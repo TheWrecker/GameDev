@@ -22,10 +22,16 @@
     <ClCompile Include="source\core\platform.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="source\core\win_init.cpp">
+    <ClCompile Include="source\core\sys_win_init.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\sys_ticker.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\sys_win_profiler.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\sys_profiler.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>
@@ -36,13 +42,22 @@
     <ClInclude Include="source\headers\platform.h">
       <Filter>Source\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\win_init.h">
+    <ClInclude Include="source\headers\sys_win_init.h">
       <Filter>Source\Headers</Filter>
     </ClInclude>
     <ClInclude Include="source\headers\platfrom_defs.h">
       <Filter>Source\Headers</Filter>
     </ClInclude>
     <ClInclude Include="source\headers\sys_ticker.h">
+      <Filter>Source\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\sys_win_profiler.h">
+      <Filter>Source\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\sys_profiler.h">
+      <Filter>Source\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\sys_interface_profiler.h">
       <Filter>Source\Headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,6 +5,8 @@
 #include <Windows.h>
 
 #include "platfrom_defs.h"
+#include "sys_ticker.h"
+#include "sys_profiler.h"
 
 #include "platform.h"
 
@@ -19,6 +21,6 @@ public:
 private:
 
 	std::unique_ptr<Platform> platfrom;
-
-
+	std::unique_ptr<SystemTicker> ticker;
+	std::unique_ptr<SystemProfiler> profiler;
 };

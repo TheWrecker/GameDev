@@ -7,9 +7,9 @@ SystemTicker::SystemTicker()
 #ifdef _WINDOWS
 	QueryPerformanceCounter(&start_tick);
 	current_tick = previous_tick = start_tick;
-	SysTickValue freq;
-	QueryPerformanceFrequency(&freq);
-	frequency = static_cast<double>(freq.QuadPart);
+	SysTickValue _freq;
+	QueryPerformanceFrequency(&_freq);
+	frequency = static_cast<double>(_freq.QuadPart);
 #endif // _WINDOWS
 }
 
@@ -21,7 +21,7 @@ void SystemTicker::Update()
 {
 	previous_tick = current_tick;
 	QueryPerformanceCounter(&current_tick);
-	last_tick_duration = (current_tick.QuadPart - previous_tick.QuadPart) / frequency;
+	last_tick_duration = static_cast<float>((current_tick.QuadPart - previous_tick.QuadPart) / frequency);
 }
 
 float SystemTicker::GetLastTickDuration()

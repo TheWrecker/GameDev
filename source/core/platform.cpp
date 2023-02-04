@@ -1,11 +1,7 @@
 
 #include "platform.h"
 
-#ifdef _WINDOWS
-
-#include "win_init.h"
-
-#endif // _WINDOWS
+#include SysPlatformInitializerHeader
 
 Platform::Platform(InstanceHandle handle)
 {

@@ -5,6 +5,8 @@
 
 #include "platfrom_defs.h"
 
+#include SysPlatformInitializerHeader
+
 class Platform
 {
 public:

@@ -3,7 +3,7 @@
 
 #include <assert.h>
 
-#include "win_init.h"
+#include "sys_win_init.h"
 
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -29,8 +29,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	}
 	break;
 	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
+	break;
 	}
+	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
 WindowsInitializer::WindowsInitializer(HINSTANCE instance)
