@@ -13,6 +13,7 @@ public:
 	WindowsInitializer(HINSTANCE instance);
 	~WindowsInitializer();
 
+	void* GetWindowHandle() override;
 	bool ProcessPlatformMessages() override;
 
 private:

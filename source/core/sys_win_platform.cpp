@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include "sys_win_platform.h"
+#include "sys_win_platform.h"
 
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -65,6 +66,11 @@ WindowsInitializer::WindowsInitializer(HINSTANCE instance)
 WindowsInitializer::~WindowsInitializer()
 {
 	DestroyWindow(window_handle);
+}
+
+void* WindowsInitializer::GetWindowHandle()
+{
+	return static_cast<void*>(window_handle);
 }
 
 bool WindowsInitializer::ProcessPlatformMessages()

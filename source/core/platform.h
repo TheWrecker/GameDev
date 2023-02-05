@@ -15,6 +15,7 @@ public:
 	Platform(InstanceHandle handle);
 	~Platform();
 
+	SysWindowHandle GetWindowHandle();
 	bool ProcessPlatfromMessages();
 
 private:

@@ -1,76 +1,91 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source">
+    <Filter Include="source">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Source\Headers">
+    <Filter Include="source\visuals">
+      <UniqueIdentifier>{b23d41c1-587f-4066-a497-1d7978646748}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\headers">
       <UniqueIdentifier>{ad10d727-b074-4dab-8a98-68c846dc50fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Core">
+    <Filter Include="source\core">
       <UniqueIdentifier>{6b2d92d6-4b79-4bee-ab9d-6e2fb0a00681}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\entry.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\core\service_manager.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>source\core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\platform.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>source\core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\sys_win_platform.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>source\core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\sys_ticker.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>source\core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\sys_win_profiler.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>source\core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\sys_profiler.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>source\core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\supervisor.cpp">
-      <Filter>Source\Core</Filter>
+      <Filter>source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\presenter.cpp">
+      <Filter>source\visuals</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\headers\service_manager.h">
-      <Filter>Source\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="source\headers\platform.h">
-      <Filter>Source\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="source\headers\sys_win_platform.h">
-      <Filter>Source\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="source\headers\platfrom_defs.h">
-      <Filter>Source\Headers</Filter>
+      <Filter>source\headers</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\sys_ticker.h">
-      <Filter>Source\Headers</Filter>
+    <ClInclude Include="source\core\interface_sys_platform.h">
+      <Filter>source\core</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\sys_win_profiler.h">
-      <Filter>Source\Headers</Filter>
+    <ClInclude Include="source\core\interface_sys_profiler.h">
+      <Filter>source\core</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\sys_profiler.h">
-      <Filter>Source\Headers</Filter>
+    <ClInclude Include="source\core\platform.h">
+      <Filter>source\core</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\interface_sys_profiler.h">
-      <Filter>Source\Headers</Filter>
+    <ClInclude Include="source\core\service_manager.h">
+      <Filter>source\core</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\supervisor.h">
-      <Filter>Source\Headers</Filter>
+    <ClInclude Include="source\core\supervisor.h">
+      <Filter>source\core</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\interface_sys_platform.h">
-      <Filter>Source\Headers</Filter>
+    <ClInclude Include="source\core\sys_profiler.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\sys_ticker.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\sys_win_platform.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\sys_win_profiler.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\interface_drawable.h">
+      <Filter>source\visuals</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\presenter.h">
+      <Filter>source\visuals</Filter>
     </ClInclude>
     <ClInclude Include="source\headers\interface_service.h">
-      <Filter>Source\Headers</Filter>
+      <Filter>source\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\util_funcs.h">
+      <Filter>source\headers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

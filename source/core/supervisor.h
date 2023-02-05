@@ -4,7 +4,8 @@
 #include <memory>
 
 #include "platfrom_defs.h"
-#include "service_manager.h"
+
+class ServiceManager;
 
 class Supervisor
 {
@@ -12,10 +13,10 @@ public:
 	Supervisor(InstanceHandle instance);
 	~Supervisor();
 
+	ServiceManager* Services();
 	void PassControl();
 
 private:
-
 	std::unique_ptr<ServiceManager> services;
 
 };

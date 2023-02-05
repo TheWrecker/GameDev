@@ -2,9 +2,9 @@
 #ifdef _WINDOWS
 
     #if defined(DEBUG) || defined(_DEBUG)
-    #define _CRTDBG_MAP_ALLOC
-    #include <stdlib.h>
-    #include <crtdbg.h>
+        #define _CRTDBG_MAP_ALLOC
+        #include <stdlib.h>
+        #include <crtdbg.h>
     #else
     #endif
 
@@ -12,7 +12,7 @@
     #include <string>
     #include <Windows.h>
 
-    #include "supervisor.h"
+    #include "core/supervisor.h"
 
 
     int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)

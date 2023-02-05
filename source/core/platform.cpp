@@ -1,5 +1,6 @@
 
 #include "platform.h"
+#include "platform.h"
 
 #include SysPlatformInitializerHeader
 
@@ -11,6 +12,11 @@ Platform::Platform(InstanceHandle handle)
 
 Platform::~Platform()
 {
+}
+
+SysWindowHandle Platform::GetWindowHandle()
+{
+	return static_cast<SysWindowHandle>(impl->GetWindowHandle());
 }
 
 bool Platform::ProcessPlatfromMessages()
