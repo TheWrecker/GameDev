@@ -3,7 +3,7 @@
 
 #include <cstddef>
 
-class SystemProfilerInterface
+class ISystemProfiler
 {
 public:
 	virtual void QueryRAMCapacity(std::size_t& physicalTotal, std::size_t& virtualTotal) = 0;

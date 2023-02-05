@@ -1,9 +1,10 @@
 
 #pragma once
 
+#include "interface_service.h"
 #include "platfrom_defs.h"
 
-class SystemTicker
+class SystemTicker : public IService
 {
 public:
 	SystemTicker();

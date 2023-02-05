@@ -6,7 +6,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#define SysPlatformInitializerHeader "sys_win_init.h"
+#define SysPlatformInitializerHeader "sys_win_platform.h"
 #define SysProfilerHeader "sys_win_profiler.h"
 #define SysProfilerImpl WindowsProfiler
 #define PlatformImpl WindowsInitializer

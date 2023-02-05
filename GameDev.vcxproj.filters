@@ -16,13 +16,13 @@
     <ClCompile Include="Source\entry.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="source\core\initializer.cpp">
+    <ClCompile Include="source\core\service_manager.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\platform.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="source\core\sys_win_init.cpp">
+    <ClCompile Include="source\core\sys_win_platform.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\sys_ticker.cpp">
@@ -34,15 +34,18 @@
     <ClCompile Include="source\core\sys_profiler.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="source\core\supervisor.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\headers\initializer.h">
+    <ClInclude Include="source\headers\service_manager.h">
       <Filter>Source\Headers</Filter>
     </ClInclude>
     <ClInclude Include="source\headers\platform.h">
       <Filter>Source\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\sys_win_init.h">
+    <ClInclude Include="source\headers\sys_win_platform.h">
       <Filter>Source\Headers</Filter>
     </ClInclude>
     <ClInclude Include="source\headers\platfrom_defs.h">
@@ -57,7 +60,16 @@
     <ClInclude Include="source\headers\sys_profiler.h">
       <Filter>Source\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\sys_interface_profiler.h">
+    <ClInclude Include="source\headers\interface_sys_profiler.h">
+      <Filter>Source\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\supervisor.h">
+      <Filter>Source\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\interface_sys_platform.h">
+      <Filter>Source\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\interface_service.h">
       <Filter>Source\Headers</Filter>
     </ClInclude>
   </ItemGroup>

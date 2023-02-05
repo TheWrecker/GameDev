@@ -4,9 +4,10 @@
 #include <cstddef>
 #include <memory>
 
-#include "sys_interface_profiler.h"
+#include "interface_service.h"
+#include "interface_sys_profiler.h"
 
-class SystemProfiler
+class SystemProfiler : public IService
 {
 public:
 	SystemProfiler();
@@ -22,7 +23,7 @@ public:
 
 private:
 
-	std::unique_ptr<SystemProfilerInterface> impl;
+	std::unique_ptr<ISystemProfiler> impl;
 
 	std::size_t
 		cpu_consumption,

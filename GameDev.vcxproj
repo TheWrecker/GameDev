@@ -155,23 +155,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\core\initializer.cpp" />
+    <ClCompile Include="source\core\service_manager.cpp" />
     <ClCompile Include="source\core\platform.cpp" />
+    <ClCompile Include="source\core\supervisor.cpp" />
     <ClCompile Include="source\core\sys_profiler.cpp" />
     <ClCompile Include="source\core\sys_win_profiler.cpp" />
     <ClCompile Include="source\core\sys_ticker.cpp" />
-    <ClCompile Include="source\core\sys_win_init.cpp" />
+    <ClCompile Include="source\core\sys_win_platform.cpp" />
     <ClCompile Include="Source\entry.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\headers\initializer.h" />
+    <ClInclude Include="source\headers\interface_service.h" />
+    <ClInclude Include="source\headers\service_manager.h" />
     <ClInclude Include="source\headers\platform.h" />
     <ClInclude Include="source\headers\platfrom_defs.h" />
+    <ClInclude Include="source\headers\supervisor.h" />
+    <ClInclude Include="source\headers\interface_sys_platform.h" />
     <ClInclude Include="source\headers\sys_profiler.h" />
-    <ClInclude Include="source\headers\sys_interface_profiler.h" />
+    <ClInclude Include="source\headers\interface_sys_profiler.h" />
     <ClInclude Include="source\headers\sys_win_profiler.h" />
     <ClInclude Include="source\headers\sys_ticker.h" />
-    <ClInclude Include="source\headers\sys_win_init.h" />
+    <ClInclude Include="source\headers\sys_win_platform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

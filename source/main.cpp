@@ -12,7 +12,7 @@
     #include <string>
     #include <Windows.h>
 
-    #include "initializer.h"
+    #include "supervisor.h"
 
 
     int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
@@ -22,8 +22,8 @@
     #endif
 
         //initialize all systems
-        auto initializer = std::make_unique<Initializer>(instance);
-
+        auto _supervisor = std::make_unique<Supervisor>(instance);
+        _supervisor->PassControl();
         return 0;
     }
 

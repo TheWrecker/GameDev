@@ -1,15 +1,19 @@
 
 #pragma once
 
+#include "interface_sys_platform.h"
+
 #ifdef _WINDOWS
 
 #include <Windows.h>
 
-class WindowsInitializer
+class WindowsInitializer : public ISystemPlatform
 {
 public:
 	WindowsInitializer(HINSTANCE instance);
 	~WindowsInitializer();
+
+	bool ProcessPlatformMessages() override;
 
 private:
 

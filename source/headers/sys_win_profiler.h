@@ -8,9 +8,9 @@
 #include <TCHAR.h>
 
 #include "platfrom_defs.h"
-#include "sys_interface_profiler.h"
+#include "interface_sys_profiler.h"
 
-class WindowsProfiler : public SystemProfilerInterface
+class WindowsProfiler : public ISystemProfiler
 {
 public:
 	WindowsProfiler();

@@ -3,7 +3,7 @@
 
 #include <assert.h>
 
-#include "sys_win_init.h"
+#include "sys_win_platform.h"
 
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -65,6 +65,24 @@ WindowsInitializer::WindowsInitializer(HINSTANCE instance)
 WindowsInitializer::~WindowsInitializer()
 {
 	DestroyWindow(window_handle);
+}
+
+bool WindowsInitializer::ProcessPlatformMessages()
+{
+	bool _should_Shutdown = false;
+	MSG _msg;
+	ZeroMemory(&_msg, sizeof(_msg));
+	while (PeekMessage(&_msg, 0, 0, 0, PM_REMOVE))
+	{
+		TranslateMessage(&_msg);
+		DispatchMessage(&_msg);
+		if (_msg.message == WM_QUIT)
+		{
+			_should_Shutdown = true;
+			break;
+		}
+	}
+	return _should_Shutdown;
 }
 
 #endif // _WINDOWS
