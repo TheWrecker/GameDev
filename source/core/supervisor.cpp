@@ -33,10 +33,15 @@ void Supervisor::PassControl()
 {
 	int i = 0;
 	Platform* _platform = services->QueryService<Platform*>("platform");
+	SystemTicker* _ticker = services->QueryService<SystemTicker*>("ticker");
+	SystemProfiler* _profiler = services->QueryService<SystemProfiler*>("profiler");
 	Presenter* _presenter = services->QueryService<Presenter*>("presenter");
+
 	while (!_platform->ProcessPlatfromMessages())
 	{
 		//update components
+		_ticker->Update();
+		_profiler->Update();
 		_presenter->Update();
 
 		//render

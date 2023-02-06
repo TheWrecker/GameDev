@@ -14,9 +14,18 @@
     <Filter Include="source\core">
       <UniqueIdentifier>{6b2d92d6-4b79-4bee-ab9d-6e2fb0a00681}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\visuals\elements">
+      <UniqueIdentifier>{55d25463-f520-46e4-8434-ba681af3bbc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\external">
+      <UniqueIdentifier>{e49ad5e8-3117-43fb-a158-b2d24c581604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\external\ImGui">
+      <UniqueIdentifier>{ea758dde-1473-47ab-a326-39b41cc73eba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\main.cpp">
+    <ClCompile Include="Source\entry.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\core\service_manager.cpp">
@@ -42,6 +51,33 @@
     </ClCompile>
     <ClCompile Include="source\visuals\presenter.cpp">
       <Filter>source\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\scene.cpp">
+      <Filter>source\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\overlay.cpp">
+      <Filter>source\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\ImGui\imgui.cpp">
+      <Filter>source\external\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\ImGui\imgui_demo.cpp">
+      <Filter>source\external\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\ImGui\imgui_draw.cpp">
+      <Filter>source\external\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\ImGui\imgui_impl_dx11.cpp">
+      <Filter>source\external\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\ImGui\imgui_impl_win32.cpp">
+      <Filter>source\external\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\ImGui\imgui_tables.cpp">
+      <Filter>source\external\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\ImGui\imgui_widgets.cpp">
+      <Filter>source\external\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +122,36 @@
     </ClInclude>
     <ClInclude Include="source\headers\util_funcs.h">
       <Filter>source\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\scene.h">
+      <Filter>source\visuals</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\overlay.h">
+      <Filter>source\visuals</Filter>
+    </ClInclude>
+    <ClInclude Include="source\external\ImGui\imconfig.h">
+      <Filter>source\external\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\external\ImGui\imgui.h">
+      <Filter>source\external\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\external\ImGui\imgui_impl_dx11.h">
+      <Filter>source\external\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\external\ImGui\imgui_impl_win32.h">
+      <Filter>source\external\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\external\ImGui\imgui_internal.h">
+      <Filter>source\external\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\external\ImGui\imstb_rectpack.h">
+      <Filter>source\external\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\external\ImGui\imstb_textedit.h">
+      <Filter>source\external\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\external\ImGui\imstb_truetype.h">
+      <Filter>source\external\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

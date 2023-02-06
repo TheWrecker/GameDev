@@ -1,0 +1,139 @@
+
+#include <cassert>
+
+#include "../external/ImGui/imgui.h"
+
+#ifdef _WINDOWS
+#include "../external/ImGui/imgui_impl_win32.h"
+#endif // _WINDOWS
+
+#include "../external/ImGui/imgui_impl_dx11.h"
+#include "overlay.h"
+
+Overlay::Overlay(ID3D11Device* device, ID3D11DeviceContext* context, SysWindowHandle windowHandle)
+	:show(false)
+{
+	assert(ImGui::CreateContext());
+#ifdef _WINDOWS
+	assert(ImGui_ImplWin32_Init(windowHandle));
+#endif // _WINDOWS
+	assert(ImGui_ImplDX11_Init(device, context));
+
+}
+
+Overlay::~Overlay()
+{
+#ifdef _WINDOWS
+	ImGui_ImplWin32_Shutdown();
+#endif // _WINDOWS
+	ImGui_ImplDX11_Shutdown();
+	ImGui::DestroyContext();
+}
+
+void Overlay::Show()
+{
+	show = true;
+}
+
+void Overlay::Hide()
+{
+	show = false;
+}
+
+void Overlay::Draw() 
+{
+	if (!show) return;
+
+	//setup new frame
+	ImGui_ImplDX11_NewFrame();
+#ifdef _WINDOWS
+	ImGui_ImplWin32_NewFrame();
+#endif // _WINDOWS
+	ImGui::NewFrame();
+
+	//GUI stuff
+	if (ImGui::Begin("Developement"))
+	{
+		/*
+		if (ImGui::CollapsingHeader("Scene"))
+		{
+			static int currentTextureIndex = 0; // Here we store our selection data as an index.
+			if (ImGui::BeginCombo("Object Texture", Elements::Texture::names.at(Render::Developement::currentTextureID).c_str()))
+			{
+				for (unsigned int n = 0; n < Elements::Texture::names.size(); n++)
+				{
+					const bool is_selected = (currentTextureIndex == n);
+					if (ImGui::Selectable(Elements::Texture::names.at(n).c_str(), is_selected))
+					{
+						currentTextureIndex = n;
+						Render::Developement::currentTextureID = n;
+					}
+
+					// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+			ImGui::Separator();
+			ImGui::ColorPicker4("##picker1", (float*)&Render::Developement::ambientColor, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
+			ImGui::Separator();
+			ImGui::ColorPicker4("##picker2", (float*)&Render::Developement::lightColor, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
+			ImGui::Separator();
+			ImGui::DragFloat3("Light Direction", (float*)&Render::Developement::lightDirection, 0.01f, -1.0f, 1.0f);
+		}
+
+
+		if (ImGui::CollapsingHeader("Graphics"))
+		{
+			if (ImGui::Button("Toggle Fullscreen"))
+				Visuals::ToggleFullscreen();
+		}
+
+		if (ImGui::CollapsingHeader("Camera"))
+		{
+			ImGui::SliderFloat("Sensitivity", &Scene::camera->mouseSensitivity, 1.0f, 100.0f);
+			ImGui::SliderFloat("Move Speed", &Scene::camera->moveSpeed, 1.0f, 500.0f);
+			ImGui::SliderFloat("Rotation Speed", &Scene::camera->rotationSpeed, 0.01f, 1.0f);
+		}
+
+		if (ImGui::CollapsingHeader("Profiler"))
+		{
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "Total Hardware Usage");
+			ImGui::Text("CPU Load: %u%%", Profiler::cpuLoad);
+			ImGui::Text("RAM Load: %u%%", Profiler::ramLoad);
+			ImGui::SameLine();
+			ImGui::Text("- %u / %u MBs",
+				(Profiler::physicalMemoryTotal - Profiler::physicalMemoryAvailable) / MegaByte,
+				Profiler::physicalMemoryTotal / MegaByte);
+			ImGui::Separator();
+
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "Storm Field Usage");
+			ImGui::Text("CPU Consumption: %u%%", Profiler::cpuConsumption);
+			ImGui::Text("Physical Memory: %u / %u MBs", Profiler::physicalMemoryUsed / MegaByte,
+				Profiler::physicalMemoryTotal / MegaByte);
+			ImGui::Text("Virtual Memory: %u / %u MBs", Profiler::virtualMemoryUsed / MegaByte,
+				Profiler::virtualMemoryTotal / MegaByte);
+			ImGui::Separator();
+
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "Performance");
+			ImGui::Text("Last Tick Duration: %fms", Profiler::lastIterationDuration * 1000);
+			ImGui::Text("Ticks Per Second: %u", Profiler::ips);
+		}
+		*/
+
+		ImGui::Separator();
+
+		if (ImGui::Button("Exit"))
+			PostQuitMessage(0);
+
+	}
+
+	ImGui::End();
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Overlay::Update()
+{
+}

@@ -162,8 +162,17 @@
     <ClCompile Include="source\core\sys_win_profiler.cpp" />
     <ClCompile Include="source\core\sys_ticker.cpp" />
     <ClCompile Include="source\core\sys_win_platform.cpp" />
-    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\entry.cpp" />
+    <ClCompile Include="source\external\ImGui\imgui.cpp" />
+    <ClCompile Include="source\external\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="source\external\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="source\external\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="source\external\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="source\external\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="source\external\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="source\visuals\overlay.cpp" />
     <ClCompile Include="source\visuals\presenter.cpp" />
+    <ClCompile Include="source\visuals\scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\interface_sys_platform.h" />
@@ -175,11 +184,21 @@
     <ClInclude Include="source\core\sys_ticker.h" />
     <ClInclude Include="source\core\sys_win_platform.h" />
     <ClInclude Include="source\core\sys_win_profiler.h" />
+    <ClInclude Include="source\external\ImGui\imconfig.h" />
+    <ClInclude Include="source\external\ImGui\imgui.h" />
+    <ClInclude Include="source\external\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="source\external\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="source\external\ImGui\imgui_internal.h" />
+    <ClInclude Include="source\external\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="source\external\ImGui\imstb_textedit.h" />
+    <ClInclude Include="source\external\ImGui\imstb_truetype.h" />
     <ClInclude Include="source\headers\interface_service.h" />
     <ClInclude Include="source\headers\platfrom_defs.h" />
     <ClInclude Include="source\headers\util_funcs.h" />
     <ClInclude Include="source\visuals\interface_drawable.h" />
+    <ClInclude Include="source\visuals\overlay.h" />
     <ClInclude Include="source\visuals\presenter.h" />
+    <ClInclude Include="source\visuals\scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

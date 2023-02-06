@@ -6,6 +6,8 @@
 
 #include "interface_drawable.h"
 #include "interface_service.h"
+#include "overlay.h"
+#include "scene.h"
 
 class Supervisor;
 
@@ -49,6 +51,8 @@ private:
 	void Func_ClearAndRenderNoStencil();
 	void Func_OnlyRenderDeferClear();
 
+	std::unique_ptr<Scene> scene;
+	std::unique_ptr<Overlay> overlay;
 	std::function<void()> render_function;
     Supervisor* supervisor;
 

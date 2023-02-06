@@ -38,6 +38,12 @@ Presenter::Presenter(Supervisor* parent)
 	assert(SetMultiSampling(MultiSamplingType::NONE, 1, 0));
 	assert(SetRasterizerState(CullMode::CULL_BACK, false, false));
 	assert(SetRenderMode(RenderMode::SINGLE_PASS_WITH_STENCIL)); //TODO: change to multipass, currently redundant
+
+	scene = std::make_unique<Scene>(this);
+	overlay = std::make_unique<Overlay>(device, context, supervisor->Services()->QueryService<Platform*>("platform")->GetWindowHandle());
+
+	scene->SwitchMode(SceneMode::DEVELOPEMENT);
+	overlay->Show();
 }
 
 Presenter::~Presenter()
@@ -67,10 +73,15 @@ Presenter::~Presenter()
 void Presenter::Draw()
 {
 	render_function();
+	scene->Draw();
+	overlay->Draw();
+	swapchain->Present(0, 0);
 }
 
 void Presenter::Update()
 {
+	scene->Update();
+	overlay->Update();
 }
 
 bool Presenter::SetMultiSampling(MultiSamplingType type, UINT count, UINT quality)
@@ -231,24 +242,15 @@ void Presenter::Func_ClearAndRenderWithStencil()
 {
 	context->ClearRenderTargetView(render_target_view, reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
 	context->ClearDepthStencilView(depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	//TODO: add rendering
-
-	swapchain->Present(0, 0);
 }
 
 void Presenter::Func_ClearAndRenderNoStencil()
 {
 	context->ClearRenderTargetView(render_target_view, reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
-	//TODO: add rendering
-
-	swapchain->Present(0, 0);
 }
 
 void Presenter::Func_OnlyRenderDeferClear()
 {
-	//TODO: add rendering
-
-	swapchain->Present(0, 0);
 }
 
 bool Presenter::SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc)
