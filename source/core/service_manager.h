@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <unordered_map>
+#include <vector>
 #include <memory>
 #include <string>
 
@@ -10,7 +10,8 @@
 class ServiceManager
 {
 public:
-	typedef std::unordered_map<std::string, std::unique_ptr<IService>> ServiceContainer;
+	typedef std::pair<std::string, std::unique_ptr<IService>> ServicePair;
+	typedef std::vector<ServicePair> ServiceContainer;
 
 	ServiceManager();
 	~ServiceManager();

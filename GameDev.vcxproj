@@ -162,6 +162,9 @@
     <ClCompile Include="source\core\sys_win_profiler.cpp" />
     <ClCompile Include="source\core\sys_ticker.cpp" />
     <ClCompile Include="source\core\sys_win_platform.cpp" />
+    <ClCompile Include="source\entities\basic_entity.cpp" />
+    <ClCompile Include="source\entities\interface_camera.cpp" />
+    <ClCompile Include="source\entities\transformable_entity.cpp" />
     <ClCompile Include="Source\entry.cpp" />
     <ClCompile Include="source\external\ImGui\imgui.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_demo.cpp" />
@@ -186,6 +189,9 @@
     <ClInclude Include="source\core\sys_ticker.h" />
     <ClInclude Include="source\core\sys_win_platform.h" />
     <ClInclude Include="source\core\sys_win_profiler.h" />
+    <ClInclude Include="source\entities\basic_entity.h" />
+    <ClInclude Include="source\entities\interface_camera.h" />
+    <ClInclude Include="source\entities\transformable_entity.h" />
     <ClInclude Include="source\external\ImGui\imconfig.h" />
     <ClInclude Include="source\external\ImGui\imgui.h" />
     <ClInclude Include="source\external\ImGui\imgui_impl_dx11.h" />

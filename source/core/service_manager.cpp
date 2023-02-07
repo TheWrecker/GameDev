@@ -13,7 +13,7 @@ ServiceManager::~ServiceManager()
 
 void ServiceManager::AdoptService(std::string name, IService* target)
 {
-	container[name] = std::move(std::unique_ptr<IService>(target));
+	container.push_back(ServicePair(name, std::move(std::unique_ptr<IService>(target))));
 }
 
 ServiceManager::ServiceContainer& ServiceManager::Services()
@@ -23,8 +23,10 @@ ServiceManager::ServiceContainer& ServiceManager::Services()
 
 IService* ServiceManager::GetService(const std::string& name)
 {
-	auto _result = container.find(name);
-	if (_result != container.end())
-		return _result->second.get();
+	for (auto& service : container)
+	{
+		if (service.first == name)
+			return service.second.get();
+	}
 	return nullptr;
 }

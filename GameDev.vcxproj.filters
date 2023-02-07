@@ -26,6 +26,9 @@
     <Filter Include="source\input">
       <UniqueIdentifier>{f8a832e0-1450-400b-acfa-977eb13d7cdb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\entities">
+      <UniqueIdentifier>{3f0f0fd3-2b4c-4334-83be-c2e2fd3296bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\entry.cpp">
@@ -87,6 +90,15 @@
     </ClCompile>
     <ClCompile Include="source\input\keyboard.cpp">
       <Filter>source\input</Filter>
+    </ClCompile>
+    <ClCompile Include="source\entities\basic_entity.cpp">
+      <Filter>source\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\entities\transformable_entity.cpp">
+      <Filter>source\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\entities\interface_camera.cpp">
+      <Filter>source\entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +179,15 @@
     </ClInclude>
     <ClInclude Include="source\input\keyboard.h">
       <Filter>source\input</Filter>
+    </ClInclude>
+    <ClInclude Include="source\entities\basic_entity.h">
+      <Filter>source\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\entities\transformable_entity.h">
+      <Filter>source\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\entities\interface_camera.h">
+      <Filter>source\entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
