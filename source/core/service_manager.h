@@ -10,17 +10,20 @@
 class ServiceManager
 {
 public:
+	typedef std::unordered_map<std::string, std::unique_ptr<IService>> ServiceContainer;
+
 	ServiceManager();
 	~ServiceManager();
 
 	void AdoptService(std::string name, IService* target);
 	template <typename type>
 	type QueryService(const std::string& name);
+	ServiceContainer& Services();
 
 private:
 	IService* GetService(const std::string& name);
 
-	std::unordered_map<std::string, std::unique_ptr<IService>> container;
+	ServiceContainer container;
 };
 
 template<typename type>

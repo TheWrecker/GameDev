@@ -2,10 +2,16 @@
 #ifdef _WINDOWS
 
 #include <assert.h>
+#include <Windows.h>
+
+#include "directxtk/Mouse.h"
+#include "directxtk/Keyboard.h"
+#include "../External/ImGui/imgui.h"
+#include "../External/ImGui/imgui_impl_win32.h"
 
 #include "sys_win_platform.h"
-#include "sys_win_platform.h"
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -17,20 +23,80 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		HDC hdc = BeginPaint(hWnd, &ps);
 		// TODO: Add any drawing code that uses hdc here...
 		EndPaint(hWnd, &ps);
+		break;
 	}
-	break;
+	case WM_ACTIVATEAPP:
+	{
+		DirectX::Keyboard::ProcessMessage(message, wParam, lParam);
+		DirectX::Mouse::ProcessMessage(message, wParam, lParam);
+		break;
+	}
+	case WM_MOUSEACTIVATE:
+	{
+		return MA_ACTIVATEANDEAT;
+		break;
+	}
+	//TODO: Reset keyboard and mouse trackers on activation
+	case WM_ACTIVATE:
+	case WM_INPUT:
+	case WM_MOUSEMOVE:
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONUP:
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONUP:
+	case WM_MOUSEWHEEL:
+	case WM_XBUTTONDOWN:
+	case WM_XBUTTONUP:
+	case WM_MOUSEHOVER:
+	{
+		auto& io = ImGui::GetIO();
+		if (io.WantCaptureMouse)
+			return ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
+		else
+			DirectX::Mouse::ProcessMessage(message, wParam, lParam);
+		break;
+	}
+	case WM_KEYDOWN:
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+	{
+		auto& io = ImGui::GetIO();
+		if (io.WantCaptureKeyboard)
+			return ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
+		else
+			DirectX::Keyboard::ProcessMessage(message, wParam, lParam);
+		break;
+	}
+	case WM_SYSKEYDOWN:
+	{
+		auto& io = ImGui::GetIO();
+		if (io.WantCaptureKeyboard)
+			return ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
+		else
+			DirectX::Mouse::ProcessMessage(message, wParam, lParam);
+		break;
+		if (wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)
+		{
+			//...
+		}
+		break;
+	}
 	case WM_DESTROY:
 	{
 		PostQuitMessage(0);
+		break;
 	}
-	break;
 	case  WM_CLOSE:
 	{
 		PostQuitMessage(0);
+		break;
 	}
-	break;
 	default:
-	break;
+	{
+		break;
+	}
 	}
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }

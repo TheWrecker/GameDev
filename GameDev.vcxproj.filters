@@ -23,6 +23,9 @@
     <Filter Include="source\external\ImGui">
       <UniqueIdentifier>{ea758dde-1473-47ab-a326-39b41cc73eba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\input">
+      <UniqueIdentifier>{f8a832e0-1450-400b-acfa-977eb13d7cdb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\entry.cpp">
@@ -78,6 +81,12 @@
     </ClCompile>
     <ClCompile Include="source\external\ImGui\imgui_widgets.cpp">
       <Filter>source\external\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\input\mouse.cpp">
+      <Filter>source\input</Filter>
+    </ClCompile>
+    <ClCompile Include="source\input\keyboard.cpp">
+      <Filter>source\input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +161,12 @@
     </ClInclude>
     <ClInclude Include="source\external\ImGui\imstb_truetype.h">
       <Filter>source\external\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="source\input\mouse.h">
+      <Filter>source\input</Filter>
+    </ClInclude>
+    <ClInclude Include="source\input\keyboard.h">
+      <Filter>source\input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,5 +6,6 @@
 class IService
 {
 public:
+	virtual void Update() {}
 	virtual ~IService() {}
 };

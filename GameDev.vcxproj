@@ -170,6 +170,8 @@
     <ClCompile Include="source\external\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_tables.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="source\input\keyboard.cpp" />
+    <ClCompile Include="source\input\mouse.cpp" />
     <ClCompile Include="source\visuals\overlay.cpp" />
     <ClCompile Include="source\visuals\presenter.cpp" />
     <ClCompile Include="source\visuals\scene.cpp" />
@@ -195,6 +197,8 @@
     <ClInclude Include="source\headers\interface_service.h" />
     <ClInclude Include="source\headers\platfrom_defs.h" />
     <ClInclude Include="source\headers\util_funcs.h" />
+    <ClInclude Include="source\input\keyboard.h" />
+    <ClInclude Include="source\input\mouse.h" />
     <ClInclude Include="source\visuals\interface_drawable.h" />
     <ClInclude Include="source\visuals\overlay.h" />
     <ClInclude Include="source\visuals\presenter.h" />

@@ -13,7 +13,7 @@ public:
 	SystemProfiler();
 	~SystemProfiler();
 
-	void Update();
+	void Update() override;
 
 	std::size_t GetCPUConsumption();
 	std::size_t GetCPULoad();

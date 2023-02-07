@@ -10,7 +10,7 @@ public:
 	SystemTicker();
 	~SystemTicker();
 
-	void Update();
+	void Update() override;
 	float GetLastTickDuration();
 
 private:

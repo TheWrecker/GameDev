@@ -13,7 +13,6 @@
 Overlay::Overlay(ID3D11Device* device, ID3D11DeviceContext* context, SysWindowHandle windowHandle)
 	:show(false)
 {
-	assert(ImGui::CreateContext());
 #ifdef _WINDOWS
 	assert(ImGui_ImplWin32_Init(windowHandle));
 #endif // _WINDOWS

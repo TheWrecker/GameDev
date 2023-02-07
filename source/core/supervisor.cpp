@@ -1,4 +1,8 @@
 
+#include "../external/ImGui/imgui.h"
+
+#include "../input/mouse.h"
+#include "../input/keyboard.h"
 #include "platform.h"
 #include "service_manager.h"
 #include "sys_profiler.h"
@@ -10,6 +14,9 @@
 Supervisor::Supervisor(InstanceHandle instance)
 {
 	services = std::make_unique<ServiceManager>();
+
+	ImGui::CreateContext();
+
 	IService* _platform = new Platform(instance);
 	services->AdoptService("platform", _platform);
 	IService* _ticker = new SystemTicker();
@@ -18,6 +25,10 @@ Supervisor::Supervisor(InstanceHandle instance)
 	services->AdoptService("profiler", _profiler);
 	IService* _presenter = new Presenter(this);
 	services->AdoptService("presenter", _presenter);
+	IService* _mouse = new Mouse(static_cast<Platform*>(_platform)->GetWindowHandle());
+	services->AdoptService("mouse", _mouse);
+	IService* _keyboard = new Keyboard();
+	services->AdoptService("keyboard", _keyboard);
 }
 
 Supervisor::~Supervisor()
@@ -31,18 +42,15 @@ ServiceManager* Supervisor::Services()
 
 void Supervisor::PassControl()
 {
-	int i = 0;
 	Platform* _platform = services->QueryService<Platform*>("platform");
-	SystemTicker* _ticker = services->QueryService<SystemTicker*>("ticker");
-	SystemProfiler* _profiler = services->QueryService<SystemProfiler*>("profiler");
 	Presenter* _presenter = services->QueryService<Presenter*>("presenter");
-
 	while (!_platform->ProcessPlatfromMessages())
 	{
 		//update components
-		_ticker->Update();
-		_profiler->Update();
-		_presenter->Update();
+		for (auto& service : services->Services())
+		{
+			service.second->Update();
+		}
 
 		//render
 		_presenter->Draw();
