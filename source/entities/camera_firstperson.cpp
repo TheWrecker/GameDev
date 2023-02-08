@@ -9,7 +9,7 @@
 #include "camera_firstperson.h"
 
 FirstPersonCamera::FirstPersonCamera(Supervisor* supervisor)
-	:mouse_sensitivity(0.1f), move_speed(0.02f), rotation_speed(DirectX::XMConvertToRadians(2.0f))
+	:mouse_sensitivity(0.1f), move_speed(0.002f), rotation_speed(DirectX::XMConvertToRadians(2.0f))
 {
 	mouse = supervisor->Services()->QueryService<Mouse*>("mouse");
 	keyboard = supervisor->Services()->QueryService<Keyboard*>("keyboard");
@@ -24,22 +24,24 @@ void FirstPersonCamera::Update()
 	using namespace DirectX;
 	XMFLOAT2 movementAmount = XMFLOAT2(0.0f, 0.0f);
 	//TODO: assignable keys
-	if (keyboard->keyboard->W)
+	auto kb = keyboard->keyboard->GetState();
+
+	if (kb.G)
 	{
 		movementAmount.y = 1.0f;
 	}
 
-	if (keyboard->keyboard->S)
+	if (kb.S)
 	{
 		movementAmount.y = -1.0f;
 	}
 
-	if (keyboard->keyboard->A)
+	if (kb.A)
 	{
 		movementAmount.x = -1.0f;
 	}
 
-	if (keyboard->keyboard->D)
+	if (kb.D)
 	{
 		movementAmount.x = 1.0f;
 	}

@@ -20,7 +20,7 @@ BasicCamera::~BasicCamera()
 
 void BasicCamera::UpdateViewMatrix()
 {
-	view_matrix = DirectX::XMMatrixLookToRH(Position(), Direction(), Up());
+	view_matrix = DirectX::XMMatrixLookToRH(Position_Vector(), Direction(), Up());
 	DirectX::XMStoreFloat4x4(&view_4x4, view_matrix);
 	UpdateViewProjectionMatrix();
 }
@@ -34,7 +34,7 @@ void BasicCamera::UpdateProjectionMatrix()
 
 void BasicCamera::SetProperties(float fieldOfView, float aspectRatio, float near, float far)
 {
-	fov = DirectX::XMConvertToRadians(fov);
+	fov = DirectX::XMConvertToRadians(fieldOfView);
 	aspect_ratio = aspectRatio;
 	near_plane = near;
 	far_plane = far;

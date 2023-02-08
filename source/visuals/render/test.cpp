@@ -1,12 +1,14 @@
 
 #include <d3dcompiler.h>
 
+#include "../entities/camera_basic.h"
+#include "../scene.h"
 #include "util_funcs.h"
 
 #include "test.h"
 
-TestRender::TestRender(ID3D11Device* device, ID3D11DeviceContext* context)
-	:device(device), context(context)
+TestRender::TestRender(ID3D11Device* device, ID3D11DeviceContext* context, Scene* scene)
+	:device(device), context(context), scene(scene)
 {
 	test_object = std::make_unique<BasicEntity>();
 	vertex_stride = sizeof(TestVertex);
@@ -46,12 +48,10 @@ TestRender::TestRender(ID3D11Device* device, ID3D11DeviceContext* context)
 	per_object_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	DXAssert(device->CreateBuffer(&per_object_buffer_desc, 0, &per_object_buffer));
 
-	vertices.resize(3);
-	vertices.push_back({ { 0.0f, 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f, 0.0f } });
-	vertices.push_back({ { -1.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 0.0f } });
-	vertices.push_back({ { 1.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 0.0f } });
+	vertices.push_back({ DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) });
+	vertices.push_back({ DirectX::XMFLOAT4(-1.0f, 0.0f, 0.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) });
+	vertices.push_back({ DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) });
 
-	indices.resize(3);
 	indices.push_back(0);
 	indices.push_back(1);
 	indices.push_back(2);
@@ -74,6 +74,8 @@ TestRender::TestRender(ID3D11Device* device, ID3D11DeviceContext* context)
 	index_subresource_data.pSysMem = &indices.at(0);
 	DXAssert(device->CreateBuffer(&index_buffer_desc, &index_subresource_data, &index_buffer));
 
+	camera = scene->GetActiveCamera();
+
 	_blob_v->Release();
 	_blob_p->Release();
 }
@@ -84,4 +86,27 @@ TestRender::~TestRender()
 
 void TestRender::Draw()
 {
+	DirectX::XMMATRIX viewProjectionMatrixTransposed =	DirectX::XMMatrixTranspose(camera->ViewProjectionMatrix());
+	DirectX::XMMATRIX worldMatrixTransposed = DirectX::XMMatrixTranspose(test_object->World_Matrix());
+
+	ZeroMemory(&per_frame_vertex_subresource, sizeof(per_frame_vertex_subresource));
+	context->Map(per_frame_vertex_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &per_frame_vertex_subresource);
+	reinterpret_cast<PerFrameVertexBuffer*>(per_frame_vertex_subresource.pData)->viewprojection = viewProjectionMatrixTransposed;
+	context->Unmap(per_frame_vertex_buffer, 0);
+
+	ZeroMemory(&per_object_subresource, sizeof(per_object_subresource));
+	context->Map(per_object_buffer, 0, D3D11_MAP_WRITE_DISCARD,	0, &per_object_subresource);
+	reinterpret_cast<PerObjectBuffer*>(per_object_subresource.pData)->world = worldMatrixTransposed;
+	context->Unmap(per_object_buffer, 0);
+
+	context->IASetVertexBuffers(0, 1, &vertex_buffer, &vertex_stride, &vertex_offset);
+	context->IASetIndexBuffer(index_buffer, DXGI_FORMAT_R32_UINT, 0);
+	context->VSSetConstantBuffers(0, 1, &per_frame_vertex_buffer);
+	context->VSSetConstantBuffers(1, 1, &per_object_buffer);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context->IASetInputLayout(input_layout);
+	context->VSSetShader(vertex_shader, 0, 0);
+	context->PSSetShader(pixel_shader, 0, 0);
+
+	context->DrawIndexed(indices.size(), 0, 0);
 }

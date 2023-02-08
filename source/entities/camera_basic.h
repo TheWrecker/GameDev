@@ -9,8 +9,8 @@ public:
 	BasicCamera(float fieldOfView = 90.0f, float aspectRatio = 4.0f/3.0f, float near = 0.001f, float far = 1000.0f);
 	~BasicCamera();
 
-	virtual void UpdateViewMatrix() = 0;
-	virtual void UpdateProjectionMatrix() = 0;
+	virtual void UpdateViewMatrix();
+	virtual void UpdateProjectionMatrix();
 
 	void SetProperties(float fieldOfView, float aspectRatio, float near, float far);
 	void SetRotation(float x, float y, float z) override;
@@ -24,6 +24,8 @@ public:
 	const DirectX::XMMATRIX& ViewProjectionMatrix() const;
 
 protected:
+	friend class Scene;
+
 	void UpdateOrientationFloats();
 	virtual void UpdateViewProjectionMatrix();
 

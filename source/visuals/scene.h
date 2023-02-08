@@ -6,11 +6,19 @@
 #include "interface_drawable.h"
 
 class Presenter;
-//class Camera;
+class BasicCamera;
+class TestRender;
 
 enum class SceneMode
 {
 	DEVELOPEMENT
+};
+
+enum class CameraType
+{
+	UNDEFINED,
+	STATIC,
+	FIRST_PERSON
 };
 
 class Scene : public IDrawable
@@ -22,8 +30,13 @@ public:
 	void SwitchMode(SceneMode mode);
 	void Draw() override;
 	void Update() override;
+	void SwitchCameraType(CameraType type);
+	BasicCamera* GetActiveCamera();
 
 private:
 	Presenter* presenter;
-//	std::unique_ptr<Camera> camera;
+	std::unique_ptr<BasicCamera> active_camera;
+	std::unique_ptr<TestRender> test_render;
+
+	CameraType camera_type;
 };

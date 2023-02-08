@@ -29,6 +29,9 @@
     <Filter Include="source\visuals\render">
       <UniqueIdentifier>{158767ba-4fc9-4bfd-a8d0-af7624ba3c1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\visuals\shaders">
+      <UniqueIdentifier>{a83aea85-130b-415b-88bc-4c80ca131d35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\entry.cpp">
@@ -201,5 +204,13 @@
     <ClInclude Include="source\visuals\render\test.h">
       <Filter>source\visuals\render</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="source\visuals\shaders\test_v.hlsl">
+      <Filter>source\visuals\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="source\visuals\shaders\test_p.hlsl">
+      <Filter>source\visuals\shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -43,6 +43,9 @@ public:
 	bool SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc);
 	bool SetRasterizerState(CullMode cullmodle, bool wireframe, bool frontCCW);
 	bool SetRenderMode(RenderMode mode);
+	Supervisor* GetSupervisor();
+	ID3D11Device* GetDevice();
+	ID3D11DeviceContext* GetContext();
 	
 private:
 	bool CreateSwapChain(bool isResize);

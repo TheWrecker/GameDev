@@ -36,7 +36,7 @@ Presenter::Presenter(Supervisor* parent)
 #endif
 
 	assert(SetMultiSampling(MultiSamplingType::NONE, 1, 0));
-	assert(SetRasterizerState(CullMode::CULL_BACK, false, false));
+	assert(SetRasterizerState(CullMode::CULL_NONE, false, false));
 	assert(SetRenderMode(RenderMode::SINGLE_PASS_WITH_STENCIL)); //TODO: change to multipass, currently redundant
 
 	scene = std::make_unique<Scene>(this);
@@ -342,4 +342,19 @@ bool Presenter::SetRenderMode(RenderMode mode)
 	}
 
 	return true;
+}
+
+Supervisor* Presenter::GetSupervisor()
+{
+	return supervisor;
+}
+
+ID3D11Device* Presenter::GetDevice()
+{
+	return device;
+}
+
+ID3D11DeviceContext* Presenter::GetContext()
+{
+	return context;
 }

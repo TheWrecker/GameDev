@@ -23,12 +23,12 @@ Supervisor::Supervisor(InstanceHandle instance)
 	services->AdoptService("ticker", _ticker);
 	IService* _profiler = new SystemProfiler();
 	services->AdoptService("profiler", _profiler);
-	IService* _presenter = new Presenter(this);
-	services->AdoptService("presenter", _presenter);
 	IService* _mouse = new Mouse(static_cast<Platform*>(_platform)->GetWindowHandle());
 	services->AdoptService("mouse", _mouse);
 	IService* _keyboard = new Keyboard();
 	services->AdoptService("keyboard", _keyboard);
+	IService* _presenter = new Presenter(this);
+	services->AdoptService("presenter", _presenter);
 }
 
 Supervisor::~Supervisor()

@@ -1,6 +1,8 @@
 
 #pragma once
 
+//TODO: change to renderer interface
+
 #include <d3d11.h>
 #include <memory>
 #include <vector>
@@ -8,10 +10,13 @@
 #include "interface_drawable.h"
 #include "../entities/entity_basic.h"
 
+class BasicCamera;
+class Scene;
+
 class TestRender : public IDrawable
 {
 public:
-	TestRender(ID3D11Device* device, ID3D11DeviceContext* context);
+	TestRender(ID3D11Device* device, ID3D11DeviceContext* context, Scene* scene);
 	~TestRender();
 
 	void Draw() override;
@@ -21,6 +26,8 @@ private:
 
 	ID3D11Device* device;
 	ID3D11DeviceContext* context;
+	Scene* scene;
+	BasicCamera* camera;
 
 	struct TestVertex
 	{
