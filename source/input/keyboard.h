@@ -18,9 +18,11 @@ public:
 	void Update() override;
 	void RegisterEvent(std::function<void()> target);
 
+	std::unique_ptr<DirectX::Keyboard> keyboard;
+	std::unique_ptr<DirectX::Keyboard::KeyboardStateTracker> keys;
+
 private:
 	void DispatchInputs();
 
-	std::unique_ptr<DirectX::Keyboard> keyboard;
-	std::unique_ptr<DirectX::Keyboard::KeyboardStateTracker> keys;
+
 };

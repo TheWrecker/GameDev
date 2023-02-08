@@ -1,26 +1,21 @@
 
 #pragma once
 
-#include "transformable_entity.h"
+#include "entity_transformable.h"
 
-class ICamera : public BasicEntity
+class BasicCamera : public TransformableEntity
 {
 public:
-	ICamera(float fov = 90.0f, float aspectRatio = 4.0f/3.0f, float near = 0.001f, float far = 1000.0f);
-	~ICamera();
+	BasicCamera(float fieldOfView = 90.0f, float aspectRatio = 4.0f/3.0f, float near = 0.001f, float far = 1000.0f);
+	~BasicCamera();
 
 	virtual void UpdateViewMatrix() = 0;
 	virtual void UpdateProjectionMatrix() = 0;
 
-	void SetProperties(float fov, float aspectRatio, float near, float far);
-	void SetPosition(float x, float y, float z);
-	void SetPosition(DirectX::XMFLOAT3& pos);
-	void SetDirection(float x, float y, float z);
-	void SetDirection(DirectX::XMFLOAT3& dir);
+	void SetProperties(float fieldOfView, float aspectRatio, float near, float far);
+	void SetRotation(float x, float y, float z) override;
 	void Rotate(DirectX::CXMMATRIX matrix);
-	void Rotate(DirectX::XMFLOAT4X4& matrix);
 
-	const DirectX::XMVECTOR& Position() const;
 	const DirectX::XMVECTOR& Direction() const;
 	const DirectX::XMVECTOR& Right() const;
 	const DirectX::XMVECTOR& Up() const;
@@ -29,6 +24,7 @@ public:
 	const DirectX::XMMATRIX& ViewProjectionMatrix() const;
 
 protected:
+	void UpdateOrientationFloats();
 	virtual void UpdateViewProjectionMatrix();
 
 	float
@@ -43,7 +39,6 @@ protected:
 		right;
 
 	DirectX::XMVECTOR
-		position_vector,
 		direction_vector,
 		up_vector,
 		right_vector;

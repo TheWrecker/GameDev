@@ -1,7 +1,8 @@
-#include "transformable_entity.h"
+
+#include "entity_transformable.h"
 
 TransformableEntity::TransformableEntity()
-	:scale(), rotation()
+	:scale(), rotation(), scale_vector(), rotation_vector()
 {
 	SetRotation(0.0f, 0.0f, 0.0f);
 	SetScale(1.0f, 1.0f, 1.0f);
@@ -11,7 +12,7 @@ TransformableEntity::~TransformableEntity()
 {
 }
 
-const DirectX::XMVECTOR& TransformableEntity::GetRotation() const
+const DirectX::XMVECTOR& TransformableEntity::Rotation() const
 {
 	return rotation_vector;
 }
@@ -26,7 +27,7 @@ void TransformableEntity::SetRotation(float x, float y, float z)
 	DirectX::XMStoreFloat4x4(&world_4x4, world_matrix);
 }
 
-const DirectX::XMVECTOR& TransformableEntity::GetScale() const
+const DirectX::XMVECTOR& TransformableEntity::Scale() const
 {
 	return scale_vector;
 }

@@ -11,7 +11,7 @@ public:
 
 	virtual void Render();
 	virtual void Update();
-	virtual const DirectX::XMVECTOR& GetPosition() const;
+	virtual const DirectX::XMVECTOR& Position() const;
 	virtual void SetPosition(float x, float y, float z);
 
 protected:

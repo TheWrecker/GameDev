@@ -14,9 +14,6 @@
     <Filter Include="source\core">
       <UniqueIdentifier>{6b2d92d6-4b79-4bee-ab9d-6e2fb0a00681}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\visuals\elements">
-      <UniqueIdentifier>{55d25463-f520-46e4-8434-ba681af3bbc0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="source\external">
       <UniqueIdentifier>{e49ad5e8-3117-43fb-a158-b2d24c581604}</UniqueIdentifier>
     </Filter>
@@ -28,6 +25,9 @@
     </Filter>
     <Filter Include="source\entities">
       <UniqueIdentifier>{3f0f0fd3-2b4c-4334-83be-c2e2fd3296bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\visuals\render">
+      <UniqueIdentifier>{158767ba-4fc9-4bfd-a8d0-af7624ba3c1e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -91,14 +91,20 @@
     <ClCompile Include="source\input\keyboard.cpp">
       <Filter>source\input</Filter>
     </ClCompile>
-    <ClCompile Include="source\entities\basic_entity.cpp">
+    <ClCompile Include="source\entities\entity_basic.cpp">
       <Filter>source\entities</Filter>
     </ClCompile>
-    <ClCompile Include="source\entities\transformable_entity.cpp">
+    <ClCompile Include="source\entities\entity_transformable.cpp">
       <Filter>source\entities</Filter>
     </ClCompile>
-    <ClCompile Include="source\entities\interface_camera.cpp">
+    <ClCompile Include="source\entities\camera_basic.cpp">
       <Filter>source\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\entities\camera_firstperson.cpp">
+      <Filter>source\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\render\test.cpp">
+      <Filter>source\visuals\render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -131,9 +137,6 @@
     </ClInclude>
     <ClInclude Include="source\core\sys_win_profiler.h">
       <Filter>source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="source\visuals\interface_drawable.h">
-      <Filter>source\visuals</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\presenter.h">
       <Filter>source\visuals</Filter>
@@ -180,14 +183,23 @@
     <ClInclude Include="source\input\keyboard.h">
       <Filter>source\input</Filter>
     </ClInclude>
-    <ClInclude Include="source\entities\basic_entity.h">
+    <ClInclude Include="source\entities\entity_basic.h">
       <Filter>source\entities</Filter>
     </ClInclude>
-    <ClInclude Include="source\entities\transformable_entity.h">
+    <ClInclude Include="source\entities\entity_transformable.h">
       <Filter>source\entities</Filter>
     </ClInclude>
-    <ClInclude Include="source\entities\interface_camera.h">
+    <ClInclude Include="source\entities\camera_basic.h">
       <Filter>source\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\entities\camera_firstperson.h">
+      <Filter>source\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\interface_drawable.h">
+      <Filter>source\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\render\test.h">
+      <Filter>source\visuals\render</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -162,9 +162,10 @@
     <ClCompile Include="source\core\sys_win_profiler.cpp" />
     <ClCompile Include="source\core\sys_ticker.cpp" />
     <ClCompile Include="source\core\sys_win_platform.cpp" />
-    <ClCompile Include="source\entities\basic_entity.cpp" />
-    <ClCompile Include="source\entities\interface_camera.cpp" />
-    <ClCompile Include="source\entities\transformable_entity.cpp" />
+    <ClCompile Include="source\entities\camera_firstperson.cpp" />
+    <ClCompile Include="source\entities\entity_basic.cpp" />
+    <ClCompile Include="source\entities\camera_basic.cpp" />
+    <ClCompile Include="source\entities\entity_transformable.cpp" />
     <ClCompile Include="Source\entry.cpp" />
     <ClCompile Include="source\external\ImGui\imgui.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_demo.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="source\input\mouse.cpp" />
     <ClCompile Include="source\visuals\overlay.cpp" />
     <ClCompile Include="source\visuals\presenter.cpp" />
+    <ClCompile Include="source\visuals\render\test.cpp" />
     <ClCompile Include="source\visuals\scene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -189,9 +191,10 @@
     <ClInclude Include="source\core\sys_ticker.h" />
     <ClInclude Include="source\core\sys_win_platform.h" />
     <ClInclude Include="source\core\sys_win_profiler.h" />
-    <ClInclude Include="source\entities\basic_entity.h" />
-    <ClInclude Include="source\entities\interface_camera.h" />
-    <ClInclude Include="source\entities\transformable_entity.h" />
+    <ClInclude Include="source\entities\camera_firstperson.h" />
+    <ClInclude Include="source\entities\entity_basic.h" />
+    <ClInclude Include="source\entities\camera_basic.h" />
+    <ClInclude Include="source\entities\entity_transformable.h" />
     <ClInclude Include="source\external\ImGui\imconfig.h" />
     <ClInclude Include="source\external\ImGui\imgui.h" />
     <ClInclude Include="source\external\ImGui\imgui_impl_dx11.h" />
@@ -200,14 +203,15 @@
     <ClInclude Include="source\external\ImGui\imstb_rectpack.h" />
     <ClInclude Include="source\external\ImGui\imstb_textedit.h" />
     <ClInclude Include="source\external\ImGui\imstb_truetype.h" />
+    <ClInclude Include="source\headers\interface_drawable.h" />
     <ClInclude Include="source\headers\interface_service.h" />
     <ClInclude Include="source\headers\platfrom_defs.h" />
     <ClInclude Include="source\headers\util_funcs.h" />
     <ClInclude Include="source\input\keyboard.h" />
     <ClInclude Include="source\input\mouse.h" />
-    <ClInclude Include="source\visuals\interface_drawable.h" />
     <ClInclude Include="source\visuals\overlay.h" />
     <ClInclude Include="source\visuals\presenter.h" />
+    <ClInclude Include="source\visuals\render\test.h" />
     <ClInclude Include="source\visuals\scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,8 +1,8 @@
 
-#include "basic_entity.h"
+#include "entity_basic.h"
 
 BasicEntity::BasicEntity()
-	:position(), world_matrix(), world_4x4()
+	:position(), position_vector(), world_matrix(), world_4x4()
 {
 	SetPosition(0.0f, 0.0f, 0.0f);
 }
@@ -19,7 +19,7 @@ void BasicEntity::Update()
 {
 }
 
-const DirectX::XMVECTOR& BasicEntity::GetPosition() const
+const DirectX::XMVECTOR& BasicEntity::Position() const
 {
 	return position_vector;
 }
