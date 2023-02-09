@@ -176,6 +176,9 @@
     <ClCompile Include="source\external\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="source\input\keyboard.cpp" />
     <ClCompile Include="source\input\mouse.cpp" />
+    <ClCompile Include="source\visuals\elements\interface_shader.cpp" />
+    <ClCompile Include="source\visuals\elements\pixel_shader.cpp" />
+    <ClCompile Include="source\visuals\elements\vertex_shader.cpp" />
     <ClCompile Include="source\visuals\overlay.cpp" />
     <ClCompile Include="source\visuals\presenter.cpp" />
     <ClCompile Include="source\visuals\render\test.cpp" />
@@ -209,6 +212,9 @@
     <ClInclude Include="source\headers\util_funcs.h" />
     <ClInclude Include="source\input\keyboard.h" />
     <ClInclude Include="source\input\mouse.h" />
+    <ClInclude Include="source\visuals\elements\interface_shader.h" />
+    <ClInclude Include="source\visuals\elements\pixel_shader.h" />
+    <ClInclude Include="source\visuals\elements\vertex_shader.h" />
     <ClInclude Include="source\visuals\overlay.h" />
     <ClInclude Include="source\visuals\presenter.h" />
     <ClInclude Include="source\visuals\render\test.h" />
@@ -227,6 +233,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Global TODO checklist.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

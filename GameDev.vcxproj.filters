@@ -32,6 +32,9 @@
     <Filter Include="source\visuals\shaders">
       <UniqueIdentifier>{a83aea85-130b-415b-88bc-4c80ca131d35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\visuals\elements">
+      <UniqueIdentifier>{ee571f85-3d55-4f5b-b1d8-885b7fa59628}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\entry.cpp">
@@ -108,6 +111,15 @@
     </ClCompile>
     <ClCompile Include="source\visuals\render\test.cpp">
       <Filter>source\visuals\render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\elements\interface_shader.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\elements\vertex_shader.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\elements\pixel_shader.cpp">
+      <Filter>source\visuals\elements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +216,15 @@
     <ClInclude Include="source\visuals\render\test.h">
       <Filter>source\visuals\render</Filter>
     </ClInclude>
+    <ClInclude Include="source\visuals\elements\interface_shader.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\vertex_shader.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\pixel_shader.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="source\visuals\shaders\test_v.hlsl">
@@ -212,5 +233,8 @@
     <FxCompile Include="source\visuals\shaders\test_p.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Global TODO checklist.txt" />
   </ItemGroup>
 </Project>

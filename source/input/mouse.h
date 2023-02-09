@@ -1,13 +1,12 @@
 
 #pragma once
 
-#include <functional>
 #include <memory>
 
 #include "directxtk/Mouse.h"
-#include "platfrom_defs.h"
 
 #include "interface_service.h"
+#include "platfrom_defs.h"
 
 class Mouse : public IService
 {
@@ -16,12 +15,13 @@ public:
 	~Mouse();
 
 	void Update() override;
-	void RegisterEvent(std::function<void()> target);
 
+	DirectX::Mouse* GetMouse();
+	DirectX::Mouse::ButtonStateTracker* GetButtonTracker();
+	DirectX::Mouse::State& GetState();
+
+private:
 	std::unique_ptr<DirectX::Mouse> mouse;
 	std::unique_ptr<DirectX::Mouse::ButtonStateTracker> mouse_buttons;
 	DirectX::Mouse::State state;
-
-private:
-	void DispatchInputs();
 };

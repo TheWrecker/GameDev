@@ -20,13 +20,19 @@ void Keyboard::Update()
 {
 	state = keyboard->GetState();
 	keys->Update(state);
-	DispatchInputs();
 }
 
-void Keyboard::RegisterEvent(std::function<void()> target)
+DirectX::Keyboard* Keyboard::GetKeyboard()
 {
+	return keyboard.get();
 }
 
-void Keyboard::DispatchInputs()
+DirectX::Keyboard::KeyboardStateTracker* Keyboard::GetKeyTracker()
 {
+	return keys.get();
+}
+
+DirectX::Keyboard::State& Keyboard::GetState()
+{
+	return state;
 }

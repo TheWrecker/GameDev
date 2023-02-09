@@ -9,13 +9,14 @@ public:
 	TransformableEntity();
 	virtual ~TransformableEntity();
 
+	virtual void SetScale(float x, float y, float z);
+	virtual void SetRotation(float x, float y, float z);
+	void SetPosition(float x, float y, float z) override;
+
 	virtual const DirectX::XMMATRIX Rotation_Matrix() const;
 	virtual const DirectX::XMFLOAT3& Rotation() const;
-	virtual void SetRotation(float x, float y, float z);
 	virtual const DirectX::XMMATRIX Scale_Matrix() const;
 	virtual const DirectX::XMFLOAT3& Scale() const;
-	virtual void SetScale(float x, float y, float z);
-	void SetPosition(float x, float y, float z) override;
 
 protected:
 	void UpdateWorldMatrix() override;

@@ -38,18 +38,22 @@ void BasicCamera::SetProperties(float fieldOfView, float aspectRatio, float near
 
 void BasicCamera::SetRotation(float x, float y, float z)
 {
-	//auto _matrix = DirectX::XMMatrixRotationRollPitchYaw(x, y, z);
-	//direction_vector = DirectX::XMVector3TransformNormal(direction_vector, _matrix);
-	//direction_vector = DirectX::XMVector2Normalize(direction_vector);
-	//up_vector = DirectX::XMVector3TransformNormal(up_vector, _matrix);
-	//up_vector = DirectX::XMVector2Normalize(up_vector);
-	//right_vector = DirectX::XMVector3TransformNormal(right_vector, _matrix);
-	//right_vector = DirectX::XMVector2Normalize(right_vector);
-	///*right_vector = DirectX::XMVector3Cross(direction_vector, up_vector);
-	//up_vector = DirectX::XMVector3Cross(right_vector, direction_vector);*/
+	auto _matrix = DirectX::XMMatrixRotationRollPitchYaw(x, y, z);
+	auto _new_direction = DirectX::XMVector3TransformNormal(Direction_Vector(), _matrix);
+	_new_direction = DirectX::XMVector3Normalize(_new_direction);
+	auto _new_up = DirectX::XMVector3TransformNormal(Up_Vector(), _matrix);
+	_new_up = DirectX::XMVector3Normalize(_new_up);
+	auto _new_right = DirectX::XMVector3TransformNormal(Right_Vector(), _matrix);
+	_new_right = DirectX::XMVector3Normalize(_new_right);
+	/*right_vector = DirectX::XMVector3Cross(direction_vector, up_vector);
+	up_vector = DirectX::XMVector3Cross(right_vector, direction_vector);*/
 
-	//UpdateOrientationFloats();
-	//TransformableEntity::SetRotation(direction.x, direction.y, direction.z);
+	DirectX::XMStoreFloat3(&direction, _new_direction);
+	DirectX::XMStoreFloat3(&up, _new_up);
+	DirectX::XMStoreFloat3(&right, _new_right);
+
+	UpdateViewMatrix();
+	TransformableEntity::SetRotation(direction.x, direction.y, direction.z);
 }
 
 void BasicCamera::Rotate(DirectX::CXMMATRIX matrix)
@@ -68,7 +72,7 @@ void BasicCamera::Rotate(DirectX::CXMMATRIX matrix)
 	DirectX::XMStoreFloat3(&right, _new_right);
 
 	UpdateViewMatrix();
-	//TransformableEntity::SetRotation(direction.x, direction.y, direction.z);
+	TransformableEntity::SetRotation(direction.x, direction.y, direction.z);
 }
 
 const DirectX::XMVECTOR BasicCamera::Direction_Vector() const

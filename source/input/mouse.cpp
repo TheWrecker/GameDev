@@ -21,13 +21,19 @@ void Mouse::Update()
 {
 	state = mouse->GetState();
 	mouse_buttons->Update(state);
-	DispatchInputs();
 }
 
-void Mouse::RegisterEvent(std::function<void()> target)
+DirectX::Mouse* Mouse::GetMouse()
 {
+	return mouse.get();
 }
 
-void Mouse::DispatchInputs()
+DirectX::Mouse::ButtonStateTracker* Mouse::GetButtonTracker()
 {
+	return mouse_buttons.get();
+}
+
+DirectX::Mouse::State& Mouse::GetState()
+{
+	return state;
 }

@@ -11,9 +11,10 @@ public:
 
 	virtual void Render();
 	virtual void Update();
+	virtual void SetPosition(float x, float y, float z);
+
 	virtual const DirectX::XMVECTOR Position_Vector() const;
 	virtual const DirectX::XMFLOAT3& Position() const;
-	virtual void SetPosition(float x, float y, float z);
 	virtual const DirectX::XMMATRIX World_Matrix() const;
 	const DirectX::XMMATRIX Translation_Matrix() const;
 

@@ -4,6 +4,7 @@
 #include "camera_basic.h"
 
 class Supervisor;
+class SystemTicker;
 class Mouse;
 class Keyboard;
 
@@ -18,6 +19,7 @@ public:
 private:
 	Mouse* mouse;
 	Keyboard* keyboard;
+	SystemTicker* ticker;
 
 	float
 		mouse_sensitivity,
