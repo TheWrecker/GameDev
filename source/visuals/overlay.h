@@ -6,10 +6,13 @@
 #include "interface_drawable.h"
 #include"platfrom_defs.h"
 
+class Presenter;
+class SystemTicker;
+
 class Overlay : public IDrawable
 {
 public:
-	Overlay(ID3D11Device* device, ID3D11DeviceContext* context, SysWindowHandle windowHandle);
+	Overlay(Presenter* parent, ID3D11Device* device, ID3D11DeviceContext* context);
 	~Overlay();
 
 	void Show();
@@ -18,5 +21,7 @@ public:
 	void Update() override;
 
 private:
+	Presenter* presenter;
+	SystemTicker* ticker;
 	bool show;
 };

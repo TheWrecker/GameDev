@@ -2,22 +2,25 @@
 #include <cassert>
 
 #include "../external/ImGui/imgui.h"
-
 #ifdef _WINDOWS
 #include "../external/ImGui/imgui_impl_win32.h"
 #endif // _WINDOWS
-
 #include "../external/ImGui/imgui_impl_dx11.h"
+
+#include "../core/platform.h"
+#include "../core/sys_ticker.h"
+#include "presenter.h"
+
 #include "overlay.h"
 
-Overlay::Overlay(ID3D11Device* device, ID3D11DeviceContext* context, SysWindowHandle windowHandle)
-	:show(false)
+Overlay::Overlay(Presenter* parent, ID3D11Device* device, ID3D11DeviceContext* context)
+	:presenter(parent), show(false)
 {
 #ifdef _WINDOWS
-	assert(ImGui_ImplWin32_Init(windowHandle));
+	assert(ImGui_ImplWin32_Init(parent->QueryService<Platform*>("platform")->GetWindowHandle()));
 #endif // _WINDOWS
 	assert(ImGui_ImplDX11_Init(device, context));
-
+	ticker = parent->QueryService<SystemTicker*>("ticker");
 }
 
 Overlay::~Overlay()
@@ -120,6 +123,10 @@ void Overlay::Draw()
 			ImGui::Text("Ticks Per Second: %u", Profiler::ips);
 		}
 		*/
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Performance");
+		ImGui::Text("Last Tick Duration: %fms", ticker->GetLastTickDuration() * 1000);
+		ImGui::Text("Ticks Per Second: %u", ticker->GetTickPerSecond());
 
 		ImGui::Separator();
 

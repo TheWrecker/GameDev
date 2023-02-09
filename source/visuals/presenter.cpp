@@ -23,7 +23,6 @@ Presenter::Presenter(Supervisor* parent)
 	//create directx device, context, and interfaces
 	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
 	D3D_FEATURE_LEVEL selectedFeatureLevel;
-	int i = 1;
 	DXAssert(D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags,	featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION,
 		&device, &selectedFeatureLevel, &context));
 	DXAssert(device->QueryInterface(__uuidof(IDXGIDevice), 	reinterpret_cast<void**>(&graphics_interface)));
@@ -40,7 +39,7 @@ Presenter::Presenter(Supervisor* parent)
 	assert(SetRenderMode(RenderMode::SINGLE_PASS_WITH_STENCIL)); //TODO: change to multipass, currently redundant
 
 	scene = std::make_unique<Scene>(this);
-	overlay = std::make_unique<Overlay>(device, context, supervisor->Services()->QueryService<Platform*>("platform")->GetWindowHandle());
+	overlay = std::make_unique<Overlay>(this, device, context);
 
 	scene->SwitchMode(SceneMode::DEVELOPEMENT);
 	overlay->Show();

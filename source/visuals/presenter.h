@@ -8,8 +8,8 @@
 #include "interface_service.h"
 #include "overlay.h"
 #include "scene.h"
-
-class Supervisor;
+#include "../core/service_manager.h"
+#include "../core/supervisor.h"
 
 enum class MultiSamplingType
 {
@@ -46,6 +46,9 @@ public:
 	Supervisor* GetSupervisor();
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
+
+	template <typename type>
+	type QueryService(const std::string& name);
 	
 private:
 	bool CreateSwapChain(bool isResize);
@@ -92,3 +95,9 @@ private:
 	MultiSamplingType multisampling_type;
 	UINT multisampling_count, multisampling_quality;
 };
+
+template<typename type>
+inline type Presenter::QueryService(const std::string& name)
+{
+	return dynamic_cast<type>(supervisor->Services()->GetService(name));
+}

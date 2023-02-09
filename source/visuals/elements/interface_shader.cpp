@@ -1,13 +1,17 @@
 
 #include <cassert>
+#include <d3dcompiler.h>
 
 #include "util_funcs.h"
+#include "../presenter.h"
 
 #include "interface_shader.h"
 
-IShader::IShader(ID3D11Device* device, ID3D11DeviceContext* context)
-	:device(device), context(context), blob(), byte_code(nullptr), byte_code_size(0), type(ShaderType::UNDEFINED)
+IShader::IShader(Presenter* presenter)
+	:blob(), byte_code(nullptr), byte_code_size(0), type(ShaderType::UNDEFINED)
 {
+	device = presenter->GetDevice();
+	context = presenter->GetContext();
 }
 
 IShader::~IShader()

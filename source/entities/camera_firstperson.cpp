@@ -4,17 +4,16 @@
 #include "../input/keyboard.h"
 #include "../input/mouse.h"
 #include "../core/sys_ticker.h"
-#include "../core/service_manager.h"
-#include "../core/supervisor.h"
+#include "../visuals/presenter.h"
 
 #include "camera_firstperson.h"
 
-FirstPersonCamera::FirstPersonCamera(Supervisor* supervisor)
+FirstPersonCamera::FirstPersonCamera(Presenter* presenter)
 	:mouse_sensitivity(100.0f), move_speed(2.0f), rotation_speed(DirectX::XMConvertToRadians(2.0f))
 {
-	mouse = supervisor->Services()->QueryService<Mouse*>("mouse");
-	keyboard = supervisor->Services()->QueryService<Keyboard*>("keyboard");
-	ticker = supervisor->Services()->QueryService<SystemTicker*>("ticker");
+	mouse = presenter->QueryService<Mouse*>("mouse");
+	keyboard = presenter->QueryService<Keyboard*>("keyboard");
+	ticker = presenter->QueryService<SystemTicker*>("ticker");
 }
 
 FirstPersonCamera::~FirstPersonCamera()

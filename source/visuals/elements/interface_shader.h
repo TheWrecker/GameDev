@@ -1,9 +1,10 @@
 
 #pragma once
 
-#include <d3d11.h>
-#include <d3dcompiler.h>
 #include <string>
+#include <d3d11.h>
+
+class Presenter;
 
 enum class ShaderType
 {
@@ -15,7 +16,7 @@ enum class ShaderType
 class IShader
 {
 public:
-	IShader(ID3D11Device* device, ID3D11DeviceContext* context);
+	IShader(Presenter* presenter);
 	virtual ~IShader();
 
 	virtual bool LoadShader(ShaderType type, const std::wstring& file);

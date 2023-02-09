@@ -11,10 +11,12 @@ public:
 	~SystemTicker();
 
 	void Update() override;
+
 	float GetLastTickDuration();
+	float GetAverageTickDuration();
+	std::size_t GetTickPerSecond();
 
 private:
-
 	SysTickValue
 		start_tick,
 		previous_tick,
@@ -22,6 +24,12 @@ private:
 
 	double frequency;
 
-	float last_tick_duration;
+	float 
+		last_tick_duration,
+		current_tick_sum,
+		average_tick_duration;
 
+	std::size_t
+		tick_per_second,
+		current_tick_count;
 };

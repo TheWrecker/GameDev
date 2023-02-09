@@ -22,6 +22,9 @@ public:
 	ServiceContainer& Services();
 
 private:
+	friend class Supervisor;
+	friend class Presenter;
+
 	IService* GetService(const std::string& name);
 
 	ServiceContainer container;

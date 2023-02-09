@@ -8,7 +8,7 @@
 class PixelShader : public IShader
 {
 public:
-	PixelShader(ID3D11Device* device, ID3D11DeviceContext* context);
+	PixelShader(Presenter* presenter);
 	~PixelShader();
 
 	bool LoadShader(ShaderType type,const std::wstring& file) override;

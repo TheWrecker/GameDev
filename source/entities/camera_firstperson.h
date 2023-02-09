@@ -3,15 +3,15 @@
 
 #include "camera_basic.h"
 
-class Supervisor;
 class SystemTicker;
 class Mouse;
 class Keyboard;
+class Presenter;
 
 class FirstPersonCamera : public BasicCamera
 {
 public:
-	FirstPersonCamera(Supervisor* supervisor);
+	FirstPersonCamera(Presenter* presenter);
 	~FirstPersonCamera();
 
 	void Update() override;

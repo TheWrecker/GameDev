@@ -3,8 +3,8 @@
 
 #include "pixel_shader.h"
 
-PixelShader::PixelShader(ID3D11Device* device, ID3D11DeviceContext* context)
-    :IShader(device, context), shader()
+PixelShader::PixelShader(Presenter* presenter)
+    :IShader(presenter), shader()
 {
 }
 

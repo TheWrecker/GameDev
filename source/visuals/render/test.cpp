@@ -82,6 +82,13 @@ TestRender::TestRender(ID3D11Device* device, ID3D11DeviceContext* context, Scene
 
 TestRender::~TestRender()
 {
+	DXRelease(vertex_buffer);
+	DXRelease(index_buffer);
+	DXRelease(input_layout);
+	DXRelease(vertex_shader);
+	DXRelease(pixel_shader);
+	DXRelease(per_frame_vertex_buffer);
+	DXRelease(per_object_buffer);
 }
 
 void TestRender::Draw()

@@ -3,8 +3,8 @@
 
 #include "vertex_shader.h"
 
-VertexShader::VertexShader(ID3D11Device* device, ID3D11DeviceContext* context)
-    :IShader(device, context), shader()
+VertexShader::VertexShader(Presenter* presenter)
+    :IShader(presenter), shader()
 {
 }
 

@@ -8,7 +8,7 @@
 class VertexShader : public IShader
 {
 public:
-	VertexShader(ID3D11Device* device, ID3D11DeviceContext* context);
+	VertexShader(Presenter* presenter);
 	~VertexShader();
 
 	bool LoadShader(ShaderType type,const std::wstring& file) override;
