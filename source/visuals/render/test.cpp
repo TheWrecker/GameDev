@@ -86,7 +86,7 @@ TestRender::~TestRender()
 
 void TestRender::Draw()
 {
-	DirectX::XMMATRIX viewProjectionMatrixTransposed =	DirectX::XMMatrixTranspose(camera->ViewProjectionMatrix());
+	DirectX::XMMATRIX viewProjectionMatrixTransposed =	DirectX::XMMatrixTranspose(camera->View_Projection_Matrix());
 	DirectX::XMMATRIX worldMatrixTransposed = DirectX::XMMatrixTranspose(test_object->World_Matrix());
 
 	ZeroMemory(&per_frame_vertex_subresource, sizeof(per_frame_vertex_subresource));

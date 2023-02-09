@@ -20,6 +20,7 @@ public:
 
 	std::unique_ptr<DirectX::Keyboard> keyboard;
 	std::unique_ptr<DirectX::Keyboard::KeyboardStateTracker> keys;
+	DirectX::Keyboard::State state;
 
 private:
 	void DispatchInputs();

@@ -10,6 +10,7 @@ Scene::Scene(Presenter* parent)
 	:presenter(parent), camera_type(CameraType::FIRST_PERSON)
 {
 	active_camera = std::make_unique<FirstPersonCamera>(presenter->GetSupervisor());
+	active_camera->SetPosition(0.0f, 0.0f, 2.0f);
 	test_render = std::make_unique<TestRender>(parent->GetDevice(), parent->GetContext(), this);
 }
 

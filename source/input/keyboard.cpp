@@ -9,6 +9,7 @@ Keyboard::Keyboard()
 {
 	keyboard = std::make_unique<DirectX::Keyboard>();
 	keys = std::make_unique<DirectX::Keyboard::KeyboardStateTracker>();
+	state = keyboard->GetState();
 }
 
 Keyboard::~Keyboard()
@@ -17,7 +18,7 @@ Keyboard::~Keyboard()
 
 void Keyboard::Update()
 {
-	auto state = keyboard->GetState();
+	state = keyboard->GetState();
 	keys->Update(state);
 	DispatchInputs();
 }

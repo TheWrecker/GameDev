@@ -26,9 +26,8 @@ VS_OUTPUT main(VS_INPUT vertex)
 {
     VS_OUTPUT output;
     
-    //output.position = mul(vertex.position, world_matrix);
-    output.position = mul(vertex.position, view_projection_matrix);
-    output.position.w = 1.0f;
+    output.position = mul(vertex.position, world_matrix);
+    output.position = mul(output.position, view_projection_matrix);
     output.color = vertex.color;
     
     return output;

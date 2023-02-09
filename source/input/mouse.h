@@ -18,9 +18,10 @@ public:
 	void Update() override;
 	void RegisterEvent(std::function<void()> target);
 
-private:
-	void DispatchInputs();
-
 	std::unique_ptr<DirectX::Mouse> mouse;
 	std::unique_ptr<DirectX::Mouse::ButtonStateTracker> mouse_buttons;
+	DirectX::Mouse::State state;
+
+private:
+	void DispatchInputs();
 };

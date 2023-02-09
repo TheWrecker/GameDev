@@ -16,17 +16,16 @@ public:
 	void SetRotation(float x, float y, float z) override;
 	void Rotate(DirectX::CXMMATRIX matrix);
 
-	const DirectX::XMVECTOR& Direction() const;
-	const DirectX::XMVECTOR& Right() const;
-	const DirectX::XMVECTOR& Up() const;
-	const DirectX::XMMATRIX& ViewMatrix() const;
-	const DirectX::XMMATRIX& ProjectionMatrix() const;
-	const DirectX::XMMATRIX& ViewProjectionMatrix() const;
+	const DirectX::XMVECTOR Direction_Vector() const;
+	const DirectX::XMVECTOR Right_Vector() const;
+	const DirectX::XMVECTOR Up_Vector() const;
+	const DirectX::XMMATRIX View_Matrix() const;
+	const DirectX::XMMATRIX Projection_Matrix() const;
+	const DirectX::XMMATRIX View_Projection_Matrix() const;
 
 protected:
 	friend class Scene;
 
-	void UpdateOrientationFloats();
 	virtual void UpdateViewProjectionMatrix();
 
 	float
@@ -40,17 +39,7 @@ protected:
 		up,
 		right;
 
-	DirectX::XMVECTOR
-		direction_vector,
-		up_vector,
-		right_vector;
-
 	DirectX::XMFLOAT4X4
-		view_4x4,
-		projection_4x4,
-		view_projection_4x4;
-
-	DirectX::XMMATRIX
 		view_matrix,
 		projection_matrix,
 		view_projection_matrix;

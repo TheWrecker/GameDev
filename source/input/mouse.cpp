@@ -10,6 +10,7 @@ Mouse::Mouse(SysWindowHandle handle)
 	mouse = std::make_unique<DirectX::Mouse>();
 	mouse->SetWindow(handle);
 	mouse_buttons = std::make_unique<DirectX::Mouse::ButtonStateTracker>();
+	state = mouse->GetState();
 }
 
 Mouse::~Mouse()
@@ -18,7 +19,7 @@ Mouse::~Mouse()
 
 void Mouse::Update()
 {
-	auto state = mouse->GetState();
+	state = mouse->GetState();
 	mouse_buttons->Update(state);
 	DispatchInputs();
 }
