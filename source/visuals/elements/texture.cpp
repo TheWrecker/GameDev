@@ -53,5 +53,5 @@ const D3D11_TEXTURE2D_DESC& Texture::GetDesc() const
 
 const std::string& Texture::GetName() const
 {
-	// TODO: insert return statement here
+	return name;
 }

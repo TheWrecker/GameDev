@@ -124,6 +124,15 @@
     <ClCompile Include="source\visuals\elements\texture.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
+    <ClCompile Include="source\visuals\elements\model.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\elements\mesh.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\elements\material.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\headers\platfrom_defs.h">
@@ -229,6 +238,15 @@
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\elements\texture.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\model.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\mesh.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\material.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
   </ItemGroup>

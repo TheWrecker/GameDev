@@ -1,12 +1,11 @@
 
-#include <cassert>
-
 #include "../external/ImGui/imgui.h"
 #ifdef _WINDOWS
 #include "../external/ImGui/imgui_impl_win32.h"
 #endif // _WINDOWS
 #include "../external/ImGui/imgui_impl_dx11.h"
 
+#include "util_funcs.h"
 #include "../core/platform.h"
 #include "../core/sys_ticker.h"
 #include "presenter.h"
@@ -17,9 +16,9 @@ Overlay::Overlay(Presenter* parent, ID3D11Device* device, ID3D11DeviceContext* c
 	:presenter(parent), show(false)
 {
 #ifdef _WINDOWS
-	assert(ImGui_ImplWin32_Init(parent->QueryService<Platform*>("platform")->GetWindowHandle()));
+	RetAssert(ImGui_ImplWin32_Init(parent->QueryService<Platform*>("platform")->GetWindowHandle()));
 #endif // _WINDOWS
-	assert(ImGui_ImplDX11_Init(device, context));
+	RetAssert(ImGui_ImplDX11_Init(device, context));
 	ticker = parent->QueryService<SystemTicker*>("ticker");
 }
 

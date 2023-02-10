@@ -120,7 +120,6 @@ WindowsInitializer::WindowsInitializer(HINSTANCE instance)
 	//TODO: less magic values
 	auto flags = WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU;
 	window_handle = CreateWindow(window_class.lpszClassName, window_class.lpszClassName, flags, 100, 100, 800, 600, nullptr, nullptr, instance_handle, nullptr);
-
 	assert(window_handle);
 
 	ShowWindow(window_handle, 1);

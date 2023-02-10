@@ -34,9 +34,9 @@ Presenter::Presenter(Supervisor* parent)
 	DXAssert(graphics_factory->MakeWindowAssociation(supervisor->Services()->QueryService<Platform*>("platform")->GetWindowHandle(), DXGI_MWA_NO_ALT_ENTER));
 #endif
 
-	assert(SetMultiSampling(MultiSamplingType::NONE, 1, 0));
-	assert(SetRasterizerState(CullMode::CULL_NONE, false, false));
-	assert(SetRenderMode(RenderMode::SINGLE_PASS_WITH_STENCIL)); //TODO: change to multipass, currently redundant
+	RetAssert(SetMultiSampling(MultiSamplingType::NONE, 1, 0));
+	RetAssert(SetRasterizerState(CullMode::CULL_NONE, false, false));
+	RetAssert(SetRenderMode(RenderMode::SINGLE_PASS_WITH_STENCIL)); //TODO: change to multipass, currently redundant
 
 	scene = std::make_unique<Scene>(this);
 	overlay = std::make_unique<Overlay>(this, device, context);
