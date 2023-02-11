@@ -10,29 +10,37 @@
 #include "interface_drawable.h"
 #include "../entities/entity_basic.h"
 
+class Texture;
+class Model;
+class VertexShader;
+class PixelShader;
 class BasicCamera;
 class Scene;
+class Presenter;
 
 class TestRender : public IDrawable
 {
 public:
-	TestRender(ID3D11Device* device, ID3D11DeviceContext* context, Scene* scene);
+	TestRender(Presenter* presenter, Scene* scene);
 	~TestRender();
 
 	void Draw() override;
 
 private:
 	std::unique_ptr<BasicEntity> test_object;
+	std::unique_ptr<Texture> texture;
+	std::unique_ptr<Model> model;
 
 	ID3D11Device* device;
 	ID3D11DeviceContext* context;
 	Scene* scene;
 	BasicCamera* camera;
+	Presenter* presenter;
 
 	struct TestVertex
 	{
 		DirectX::XMFLOAT4 position;
-		DirectX::XMFLOAT4 color;
+		DirectX::XMFLOAT2 uv;
 	};
 
 	struct PerFrameVertexBuffer
@@ -74,7 +82,7 @@ private:
 	D3D11_MAPPED_SUBRESOURCE per_object_subresource;
 	ID3D11Buffer* per_object_buffer;
 
-	ID3D11VertexShader* vertex_shader;
-	ID3D11PixelShader* pixel_shader;
+	std::unique_ptr<VertexShader> vertex_shader;
+	std::unique_ptr<PixelShader> pixel_shader;
 
 };

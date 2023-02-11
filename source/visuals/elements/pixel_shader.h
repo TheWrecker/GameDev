@@ -5,13 +5,14 @@
 
 #include "interface_shader.h"
 
+class Presenter;
+
 class PixelShader : public IShader
 {
 public:
-	PixelShader(Presenter* presenter);
+	PixelShader(Presenter* presenter, const std::wstring& file);
 	~PixelShader();
 
-	bool LoadShader(ShaderType type,const std::wstring& file) override;
 	void Apply() override;
 
 private:

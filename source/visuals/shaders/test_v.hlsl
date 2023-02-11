@@ -12,13 +12,13 @@ cbuffer PerObject : register(b1)
 struct VS_INPUT
 {
     float4 position : POSITION;
-    float4 color : COLOR;
+    float2 uv : TEXCOORDS;
 };
 
 struct VS_OUTPUT
 {
     float4 position : SV_Position;
-    float4 color : COLOR;
+    float2 uv : TEXCOORDS;
 };
 
 
@@ -28,7 +28,7 @@ VS_OUTPUT main(VS_INPUT vertex)
     
     output.position = mul(vertex.position, world_matrix);
     output.position = mul(output.position, view_projection_matrix);
-    output.color = vertex.color;
+    output.uv = vertex.uv;
     
     return output;
 }

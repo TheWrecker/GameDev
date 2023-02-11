@@ -13,7 +13,7 @@ public:
 	~Texture();
 
 	const ID3D11Texture2D* GetTexture() const;
-	const ID3D11ShaderResourceView* GetShaderView() const;
+	ID3D11ShaderResourceView* GetShaderView();
 	const D3D11_TEXTURE2D_DESC& GetDesc() const;
 	const std::string& GetName() const;
 

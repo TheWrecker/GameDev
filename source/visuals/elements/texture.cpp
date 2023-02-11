@@ -41,7 +41,7 @@ const ID3D11Texture2D* Texture::GetTexture() const
 	return texture;
 }
 
-const ID3D11ShaderResourceView* Texture::GetShaderView() const
+ID3D11ShaderResourceView* Texture::GetShaderView()
 {
 	return shader_view;
 }
