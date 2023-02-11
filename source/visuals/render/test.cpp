@@ -4,9 +4,11 @@
 #include "../elements/mesh.h"
 #include "../elements/model.h"
 #include "../elements/texture.h"
-#include "../elements/pixel_shader.h"
-#include "../elements/vertex_shader.h"
+#include "../elements/shader_pixel.h"
+#include "../elements/shader_vertex.h"
 #include "../entities/camera_basic.h"
+#include "../elements/input_layout.h"
+#include "../elements/buffer_index.h"
 #include "../scene.h"
 #include "../presenter.h"
 #include "util_funcs.h"
@@ -19,17 +21,12 @@ TestRender::TestRender(Presenter* presenter, Scene* scene)
 	device = presenter->GetDevice();
 	context = presenter->GetContext();
 	test_object = std::make_unique<BasicEntity>();
-	vertex_stride = sizeof(TestVertex);
-	vertex_offset = 0;
-	input_layout_desc.push_back(
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-	input_layout_desc.push_back(
-		{ "TEXCOORDS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT , D3D11_INPUT_PER_VERTEX_DATA, 0 });
-
-
 	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/test_v.hlsl");
 	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/test_p.hlsl");
-	DXAssert(device->CreateInputLayout(&input_layout_desc.at(0), input_layout_desc.size(), vertex_shader->GetByteCode(), vertex_shader->GetSize(), &input_layout));
+	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
+	input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32A32_FLOAT)
+		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT)
+		.Build();
 
 	model = std::make_unique<Model>(L"assets/models/sphere.obj", true);
 	texture = std::make_unique<Texture>(presenter, L"assets/textures/earth.dds");
@@ -50,67 +47,37 @@ TestRender::TestRender(Presenter* presenter, Scene* scene)
 	DXAssert(device->CreateBuffer(&per_object_buffer_desc, 0, &per_object_buffer));
 
 	std::size_t _vertexCount = model->meshes.at(0)->vertices.size();
-	vertices.resize(_vertexCount);
-
-	size_t i = 0;
+	vertex_buffer = std::make_unique<VertexBuffer<TestVertex>>(device, context, _vertexCount);
+	std::size_t i = 0;
 	//TODO: setup dynamic model lookup
-	for (auto& vertex : model->meshes.at(0)->vertices)
+	TestVertex _vertex = {};
+	for (i;i<_vertexCount; i++)
 	{
-		vertices[i].position = { vertex.x, vertex.y, vertex.z, 1.0f };
-		i++;
+		auto& vertex = model->meshes.at(0)->vertices[i];
+		_vertex.position = { vertex.x, vertex.y, vertex.z, 1.0f };
+		auto& texCoords = model->meshes[0]->texture_coordinates.at(0)->at(i);
+		_vertex.uv = { texCoords.x, texCoords.y };
+		vertex_buffer->AddVertex(_vertex);
 	}
-
-	i = 0;
-	for (auto& textureCoord : *model->meshes[0]->texture_coordinates.at(0))
-	{
-		vertices[i].uv = { textureCoord.x, textureCoord.y };
-		i++;
-	}
-
-	i = 0;
+	vertex_buffer->Build();
 	//for (auto& normal : model->meshes[0]->normals)
 	//{
 	//	vertices[i].normal = normal;
 	//	i++;
 	//}
 
-	std::size_t indexCount = model->meshes.at(0)->indices.size();
-	indices.resize(indexCount);
-
-	i = 0;
+	std::size_t _indexCount = model->meshes.at(0)->indices.size();
+	index_buffer = std::make_unique<IndexBuffer>(device, context, _indexCount);
 	for (auto& index : model->meshes.at(0)->indices)
 	{
-		indices[i] = index;
-		i++;
-
+		index_buffer->AddIndex(index);
 	}
-
-	ZeroMemory(&vertex_buffer_desc, sizeof(vertex_buffer_desc));
-	vertex_buffer_desc.ByteWidth = sizeof(TestVertex) * vertices.size();
-	vertex_buffer_desc.Usage = D3D11_USAGE_IMMUTABLE;
-	vertex_buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-	ZeroMemory(&vertex_subresource_data, sizeof(vertex_subresource_data));
-	vertex_subresource_data.pSysMem = &vertices.at(0);
-	DXAssert(device->CreateBuffer(&vertex_buffer_desc, &vertex_subresource_data, &vertex_buffer));
-
-	ZeroMemory(&index_buffer_desc, sizeof(index_buffer_desc));
-	index_buffer_desc.ByteWidth = sizeof(UINT) * indices.size();
-	index_buffer_desc.Usage = D3D11_USAGE_IMMUTABLE;
-	index_buffer_desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-
-	ZeroMemory(&index_subresource_data, sizeof(index_subresource_data));
-	index_subresource_data.pSysMem = &indices.at(0);
-	DXAssert(device->CreateBuffer(&index_buffer_desc, &index_subresource_data, &index_buffer));
-
+	index_buffer->Build();
 	camera = scene->GetActiveCamera();
 }
 
 TestRender::~TestRender()
 {
-	DXRelease(vertex_buffer);
-	DXRelease(index_buffer);
-	DXRelease(input_layout);
 	DXRelease(per_frame_vertex_buffer);
 	DXRelease(per_object_buffer);
 }
@@ -130,16 +97,16 @@ void TestRender::Draw()
 	reinterpret_cast<PerObjectBuffer*>(per_object_subresource.pData)->world = worldMatrixTransposed;
 	context->Unmap(per_object_buffer, 0);
 
-	context->IASetVertexBuffers(0, 1, &vertex_buffer, &vertex_stride, &vertex_offset);
-	context->IASetIndexBuffer(index_buffer, DXGI_FORMAT_R32_UINT, 0);
+	vertex_buffer->Bind();
+	index_buffer->Bind();
 	context->VSSetConstantBuffers(0, 1, &per_frame_vertex_buffer);
 	context->VSSetConstantBuffers(1, 1, &per_object_buffer);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->IASetInputLayout(input_layout);
+	input_layout->Bind();
 	vertex_shader->Apply();
 	pixel_shader->Apply();
 	auto _shaderView = texture->GetShaderView();
 	context->PSSetShaderResources(0, 1, &_shaderView);
 
-	context->DrawIndexed(indices.size(), 0, 0);
+	context->DrawIndexed(index_buffer->GetIndexCount(), 0, 0);
 }

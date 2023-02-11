@@ -3,7 +3,7 @@
 
 #include <d3d11.h>
 
-#include "interface_shader.h"
+#include "shader_interface.h"
 
 class Presenter;
 

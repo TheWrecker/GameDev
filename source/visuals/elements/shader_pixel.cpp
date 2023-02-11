@@ -4,10 +4,10 @@
 #include "util_funcs.h"
 #include "../presenter.h"
 
-#include "vertex_shader.h"
+#include "shader_pixel.h"
 
-VertexShader::VertexShader(Presenter* presenter, const std::wstring& file)
-    :shader()
+PixelShader::PixelShader(Presenter* presenter, const std::wstring& file)
+	:shader()
 {
 	device = presenter->GetDevice();
 	context = presenter->GetContext();
@@ -20,20 +20,20 @@ VertexShader::VertexShader(Presenter* presenter, const std::wstring& file)
 	_shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
-	DXAssert(D3DCompileFromFile(file.c_str(), nullptr, nullptr, "main", "vs_5_0", _shaderFlags, 0, &blob, &_errorMessages));
+	DXAssert(D3DCompileFromFile(file.c_str(), nullptr, nullptr, "main", "ps_5_0", _shaderFlags, 0, &blob, &_errorMessages));
 	byte_code = blob->GetBufferPointer();
 	byte_code_size = blob->GetBufferSize();
-	DXAssert(device->CreateVertexShader(byte_code, byte_code_size, 0, &shader));
+	DXAssert(device->CreatePixelShader(byte_code, byte_code_size, 0, &shader));
 	DXRelease(_errorMessages);
 }
 
-VertexShader::~VertexShader()
+PixelShader::~PixelShader()
 {
-    DXRelease(shader);
+	DXRelease(shader);
 }
 
-void VertexShader::Apply()
+void PixelShader::Apply()
 {
-    assert(shader);
-    context->VSSetShader(shader, 0, 0);
+	assert(shader);
+	context->PSSetShader(shader, 0, 0);
 }

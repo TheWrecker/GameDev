@@ -112,13 +112,13 @@
     <ClCompile Include="source\visuals\render\test.cpp">
       <Filter>source\visuals\render</Filter>
     </ClCompile>
-    <ClCompile Include="source\visuals\elements\interface_shader.cpp">
+    <ClCompile Include="source\visuals\elements\shader_interface.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
-    <ClCompile Include="source\visuals\elements\vertex_shader.cpp">
+    <ClCompile Include="source\visuals\elements\shader_vertex.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
-    <ClCompile Include="source\visuals\elements\pixel_shader.cpp">
+    <ClCompile Include="source\visuals\elements\shader_pixel.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
     <ClCompile Include="source\visuals\elements\texture.cpp">
@@ -131,6 +131,12 @@
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
     <ClCompile Include="source\visuals\elements\material.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\elements\input_layout.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\elements\buffer_index.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
   </ItemGroup>
@@ -228,13 +234,13 @@
     <ClInclude Include="source\visuals\render\test.h">
       <Filter>source\visuals\render</Filter>
     </ClInclude>
-    <ClInclude Include="source\visuals\elements\interface_shader.h">
+    <ClInclude Include="source\visuals\elements\shader_interface.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
-    <ClInclude Include="source\visuals\elements\vertex_shader.h">
+    <ClInclude Include="source\visuals\elements\shader_vertex.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
-    <ClInclude Include="source\visuals\elements\pixel_shader.h">
+    <ClInclude Include="source\visuals\elements\shader_pixel.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\elements\texture.h">
@@ -247,6 +253,15 @@
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\elements\material.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\input_layout.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\buffer_vertex.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\buffer_index.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
   </ItemGroup>
