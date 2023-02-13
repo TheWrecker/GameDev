@@ -10,6 +10,7 @@
 #include "interface_drawable.h"
 #include "../entities/entity_basic.h"
 #include "../elements/buffer_vertex.h"
+#include "../elements/buffer_constant.h"
 
 class Texture;
 class Model;
@@ -53,22 +54,17 @@ private:
 	std::unique_ptr<InputLayout> input_layout;
 	std::unique_ptr<VertexBuffer<TestVertex>> vertex_buffer;
 	std::unique_ptr<IndexBuffer> index_buffer;
+	std::unique_ptr<ConstantBuffer<PerFrameVertexBuffer>> per_frame_vertex_buffer;
+	std::unique_ptr<ConstantBuffer<PerObjectBuffer>> per_object_buffer;
+	std::unique_ptr<VertexShader> vertex_shader;
+	std::unique_ptr<PixelShader> pixel_shader;
+
+	ID3D11SamplerState* samplerState;
+	D3D11_SAMPLER_DESC samplerStateDesc;
 
 	ID3D11Device* device;
 	ID3D11DeviceContext* context;
 	Scene* scene;
 	BasicCamera* camera;
 	Presenter* presenter;
-
-	D3D11_BUFFER_DESC per_frame_vertex_buffer_desc;
-	D3D11_MAPPED_SUBRESOURCE per_frame_vertex_subresource;
-	ID3D11Buffer* per_frame_vertex_buffer;
-
-	D3D11_BUFFER_DESC per_object_buffer_desc;
-	D3D11_MAPPED_SUBRESOURCE per_object_subresource;
-	ID3D11Buffer* per_object_buffer;
-
-	std::unique_ptr<VertexShader> vertex_shader;
-	std::unique_ptr<PixelShader> pixel_shader;
-
 };

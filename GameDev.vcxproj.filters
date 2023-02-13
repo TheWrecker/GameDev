@@ -264,6 +264,9 @@
     <ClInclude Include="source\visuals\elements\buffer_index.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
+    <ClInclude Include="source\visuals\elements\buffer_constant.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="source\visuals\shaders\test_v.hlsl">

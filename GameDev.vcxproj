@@ -212,6 +212,7 @@
     <ClInclude Include="source\headers\util_funcs.h" />
     <ClInclude Include="source\input\keyboard.h" />
     <ClInclude Include="source\input\mouse.h" />
+    <ClInclude Include="source\visuals\elements\buffer_constant.h" />
     <ClInclude Include="source\visuals\elements\buffer_index.h" />
     <ClInclude Include="source\visuals\elements\buffer_vertex.h" />
     <ClInclude Include="source\visuals\elements\input_layout.h" />

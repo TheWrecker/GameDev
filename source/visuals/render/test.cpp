@@ -32,19 +32,8 @@ TestRender::TestRender(Presenter* presenter, Scene* scene)
 	texture = std::make_unique<Texture>(presenter, L"assets/textures/earth.dds");
 
 	//setup constant buffers
-	ZeroMemory(&per_frame_vertex_buffer_desc, sizeof(per_frame_vertex_buffer_desc));
-	per_frame_vertex_buffer_desc.ByteWidth = sizeof(PerFrameVertexBuffer);
-	per_frame_vertex_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
-	per_frame_vertex_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	per_frame_vertex_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	DXAssert(device->CreateBuffer(&per_frame_vertex_buffer_desc, 0, &per_frame_vertex_buffer));
-
-	ZeroMemory(&per_object_buffer_desc, sizeof(per_object_buffer_desc));
-	per_object_buffer_desc.ByteWidth = sizeof(PerObjectBuffer);
-	per_object_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
-	per_object_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	per_object_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	DXAssert(device->CreateBuffer(&per_object_buffer_desc, 0, &per_object_buffer));
+	per_frame_vertex_buffer = std::make_unique<ConstantBuffer<PerFrameVertexBuffer>>(device, context);
+	per_object_buffer = std::make_unique<ConstantBuffer<PerObjectBuffer>>(device, context);
 
 	std::size_t _vertexCount = model->meshes.at(0)->vertices.size();
 	vertex_buffer = std::make_unique<VertexBuffer<TestVertex>>(device, context, _vertexCount);
@@ -74,39 +63,48 @@ TestRender::TestRender(Presenter* presenter, Scene* scene)
 	}
 	index_buffer->Build();
 	camera = scene->GetActiveCamera();
+
+	ZeroMemory(&samplerStateDesc, sizeof(samplerStateDesc));
+	samplerStateDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerStateDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStateDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStateDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStateDesc.MipLODBias = 0.0f;
+	samplerStateDesc.MaxAnisotropy = 1;
+	samplerStateDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerStateDesc.BorderColor[0] = 0;
+	samplerStateDesc.BorderColor[1] = 0;
+	samplerStateDesc.BorderColor[2] = 0;
+	samplerStateDesc.BorderColor[3] = 0;
+	samplerStateDesc.MinLOD = 0;
+	samplerStateDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	device->CreateSamplerState(&samplerStateDesc, &samplerState);
 }
 
 TestRender::~TestRender()
 {
-	DXRelease(per_frame_vertex_buffer);
-	DXRelease(per_object_buffer);
+	DXRelease(samplerState);
 }
 
 void TestRender::Draw()
 {
-	DirectX::XMMATRIX viewProjectionMatrixTransposed =	DirectX::XMMatrixTranspose(camera->View_Projection_Matrix());
-	DirectX::XMMATRIX worldMatrixTransposed = DirectX::XMMatrixTranspose(test_object->World_Matrix());
+	PerFrameVertexBuffer _cb1 = { DirectX::XMMatrixTranspose(camera->View_Projection_Matrix())};
+	PerObjectBuffer _cb2 = { DirectX::XMMatrixTranspose(test_object->World_Matrix()) };
 
-	ZeroMemory(&per_frame_vertex_subresource, sizeof(per_frame_vertex_subresource));
-	context->Map(per_frame_vertex_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &per_frame_vertex_subresource);
-	reinterpret_cast<PerFrameVertexBuffer*>(per_frame_vertex_subresource.pData)->viewprojection = viewProjectionMatrixTransposed;
-	context->Unmap(per_frame_vertex_buffer, 0);
-
-	ZeroMemory(&per_object_subresource, sizeof(per_object_subresource));
-	context->Map(per_object_buffer, 0, D3D11_MAP_WRITE_DISCARD,	0, &per_object_subresource);
-	reinterpret_cast<PerObjectBuffer*>(per_object_subresource.pData)->world = worldMatrixTransposed;
-	context->Unmap(per_object_buffer, 0);
+	per_frame_vertex_buffer->Update(_cb1);
+	per_object_buffer->Update(_cb2);
 
 	vertex_buffer->Bind();
 	index_buffer->Bind();
-	context->VSSetConstantBuffers(0, 1, &per_frame_vertex_buffer);
-	context->VSSetConstantBuffers(1, 1, &per_object_buffer);
+	per_frame_vertex_buffer->Bind(BindStage::VERTEX, 0);
+	per_object_buffer->Bind(BindStage::VERTEX, 1);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	input_layout->Bind();
 	vertex_shader->Apply();
 	pixel_shader->Apply();
 	auto _shaderView = texture->GetShaderView();
 	context->PSSetShaderResources(0, 1, &_shaderView);
+	context->PSSetSamplers(0, 1, &samplerState);
 
 	context->DrawIndexed(index_buffer->GetIndexCount(), 0, 0);
 }
