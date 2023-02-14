@@ -129,6 +129,11 @@ void Overlay::Draw()
 
 		ImGui::Separator();
 
+		if (ImGui::Button("Toggle Fullscreen"))
+			presenter->ToggleFullscreen();
+
+		ImGui::Separator();
+
 		if (ImGui::Button("Exit"))
 			PostQuitMessage(0);
 

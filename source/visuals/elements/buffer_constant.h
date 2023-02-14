@@ -19,7 +19,7 @@ public:
 	ConstantBuffer(ID3D11Device* device, ID3D11DeviceContext* context);
 	~ConstantBuffer();
 
-	void Update(type info);
+	void Update(type& info);
 	void Bind(BindStage stage, unsigned int slot);
 	void Unbind();
 
@@ -54,7 +54,7 @@ inline ConstantBuffer<type>::~ConstantBuffer()
 }
 
 template<typename type>
-inline void ConstantBuffer<type>::Update(type info)
+inline void ConstantBuffer<type>::Update(type& info)
 {
 	data = info;
 	ZeroMemory(&subresource, sizeof(subresource));

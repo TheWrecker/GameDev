@@ -39,10 +39,12 @@ public:
 
 	void Draw() override;
 	void Update() override;
+	void ToggleFullscreen();
 	bool SetMultiSampling(MultiSamplingType type, UINT count, UINT quality);
 	bool SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc);
 	bool SetRasterizerState(CullMode cullmodle, bool wireframe, bool frontCCW);
 	bool SetRenderMode(RenderMode mode);
+
 	Supervisor* GetSupervisor();
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
@@ -61,6 +63,7 @@ private:
 	std::unique_ptr<Overlay> overlay;
 	std::function<void()> render_function;
     Supervisor* supervisor;
+	bool isFullscreen;
 
 	//d3d parameters
 	//adapters

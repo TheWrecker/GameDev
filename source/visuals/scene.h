@@ -32,6 +32,8 @@ public:
 	void Draw() override;
 	void Update() override;
 	void SwitchCameraType(CameraType type);
+
+	Presenter* GetPresenter();
 	BasicCamera* GetActiveCamera();
 
 private:

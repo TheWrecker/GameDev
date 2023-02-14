@@ -11,7 +11,7 @@
 static const ::DirectX::XMVECTORF32 RENDER_TARGET_DEFAULT_COLOR = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 Presenter::Presenter(Supervisor* parent)
-	:supervisor(parent), depth_stencil_enabled(true), multisampling_enabled(false)
+	:supervisor(parent), depth_stencil_enabled(true), multisampling_enabled(false), isFullscreen(false)
 {
 	HRESULT result = 0;
 	UINT createDeviceFlags = 0;
@@ -81,6 +81,41 @@ void Presenter::Update()
 {
 	scene->Update();
 	overlay->Update();
+}
+
+void Presenter::ToggleFullscreen()
+{
+	SysWindowHandle windowHandle = supervisor->Services()->QueryService<Platform*>("platform")->GetWindowHandle();
+
+#ifdef _WINDOWS
+	static WINDOWPLACEMENT previousWindowPlacement = { sizeof(previousWindowPlacement) };
+	static DWORD dwStyle = GetWindowLong(windowHandle, GWL_STYLE);
+	if (!isFullscreen)
+	{
+		MONITORINFO monitorInfo = {};
+		monitorInfo.cbSize = sizeof(MONITORINFO);
+		if (GetWindowPlacement(windowHandle, &previousWindowPlacement) &&
+			GetMonitorInfo(MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY), &monitorInfo))
+		{
+			SetWindowLong(windowHandle, GWL_STYLE, dwStyle & ~WS_OVERLAPPEDWINDOW);
+			SetWindowPos(windowHandle, HWND_TOP,
+				monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.top,
+				monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left,
+				monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top,
+				SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+			isFullscreen = true;
+		}
+	}
+	else
+	{
+		SetWindowLong(windowHandle, GWL_STYLE, dwStyle);
+		SetWindowPlacement(windowHandle, &previousWindowPlacement);
+		SetWindowPos(windowHandle, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+		isFullscreen = false;
+	}
+#endif // _WINDOWS
+
+	RetAssert(CreateSwapChain(true));
 }
 
 bool Presenter::SetMultiSampling(MultiSamplingType type, UINT count, UINT quality)

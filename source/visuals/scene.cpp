@@ -1,7 +1,7 @@
 
 #include "../entities/camera_basic.h"
 #include "../entities/camera_firstperson.h"
-#include "elements/sampler_manager.h"
+#include "elements/manager_sampler.h"
 #include "presenter.h"
 #include "render/test.h"
 
@@ -62,6 +62,11 @@ void Scene::SwitchCameraType(CameraType type)
 		break;
 	}
 	active_camera.swap(_temp);
+}
+
+Presenter* Scene::GetPresenter()
+{
+	return presenter;
 }
 
 BasicCamera* Scene::GetActiveCamera()

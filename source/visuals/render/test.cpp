@@ -9,7 +9,7 @@
 #include "../entities/camera_basic.h"
 #include "../elements/input_layout.h"
 #include "../elements/buffer_index.h"
-#include "../elements/sampler_manager.h"
+#include "../elements/manager_sampler.h"
 #include "../scene.h"
 #include "../presenter.h"
 #include "util_funcs.h"
@@ -88,7 +88,7 @@ void TestRender::Draw()
 	pixel_shader->Apply();
 	auto _shaderView = texture->GetShaderView();
 	context->PSSetShaderResources(0, 1, &_shaderView);
-	SamplerManager::BindDefaultTextureSampler(DefaultSampler::BILINEAR, 0);
+	SamplerManager::GetPrimaryManager()->BindTextureSampler(DefaultSampler::BILINEAR, 0);
 
 	context->DrawIndexed(index_buffer->GetIndexCount(), 0, 0);
 }

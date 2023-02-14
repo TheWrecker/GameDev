@@ -1,9 +1,9 @@
 
 #include "sampler_texture.h"
 
-#include "sampler_manager.h"
+#include "manager_sampler.h"
 
-SamplerManager* first_instance = nullptr;
+SamplerManager* SamplerManager::primary_instance = nullptr;
 
 SamplerManager::SamplerManager(ID3D11Device* device, ID3D11DeviceContext* context)
 	:device(device), context(context), texture_samplers()
@@ -45,8 +45,8 @@ SamplerManager::SamplerManager(ID3D11Device* device, ID3D11DeviceContext* contex
 	auto sampler2 = new TextureSampler(device, context, desc);
 	texture_samplers.insert(std::pair(DefaultSampler::BILINEAR, sampler2));
 
-	if (!first_instance)
-		first_instance = this;
+	if (!primary_instance)
+		primary_instance = this;
 }
 
 SamplerManager::~SamplerManager()
@@ -72,12 +72,7 @@ void SamplerManager::UnbindTextureSampler(DefaultSampler what)
 		sampler->second->Unbind();
 }
 
-void SamplerManager::BindDefaultTextureSampler(DefaultSampler what, unsigned int slot)
+SamplerManager* SamplerManager::GetPrimaryManager()
 {
-	first_instance->BindTextureSampler(what, slot);
-}
-
-void SamplerManager::UnbindDefaultTextureSampler(DefaultSampler what)
-{
-	first_instance->UnbindTextureSampler(what);
+	return primary_instance;
 }

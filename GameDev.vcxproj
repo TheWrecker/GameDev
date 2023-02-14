@@ -172,7 +172,9 @@
     <ClCompile Include="source\input\mouse.cpp" />
     <ClCompile Include="source\visuals\elements\buffer_index.cpp" />
     <ClCompile Include="source\visuals\elements\input_layout.cpp" />
-    <ClCompile Include="source\visuals\elements\sampler_manager.cpp" />
+    <ClCompile Include="source\visuals\elements\manager_model.cpp" />
+    <ClCompile Include="source\visuals\elements\manager_sampler.cpp" />
+    <ClCompile Include="source\visuals\elements\manager_texture.cpp" />
     <ClCompile Include="source\visuals\elements\sampler_texture.cpp" />
     <ClCompile Include="source\visuals\elements\shader_interface.cpp" />
     <ClCompile Include="source\visuals\elements\material.cpp" />
@@ -183,6 +185,7 @@
     <ClCompile Include="source\visuals\elements\shader_vertex.cpp" />
     <ClCompile Include="source\visuals\overlay.cpp" />
     <ClCompile Include="source\visuals\presenter.cpp" />
+    <ClCompile Include="source\visuals\render\render_base.cpp" />
     <ClCompile Include="source\visuals\render\test.cpp" />
     <ClCompile Include="source\visuals\scene.cpp" />
   </ItemGroup>
@@ -209,6 +212,7 @@
     <ClInclude Include="source\external\ImGui\imstb_textedit.h" />
     <ClInclude Include="source\external\ImGui\imstb_truetype.h" />
     <ClInclude Include="source\headers\interface_drawable.h" />
+    <ClInclude Include="source\headers\interface_manager.h" />
     <ClInclude Include="source\headers\interface_service.h" />
     <ClInclude Include="source\headers\platfrom_defs.h" />
     <ClInclude Include="source\headers\util_funcs.h" />
@@ -218,7 +222,9 @@
     <ClInclude Include="source\visuals\elements\buffer_index.h" />
     <ClInclude Include="source\visuals\elements\buffer_vertex.h" />
     <ClInclude Include="source\visuals\elements\input_layout.h" />
-    <ClInclude Include="source\visuals\elements\sampler_manager.h" />
+    <ClInclude Include="source\visuals\elements\manager_model.h" />
+    <ClInclude Include="source\visuals\elements\manager_sampler.h" />
+    <ClInclude Include="source\visuals\elements\manager_texture.h" />
     <ClInclude Include="source\visuals\elements\sampler_texture.h" />
     <ClInclude Include="source\visuals\elements\shader_interface.h" />
     <ClInclude Include="source\visuals\elements\material.h" />
@@ -229,6 +235,8 @@
     <ClInclude Include="source\visuals\elements\shader_vertex.h" />
     <ClInclude Include="source\visuals\overlay.h" />
     <ClInclude Include="source\visuals\presenter.h" />
+    <ClInclude Include="source\visuals\render\render_base.h" />
+    <ClInclude Include="source\visuals\render\sky.h" />
     <ClInclude Include="source\visuals\render\test.h" />
     <ClInclude Include="source\visuals\scene.h" />
   </ItemGroup>

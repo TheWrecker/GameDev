@@ -21,11 +21,12 @@ public:
 	void BindTextureSampler(DefaultSampler what, unsigned int slot);
 	void UnbindTextureSampler(DefaultSampler what);
 
-	static void BindDefaultTextureSampler(DefaultSampler what, unsigned int slot);
-	static void UnbindDefaultTextureSampler(DefaultSampler what);
+	static SamplerManager* GetPrimaryManager();
 
 private:
 	ID3D11Device* device;
 	ID3D11DeviceContext* context;
 	std::unordered_map<DefaultSampler, TextureSampler*> texture_samplers;
+
+	static SamplerManager* primary_instance;
 };

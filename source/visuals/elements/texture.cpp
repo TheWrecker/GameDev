@@ -7,7 +7,7 @@
 
 #include "texture.h"
 
-Texture::Texture(Presenter* presenter, const std::wstring& file, const std::string& name)
+Texture::Texture(Presenter* presenter, const std::wstring& file)
 	:texture(), shader_view(), desc()
 {
 	auto extension = file.substr(file.size() - 3, 3);
@@ -20,14 +20,6 @@ Texture::Texture(Presenter* presenter, const std::wstring& file, const std::stri
 		DXAssert(DirectX::CreateWICTextureFromFile(presenter->GetDevice(), file.c_str(), (ID3D11Resource**)&texture, &shader_view));
 	}
 	texture->GetDesc(&desc);
-	if (name == "")
-	{
-		this->name = WString_To_String(file);
-	}
-	else
-	{
-		this->name = name;
-	}
 }
 
 Texture::~Texture()
@@ -49,9 +41,4 @@ ID3D11ShaderResourceView* Texture::GetShaderView()
 const D3D11_TEXTURE2D_DESC& Texture::GetDesc() const
 {
 	return desc;
-}
-
-const std::string& Texture::GetName() const
-{
-	return name;
 }

@@ -142,7 +142,16 @@
     <ClCompile Include="source\visuals\elements\sampler_texture.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
-    <ClCompile Include="source\visuals\elements\sampler_manager.cpp">
+    <ClCompile Include="source\visuals\elements\manager_sampler.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\render\render_base.cpp">
+      <Filter>source\visuals\render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\elements\manager_model.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\elements\manager_texture.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
   </ItemGroup>
@@ -276,7 +285,22 @@
     <ClInclude Include="source\visuals\elements\sampler_texture.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
-    <ClInclude Include="source\visuals\elements\sampler_manager.h">
+    <ClInclude Include="source\visuals\elements\manager_sampler.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\render\render_base.h">
+      <Filter>source\visuals\render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\render\sky.h">
+      <Filter>source\visuals\render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\manager_model.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\interface_manager.h">
+      <Filter>source\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\manager_texture.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
   </ItemGroup>
