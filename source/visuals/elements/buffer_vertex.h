@@ -69,7 +69,7 @@ inline void VertexBuffer<type>::Build()
 	if (vertices.size() > 0)
 	{
 		subresource.pSysMem = &vertices.at(0);
-		desc.ByteWidth = sizeof(type) * vertices.size();
+		desc.ByteWidth = sizeof(type) * static_cast<unsigned int>(vertices.size());
 		DXAssert(device->CreateBuffer(&desc, &subresource, &buffer));
 	}
 }

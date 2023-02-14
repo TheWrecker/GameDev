@@ -59,8 +59,8 @@ private:
 	std::unique_ptr<VertexShader> vertex_shader;
 	std::unique_ptr<PixelShader> pixel_shader;
 
-	ID3D11SamplerState* samplerState;
-	D3D11_SAMPLER_DESC samplerStateDesc;
+	//ID3D11SamplerState* samplerState;
+	//D3D11_SAMPLER_DESC samplerStateDesc;
 
 	ID3D11Device* device;
 	ID3D11DeviceContext* context;

@@ -15,7 +15,7 @@ public:
 	void Bind();
 	void Unbind();
 
-	std::size_t GetIndexCount();
+	unsigned int GetIndexCount();
 
 private:
 	ID3D11Device* device;

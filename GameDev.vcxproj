@@ -172,6 +172,8 @@
     <ClCompile Include="source\input\mouse.cpp" />
     <ClCompile Include="source\visuals\elements\buffer_index.cpp" />
     <ClCompile Include="source\visuals\elements\input_layout.cpp" />
+    <ClCompile Include="source\visuals\elements\sampler_manager.cpp" />
+    <ClCompile Include="source\visuals\elements\sampler_texture.cpp" />
     <ClCompile Include="source\visuals\elements\shader_interface.cpp" />
     <ClCompile Include="source\visuals\elements\material.cpp" />
     <ClCompile Include="source\visuals\elements\mesh.cpp" />
@@ -216,6 +218,8 @@
     <ClInclude Include="source\visuals\elements\buffer_index.h" />
     <ClInclude Include="source\visuals\elements\buffer_vertex.h" />
     <ClInclude Include="source\visuals\elements\input_layout.h" />
+    <ClInclude Include="source\visuals\elements\sampler_manager.h" />
+    <ClInclude Include="source\visuals\elements\sampler_texture.h" />
     <ClInclude Include="source\visuals\elements\shader_interface.h" />
     <ClInclude Include="source\visuals\elements\material.h" />
     <ClInclude Include="source\visuals\elements\mesh.h" />

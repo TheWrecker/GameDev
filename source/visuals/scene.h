@@ -8,6 +8,7 @@
 class Presenter;
 class BasicCamera;
 class TestRender;
+class SamplerManager;
 
 enum class SceneMode
 {
@@ -37,6 +38,7 @@ private:
 	Presenter* presenter;
 	std::unique_ptr<BasicCamera> active_camera;
 	std::unique_ptr<TestRender> test_render;
+	std::unique_ptr<SamplerManager> sampler_manager;
 
 	CameraType camera_type;
 };

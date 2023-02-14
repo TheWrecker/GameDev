@@ -9,6 +9,7 @@
 #include "../entities/camera_basic.h"
 #include "../elements/input_layout.h"
 #include "../elements/buffer_index.h"
+#include "../elements/sampler_manager.h"
 #include "../scene.h"
 #include "../presenter.h"
 #include "util_funcs.h"
@@ -63,27 +64,10 @@ TestRender::TestRender(Presenter* presenter, Scene* scene)
 	}
 	index_buffer->Build();
 	camera = scene->GetActiveCamera();
-
-	ZeroMemory(&samplerStateDesc, sizeof(samplerStateDesc));
-	samplerStateDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerStateDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerStateDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerStateDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerStateDesc.MipLODBias = 0.0f;
-	samplerStateDesc.MaxAnisotropy = 1;
-	samplerStateDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	samplerStateDesc.BorderColor[0] = 0;
-	samplerStateDesc.BorderColor[1] = 0;
-	samplerStateDesc.BorderColor[2] = 0;
-	samplerStateDesc.BorderColor[3] = 0;
-	samplerStateDesc.MinLOD = 0;
-	samplerStateDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	device->CreateSamplerState(&samplerStateDesc, &samplerState);
 }
 
 TestRender::~TestRender()
 {
-	DXRelease(samplerState);
 }
 
 void TestRender::Draw()
@@ -104,7 +88,7 @@ void TestRender::Draw()
 	pixel_shader->Apply();
 	auto _shaderView = texture->GetShaderView();
 	context->PSSetShaderResources(0, 1, &_shaderView);
-	context->PSSetSamplers(0, 1, &samplerState);
+	SamplerManager::BindDefaultTextureSampler(DefaultSampler::BILINEAR, 0);
 
 	context->DrawIndexed(index_buffer->GetIndexCount(), 0, 0);
 }

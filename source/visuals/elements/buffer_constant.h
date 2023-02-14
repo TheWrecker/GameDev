@@ -20,7 +20,7 @@ public:
 	~ConstantBuffer();
 
 	void Update(type info);
-	void Bind(BindStage stage, std::size_t slot);
+	void Bind(BindStage stage, unsigned int slot);
 	void Unbind();
 
 private:
@@ -30,7 +30,7 @@ private:
 	ID3D11Buffer* buffer;
 	D3D11_BUFFER_DESC desc;
 	D3D11_MAPPED_SUBRESOURCE subresource;
-	std::size_t current_slot;
+	unsigned int current_slot;
 	BindStage current_stage;
 };
 
@@ -64,7 +64,7 @@ inline void ConstantBuffer<type>::Update(type info)
 }
 
 template<typename type>
-inline void ConstantBuffer<type>::Bind(BindStage stage, std::size_t slot)
+inline void ConstantBuffer<type>::Bind(BindStage stage, unsigned int slot)
 {
 	switch (stage)
 	{

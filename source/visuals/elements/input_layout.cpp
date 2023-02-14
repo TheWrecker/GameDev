@@ -38,7 +38,8 @@ InputLayout& InputLayout::AddElement(D3D11_INPUT_ELEMENT_DESC& target)
 
 bool InputLayout::Build()
 {
-    auto _result = device->CreateInputLayout(&container.at(0), container.size(), shader->GetByteCode(), shader->GetSize(), &input_layout);
+    auto _result = device->CreateInputLayout(&container.at(0), static_cast<unsigned int>(container.size()), shader->GetByteCode(),
+        shader->GetSize(), &input_layout);
     if (_result < 0)
         return false;
     return true;

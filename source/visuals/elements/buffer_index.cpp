@@ -34,7 +34,7 @@ void IndexBuffer::Build()
 	if (indices.size() > 0)
 	{
 		subresource.pSysMem = &indices.at(0);
-		desc.ByteWidth = sizeof(unsigned int) * indices.size();
+		desc.ByteWidth = sizeof(unsigned int) * static_cast<unsigned int>(indices.size());
 		DXAssert(device->CreateBuffer(&desc, &subresource, &buffer));
 	}
 }
@@ -50,7 +50,7 @@ void IndexBuffer::Unbind()
 	context->IASetIndexBuffer(nullBuffer, DXGI_FORMAT_R32_UINT, 0);
 }
 
-std::size_t IndexBuffer::GetIndexCount()
+unsigned int IndexBuffer::GetIndexCount()
 {
-	return indices.size();
+	return static_cast<unsigned int>(indices.size());
 }

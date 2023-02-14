@@ -31,7 +31,7 @@ Material::Material(Model& model, aiMaterial* material)
             std::vector<std::wstring>* _textures = new std::vector<std::wstring>();
             textures.insert(std::pair<TextureType, std::vector<std::wstring>*>(textureType, _textures));
             _textures->reserve(_texture_count);
-            for (std::size_t textureIndex = 0; textureIndex < _texture_count; textureIndex++)
+            for (unsigned int textureIndex = 0; textureIndex < _texture_count; textureIndex++)
             {
                 aiString _path;
                 if (material->GetTexture(_mapped_texture_type, textureIndex, &_path) == AI_SUCCESS)

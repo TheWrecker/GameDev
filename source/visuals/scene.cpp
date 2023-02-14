@@ -1,6 +1,7 @@
 
 #include "../entities/camera_basic.h"
 #include "../entities/camera_firstperson.h"
+#include "elements/sampler_manager.h"
 #include "presenter.h"
 #include "render/test.h"
 
@@ -12,6 +13,7 @@ Scene::Scene(Presenter* parent)
 	active_camera = std::make_unique<FirstPersonCamera>(parent);
 	active_camera->SetPosition(0.0f, 0.0f, 2.0f);
 	test_render = std::make_unique<TestRender>(parent, this);
+	sampler_manager = std::make_unique<SamplerManager>(parent->GetDevice(), parent->GetContext());
 }
 
 Scene::~Scene()

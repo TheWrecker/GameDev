@@ -139,6 +139,12 @@
     <ClCompile Include="source\visuals\elements\buffer_index.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
+    <ClCompile Include="source\visuals\elements\sampler_texture.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\elements\sampler_manager.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\headers\platfrom_defs.h">
@@ -265,6 +271,12 @@
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\elements\buffer_constant.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\sampler_texture.h">
+      <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\sampler_manager.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
   </ItemGroup>
