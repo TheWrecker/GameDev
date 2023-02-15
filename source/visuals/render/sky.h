@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <DirectXMath.h>
+
 #include "render_base.h"
 
 class SkyRender : public RenderBase
@@ -11,6 +13,10 @@ public:
 
 
 private:
+	struct SkyVertex
+	{
+		DirectX::XMFLOAT4 position;
+	};
 
-
+	struct 
 };

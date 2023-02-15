@@ -14,6 +14,7 @@ RenderBase::RenderBase(Scene* scene)
 {
 	device = presenter->GetDevice();
 	context = presenter->GetContext();
+	camera = scene->GetActiveCamera();
 }
 
 RenderBase::~RenderBase()

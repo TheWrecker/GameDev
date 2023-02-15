@@ -1,7 +1,7 @@
 
 #include "sampler_texture.h"
 
-#include "manager_sampler.h"
+#include "pipeline_states.h"
 
 SamplerManager* SamplerManager::primary_instance = nullptr;
 

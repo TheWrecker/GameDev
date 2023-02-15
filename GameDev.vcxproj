@@ -173,7 +173,8 @@
     <ClCompile Include="source\visuals\elements\buffer_index.cpp" />
     <ClCompile Include="source\visuals\elements\input_layout.cpp" />
     <ClCompile Include="source\visuals\elements\manager_model.cpp" />
-    <ClCompile Include="source\visuals\elements\manager_sampler.cpp" />
+    <ClCompile Include="source\visuals\elements\pipeline_buffers.cpp" />
+    <ClCompile Include="source\visuals\elements\pipeline_states.cpp" />
     <ClCompile Include="source\visuals\elements\manager_texture.cpp" />
     <ClCompile Include="source\visuals\elements\sampler_texture.cpp" />
     <ClCompile Include="source\visuals\elements\shader_interface.cpp" />
@@ -222,8 +223,9 @@
     <ClInclude Include="source\visuals\elements\buffer_index.h" />
     <ClInclude Include="source\visuals\elements\buffer_vertex.h" />
     <ClInclude Include="source\visuals\elements\input_layout.h" />
+    <ClInclude Include="source\visuals\elements\pipeline_buffers.h" />
     <ClInclude Include="source\visuals\elements\manager_model.h" />
-    <ClInclude Include="source\visuals\elements\manager_sampler.h" />
+    <ClInclude Include="source\visuals\elements\pipeline_states.h" />
     <ClInclude Include="source\visuals\elements\manager_texture.h" />
     <ClInclude Include="source\visuals\elements\sampler_texture.h" />
     <ClInclude Include="source\visuals\elements\shader_interface.h" />
