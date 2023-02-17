@@ -19,8 +19,8 @@ public:
 	StateMaster(Presenter* parent);
 	~StateMaster();
 
-	void BindTextureSampler(DefaultSampler what, unsigned int slot);
-	void UnbindTextureSampler(DefaultSampler what);
+	void BindDefaultTextureSampler(DefaultSampler what, unsigned int slot);
+	void UnbindDefaultTextureSampler(DefaultSampler what);
 
 private:
 	Presenter* presenter;

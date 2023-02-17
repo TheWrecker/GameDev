@@ -24,12 +24,7 @@ enum class CullMode
 	CULL_FRONT
 };
 
-enum class RenderMode
-{
-	SINGLE_PASS_NO_STENCIL,
-	SINGLE_PASS_WITH_STENCIL,
-	MULTI_PASS
-};
+class Aggregator;
 
 class Presenter : public IService, public IDrawable
 {
@@ -43,7 +38,6 @@ public:
 	bool SetMultiSampling(MultiSamplingType type, UINT count, UINT quality);
 	bool SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc);
 	bool SetRasterizerState(CullMode cullmodle, bool wireframe, bool frontCCW);
-	bool SetRenderMode(RenderMode mode);
 
 	Supervisor* GetSupervisor();
 	Scene* GetActiveScene();
@@ -54,15 +48,13 @@ public:
 	type QueryService(const std::string& name);
 	
 private:
+	friend Aggregator;
+
 	bool CreateSwapChain(bool isResize);
 	bool CreateViewPort();
-	void Func_ClearAndRenderWithStencil();
-	void Func_ClearAndRenderNoStencil();
-	void Func_OnlyRenderDeferClear();
 
 	std::unique_ptr<Scene> scene;
 	std::unique_ptr<Overlay> overlay;
-	std::function<void()> render_function;
     Supervisor* supervisor;
 	bool isFullscreen;
 

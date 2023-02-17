@@ -109,7 +109,7 @@
     <ClCompile Include="source\entities\camera_firstperson.cpp">
       <Filter>source\entities</Filter>
     </ClCompile>
-    <ClCompile Include="source\visuals\render\test.cpp">
+    <ClCompile Include="source\visuals\render\render_dev.cpp">
       <Filter>source\visuals\render</Filter>
     </ClCompile>
     <ClCompile Include="source\visuals\elements\shader_interface.cpp">
@@ -156,6 +156,12 @@
     </ClCompile>
     <ClCompile Include="source\visuals\elements\master_buffer.cpp">
       <Filter>source\visuals\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\render\aggregator.cpp">
+      <Filter>source\visuals\render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\render\sky.cpp">
+      <Filter>source\visuals\render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -249,7 +255,7 @@
     <ClInclude Include="source\headers\interface_drawable.h">
       <Filter>source\headers</Filter>
     </ClInclude>
-    <ClInclude Include="source\visuals\render\test.h">
+    <ClInclude Include="source\visuals\render\render_dev.h">
       <Filter>source\visuals\render</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\elements\shader_interface.h">
@@ -312,12 +318,21 @@
     <ClInclude Include="source\headers\defs_pipeline.h">
       <Filter>source\headers</Filter>
     </ClInclude>
+    <ClInclude Include="source\visuals\render\aggregator.h">
+      <Filter>source\visuals\render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="source\visuals\shaders\test_v.hlsl">
+    <FxCompile Include="source\visuals\shaders\dev_v.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="source\visuals\shaders\test_p.hlsl">
+    <FxCompile Include="source\visuals\shaders\dev_p.hlsl">
+      <Filter>source\visuals\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="source\visuals\shaders\sky_v.hlsl">
+      <Filter>source\visuals\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="source\visuals\shaders\sky_p.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -10,6 +10,7 @@ TextureManager::TextureManager(Presenter* presenter)
     //load essential textures
     Load(L"assets/textures/earth.dds", "earth"); //earth
     Load(L"assets/textures/test.dds", "test_checkers"); //test checkers
+    Load(L"assets/textures/sky.dds", "sky"); //sky
 }
 
 TextureManager::~TextureManager()

@@ -6,7 +6,7 @@
 #include "elements/manager_model.h"
 #include "elements/manager_texture.h"
 #include "presenter.h"
-#include "render/test.h"
+#include "render/aggregator.h"
 
 #include "scene.h"
 
@@ -19,7 +19,7 @@ Scene::Scene(Presenter* parent)
 	texture_manager = std::make_unique<TextureManager>(parent);
 	model_manager = std::make_unique<ModelManager>();
 	buffer_master = std::make_unique<BufferMaster>(this);
-	test_render = std::make_unique<TestRender>(parent, this);
+	aggregator = std::make_unique<Aggregator>(this);
 }
 
 Scene::~Scene()
@@ -34,7 +34,7 @@ void Scene::SwitchMode(SceneMode mode)
 
 void Scene::Draw()
 {
-	test_render->Draw();
+	aggregator->AggregateAllRenders();
 }
 
 void Scene::Update()

@@ -4,13 +4,17 @@
 #include <d3d11.h>
 #include <memory>
 
-class VertexShader;
-class PixelShader;
-class InputLayout;
-class IndexBuffer;
-class BasicCamera;
-class Scene;
-class Presenter;
+#include "../elements/shader_pixel.h"
+#include "../elements/shader_vertex.h"
+#include "../entities/camera_basic.h"
+#include "../elements/input_layout.h"
+#include "../elements/buffer_index.h"
+#include "../elements/buffer_vertex.h"
+#include "../elements/buffer_constant.h"
+#include "../elements/manager_model.h"
+#include "../elements/manager_texture.h"
+#include "../elements/master_state.h"
+#include "../elements/master_buffer.h"
 
 class RenderBase
 {
@@ -22,7 +26,6 @@ public:
 	virtual void Update();
 
 protected:
-
 	std::unique_ptr<InputLayout> input_layout;
 	std::unique_ptr<IndexBuffer> index_buffer;
 	std::unique_ptr<VertexShader> vertex_shader;
@@ -30,7 +33,11 @@ protected:
 
 	ID3D11Device* device;
 	ID3D11DeviceContext* context;
+	Presenter* presenter;
 	Scene* scene;
 	BasicCamera* camera;
-	Presenter* presenter;
+	StateMaster* state_master;
+	ModelManager* model_manager;
+	TextureManager* texture_manager;
+	BufferMaster* buffer_master;
 };

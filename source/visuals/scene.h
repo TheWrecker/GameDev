@@ -7,11 +7,11 @@
 #include "elements/manager_texture.h"
 #include "elements/manager_model.h"
 
-class Presenter;
 class BasicCamera;
-class TestRender;
 class StateMaster;
 class BufferMaster;
+class Aggregator;
+class Presenter;
 
 enum class SceneMode
 {
@@ -46,11 +46,11 @@ public:
 private:
 	Presenter* presenter;
 	std::unique_ptr<BasicCamera> active_camera;
-	std::unique_ptr<TestRender> test_render;
 	std::unique_ptr<StateMaster> state_master;
 	std::unique_ptr<BufferMaster> buffer_master;
 	std::unique_ptr<TextureManager> texture_manager;
 	std::unique_ptr <ModelManager> model_manager;
+	std::unique_ptr<Aggregator> aggregator;
 
 	CameraType camera_type;
 };

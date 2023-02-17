@@ -1,9 +1,4 @@
 
-
-#include "../elements/shader_vertex.h"
-#include "../elements/shader_pixel.h"
-#include "../elements/input_layout.h"
-#include "../elements/buffer_index.h"
 #include "../scene.h"
 #include "../presenter.h"
 
@@ -15,7 +10,11 @@ RenderBase::RenderBase(Scene* scene)
 	device = presenter->GetDevice();
 	context = presenter->GetContext();
 	camera = scene->GetActiveCamera();
-}
+	state_master = scene->GetStateMaster();
+	model_manager = scene->GetModelManager();
+	texture_manager = scene->GetTextureManager();
+	buffer_master = scene->GetBufferMaster();
+	}
 
 RenderBase::~RenderBase()
 {

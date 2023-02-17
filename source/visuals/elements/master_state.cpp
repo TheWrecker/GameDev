@@ -57,14 +57,14 @@ StateMaster::~StateMaster()
 	}
 }
 
-void StateMaster::BindTextureSampler(DefaultSampler what, unsigned int slot)
+void StateMaster::BindDefaultTextureSampler(DefaultSampler what, unsigned int slot)
 {
 	auto sampler = texture_samplers.find(what);
 	if (sampler != texture_samplers.end())
 		sampler->second->Bind(slot);
 }
 
-void StateMaster::UnbindTextureSampler(DefaultSampler what)
+void StateMaster::UnbindDefaultTextureSampler(DefaultSampler what)
 {
 	auto sampler = texture_samplers.find(what);
 	if (sampler != texture_samplers.end())

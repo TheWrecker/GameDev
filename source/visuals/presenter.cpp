@@ -8,8 +8,6 @@
 
 #include "presenter.h"
 
-static const ::DirectX::XMVECTORF32 RENDER_TARGET_DEFAULT_COLOR = { 0.0f, 0.0f, 0.0f, 1.0f };
-
 Presenter::Presenter(Supervisor* parent)
 	:supervisor(parent), depth_stencil_enabled(true), multisampling_enabled(false), isFullscreen(false)
 {
@@ -36,7 +34,6 @@ Presenter::Presenter(Supervisor* parent)
 
 	RetAssert(SetMultiSampling(MultiSamplingType::NONE, 1, 0));
 	RetAssert(SetRasterizerState(CullMode::CULL_NONE, false, false));
-	RetAssert(SetRenderMode(RenderMode::SINGLE_PASS_WITH_STENCIL)); //TODO: change to multipass, currently redundant
 
 	scene = std::make_unique<Scene>(this);
 	overlay = std::make_unique<Overlay>(this, device, context);
@@ -71,7 +68,6 @@ Presenter::~Presenter()
 
 void Presenter::Draw()
 {
-	render_function();
 	scene->Draw();
 	overlay->Draw();
 	swapchain->Present(0, 0);
@@ -272,21 +268,6 @@ bool Presenter::CreateViewPort()
 	return true;
 }
 
-void Presenter::Func_ClearAndRenderWithStencil()
-{
-	context->ClearRenderTargetView(render_target_view, reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
-	context->ClearDepthStencilView(depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-}
-
-void Presenter::Func_ClearAndRenderNoStencil()
-{
-	context->ClearRenderTargetView(render_target_view, reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
-}
-
-void Presenter::Func_OnlyRenderDeferClear()
-{
-}
-
 bool Presenter::SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc)
 {
 	assert(device);
@@ -297,18 +278,12 @@ bool Presenter::SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc)
 
 		//create depthstencilview
 		DXAssert(device->CreateDepthStencilView(depth_stencil, nullptr, &depth_stencil_view));
-
-		//set render function
-		SetRenderMode(RenderMode::SINGLE_PASS_WITH_STENCIL);
 	}
 	else
 	{
 		//unassign depthstencil views from outputmerger
 		context->OMSetDepthStencilState(nullptr, UINT_MAX);
 		depth_stencil_view = nullptr;
-
-		//set render function
-		SetRenderMode(RenderMode::SINGLE_PASS_NO_STENCIL);
 	}
 
 	//return success
@@ -349,32 +324,6 @@ bool Presenter::SetRasterizerState(CullMode cullmodle, bool wireframe, bool fron
 	//create rasterizer state
 	DXAssert(device->CreateRasterizerState(&rasterizer_state_desc, &rasterizer_state));
 	context->RSSetState(rasterizer_state);
-	return true;
-}
-
-bool Presenter::SetRenderMode(RenderMode mode)
-{
-	switch (mode)
-	{
-	case RenderMode::SINGLE_PASS_NO_STENCIL: 
-	{
-		render_function = std::bind(&Presenter::Func_ClearAndRenderNoStencil, this);
-	}
-	break;
-	case RenderMode::SINGLE_PASS_WITH_STENCIL:
-	{
-		render_function = std::bind(&Presenter::Func_ClearAndRenderWithStencil, this);
-	}
-	break;
-	case RenderMode::MULTI_PASS:
-	{
-		render_function = std::bind(&Presenter::Func_OnlyRenderDeferClear, this);
-	}
-	break;
-	default:
-		return false;
-	}
-
 	return true;
 }
 

@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <DirectXMath.h>
-
 #include "render_base.h"
+
+class BasicCamera;
 
 class SkyRender : public RenderBase
 {
@@ -11,12 +11,14 @@ public:
 	SkyRender(Scene* scene);
 	~SkyRender();
 
+	void Render() override;
 
 private:
-	struct SkyVertex
+	struct PerFrameBuffer
 	{
-		DirectX::XMFLOAT4 position;
+		DirectX::XMMATRIX world;
 	};
 
-	struct 
+	BasicCamera* camera;
+	std::unique_ptr<ConstantBuffer<PerFrameBuffer>> per_frame_buffer;
 };
