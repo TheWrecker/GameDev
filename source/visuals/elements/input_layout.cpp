@@ -17,15 +17,15 @@ InputLayout::~InputLayout()
     DXRelease(input_layout);
 }
 
-InputLayout& InputLayout::AddElement(const std::string& semantic, DXGI_FORMAT format)
+InputLayout& InputLayout::AddElement(const std::string& semantic, DXGI_FORMAT format, unsigned int slot)
 {
     if (container.size() == 0)
     {
-        container.push_back({ semantic.c_str(), 0, format, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+        container.push_back({ semantic.c_str(), 0, format, slot, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
     }
     else
     {
-        container.push_back({ semantic.c_str(), 0, format, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+        container.push_back({ semantic.c_str(), 0, format, slot, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
     }
     return *this;
 }

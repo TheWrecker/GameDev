@@ -1,7 +1,10 @@
 
 #include "../entities/camera_basic.h"
 #include "../entities/camera_firstperson.h"
-#include "elements/manager_sampler.h"
+#include "elements/master_state.h"
+#include "elements/master_buffer.h"
+#include "elements/manager_model.h"
+#include "elements/manager_texture.h"
 #include "presenter.h"
 #include "render/test.h"
 
@@ -12,8 +15,11 @@ Scene::Scene(Presenter* parent)
 {
 	active_camera = std::make_unique<FirstPersonCamera>(parent);
 	active_camera->SetPosition(0.0f, 0.0f, 2.0f);
+	state_master = std::make_unique<StateMaster>(parent);
+	texture_manager = std::make_unique<TextureManager>(parent);
+	model_manager = std::make_unique<ModelManager>();
+	buffer_master = std::make_unique<BufferMaster>(this);
 	test_render = std::make_unique<TestRender>(parent, this);
-	sampler_manager = std::make_unique<SamplerManager>(parent->GetDevice(), parent->GetContext());
 }
 
 Scene::~Scene()
@@ -22,6 +28,8 @@ Scene::~Scene()
 
 void Scene::SwitchMode(SceneMode mode)
 {
+	//switch
+	//load scene specific assets
 }
 
 void Scene::Draw()
@@ -72,4 +80,24 @@ Presenter* Scene::GetPresenter()
 BasicCamera* Scene::GetActiveCamera()
 {
 	return active_camera.get();
+}
+
+StateMaster* Scene::GetStateMaster()
+{
+	return state_master.get();
+}
+
+BufferMaster* Scene::GetBufferMaster()
+{
+	return buffer_master.get();
+}
+
+TextureManager* Scene::GetTextureManager()
+{
+	return texture_manager.get();
+}
+
+ModelManager* Scene::GetModelManager()
+{
+	return model_manager.get();
 }

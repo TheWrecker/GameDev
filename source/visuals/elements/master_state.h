@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 class TextureSampler;
+class Presenter;
 
 enum class DefaultSampler
 {
@@ -12,21 +13,18 @@ enum class DefaultSampler
 	BILINEAR
 };
 
-class SamplerManager
+class StateMaster
 {
 public:
-	SamplerManager(ID3D11Device* device, ID3D11DeviceContext* context);
-	~SamplerManager();
+	StateMaster(Presenter* parent);
+	~StateMaster();
 
 	void BindTextureSampler(DefaultSampler what, unsigned int slot);
 	void UnbindTextureSampler(DefaultSampler what);
 
-	static SamplerManager* GetPrimaryManager();
-
 private:
+	Presenter* presenter;
 	ID3D11Device* device;
 	ID3D11DeviceContext* context;
 	std::unordered_map<DefaultSampler, TextureSampler*> texture_samplers;
-
-	static SamplerManager* primary_instance;
 };

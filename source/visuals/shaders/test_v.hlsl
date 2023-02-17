@@ -1,5 +1,5 @@
 
-cbuffer PerFrame : register(b0)
+cbuffer PerFrame : register(b12)
 {
     float4x4 view_projection_matrix;
 }

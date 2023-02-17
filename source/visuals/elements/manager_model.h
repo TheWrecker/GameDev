@@ -1,9 +1,8 @@
 
 #pragma once
 
+#include "model.h"
 #include "interface_manager.h"
-
-class Model;
 
 class ModelManager : public IManager<Model>
 {

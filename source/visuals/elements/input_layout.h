@@ -14,7 +14,7 @@ public:
 	InputLayout(Presenter* presenter, VertexShader* shader);
 	~InputLayout();
 
-	InputLayout& AddElement(const std::string& semantic, DXGI_FORMAT format);
+	InputLayout& AddElement(const std::string& semantic, DXGI_FORMAT format, unsigned int slot = 0);
 	InputLayout& AddElement(D3D11_INPUT_ELEMENT_DESC& target);
 	bool Build();
 	void Bind();

@@ -16,7 +16,7 @@ public:
 	void AddVertex(type vertex);
 	void Clear();
 	void Build();
-	void Bind();
+	void Bind(unsigned int slot);
 	void Unbind();
 
 private:
@@ -28,12 +28,15 @@ private:
 	D3D11_SUBRESOURCE_DATA subresource;
 	unsigned int
 		vertex_stride,
-		vertex_offset;
+		vertex_offset,
+		current_slot;
+
+	bool is_bound;
 };
 
 template<typename type>
 inline VertexBuffer<type>::VertexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, std::size_t reserve)
-	:device(device), context(context), buffer(), desc(), subresource()
+	:device(device), context(context), buffer(), desc(), subresource(), is_bound(false)
 {
 	ZeroMemory(&desc, sizeof(desc));
 	desc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -48,6 +51,7 @@ inline VertexBuffer<type>::VertexBuffer(ID3D11Device* device, ID3D11DeviceContex
 template<typename type>
 inline VertexBuffer<type>::~VertexBuffer()
 {
+	Unbind();
 	DXRelease(buffer);
 }
 
@@ -75,14 +79,22 @@ inline void VertexBuffer<type>::Build()
 }
 
 template<typename type>
-inline void VertexBuffer<type>::Bind()
+inline void VertexBuffer<type>::Bind(unsigned int slot)
 {
-	context->IASetVertexBuffers(0, 1, &buffer, &vertex_stride, &vertex_offset);
+	if (is_bound)
+		return;
+
+	context->IASetVertexBuffers(slot, 1, &buffer, &vertex_stride, &vertex_offset);
+	current_slot = slot;
+	is_bound = true;
 }
 
 template<typename type>
 inline void VertexBuffer<type>::Unbind()
 {
+	if (!is_bound)
+		return;
+
 	ID3D11Buffer* nullBuffer = { nullptr };
-	context->IASetVertexBuffers(0, 1, &nullBuffer, &vertex_stride, &vertex_offset);
+	context->IASetVertexBuffers(current_slot, 1, &nullBuffer, &vertex_stride, &vertex_offset);
 }

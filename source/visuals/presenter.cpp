@@ -383,6 +383,11 @@ Supervisor* Presenter::GetSupervisor()
 	return supervisor;
 }
 
+Scene* Presenter::GetActiveScene()
+{
+	return scene.get();
+}
+
 ID3D11Device* Presenter::GetDevice()
 {
 	return device;

@@ -46,6 +46,7 @@ public:
 	bool SetRenderMode(RenderMode mode);
 
 	Supervisor* GetSupervisor();
+	Scene* GetActiveScene();
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
 

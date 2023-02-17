@@ -1,13 +1,15 @@
 
 #include "sampler_texture.h"
+#include "../presenter.h"
 
-#include "pipeline_states.h"
+#include "master_state.h"
 
-SamplerManager* SamplerManager::primary_instance = nullptr;
-
-SamplerManager::SamplerManager(ID3D11Device* device, ID3D11DeviceContext* context)
-	:device(device), context(context), texture_samplers()
+StateMaster::StateMaster(Presenter* parent)
+	:presenter(parent), texture_samplers()
 {
+	device = presenter->GetDevice();
+	context = presenter->GetContext();
+
 	D3D11_SAMPLER_DESC desc = {};
 	//POINT
 	ZeroMemory(&desc, sizeof(desc));
@@ -44,12 +46,9 @@ SamplerManager::SamplerManager(ID3D11Device* device, ID3D11DeviceContext* contex
 	desc.MaxLOD = D3D11_FLOAT32_MAX;
 	auto sampler2 = new TextureSampler(device, context, desc);
 	texture_samplers.insert(std::pair(DefaultSampler::BILINEAR, sampler2));
-
-	if (!primary_instance)
-		primary_instance = this;
 }
 
-SamplerManager::~SamplerManager()
+StateMaster::~StateMaster()
 {
 	for (auto& item : texture_samplers)
 	{
@@ -58,21 +57,16 @@ SamplerManager::~SamplerManager()
 	}
 }
 
-void SamplerManager::BindTextureSampler(DefaultSampler what, unsigned int slot)
+void StateMaster::BindTextureSampler(DefaultSampler what, unsigned int slot)
 {
 	auto sampler = texture_samplers.find(what);
 	if (sampler != texture_samplers.end())
 		sampler->second->Bind(slot);
 }
 
-void SamplerManager::UnbindTextureSampler(DefaultSampler what)
+void StateMaster::UnbindTextureSampler(DefaultSampler what)
 {
 	auto sampler = texture_samplers.find(what);
 	if (sampler != texture_samplers.end())
 		sampler->second->Unbind();
-}
-
-SamplerManager* SamplerManager::GetPrimaryManager()
-{
-	return primary_instance;
 }

@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "interface_service.h"
-#include "platfrom_defs.h"
+#include "defs_platform.h"
 
 #include SysPlatformInitializerHeader
 

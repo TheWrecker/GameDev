@@ -4,13 +4,8 @@
 #include <d3d11.h>
 #include <vector>
 
+#include "defs_pipeline.h"
 #include "util_funcs.h"
-
-enum class BindStage
-{
-	VERTEX,
-	PIXEL
-};
 
 template <typename type>
 class ConstantBuffer
@@ -32,11 +27,12 @@ private:
 	D3D11_MAPPED_SUBRESOURCE subresource;
 	unsigned int current_slot;
 	BindStage current_stage;
+	bool is_bound;
 };
 
 template<typename type>
 inline ConstantBuffer<type>::ConstantBuffer(ID3D11Device* device, ID3D11DeviceContext* context)
-	:device(device), context(context), buffer(), desc(), subresource(), data()
+	:device(device), context(context), buffer(), desc(), subresource(), data(), is_bound(false)
 {
 	ZeroMemory(&desc, sizeof(desc));
 	desc.ByteWidth = sizeof(type);
@@ -50,22 +46,33 @@ inline ConstantBuffer<type>::ConstantBuffer(ID3D11Device* device, ID3D11DeviceCo
 template<typename type>
 inline ConstantBuffer<type>::~ConstantBuffer()
 {
+	Unbind();
 	DXRelease(buffer);
 }
 
 template<typename type>
 inline void ConstantBuffer<type>::Update(type& info)
 {
+	bool _was_bound = is_bound;
+	if (is_bound)
+		Unbind();
+
 	data = info;
 	ZeroMemory(&subresource, sizeof(subresource));
 	context->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subresource);
 	memcpy(subresource.pData, &data, sizeof(data));
 	context->Unmap(buffer, 0);
+
+	if (_was_bound)
+		Bind(current_stage, current_slot);
 }
 
 template<typename type>
 inline void ConstantBuffer<type>::Bind(BindStage stage, unsigned int slot)
 {
+	if (is_bound)
+		return;
+
 	switch (stage)
 	{
 		case BindStage::VERTEX:
@@ -86,11 +93,15 @@ inline void ConstantBuffer<type>::Bind(BindStage stage, unsigned int slot)
 	}
 	current_stage = stage;
 	current_slot = slot;
+	is_bound = true;
 }
 
 template<typename type>
 inline void ConstantBuffer<type>::Unbind()
 {
+	if (!is_bound)
+		return;
+
 	ID3D11Buffer* nullBuffer = { nullptr };
 	switch (current_stage)
 	{
@@ -110,4 +121,5 @@ inline void ConstantBuffer<type>::Unbind()
 			break;
 		}
 	}
+	is_bound = false;
 }

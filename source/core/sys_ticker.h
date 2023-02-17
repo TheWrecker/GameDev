@@ -2,7 +2,7 @@
 #pragma once
 
 #include "interface_service.h"
-#include "platfrom_defs.h"
+#include "defs_platform.h"
 
 class SystemTicker : public IService
 {

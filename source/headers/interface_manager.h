@@ -11,8 +11,6 @@ public:
 	IManager()
 		:container()
 	{
-		if (!primary_instance)
-			primary_instance = this;
 	}
 	virtual ~IManager()
 	{
@@ -22,7 +20,9 @@ public:
 		}
 	}
 
-	virtual void Load() = 0;
+	virtual void Load(const std::wstring& file)
+	{
+	}
 
 	virtual void Unload(const std::string& name)
 	{
@@ -44,13 +44,6 @@ public:
 		return nullptr;
 	}
 
-	static type* GetPrimaryManager()
-	{
-		return primary_instance;
-	}
-
 protected:
 	std::unordered_map<std::string, type*> container;
-
-	static IManager* primary_instance;
 };

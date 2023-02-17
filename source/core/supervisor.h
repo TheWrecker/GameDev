@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "platfrom_defs.h"
+#include "defs_platform.h"
 
 class ServiceManager;
 

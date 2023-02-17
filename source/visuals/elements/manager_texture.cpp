@@ -1,11 +1,8 @@
 
 #include "util_funcs.h"
-#include "texture.h"
 #include "../presenter.h"
 
 #include "manager_texture.h"
-
-IManager<Texture>* TextureManager::primary_instance = nullptr;
 
 TextureManager::TextureManager(Presenter* presenter)
     :presenter(presenter)
@@ -40,4 +37,9 @@ void TextureManager::Load(const std::wstring& file, const std::string& name)
         assert(_texture);
         container.insert(std::pair(_name, _texture));
     }
+}
+
+ID3D11ShaderResourceView* TextureManager::GetShaderView(const std::string& name)
+{
+    return Get(name)->GetShaderView();
 }

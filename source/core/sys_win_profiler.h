@@ -7,7 +7,7 @@
 #include <Psapi.h>
 #include <TCHAR.h>
 
-#include "platfrom_defs.h"
+#include "defs_platform.h"
 #include "interface_sys_profiler.h"
 
 class WindowsProfiler : public ISystemProfiler

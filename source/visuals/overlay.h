@@ -4,7 +4,7 @@
 #include <d3d11.h>
 
 #include "interface_drawable.h"
-#include"platfrom_defs.h"
+#include"defs_platform.h"
 
 class Presenter;
 class SystemTicker;

@@ -142,7 +142,7 @@
     <ClCompile Include="source\visuals\elements\sampler_texture.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
-    <ClCompile Include="source\visuals\elements\pipeline_states.cpp">
+    <ClCompile Include="source\visuals\elements\master_state.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
     <ClCompile Include="source\visuals\render\render_base.cpp">
@@ -154,12 +154,12 @@
     <ClCompile Include="source\visuals\elements\manager_texture.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
-    <ClCompile Include="source\visuals\elements\pipeline_buffers.cpp">
+    <ClCompile Include="source\visuals\elements\master_buffer.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\headers\platfrom_defs.h">
+    <ClInclude Include="source\headers\defs_platform.h">
       <Filter>source\headers</Filter>
     </ClInclude>
     <ClInclude Include="source\core\interface_sys_platform.h">
@@ -288,7 +288,7 @@
     <ClInclude Include="source\visuals\elements\sampler_texture.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
-    <ClInclude Include="source\visuals\elements\pipeline_states.h">
+    <ClInclude Include="source\visuals\elements\master_state.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\render\render_base.h">
@@ -306,8 +306,11 @@
     <ClInclude Include="source\visuals\elements\manager_texture.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
-    <ClInclude Include="source\visuals\elements\pipeline_buffers.h">
+    <ClInclude Include="source\visuals\elements\master_buffer.h">
       <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\defs_pipeline.h">
+      <Filter>source\headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
