@@ -57,3 +57,13 @@ void Supervisor::PassControl()
 
 	}
 }
+
+void Supervisor::SetDebugQuery(ID3D11Debug* target)
+{
+	d3d11_debug = target;
+}
+
+ID3D11Debug* Supervisor::GetDebugQuery()
+{
+	return d3d11_debug;
+}

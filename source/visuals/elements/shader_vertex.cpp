@@ -34,6 +34,5 @@ VertexShader::~VertexShader()
 
 void VertexShader::Apply()
 {
-    assert(shader);
     context->VSSetShader(shader, 0, 0);
 }

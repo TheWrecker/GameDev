@@ -40,14 +40,15 @@ Presenter::Presenter(Supervisor* parent)
 
 	scene->SwitchMode(SceneMode::DEVELOPEMENT);
 	overlay->Show();
+
+	//show all live d3d11device objects
+	//ID3D11Debug* _debug = nullptr;
+	//device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&_debug));
+	//supervisor->SetDebugQuery(_debug);
 }
 
 Presenter::~Presenter()
 {
-	//show all live d3d11device objects
-	/*ID3D11Debug* debug = nullptr;
-	device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&debug));*/
-
 	DXRelease(device);
 	if (context)
 		context->ClearState();
@@ -61,9 +62,6 @@ Presenter::~Presenter()
 	DXRelease(depth_stencil);
 	DXRelease(depth_stencil_view);
 	DXRelease(rasterizer_state);
-
-	/*debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
-	debug->Release();*/
 }
 
 void Presenter::Draw()

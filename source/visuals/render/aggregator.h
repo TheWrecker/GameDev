@@ -22,5 +22,5 @@ private:
 	ID3D11DeviceContext* context;
 	Scene* scene;
 	Presenter* presenter;
-	std::deque<RenderBase*> renderers;
+	std::deque<std::unique_ptr<RenderBase>> renderers;
 };

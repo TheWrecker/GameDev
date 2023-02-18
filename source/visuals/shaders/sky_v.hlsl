@@ -18,7 +18,7 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 position : SV_Position;
-    float2 uvw : TEXCOORD;
+    float3 uvw : TEXCOORD;
 };
 
 VS_OUTPUT main(VS_INPUT vertex)
@@ -27,7 +27,7 @@ VS_OUTPUT main(VS_INPUT vertex)
     
     output.position = mul(vertex.position, translation_matrix);
     output.position = mul(output.position, view_projection_matrix);
-    output.uvw = vertex.uv.rg;
+    output.uvw = vertex.position.rgb;
     
     return output;
 }

@@ -16,6 +16,7 @@ IndexBuffer::IndexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, std
 
 IndexBuffer::~IndexBuffer()
 {
+	Unbind();
 	DXRelease(buffer);
 }
 
@@ -46,8 +47,16 @@ void IndexBuffer::Bind()
 
 void IndexBuffer::Unbind()
 {
-	ID3D11Buffer* nullBuffer = { nullptr };
-	context->IASetIndexBuffer(nullBuffer, DXGI_FORMAT_R32_UINT, 0);
+	ID3D11Buffer* _buffer = { nullptr };
+	DXGI_FORMAT _format;
+	unsigned int _int;
+	context->IAGetIndexBuffer(&_buffer, 0, 0);
+	if (_buffer == buffer)
+	{
+		ID3D11Buffer* _null_buffer = { nullptr };
+		context->IASetIndexBuffer(_null_buffer, DXGI_FORMAT_R32_UINT, 0);
+	}
+	DXRelease(_buffer);
 }
 
 unsigned int IndexBuffer::GetIndexCount()

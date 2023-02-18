@@ -8,6 +8,7 @@
     #else
     #endif
 
+    #include <d3d11.h>
     #include <memory>
     #include <string>
     #include <Windows.h>
@@ -19,11 +20,21 @@
     {
     #if defined(DEBUG) | defined(_DEBUG)
         _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+        //ID3D11Debug* _debug = nullptr;
+    #endif
+        
+        //initialize all systems
+        {
+            auto _supervisor = std::make_unique<Supervisor>(instance);
+            //_debug = _supervisor->GetDebugQuery();
+            _supervisor->PassControl();
+        }
+
+    #if defined(DEBUG) | defined(_DEBUG)
+        //_debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+        //_debug->Release();
     #endif
 
-        //initialize all systems
-        auto _supervisor = std::make_unique<Supervisor>(instance);
-        _supervisor->PassControl();
         return 0;
     }
 

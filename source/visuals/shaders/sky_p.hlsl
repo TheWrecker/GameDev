@@ -1,15 +1,15 @@
 
-Texture2D SkyboxTexture;
+TextureCube SkyTexture;
 SamplerState BilinearSampler;
 
 struct VS_OUTPUT
 {
-    float4 Position : SV_Position;
-    float2 TextureCoordinates : TEXCOORD;
+    float4 position : SV_Position;
+    float3 uvw : TEXCOORD;
 };
 
 
-float4 main(VS_OUTPUT IN) : SV_TARGET
+float4 main(VS_OUTPUT input) : SV_TARGET
 {
-    return SkyboxTexture.Sample(BilinearSampler, IN.TextureCoordinates.rg);
+    return SkyTexture.Sample(BilinearSampler, input.uvw);
 }

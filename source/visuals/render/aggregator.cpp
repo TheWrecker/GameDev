@@ -15,12 +15,16 @@ Aggregator::Aggregator(Scene* scene)
 	device = presenter->device;
 	context = presenter->context;
 
+	//TODO: move to scene change
+
 	//Sky
+	//TODO:separate culling
 	RenderBase* _sky = new SkyRender(scene);
-	renderers.push_back(_sky);
+	renderers.push_back(std::unique_ptr<RenderBase>(_sky));
+
 	//Dev Render
 	RenderBase* _dev = new DevRender(scene);
-	renderers.push_back(_dev);
+	renderers.push_back(std::unique_ptr<RenderBase>(_dev));
 }
 
 Aggregator::~Aggregator()
@@ -32,6 +36,6 @@ void Aggregator::AggregateAllRenders()
 	context->ClearRenderTargetView(presenter->render_target_view, reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
 	context->ClearDepthStencilView(presenter->depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	for (auto _renderer : renderers)
+	for (auto& _renderer : renderers)
 		_renderer->Render();
 }

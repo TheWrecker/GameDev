@@ -14,6 +14,7 @@ InputLayout::InputLayout(Presenter* presenter, VertexShader* shader)
 
 InputLayout::~InputLayout()
 {
+    Unbind();
     DXRelease(input_layout);
 }
 

@@ -34,6 +34,5 @@ PixelShader::~PixelShader()
 
 void PixelShader::Apply()
 {
-	assert(shader);
 	context->PSSetShader(shader, 0, 0);
 }

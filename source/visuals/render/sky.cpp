@@ -29,8 +29,8 @@ void SkyRender::Render()
 	DirectX::XMMATRIX _worldMatrix = DirectX::XMMatrixScaling(500.0f, 500.0f, 500.0f) * DirectX::XMMatrixTranslation(_currentPosition.x, _currentPosition.y, _currentPosition.z);
 	PerFrameBuffer _cb1 = { DirectX::XMMatrixTranspose(_worldMatrix)};
 	per_frame_buffer->Update(_cb1);
-	int i = 0;
-	auto _shaderView = texture_manager->GetShaderView("test_checkers");
+
+	auto _shaderView = texture_manager->GetShaderView("sky");
 	context->PSSetShaderResources(0, 1, &_shaderView);
 	buffer_master->BindDefaultConstant(DefaultConstants::VIEW_PROJECTION_MATRIX);
 	buffer_master->BindDefaultObject(DefaultObjects::SPHERE);

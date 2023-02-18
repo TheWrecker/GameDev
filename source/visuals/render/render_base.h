@@ -20,7 +20,7 @@ class RenderBase
 {
 public:
 	RenderBase(Scene* scene);
-	~RenderBase();
+	virtual ~RenderBase();
 
 	virtual void Render() = 0;
 	virtual void Update();

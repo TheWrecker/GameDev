@@ -102,17 +102,29 @@ inline void ConstantBuffer<type>::Unbind()
 	if (!is_bound)
 		return;
 
-	ID3D11Buffer* nullBuffer = { nullptr };
+	ID3D11Buffer* _buffer = { nullptr };
 	switch (current_stage)
 	{
 		case BindStage::VERTEX:
 		{
-			context->VSSetConstantBuffers(current_slot, 1, &nullBuffer);
+			context->VSGetConstantBuffers(current_slot, 1, &_buffer);
+			if (_buffer == buffer)
+			{
+				ID3D11Buffer* _null_buffer = { nullptr };
+				context->VSSetConstantBuffers(current_slot, 1, &_null_buffer);
+			}
+			DXRelease(_buffer);
 			break;
 		}
 		case BindStage::PIXEL:
 		{
-			context->PSSetConstantBuffers(current_slot, 1, &nullBuffer);
+			context->PSGetConstantBuffers(current_slot, 1, &_buffer);
+			if (_buffer == buffer)
+			{
+				ID3D11Buffer* _null_buffer = { nullptr };
+				context->PSSetConstantBuffers(current_slot, 1, &_null_buffer);
+			}
+			DXRelease(_buffer);
 			break;
 		}
 		default:

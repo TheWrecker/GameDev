@@ -32,6 +32,7 @@ TextureSampler::TextureSampler(ID3D11Device* device, ID3D11DeviceContext* contex
 
 TextureSampler::~TextureSampler()
 {
+	Unbind();
 	DXRelease(sampler_state);
 }
 
@@ -49,6 +50,11 @@ void TextureSampler::Bind(unsigned int slot)
 
 void TextureSampler::Unbind()
 {
-	ID3D11SamplerState* nullSampler = { nullptr };
-	context->PSSetSamplers(current_slot, 1, &nullSampler);
+	ID3D11SamplerState* _sampler = { nullptr };
+	context->PSGetSamplers(current_slot, 1, &_sampler);
+	if (_sampler == sampler_state)
+	{
+		ID3D11SamplerState* _null_sampler = { nullptr };
+		context->PSSetSamplers(current_slot, 1, &_null_sampler);
+	}
 }

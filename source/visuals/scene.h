@@ -49,7 +49,7 @@ private:
 	std::unique_ptr<StateMaster> state_master;
 	std::unique_ptr<BufferMaster> buffer_master;
 	std::unique_ptr<TextureManager> texture_manager;
-	std::unique_ptr <ModelManager> model_manager;
+	std::unique_ptr<ModelManager> model_manager;
 	std::unique_ptr<Aggregator> aggregator;
 
 	CameraType camera_type;

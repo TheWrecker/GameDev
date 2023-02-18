@@ -95,6 +95,14 @@ inline void VertexBuffer<type>::Unbind()
 	if (!is_bound)
 		return;
 
-	ID3D11Buffer* nullBuffer = { nullptr };
-	context->IASetVertexBuffers(current_slot, 1, &nullBuffer, &vertex_stride, &vertex_offset);
+	ID3D11Buffer* _buffer = { nullptr };
+	unsigned int _stride, _offset;
+	context->IAGetVertexBuffers(current_slot, 1, &_buffer, &_stride, &_offset);
+	if ((_buffer == buffer) && (_stride == vertex_stride) && (_offset == vertex_offset))
+	{
+		ID3D11Buffer* _null_buffer = { nullptr };
+		_stride = _offset = 0;
+		context->IASetVertexBuffers(current_slot, 1, &_null_buffer, &_stride, &_offset);
+	}
+	DXRelease(_buffer);
 }
