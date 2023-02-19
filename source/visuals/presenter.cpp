@@ -344,3 +344,13 @@ ID3D11DeviceContext* Presenter::GetContext()
 {
 	return context;
 }
+
+unsigned int Presenter::GetScreenWidth()
+{
+	return swapchain_desc.Width;
+}
+
+unsigned int Presenter::GetScreenHeight()
+{
+	return swapchain_desc.Height;
+}

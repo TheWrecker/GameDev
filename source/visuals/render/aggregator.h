@@ -2,7 +2,7 @@
 #pragma once
 
 #include <d3d11.h>
-#include <deque>
+#include <vector>
 
 #include "render_base.h"
 
@@ -22,5 +22,10 @@ private:
 	ID3D11DeviceContext* context;
 	Scene* scene;
 	Presenter* presenter;
-	std::deque<std::unique_ptr<RenderBase>> renderers;
+	StateMaster* state_master;
+	ModelManager* model_manager;
+	TextureManager* texture_manager;
+	BufferMaster* buffer_master;
+
+	std::vector<std::unique_ptr<RenderBase>> renderers;
 };

@@ -43,6 +43,8 @@ public:
 	Scene* GetActiveScene();
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
+	unsigned int GetScreenWidth();
+	unsigned int GetScreenHeight();
 
 	template <typename type>
 	type QueryService(const std::string& name);

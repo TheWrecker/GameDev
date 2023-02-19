@@ -6,7 +6,8 @@
 ModelManager::ModelManager()
 {
     //load essential models
-    Load(L"assets/models/block3.obj", true, "block"); //block
+    Load(L"assets/models/quad.obj", true, "quad"); //quad
+    Load(L"assets/models/block.obj", true, "block"); //block
     Load(L"assets/models/sphere.obj", true, "sphere"); //sphere
 }
 

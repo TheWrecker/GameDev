@@ -16,6 +16,8 @@
 #include "../elements/master_state.h"
 #include "../elements/master_buffer.h"
 
+class Scene;
+
 class RenderBase
 {
 public:

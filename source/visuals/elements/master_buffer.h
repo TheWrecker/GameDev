@@ -27,6 +27,7 @@ enum class DefaultObjects : unsigned int
 {
 	//32 slots total
 	UNDEFINED = 0,
+	QUAD = 28,
 	BLOCK = 29,
 	SPHERE = 30,
 	END_PADDING = 31 //D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT (32)

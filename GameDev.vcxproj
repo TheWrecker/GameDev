@@ -176,6 +176,7 @@
     <ClCompile Include="source\visuals\elements\master_buffer.cpp" />
     <ClCompile Include="source\visuals\elements\master_state.cpp" />
     <ClCompile Include="source\visuals\elements\manager_texture.cpp" />
+    <ClCompile Include="source\visuals\elements\render_target.cpp" />
     <ClCompile Include="source\visuals\elements\sampler_texture.cpp" />
     <ClCompile Include="source\visuals\elements\shader_interface.cpp" />
     <ClCompile Include="source\visuals\elements\material.cpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="source\visuals\render\aggregator.cpp" />
     <ClCompile Include="source\visuals\render\render_base.cpp" />
     <ClCompile Include="source\visuals\render\render_dev.cpp" />
+    <ClCompile Include="source\visuals\render\render_pass.cpp" />
     <ClCompile Include="source\visuals\render\sky.cpp" />
     <ClCompile Include="source\visuals\scene.cpp" />
   </ItemGroup>
@@ -230,6 +232,7 @@
     <ClInclude Include="source\visuals\elements\manager_model.h" />
     <ClInclude Include="source\visuals\elements\master_state.h" />
     <ClInclude Include="source\visuals\elements\manager_texture.h" />
+    <ClInclude Include="source\visuals\elements\render_target.h" />
     <ClInclude Include="source\visuals\elements\sampler_texture.h" />
     <ClInclude Include="source\visuals\elements\shader_interface.h" />
     <ClInclude Include="source\visuals\elements\material.h" />
@@ -242,6 +245,7 @@
     <ClInclude Include="source\visuals\presenter.h" />
     <ClInclude Include="source\visuals\render\aggregator.h" />
     <ClInclude Include="source\visuals\render\render_base.h" />
+    <ClInclude Include="source\visuals\render\render_pass.h" />
     <ClInclude Include="source\visuals\render\sky.h" />
     <ClInclude Include="source\visuals\render\render_dev.h" />
     <ClInclude Include="source\visuals\scene.h" />
@@ -266,6 +270,26 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="source\visuals\shaders\pass_p.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="source\visuals\shaders\pass_v.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="source\visuals\shaders\sky_p.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

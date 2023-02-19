@@ -28,4 +28,3 @@ private:
 	std::vector<D3D11_INPUT_ELEMENT_DESC> container;
 	ID3D11InputLayout* input_layout;
 };
-

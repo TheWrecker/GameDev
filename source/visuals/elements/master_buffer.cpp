@@ -52,6 +52,11 @@ void BufferMaster::RebuildDefaults()
 	default_constant_buffers[_index]->Update(_info);
 
 	Model* _model = nullptr;
+	//quad buffers
+	_index = static_cast<unsigned int>(DefaultObjects::QUAD);
+	_model = scene->GetModelManager()->Get("quad");
+	CreateObjectBuffers(_index, _model);
+
 	//block buffers
 	_index = static_cast<unsigned int>(DefaultObjects::BLOCK);
 	_model = scene->GetModelManager()->Get("block");

@@ -15,7 +15,6 @@
 
     #include "core/supervisor.h"
 
-
     int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
     {
     #if defined(DEBUG) | defined(_DEBUG)
@@ -37,6 +36,5 @@
 
         return 0;
     }
-
 
 #endif // _WINDOWS
