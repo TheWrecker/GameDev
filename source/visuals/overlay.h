@@ -6,13 +6,15 @@
 #include "interface_drawable.h"
 #include"defs_platform.h"
 
+class Aggregator;
+class Scene;
 class Presenter;
 class SystemTicker;
 
 class Overlay : public IDrawable
 {
 public:
-	Overlay(Presenter* parent, ID3D11Device* device, ID3D11DeviceContext* context);
+	Overlay(Presenter* parent);
 	~Overlay();
 
 	void Show();
@@ -21,6 +23,8 @@ public:
 	void Update() override;
 
 private:
+	Aggregator* aggregator;
+	Scene* scene;
 	Presenter* presenter;
 	SystemTicker* ticker;
 	bool show;

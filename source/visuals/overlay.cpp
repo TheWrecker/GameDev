@@ -6,20 +6,24 @@
 #include "../external/ImGui/imgui_impl_dx11.h"
 
 #include "util_funcs.h"
+#include "render/diffuse_lighting.h"
+#include "render/aggregator.h"
 #include "../core/platform.h"
 #include "../core/sys_ticker.h"
 #include "presenter.h"
 
 #include "overlay.h"
 
-Overlay::Overlay(Presenter* parent, ID3D11Device* device, ID3D11DeviceContext* context)
+Overlay::Overlay(Presenter* parent)
 	:presenter(parent), show(false)
 {
 #ifdef _WINDOWS
 	RetAssert(ImGui_ImplWin32_Init(parent->QueryService<Platform*>("platform")->GetWindowHandle()));
 #endif // _WINDOWS
-	RetAssert(ImGui_ImplDX11_Init(device, context));
+	RetAssert(ImGui_ImplDX11_Init(parent->GetDevice(), parent->GetContext()));
 	ticker = parent->QueryService<SystemTicker*>("ticker");
+	scene = parent->GetActiveScene();
+	aggregator = scene->GetAggregator();
 }
 
 Overlay::~Overlay()
@@ -122,6 +126,17 @@ void Overlay::Draw()
 			ImGui::Text("Ticks Per Second: %u", Profiler::ips);
 		}
 		*/
+
+		if (ImGui::CollapsingHeader("Scene"))
+		{
+			ImGui::DragFloat4("Light Color", (float*)&aggregator->render_lighting_diffuse->light_data.light_color, 0.01f, 0.0f, 1.0f);
+			ImGui::Separator();
+			ImGui::DragFloat4("Ambient Color", (float*)&aggregator->render_lighting_diffuse->light_data.ambient_color, 0.01f, 0.0f, 1.0f);
+			ImGui::Separator();
+			ImGui::DragFloat3("Light Direction", (float*)&aggregator->render_lighting_diffuse->light_data.light_direction, 0.01f, -1.0f, 1.0f);
+		}
+
+		ImGui::Separator();
 
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Performance");
 		ImGui::Text("Last Tick Duration: %fms", ticker->GetLastTickDuration() * 1000);

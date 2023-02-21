@@ -12,7 +12,7 @@ SkyRender::SkyRender(Scene* scene)
 
 	unsigned int _sphere_slot = static_cast<unsigned int>(DefaultObjects::SPHERE);
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
-	input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32A32_FLOAT, _sphere_slot)
+	input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _sphere_slot)
 		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _sphere_slot)
 		.Build();
 

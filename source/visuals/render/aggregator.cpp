@@ -1,5 +1,6 @@
 
 #include "../elements/render_target.h"
+#include "diffuse_lighting.h"
 #include "render_dev.h"
 #include "sky.h"
 #include "render_pass.h"
@@ -23,18 +24,17 @@ Aggregator::Aggregator(Scene* scene)
 
 	//TODO: move to scene change
 
-	//Sky = 0
-	//TODO:separate culling
-	RenderBase* _sky = new SkyRender(scene);
-	renderers.push_back(std::unique_ptr<RenderBase>(_sky));
+	//Sky 
+	render_sky = std::make_unique<SkyRender>(scene);
 
-	//Dev Render = 1
-	RenderBase* _dev = new DevRender(scene);
-	renderers.push_back(std::unique_ptr<RenderBase>(_dev));
+	//Dev Render
+	render_dev = std::make_unique<DevRender>(scene);
 
-	//render pass = 2
-	RenderBase* _pass = new RenderPass(scene, L"source/visuals/shaders/pass_p.hlsl");
-	renderers.push_back(std::unique_ptr<RenderBase>(_pass));
+	//render pass
+	render_pass = std::make_unique<RenderPass>(scene, L"source/visuals/shaders/pass_p.hlsl");
+
+	//diffuse lighting
+	render_lighting_diffuse = std::make_unique<DiffuseLighting>(scene);
 }
 
 Aggregator::~Aggregator()
@@ -44,48 +44,51 @@ Aggregator::~Aggregator()
 void Aggregator::AggregateAllRenders()
 {
 	//hotpath
-	// 
+	
 	//TODO: change based on scene mode
 	//TODO: replace hardcoded order with name lookup/std::set/std::deque?
-
-	auto _sky = renderers[0].get();
-	auto _dev = renderers[1].get();
-	auto _pass = reinterpret_cast<RenderPass*>(renderers[2].get());
 
 	//clear rendertargets
 	context->ClearRenderTargetView(presenter->render_target_view, reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
 	context->ClearDepthStencilView(presenter->depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	context->ClearRenderTargetView(_pass->GetRenderTarget()->GetTargetView(), reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
-	context->ClearDepthStencilView(_pass->GetRenderTarget()->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	context->ClearRenderTargetView(render_pass->GetRenderTarget()->GetTargetView(), reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
+	context->ClearDepthStencilView(render_pass->GetRenderTarget()->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	//update constants
 	//view projection
 	buffer_master->UpdateDefaultConstant(DefaultConstants::VIEW_PROJECTION_MATRIX);
 	buffer_master->BindDefaultConstant(DefaultConstants::VIEW_PROJECTION_MATRIX);
 
+	//TODO: bind  default samplers to predewfined slots and change shaders accordingly
 	//setup states
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	state_master->BindDefaultTextureSampler(DefaultSampler::BILINEAR, 0);
 
 	//bind render pass
-	_pass->BindAsRenderTarget();
+	//render_pass->BindAsRenderTarget();
 
 	//render sky
 	auto _shaderView = texture_manager->GetShaderView("sky");
 	context->PSSetShaderResources(0, 1, &_shaderView);
 	buffer_master->BindDefaultObject(DefaultObjects::SPHERE);
-	_sky->Render();
+	render_sky->Render();
 
 	//render dev
-	_shaderView = texture_manager->GetShaderView("earth");
+	_shaderView = texture_manager->GetShaderView("test_checkers");
 	context->PSSetShaderResources(0, 1, &_shaderView);
 	buffer_master->BindDefaultObject(DefaultObjects::BLOCK);
-	_dev->Render();
+	render_dev->Render();
+
+	//render diffuse lighting
+	_shaderView = texture_manager->GetShaderView("earth");
+	context->PSSetShaderResources(0, 1, &_shaderView);
+	buffer_master->BindDefaultObject(DefaultObjects::SPHERE_NORMAL);
+	render_lighting_diffuse->Render();
 
 	//render the pass
-	buffer_master->BindDefaultObject(DefaultObjects::QUAD);
+	/*buffer_master->BindDefaultObject(DefaultObjects::QUAD);
 	context->OMSetRenderTargets(1, &presenter->render_target_view, presenter->depth_stencil_view);
-	_pass->Render();
+	render_pass->Render();*/
 
 	//restore defaults
 }

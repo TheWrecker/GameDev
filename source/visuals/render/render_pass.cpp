@@ -15,7 +15,7 @@ RenderPass::RenderPass(Scene* scene, const std::wstring& pixelShader)
 
 	unsigned int _quad_slot = static_cast<unsigned int>(DefaultObjects::QUAD);
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
-	input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32A32_FLOAT, _quad_slot)
+	input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _quad_slot)
 		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _quad_slot)
 		.Build();
 }

@@ -8,7 +8,7 @@
 #include "master_buffer.h"
 
 BufferMaster::BufferMaster(Scene* scene)
-	:scene(scene), default_constant_buffers(), default_index_buffers(), default_vertex_buffers()
+	:scene(scene), default_constant_buffers(), default_index_buffers(), default_vertex_buffers(), normal_vertex_buffers()
 {
 	device = scene->GetPresenter()->GetDevice();
 	context = scene->GetPresenter()->GetContext();
@@ -30,6 +30,12 @@ void BufferMaster::RebuildDefaults()
 			delete item;
 	}
 
+	if (normal_vertex_buffers.size() > 0)
+	{
+		for (auto item : normal_vertex_buffers)
+			delete item;
+	}
+
 	if (default_index_buffers.size() > 0)
 	{
 		for (auto item : default_index_buffers)
@@ -38,10 +44,12 @@ void BufferMaster::RebuildDefaults()
 
 	default_constant_buffers.clear();
 	default_vertex_buffers.clear();
+	normal_vertex_buffers.clear();
 	default_index_buffers.clear();
 
 	default_constant_buffers.resize(static_cast<unsigned int>(DefaultConstants::END_PADDING));
 	default_vertex_buffers.resize(static_cast<unsigned int>(DefaultObjects::END_PADDING));
+	normal_vertex_buffers.resize(static_cast<unsigned int>(DefaultObjects::END_PADDING));
 	default_index_buffers.resize(static_cast<unsigned int>(DefaultObjects::END_PADDING));
 	unsigned int _index = 0;
 
@@ -52,20 +60,36 @@ void BufferMaster::RebuildDefaults()
 	default_constant_buffers[_index]->Update(_info);
 
 	Model* _model = nullptr;
-	//quad buffers
+	//quad buffers without normals
 	_index = static_cast<unsigned int>(DefaultObjects::QUAD);
 	_model = scene->GetModelManager()->Get("quad");
 	CreateObjectBuffers(_index, _model);
 
-	//block buffers
+	//block buffers without normals
 	_index = static_cast<unsigned int>(DefaultObjects::BLOCK);
 	_model = scene->GetModelManager()->Get("block");
 	CreateObjectBuffers(_index, _model);
 
-	//sphere buffer
+	//sphere buffer without normals
 	_index = static_cast<unsigned int>(DefaultObjects::SPHERE);
 	_model = scene->GetModelManager()->Get("sphere");
 	CreateObjectBuffers(_index, _model);
+
+	_model = nullptr;
+	//quad buffers with normals
+	_index = static_cast<unsigned int>(DefaultObjects::QUAD_NORMAL);
+	_model = scene->GetModelManager()->Get("quad");
+	CreateObjectBuffers(_index, _model, true);
+
+	//block buffers with normals
+	_index = static_cast<unsigned int>(DefaultObjects::BLOCK_NORMAL);
+	_model = scene->GetModelManager()->Get("block");
+	CreateObjectBuffers(_index, _model, true);
+
+	//sphere buffer with normals
+	_index = static_cast<unsigned int>(DefaultObjects::SPHERE_NORMAL);
+	_model = scene->GetModelManager()->Get("sphere");
+	CreateObjectBuffers(_index, _model, true);
 }
 
 BufferMaster::~BufferMaster()
@@ -74,6 +98,9 @@ BufferMaster::~BufferMaster()
 		delete item;
 
 	for (auto item : default_vertex_buffers)
+		delete item;
+
+	for (auto item : normal_vertex_buffers)
 		delete item;
 
 	for (auto item : default_index_buffers)
@@ -116,13 +143,49 @@ void BufferMaster::UnbindDefaultConstant(DefaultConstants target)
 
 void BufferMaster::BindDefaultObject(DefaultObjects target)
 {
-	default_vertex_buffers[static_cast<unsigned int>(target)]->Bind(static_cast<unsigned int>(target));
+	switch (target)
+	{
+		case DefaultObjects::QUAD_NORMAL:
+		case DefaultObjects::BLOCK_NORMAL:
+		case DefaultObjects::SPHERE_NORMAL:
+		{
+			normal_vertex_buffers[static_cast<unsigned int>(target)]->Bind(static_cast<unsigned int>(target));
+			break;
+		}
+		case DefaultObjects::QUAD:
+		case DefaultObjects::BLOCK:
+		case DefaultObjects::SPHERE:
+		{
+			default_vertex_buffers[static_cast<unsigned int>(target)]->Bind(static_cast<unsigned int>(target));
+			break;
+		}
+		default:
+			break;
+	}
 	default_index_buffers[static_cast<unsigned int>(target)]->Bind();
 }
 
 void BufferMaster::UnbindDefaultObject(DefaultObjects target)
 {
-	default_vertex_buffers[static_cast<unsigned int>(target)]->Unbind();
+	switch (target)
+	{
+	case DefaultObjects::QUAD_NORMAL:
+	case DefaultObjects::BLOCK_NORMAL:
+	case DefaultObjects::SPHERE_NORMAL:
+	{
+		normal_vertex_buffers[static_cast<unsigned int>(target)]->Unbind();
+		break;
+	}
+	case DefaultObjects::QUAD:
+	case DefaultObjects::BLOCK:
+	case DefaultObjects::SPHERE:
+	{
+		default_vertex_buffers[static_cast<unsigned int>(target)]->Unbind();
+		break;
+	}
+	default:
+		break;
+	}
 	default_index_buffers[static_cast<unsigned int>(target)]->Unbind();
 }
 
@@ -141,21 +204,38 @@ unsigned int BufferMaster::GetCurrentSlot(DefaultObjects target)
 	return static_cast<unsigned int>(target);
 }
 
-void BufferMaster::CreateObjectBuffers(unsigned int index, Model* model)
+void BufferMaster::CreateObjectBuffers(unsigned int index, Model* model, bool addNormals)
 {
 	std::size_t _vertexCount = model->meshes.at(0)->vertices.size();
 	std::size_t i = 0;
-	default_vertex_buffers[index] = new VertexBuffer<DefaultVertexStruct>(device, context, _vertexCount);
-	DefaultVertexStruct _vertex = {};
-	for (i; i < _vertexCount; i++)
+	if (addNormals)
 	{
-		auto& vertex = model->meshes.at(0)->vertices[i];
-		_vertex.position = { vertex.x, vertex.y, vertex.z, 1.0f };
-		auto& texCoords = model->meshes[0]->texture_coordinates.at(0)->at(i);
-		_vertex.uv = { texCoords.x, texCoords.y };
-		default_vertex_buffers[index]->AddVertex(_vertex);
+		normal_vertex_buffers[index] = new VertexBuffer<NormalVertexStruct>(device, context, _vertexCount);
+		NormalVertexStruct _vertex = {};
+		for (i; i < _vertexCount; i++)
+		{
+			_vertex.position = model->meshes.at(0)->vertices[i];
+			auto& texCoords = model->meshes[0]->texture_coordinates.at(0)->at(i);
+			_vertex.uv = { texCoords.x, texCoords.y };
+			if (model->meshes.at(0)->normals.size() > 0)
+				_vertex.normal = model->meshes.at(0)->normals[i];
+			normal_vertex_buffers[index]->AddVertex(_vertex);
+		}
+		normal_vertex_buffers[index]->Build();
 	}
-	default_vertex_buffers[index]->Build();
+	else
+	{
+		default_vertex_buffers[index] = new VertexBuffer<DefaultVertexStruct>(device, context, _vertexCount);
+		DefaultVertexStruct _vertex = {};
+		for (i; i < _vertexCount; i++)
+		{
+			_vertex.position = model->meshes.at(0)->vertices[i];
+			auto& texCoords = model->meshes[0]->texture_coordinates.at(0)->at(i);
+			_vertex.uv = { texCoords.x, texCoords.y };
+			default_vertex_buffers[index]->AddVertex(_vertex);
+		}
+		default_vertex_buffers[index]->Build();
+	}
 
 	std::size_t _indexCount = model->meshes.at(0)->indices.size();
 	default_index_buffers[index] = new IndexBuffer(device, context, _indexCount);

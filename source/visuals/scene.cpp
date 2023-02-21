@@ -72,6 +72,11 @@ void Scene::SwitchCameraType(CameraType type)
 	active_camera.swap(_temp);
 }
 
+Aggregator* Scene::GetAggregator()
+{
+	return aggregator.get();
+}
+
 Presenter* Scene::GetPresenter()
 {
 	return presenter;

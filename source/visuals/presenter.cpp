@@ -36,9 +36,8 @@ Presenter::Presenter(Supervisor* parent)
 	RetAssert(SetRasterizerState(CullMode::CULL_NONE, false, false));
 
 	scene = std::make_unique<Scene>(this);
-	overlay = std::make_unique<Overlay>(this, device, context);
-
 	scene->SwitchMode(SceneMode::DEVELOPEMENT);
+	overlay = std::make_unique<Overlay>(this);
 	overlay->Show();
 
 	//show all live d3d11device objects

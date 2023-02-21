@@ -36,6 +36,7 @@ public:
 	void Update() override;
 	void SwitchCameraType(CameraType type);
 
+	Aggregator* GetAggregator();
 	Presenter* GetPresenter();
 	BasicCamera* GetActiveCamera();
 	StateMaster* GetStateMaster();

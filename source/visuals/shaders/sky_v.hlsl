@@ -11,7 +11,7 @@ cbuffer CBufferTranslation : register(b1)
 
 struct VS_INPUT
 {
-    float4 position : POSITION;
+    float3 position : POSITION;
     float2 uv : TEXCOORDS;
 };
 
@@ -25,7 +25,8 @@ VS_OUTPUT main(VS_INPUT vertex)
 {
     VS_OUTPUT output;
     
-    output.position = mul(vertex.position, translation_matrix);
+    float4 pos = float4(vertex.position, 1.0);
+    output.position = mul(pos, translation_matrix);
     output.position = mul(output.position, view_projection_matrix);
     output.uvw = vertex.position.rgb;
     
