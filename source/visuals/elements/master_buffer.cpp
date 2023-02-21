@@ -1,7 +1,8 @@
 
 #include "mesh.h"
 #include "model.h"
-#include "../../entities/camera_basic.h"
+#include "../entities/sun.h"
+#include "../entities/camera_basic.h"
 #include "../scene.h"
 #include "../presenter.h"
 
@@ -53,9 +54,15 @@ void BufferMaster::RebuildDefaults()
 	default_index_buffers.resize(static_cast<unsigned int>(DefaultObjects::END_PADDING));
 	unsigned int _index = 0;
 
+	//sun light data
+	_index = static_cast<unsigned int>(DefaultConstants::SUN_LIGHT_DATA);
+	DefaultConstantStruct _info = { scene->GetSun()->GetLightInfo() };
+	default_constant_buffers[_index] = new ConstantBuffer<DefaultConstantStruct>(device, context);
+	default_constant_buffers[_index]->Update(_info);
+
 	//view projection matrix
 	_index = static_cast<unsigned int>(DefaultConstants::VIEW_PROJECTION_MATRIX);
-	DefaultConstantStruct _info = { camera->View_Projection_Matrix() };
+	_info = { camera->View_Projection_Matrix() };
 	default_constant_buffers[_index] = new ConstantBuffer<DefaultConstantStruct>(device, context);
 	default_constant_buffers[_index]->Update(_info);
 
@@ -109,12 +116,19 @@ BufferMaster::~BufferMaster()
 
 void BufferMaster::UpdateDefaultConstant(DefaultConstants target)
 {
+	auto _index = static_cast<unsigned int>(target);
 	switch (target)
 	{
+		case DefaultConstants::SUN_LIGHT_DATA:
+		{
+			DefaultConstantStruct _info = { scene->GetSun()->GetLightInfo()};
+			default_constant_buffers[_index]->Update(_info);
+			break;
+		}
 		case DefaultConstants::VIEW_PROJECTION_MATRIX:
 		{
 			DefaultConstantStruct _info = { DirectX::XMMatrixTranspose(camera->View_Projection_Matrix()) };
-			default_constant_buffers[static_cast<unsigned int>(target)]->Update(_info);
+			default_constant_buffers[_index]->Update(_info);
 			break;
 		}
 		default:
@@ -124,11 +138,17 @@ void BufferMaster::UpdateDefaultConstant(DefaultConstants target)
 
 void BufferMaster::BindDefaultConstant(DefaultConstants target)
 {
+	auto _index = static_cast<unsigned int>(target);
 	switch (target)
 	{
 		case DefaultConstants::VIEW_PROJECTION_MATRIX:
 		{
-			default_constant_buffers[static_cast<unsigned int>(target)]->Bind(BindStage::VERTEX, static_cast<unsigned int>(target));
+			default_constant_buffers[_index]->Bind(BindStage::VERTEX, _index);
+			break;
+		}
+		case DefaultConstants::SUN_LIGHT_DATA:
+		{
+			default_constant_buffers[_index]->Bind(BindStage::PIXEL, _index);
 			break;
 		}
 		default:
@@ -143,50 +163,52 @@ void BufferMaster::UnbindDefaultConstant(DefaultConstants target)
 
 void BufferMaster::BindDefaultObject(DefaultObjects target)
 {
+	auto _index = static_cast<unsigned int>(target);
 	switch (target)
 	{
 		case DefaultObjects::QUAD_NORMAL:
 		case DefaultObjects::BLOCK_NORMAL:
 		case DefaultObjects::SPHERE_NORMAL:
 		{
-			normal_vertex_buffers[static_cast<unsigned int>(target)]->Bind(static_cast<unsigned int>(target));
+			normal_vertex_buffers[_index]->Bind(_index);
 			break;
 		}
 		case DefaultObjects::QUAD:
 		case DefaultObjects::BLOCK:
 		case DefaultObjects::SPHERE:
 		{
-			default_vertex_buffers[static_cast<unsigned int>(target)]->Bind(static_cast<unsigned int>(target));
+			default_vertex_buffers[_index]->Bind(_index);
 			break;
 		}
 		default:
 			break;
 	}
-	default_index_buffers[static_cast<unsigned int>(target)]->Bind();
+	default_index_buffers[_index]->Bind();
 }
 
 void BufferMaster::UnbindDefaultObject(DefaultObjects target)
 {
+	auto _index = static_cast<unsigned int>(target);
 	switch (target)
 	{
 	case DefaultObjects::QUAD_NORMAL:
 	case DefaultObjects::BLOCK_NORMAL:
 	case DefaultObjects::SPHERE_NORMAL:
 	{
-		normal_vertex_buffers[static_cast<unsigned int>(target)]->Unbind();
+		normal_vertex_buffers[_index]->Unbind();
 		break;
 	}
 	case DefaultObjects::QUAD:
 	case DefaultObjects::BLOCK:
 	case DefaultObjects::SPHERE:
 	{
-		default_vertex_buffers[static_cast<unsigned int>(target)]->Unbind();
+		default_vertex_buffers[_index]->Unbind();
 		break;
 	}
 	default:
 		break;
 	}
-	default_index_buffers[static_cast<unsigned int>(target)]->Unbind();
+	default_index_buffers[_index]->Unbind();
 }
 
 unsigned int BufferMaster::GetIndexCount(DefaultObjects target)

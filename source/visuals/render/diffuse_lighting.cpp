@@ -3,12 +3,9 @@
 DiffuseLighting::DiffuseLighting(Scene* scene)
 	:RenderBase(scene)
 {
-	light = std::make_unique<BasicEntity>();
-	light->SetPosition(10.0f, 10.0f, 10.0f);
 	object = std::make_unique<BasicEntity>();
 	object->SetPosition(4.0f, 0.0f, 0.0f);
 
-	light_buffer = std::make_unique<ConstantBuffer<LightData>>(device, context);
 	object_buffer = std::make_unique<ConstantBuffer<PerObjectBuffer>>(device, context);
 
 	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/diffuse_lighting_v.hlsl");
@@ -21,9 +18,6 @@ DiffuseLighting::DiffuseLighting(Scene* scene)
 		.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, _slot)
 		.Build();
 
-	light_data.light_direction = { -1.0f, 1.0f, 1.0f, 1.0f };
-	light_data.light_color = { 1.0f, 1.0f, 1.0f, 0.7f };
-	light_data.ambient_color = { 0.5f, 0.5f, 0.5f, 0.3f };
 }
 
 DiffuseLighting::~DiffuseLighting()
@@ -32,9 +26,6 @@ DiffuseLighting::~DiffuseLighting()
 
 void DiffuseLighting::Render()
 {
-	light_buffer->Update(light_data);
-	light_buffer->Bind(BindStage::PIXEL, 3);
-
 	PerObjectBuffer _cb2 = { DirectX::XMMatrixTranspose(object->World_Matrix()) };
 	object_buffer->Update(_cb2);
 	object_buffer->Bind(BindStage::VERTEX, 1);

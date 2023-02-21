@@ -6,6 +6,7 @@
 #include "interface_drawable.h"
 #include"defs_platform.h"
 
+class Sun;
 class Aggregator;
 class Scene;
 class Presenter;
@@ -23,6 +24,7 @@ public:
 	void Update() override;
 
 private:
+	Sun* sun;
 	Aggregator* aggregator;
 	Scene* scene;
 	Presenter* presenter;

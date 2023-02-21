@@ -6,8 +6,9 @@
 #include "../external/ImGui/imgui_impl_dx11.h"
 
 #include "util_funcs.h"
-#include "render/diffuse_lighting.h"
+#include "../entities/sun.h"
 #include "render/aggregator.h"
+#include "scene.h"
 #include "../core/platform.h"
 #include "../core/sys_ticker.h"
 #include "presenter.h"
@@ -24,6 +25,7 @@ Overlay::Overlay(Presenter* parent)
 	ticker = parent->QueryService<SystemTicker*>("ticker");
 	scene = parent->GetActiveScene();
 	aggregator = scene->GetAggregator();
+	sun = scene->GetSun();
 }
 
 Overlay::~Overlay()
@@ -129,11 +131,11 @@ void Overlay::Draw()
 
 		if (ImGui::CollapsingHeader("Scene"))
 		{
-			ImGui::DragFloat4("Light Color", (float*)&aggregator->render_lighting_diffuse->light_data.light_color, 0.01f, 0.0f, 1.0f);
+			ImGui::DragFloat4("Light Color", (float*)&sun->light_info.color, 0.01f, 0.0f, 1.0f);
 			ImGui::Separator();
-			ImGui::DragFloat4("Ambient Color", (float*)&aggregator->render_lighting_diffuse->light_data.ambient_color, 0.01f, 0.0f, 1.0f);
+			ImGui::DragFloat4("Ambient Color", (float*)&sun->light_info.ambient, 0.01f, 0.0f, 1.0f);
 			ImGui::Separator();
-			ImGui::DragFloat3("Light Direction", (float*)&aggregator->render_lighting_diffuse->light_data.light_direction, 0.01f, -1.0f, 1.0f);
+			ImGui::DragFloat3("Light Direction", (float*)&sun->light_info.direction, 0.01f, -1.0f, 1.0f);
 		}
 
 		ImGui::Separator();

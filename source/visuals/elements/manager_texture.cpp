@@ -11,6 +11,7 @@ TextureManager::TextureManager(Presenter* presenter)
     Load(L"assets/textures/earth.dds", "earth"); //earth
     Load(L"assets/textures/test.dds", "test_checkers"); //test checkers
     Load(L"assets/textures/sky.dds", "sky"); //sky
+    Load(L"assets/textures/sun.dds", "sun"); //sun
 }
 
 TextureManager::~TextureManager()

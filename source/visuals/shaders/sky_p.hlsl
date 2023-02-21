@@ -1,6 +1,6 @@
 
 TextureCube SkyTexture;
-SamplerState BilinearSampler;
+SamplerState BilinearSampler : register(s14);
 
 struct VS_OUTPUT
 {

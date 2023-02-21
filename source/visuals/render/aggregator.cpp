@@ -58,11 +58,13 @@ void Aggregator::AggregateAllRenders()
 	//view projection
 	buffer_master->UpdateDefaultConstant(DefaultConstants::VIEW_PROJECTION_MATRIX);
 	buffer_master->BindDefaultConstant(DefaultConstants::VIEW_PROJECTION_MATRIX);
+	buffer_master->UpdateDefaultConstant(DefaultConstants::SUN_LIGHT_DATA);
+	buffer_master->BindDefaultConstant(DefaultConstants::SUN_LIGHT_DATA);
 
 	//TODO: bind  default samplers to predewfined slots and change shaders accordingly
 	//setup states
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	state_master->BindDefaultTextureSampler(DefaultSampler::BILINEAR, 0);
+	state_master->BindDefaultTextureSampler(DefaultSampler::BILINEAR);
 
 	//bind render pass
 	//render_pass->BindAsRenderTarget();

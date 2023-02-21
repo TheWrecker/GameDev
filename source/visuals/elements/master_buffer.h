@@ -19,7 +19,7 @@ enum class DefaultConstants : unsigned int
 {
 	//14 slots total
 	UNDEFINED = 0,
-	LIGHT_DATA = 11,
+	SUN_LIGHT_DATA = 11,
 	VIEW_PROJECTION_MATRIX = 12,
 	END_PADDING = 13 //D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT (14)
 };

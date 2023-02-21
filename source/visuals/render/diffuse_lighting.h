@@ -18,24 +18,13 @@ public:
 private:
 	friend class Overlay;
 
-	struct LightData
-	{
-		DirectX::XMFLOAT4 light_direction;
-		DirectX::XMFLOAT4 light_color;
-		DirectX::XMFLOAT4 ambient_color;
-	};
-
 	struct PerObjectBuffer
 	{
 		DirectX::XMMATRIX world;
 	};
 
-	LightData light_data;
-
 	std::unique_ptr<ConstantBuffer<PerObjectBuffer>> object_buffer;
-	std::unique_ptr<ConstantBuffer<LightData>> light_buffer;
 
 	//TODO: add light entities
-	std::unique_ptr<BasicEntity> light;
 	std::unique_ptr<BasicEntity> object;
 };

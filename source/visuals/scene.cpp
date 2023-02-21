@@ -1,6 +1,7 @@
 
 #include "../entities/camera_basic.h"
 #include "../entities/camera_firstperson.h"
+#include "../entities/sun.h"
 #include "elements/master_state.h"
 #include "elements/master_buffer.h"
 #include "elements/manager_model.h"
@@ -15,6 +16,7 @@ Scene::Scene(Presenter* parent)
 {
 	active_camera = std::make_unique<FirstPersonCamera>(parent);
 	active_camera->SetPosition(0.0f, 0.0f, 2.0f);
+	sun = std::make_unique<Sun>();
 	state_master = std::make_unique<StateMaster>(parent);
 	texture_manager = std::make_unique<TextureManager>(parent);
 	model_manager = std::make_unique<ModelManager>();
@@ -85,6 +87,11 @@ Presenter* Scene::GetPresenter()
 BasicCamera* Scene::GetActiveCamera()
 {
 	return active_camera.get();
+}
+
+Sun* Scene::GetSun()
+{
+	return sun.get();
 }
 
 StateMaster* Scene::GetStateMaster()

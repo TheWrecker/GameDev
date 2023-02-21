@@ -172,6 +172,9 @@
     <ClCompile Include="source\visuals\render\diffuse_lighting.cpp">
       <Filter>source\visuals\render</Filter>
     </ClCompile>
+    <ClCompile Include="source\entities\sun.cpp">
+      <Filter>source\entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\headers\defs_platform.h">
@@ -338,6 +341,9 @@
     </ClInclude>
     <ClInclude Include="source\visuals\render\diffuse_lighting.h">
       <Filter>source\visuals\render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\entities\sun.h">
+      <Filter>source\entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

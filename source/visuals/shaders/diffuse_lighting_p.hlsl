@@ -1,18 +1,13 @@
 
-SamplerState BilinearSampler
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = WRAP;
-    AddressV = WRAP;
-};
-
+SamplerState BilinearSampler : register(s14);
 texture2D inputTexture;
 
-cbuffer LightData : register(b03)
+cbuffer LightData : register(b11)
 {
     float4 light_direction;
     float4 light_color;
     float4 ambient_color;
+    float4 UNUSED;
 };
 
 struct PS_INPUT

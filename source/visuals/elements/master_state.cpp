@@ -9,6 +9,7 @@ StateMaster::StateMaster(Presenter* parent)
 {
 	device = presenter->GetDevice();
 	context = presenter->GetContext();
+	texture_samplers.resize(GetSamplerSlot(DefaultSampler::END_PADDING));
 
 	D3D11_SAMPLER_DESC desc = {};
 	//POINT
@@ -27,7 +28,7 @@ StateMaster::StateMaster(Presenter* parent)
 	desc.MinLOD = 0;
 	desc.MaxLOD = D3D11_FLOAT32_MAX;
 	auto sampler1 = new TextureSampler(device, context, desc);
-	texture_samplers.insert(std::pair(DefaultSampler::POINT, sampler1));
+	texture_samplers[GetSamplerSlot(DefaultSampler::POINT)] = sampler1;
 
 	//BILINEAR
 	ZeroMemory(&desc, sizeof(desc));
@@ -45,28 +46,28 @@ StateMaster::StateMaster(Presenter* parent)
 	desc.MinLOD = 0;
 	desc.MaxLOD = D3D11_FLOAT32_MAX;
 	auto sampler2 = new TextureSampler(device, context, desc);
-	texture_samplers.insert(std::pair(DefaultSampler::BILINEAR, sampler2));
+	texture_samplers[GetSamplerSlot(DefaultSampler::BILINEAR)] = sampler2;
 }
 
 StateMaster::~StateMaster()
 {
-	for (auto& item : texture_samplers)
-	{
-		item.second->Unbind();
-		delete item.second;
-	}
+	for (auto item : texture_samplers)
+		delete item;
 }
 
-void StateMaster::BindDefaultTextureSampler(DefaultSampler what, unsigned int slot)
+void StateMaster::BindDefaultTextureSampler(DefaultSampler what)
 {
-	auto sampler = texture_samplers.find(what);
-	if (sampler != texture_samplers.end())
-		sampler->second->Bind(slot);
+	auto _index = GetSamplerSlot(what);
+	texture_samplers[_index]->Bind(_index);
 }
 
 void StateMaster::UnbindDefaultTextureSampler(DefaultSampler what)
 {
-	auto sampler = texture_samplers.find(what);
-	if (sampler != texture_samplers.end())
-		sampler->second->Unbind();
+	auto _index = GetSamplerSlot(what);
+	texture_samplers[_index]->Unbind();
+}
+
+unsigned int StateMaster::GetSamplerSlot(DefaultSampler target)
+{
+	return static_cast<unsigned int>(target);
 }

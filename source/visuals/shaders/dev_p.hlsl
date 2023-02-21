@@ -1,11 +1,5 @@
 
-SamplerState BilinearSampler
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = WRAP;
-    AddressV = WRAP;
-};
-
+SamplerState BilinearSampler : register(s14);
 texture2D inputTexture;
 
 struct PS_INPUT

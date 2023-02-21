@@ -7,6 +7,7 @@
 #include "elements/manager_texture.h"
 #include "elements/manager_model.h"
 
+class Sun;
 class BasicCamera;
 class StateMaster;
 class BufferMaster;
@@ -39,6 +40,7 @@ public:
 	Aggregator* GetAggregator();
 	Presenter* GetPresenter();
 	BasicCamera* GetActiveCamera();
+	Sun* GetSun();
 	StateMaster* GetStateMaster();
 	BufferMaster* GetBufferMaster();
 	TextureManager* GetTextureManager();
@@ -47,6 +49,7 @@ public:
 private:
 	Presenter* presenter;
 	std::unique_ptr<BasicCamera> active_camera;
+	std::unique_ptr<Sun> sun;
 	std::unique_ptr<StateMaster> state_master;
 	std::unique_ptr<BufferMaster> buffer_master;
 	std::unique_ptr<TextureManager> texture_manager;
