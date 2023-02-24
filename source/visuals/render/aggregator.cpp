@@ -2,6 +2,7 @@
 #include "../elements/render_target.h"
 #include "diffuse_lighting.h"
 #include "render_dev.h"
+#include "sun_moon.h"
 #include "sky.h"
 #include "render_pass.h"
 #include "../scene.h"
@@ -35,6 +36,9 @@ Aggregator::Aggregator(Scene* scene)
 
 	//diffuse lighting
 	render_lighting_diffuse = std::make_unique<DiffuseLighting>(scene);
+
+	//Sun and Moon
+	render_sun_moon = std::make_unique<SunMoon>(scene);
 }
 
 Aggregator::~Aggregator()
@@ -74,6 +78,13 @@ void Aggregator::AggregateAllRenders()
 	context->PSSetShaderResources(0, 1, &_shaderView);
 	buffer_master->BindDefaultObject(DefaultObjects::SPHERE);
 	render_sky->Render();
+
+	//render sun or moon
+	//TODO: dynamic time of day
+	_shaderView = texture_manager->GetShaderView("sun");
+	context->PSSetShaderResources(0, 1, &_shaderView);
+	buffer_master->BindDefaultObject(DefaultObjects::SPHERE);
+	render_sun_moon->Render();
 
 	//render dev
 	_shaderView = texture_manager->GetShaderView("test_checkers");

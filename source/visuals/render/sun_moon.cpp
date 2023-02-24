@@ -1,14 +1,15 @@
 
 #include "../entities/camera_basic.h"
+#include "../entities/sun.h"
 #include "../scene.h"
 
-#include "sky.h"
+#include "sun_moon.h"
 
-SkyRender::SkyRender(Scene* scene)
+SunMoon::SunMoon(Scene* scene)
 	:RenderBase(scene)
 {
-	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/sky_v.hlsl");
-	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/sky_p.hlsl");
+	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/sun_moon_v.hlsl");
+	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/sun_moon_p.hlsl");
 
 	unsigned int _sphere_slot = static_cast<unsigned int>(DefaultObjects::SPHERE);
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
@@ -17,19 +18,20 @@ SkyRender::SkyRender(Scene* scene)
 		.Build();
 
 	per_frame_buffer = std::make_unique<ConstantBuffer<PerFrameBuffer>>(device, context);
-	scale_matrix = DirectX::XMMatrixScaling(500.0f, 500.0f, 500.0f);
 	camera = scene->GetActiveCamera();
+	sun = scene->GetSun();
 }
 
-SkyRender::~SkyRender()
+SunMoon::~SunMoon()
 {
 }
 
-void SkyRender::Render()
+void SunMoon::Render()
 {
-	DirectX::XMFLOAT3 _currentPosition = camera->Position();
-	DirectX::XMMATRIX _worldMatrix = scale_matrix * DirectX::XMMatrixTranslation(_currentPosition.x, _currentPosition.y, _currentPosition.z);
-	PerFrameBuffer _cb1 = { DirectX::XMMatrixTranspose(_worldMatrix)};
+	auto _pos1 = camera->Position();
+	auto _pos2 = sun->Position();
+	auto _worldMatrix = DirectX::XMMatrixTranslation(_pos1.x + _pos2.x, _pos1.y + _pos2.y, _pos1.z + _pos2.z);
+	PerFrameBuffer _cb1 = { DirectX::XMMatrixTranspose(_worldMatrix) };
 	per_frame_buffer->Update(_cb1);
 	per_frame_buffer->Bind(BindStage::VERTEX, 1);
 	input_layout->Bind();

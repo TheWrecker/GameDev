@@ -4,12 +4,13 @@
 #include "render_base.h"
 
 class BasicCamera;
+class Sun;
 
-class SkyRender : public RenderBase
+class SunMoon : public RenderBase
 {
 public:
-	SkyRender(Scene* scene);
-	~SkyRender();
+	SunMoon(Scene* scene);
+	~SunMoon();
 
 	void Render() override;
 
@@ -19,8 +20,7 @@ private:
 		DirectX::XMMATRIX world;
 	};
 
-	DirectX::XMMATRIX scale_matrix;
-
 	BasicCamera* camera;
+	Sun* sun;
 	std::unique_ptr<ConstantBuffer<PerFrameBuffer>> per_frame_buffer;
 };

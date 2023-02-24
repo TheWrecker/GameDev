@@ -175,6 +175,9 @@
     <ClCompile Include="source\entities\sun.cpp">
       <Filter>source\entities</Filter>
     </ClCompile>
+    <ClCompile Include="source\visuals\render\sun_moon.cpp">
+      <Filter>source\visuals\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\headers\defs_platform.h">
@@ -345,6 +348,9 @@
     <ClInclude Include="source\entities\sun.h">
       <Filter>source\entities</Filter>
     </ClInclude>
+    <ClInclude Include="source\visuals\render\sun_moon.h">
+      <Filter>source\visuals\render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="source\visuals\shaders\dev_v.hlsl">
@@ -369,6 +375,12 @@
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
     <FxCompile Include="source\visuals\shaders\diffuse_lighting_p.hlsl">
+      <Filter>source\visuals\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="source\visuals\shaders\sun_moon_v.hlsl">
+      <Filter>source\visuals\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="source\visuals\shaders\sun_moon_p.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
   </ItemGroup>
