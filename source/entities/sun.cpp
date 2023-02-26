@@ -4,7 +4,8 @@
 Sun::Sun()
     :light_info()
 {
-    SetPosition(0.0f, 8.0f, 0.0f);
+    SetPosition(0.0f, 200.0f, 0.0f);
+    SetScale(25.0f, 25.0f, 25.0f);
     light_info.direction = { 0.0f, 1.0f, 0.0f, 1.0f };
     light_info.color = { 1.0f, 1.0f, 0.9f, 0.8f };
     light_info.ambient = { 0.5f, 0.5f, 0.5f, 0.3f };

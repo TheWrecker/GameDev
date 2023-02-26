@@ -28,9 +28,10 @@ SunMoon::~SunMoon()
 
 void SunMoon::Render()
 {
-	auto _pos1 = camera->Position();
-	auto _pos2 = sun->Position();
-	auto _worldMatrix = DirectX::XMMatrixTranslation(_pos1.x + _pos2.x, _pos1.y + _pos2.y, _pos1.z + _pos2.z);
+	//auto _pos1 = camera->Position();
+	//auto _pos2 = sun->Position();
+	//auto _worldMatrix = DirectX::XMMatrixTranslation(_pos1.x + _pos2.x, _pos1.y + _pos2.y, _pos1.z + _pos2.z);
+	auto _worldMatrix = sun->World_Matrix();
 	PerFrameBuffer _cb1 = { DirectX::XMMatrixTranspose(_worldMatrix) };
 	per_frame_buffer->Update(_cb1);
 	per_frame_buffer->Bind(BindStage::VERTEX, 1);

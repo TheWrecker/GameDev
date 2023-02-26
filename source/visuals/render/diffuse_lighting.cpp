@@ -11,7 +11,7 @@ DiffuseLighting::DiffuseLighting(Scene* scene)
 	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/diffuse_lighting_v.hlsl");
 	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/diffuse_lighting_p.hlsl");
 
-	unsigned int _slot = static_cast<unsigned int>(DefaultObjects::SPHERE_NORMAL);
+	unsigned int _slot = static_cast<unsigned int>(DefaultObjects::QUAD_NORMAL);
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
 	input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot)
 		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot)
@@ -34,5 +34,5 @@ void DiffuseLighting::Render()
 	vertex_shader->Apply();
 	pixel_shader->Apply();
 
-	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::SPHERE_NORMAL), 0, 0);
+	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::QUAD_NORMAL), 0, 0);
 }

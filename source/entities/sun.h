@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "entity_basic.h"
+#include "entity_transformable.h"
 
-class Sun : public BasicEntity
+class Sun : public TransformableEntity
 {
 public:
 	Sun();

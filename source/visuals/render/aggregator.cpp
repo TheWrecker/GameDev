@@ -95,7 +95,7 @@ void Aggregator::AggregateAllRenders()
 	//render diffuse lighting
 	_shaderView = texture_manager->GetShaderView("earth");
 	context->PSSetShaderResources(0, 1, &_shaderView);
-	buffer_master->BindDefaultObject(DefaultObjects::SPHERE_NORMAL);
+	buffer_master->BindDefaultObject(DefaultObjects::QUAD_NORMAL);
 	render_lighting_diffuse->Render();
 
 	//render the pass

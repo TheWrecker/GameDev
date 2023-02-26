@@ -35,6 +35,9 @@
     <Filter Include="source\visuals\elements">
       <UniqueIdentifier>{ee571f85-3d55-4f5b-b1d8-885b7fa59628}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\visuals\processors">
+      <UniqueIdentifier>{4e9c2117-6774-4bb2-877e-34fd4f2ab03b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\entry.cpp">
@@ -177,6 +180,12 @@
     </ClCompile>
     <ClCompile Include="source\visuals\render\sun_moon.cpp">
       <Filter>source\visuals\render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\entities\block_solid.cpp">
+      <Filter>source\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\processors\processor_solid_block.cpp">
+      <Filter>source\visuals\processors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -350,6 +359,12 @@
     </ClInclude>
     <ClInclude Include="source\visuals\render\sun_moon.h">
       <Filter>source\visuals\render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\entities\block_solid.h">
+      <Filter>source\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\processors\processor_solid_block.h">
+      <Filter>source\visuals\processors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

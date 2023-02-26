@@ -156,6 +156,7 @@
     <ClCompile Include="source\core\sys_win_profiler.cpp" />
     <ClCompile Include="source\core\sys_ticker.cpp" />
     <ClCompile Include="source\core\sys_win_platform.cpp" />
+    <ClCompile Include="source\entities\block_solid.cpp" />
     <ClCompile Include="source\entities\camera_firstperson.cpp" />
     <ClCompile Include="source\entities\entity_basic.cpp" />
     <ClCompile Include="source\entities\camera_basic.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="source\visuals\elements\shader_vertex.cpp" />
     <ClCompile Include="source\visuals\overlay.cpp" />
     <ClCompile Include="source\visuals\presenter.cpp" />
+    <ClCompile Include="source\visuals\processors\processor_solid_block.cpp" />
     <ClCompile Include="source\visuals\render\aggregator.cpp" />
     <ClCompile Include="source\visuals\render\diffuse_lighting.cpp" />
     <ClCompile Include="source\visuals\render\render_base.cpp" />
@@ -207,6 +209,7 @@
     <ClInclude Include="source\core\sys_ticker.h" />
     <ClInclude Include="source\core\sys_win_platform.h" />
     <ClInclude Include="source\core\sys_win_profiler.h" />
+    <ClInclude Include="source\entities\block_solid.h" />
     <ClInclude Include="source\entities\camera_firstperson.h" />
     <ClInclude Include="source\entities\entity_basic.h" />
     <ClInclude Include="source\entities\camera_basic.h" />
@@ -247,6 +250,7 @@
     <ClInclude Include="source\visuals\elements\shader_vertex.h" />
     <ClInclude Include="source\visuals\overlay.h" />
     <ClInclude Include="source\visuals\presenter.h" />
+    <ClInclude Include="source\visuals\processors\processor_solid_block.h" />
     <ClInclude Include="source\visuals\render\aggregator.h" />
     <ClInclude Include="source\visuals\render\diffuse_lighting.h" />
     <ClInclude Include="source\visuals\render\render_base.h" />
