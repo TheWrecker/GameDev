@@ -161,6 +161,7 @@
     <ClCompile Include="source\entities\entity_basic.cpp" />
     <ClCompile Include="source\entities\camera_basic.cpp" />
     <ClCompile Include="source\entities\entity_transformable.cpp" />
+    <ClCompile Include="source\entities\segment.cpp" />
     <ClCompile Include="source\entities\sun.cpp" />
     <ClCompile Include="Source\entry.cpp" />
     <ClCompile Include="source\external\ImGui\imgui.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="source\external\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="source\input\keyboard.cpp" />
     <ClCompile Include="source\input\mouse.cpp" />
+    <ClCompile Include="source\processors\processor_solid_block.cpp" />
     <ClCompile Include="source\visuals\elements\buffer_index.cpp" />
     <ClCompile Include="source\visuals\elements\input_layout.cpp" />
     <ClCompile Include="source\visuals\elements\manager_model.cpp" />
@@ -187,9 +189,9 @@
     <ClCompile Include="source\visuals\elements\shader_pixel.cpp" />
     <ClCompile Include="source\visuals\elements\texture.cpp" />
     <ClCompile Include="source\visuals\elements\shader_vertex.cpp" />
+    <ClCompile Include="source\visuals\elements\texture_atlas.cpp" />
     <ClCompile Include="source\visuals\overlay.cpp" />
     <ClCompile Include="source\visuals\presenter.cpp" />
-    <ClCompile Include="source\visuals\processors\processor_solid_block.cpp" />
     <ClCompile Include="source\visuals\render\aggregator.cpp" />
     <ClCompile Include="source\visuals\render\diffuse_lighting.cpp" />
     <ClCompile Include="source\visuals\render\render_base.cpp" />
@@ -214,6 +216,7 @@
     <ClInclude Include="source\entities\entity_basic.h" />
     <ClInclude Include="source\entities\camera_basic.h" />
     <ClInclude Include="source\entities\entity_transformable.h" />
+    <ClInclude Include="source\entities\segment.h" />
     <ClInclude Include="source\entities\sun.h" />
     <ClInclude Include="source\external\ImGui\imconfig.h" />
     <ClInclude Include="source\external\ImGui\imgui.h" />
@@ -231,6 +234,7 @@
     <ClInclude Include="source\headers\util_funcs.h" />
     <ClInclude Include="source\input\keyboard.h" />
     <ClInclude Include="source\input\mouse.h" />
+    <ClInclude Include="source\processors\processor_solid_block.h" />
     <ClInclude Include="source\visuals\elements\buffer_constant.h" />
     <ClInclude Include="source\visuals\elements\buffer_index.h" />
     <ClInclude Include="source\visuals\elements\buffer_vertex.h" />
@@ -248,9 +252,9 @@
     <ClInclude Include="source\visuals\elements\shader_pixel.h" />
     <ClInclude Include="source\visuals\elements\texture.h" />
     <ClInclude Include="source\visuals\elements\shader_vertex.h" />
+    <ClInclude Include="source\visuals\elements\texture_atlas.h" />
     <ClInclude Include="source\visuals\overlay.h" />
     <ClInclude Include="source\visuals\presenter.h" />
-    <ClInclude Include="source\visuals\processors\processor_solid_block.h" />
     <ClInclude Include="source\visuals\render\aggregator.h" />
     <ClInclude Include="source\visuals\render\diffuse_lighting.h" />
     <ClInclude Include="source\visuals\render\render_base.h" />

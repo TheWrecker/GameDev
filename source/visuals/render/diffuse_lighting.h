@@ -5,7 +5,7 @@
 #include "../elements/buffer_constant.h"
 #include "render_base.h"
 
-class BasicEntity;
+class TransformableEntity;
 
 class DiffuseLighting : public RenderBase
 {
@@ -26,5 +26,5 @@ private:
 	std::unique_ptr<ConstantBuffer<PerObjectBuffer>> object_buffer;
 
 	//TODO: add light entities
-	std::unique_ptr<BasicEntity> object;
+	std::unique_ptr<TransformableEntity> object;
 };

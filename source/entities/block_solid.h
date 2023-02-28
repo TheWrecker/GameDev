@@ -5,17 +5,23 @@
 
 #include "entity_basic.h"
 
+enum SolidBlockType
+{
+	UNDEFINED = 0,
+	TEST = 1,
+	DIRT = 2
+};
+
 class SolidBlock : public BasicEntity
 {
 public:
-	SolidBlock();
+	SolidBlock(SolidBlockType type = SolidBlockType::UNDEFINED);
 	~SolidBlock();
 
-	//TODO: index instead of string (map to vector in IManager?)
-	void SetTexture(const std::string& what);
-	const std::string& GetTextureName();
+	void SetType(SolidBlockType what);
+	SolidBlockType GetBlockType();
+	unsigned int GetManagerIndex();
 
 private:
-	std::string texture_name;
-
+	SolidBlockType type;
 };

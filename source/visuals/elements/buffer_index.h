@@ -15,6 +15,8 @@ public:
 	void Bind();
 	void Unbind();
 
+	ID3D11Buffer* GetBuffer();
+	D3D11_BUFFER_DESC GetDesc();
 	unsigned int GetIndexCount();
 
 private:

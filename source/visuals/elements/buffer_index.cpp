@@ -59,6 +59,16 @@ void IndexBuffer::Unbind()
 	DXRelease(_buffer);
 }
 
+ID3D11Buffer* IndexBuffer::GetBuffer()
+{
+	return buffer;
+}
+
+D3D11_BUFFER_DESC IndexBuffer::GetDesc()
+{
+	return desc;
+}
+
 unsigned int IndexBuffer::GetIndexCount()
 {
 	return static_cast<unsigned int>(indices.size());

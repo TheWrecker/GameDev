@@ -19,6 +19,10 @@ public:
 	void Bind(unsigned int slot);
 	void Unbind();
 
+	ID3D11Buffer* GetBuffer();
+	D3D11_BUFFER_DESC GetDesc();
+	unsigned int GetVertexCount();
+
 private:
 	ID3D11Device* device;
 	ID3D11DeviceContext* context;
@@ -105,4 +109,22 @@ inline void VertexBuffer<type>::Unbind()
 		context->IASetVertexBuffers(current_slot, 1, &_null_buffer, &_stride, &_offset);
 	}
 	DXRelease(_buffer);
+}
+
+template<typename type>
+inline ID3D11Buffer* VertexBuffer<type>::GetBuffer()
+{
+	return buffer;
+}
+
+template<typename type>
+inline D3D11_BUFFER_DESC VertexBuffer<type>::GetDesc()
+{
+	return desc;
+}
+
+template<typename type>
+inline unsigned int VertexBuffer<type>::GetVertexCount()
+{
+	return vertices.size();
 }

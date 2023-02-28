@@ -35,7 +35,7 @@
     <Filter Include="source\visuals\elements">
       <UniqueIdentifier>{ee571f85-3d55-4f5b-b1d8-885b7fa59628}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\visuals\processors">
+    <Filter Include="source\processors">
       <UniqueIdentifier>{4e9c2117-6774-4bb2-877e-34fd4f2ab03b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -184,8 +184,14 @@
     <ClCompile Include="source\entities\block_solid.cpp">
       <Filter>source\entities</Filter>
     </ClCompile>
-    <ClCompile Include="source\visuals\processors\processor_solid_block.cpp">
-      <Filter>source\visuals\processors</Filter>
+    <ClCompile Include="source\entities\segment.cpp">
+      <Filter>source\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\processors\processor_solid_block.cpp">
+      <Filter>source\processors</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\elements\texture_atlas.cpp">
+      <Filter>source\visuals\elements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -363,8 +369,14 @@
     <ClInclude Include="source\entities\block_solid.h">
       <Filter>source\entities</Filter>
     </ClInclude>
-    <ClInclude Include="source\visuals\processors\processor_solid_block.h">
-      <Filter>source\visuals\processors</Filter>
+    <ClInclude Include="source\entities\segment.h">
+      <Filter>source\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\processors\processor_solid_block.h">
+      <Filter>source\processors</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\texture_atlas.h">
+      <Filter>source\visuals\elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

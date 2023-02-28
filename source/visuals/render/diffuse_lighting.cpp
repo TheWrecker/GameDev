@@ -3,7 +3,7 @@
 DiffuseLighting::DiffuseLighting(Scene* scene)
 	:RenderBase(scene)
 {
-	object = std::make_unique<BasicEntity>();
+	object = std::make_unique<TransformableEntity>();
 	object->SetPosition(4.0f, 0.0f, 0.0f);
 
 	object_buffer = std::make_unique<ConstantBuffer<PerObjectBuffer>>(device, context);

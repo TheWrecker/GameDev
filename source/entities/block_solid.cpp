@@ -1,21 +1,26 @@
 
 #include "block_solid.h"
 
-SolidBlock::SolidBlock()
+SolidBlock::SolidBlock(SolidBlockType type)
+    :type(type)
 {
-    texture_name = "test_checkers";
 }
 
 SolidBlock::~SolidBlock()
 {
 }
 
-void SolidBlock::SetTexture(const std::string& what)
+void SolidBlock::SetType(SolidBlockType what)
 {
-    texture_name = what;
+    type = what;
 }
 
-const std::string& SolidBlock::GetTextureName()
+SolidBlockType SolidBlock::GetBlockType()
 {
-    return texture_name;
+    return type;
+}
+
+unsigned int SolidBlock::GetManagerIndex()
+{
+    return static_cast<unsigned int>(type);
 }
