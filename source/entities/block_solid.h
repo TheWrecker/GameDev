@@ -15,7 +15,7 @@ enum SolidBlockType
 class SolidBlock : public BasicEntity
 {
 public:
-	SolidBlock(SolidBlockType type = SolidBlockType::UNDEFINED);
+	SolidBlock(SolidBlockType type = SolidBlockType::UNDEFINED, float x = 0.0f, float y = 0.0f, float z = 0.0f);
 	~SolidBlock();
 
 	void SetType(SolidBlockType what);

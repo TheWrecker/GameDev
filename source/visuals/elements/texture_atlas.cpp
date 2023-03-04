@@ -1,5 +1,6 @@
 
 #include "directxtk/DDSTextureLoader.h"
+#include "directxtk/WICTextureLoader.h"
 
 #include "util_funcs.h"
 #include "../presenter.h"
@@ -7,7 +8,7 @@
 #include "texture_atlas.h"
 
 constexpr unsigned int ATLAS_RESERVE_COUNT = 64;
-constexpr auto ATLAS_BASE_PATH = L"assets\textures\test_checkers.dds";
+constexpr auto ATLAS_BASE_PATH = L"assets/textures/atlas/test_checkers.png";
 
 TextureAtlas::TextureAtlas(Presenter* presenter)
     :presenter(presenter), texture_array(), base_desc(), shader_view(), textures(), descs(), views(), slice_count(0)
@@ -18,7 +19,7 @@ TextureAtlas::TextureAtlas(Presenter* presenter)
 	textures.reserve(ATLAS_RESERVE_COUNT);
 	descs.reserve(ATLAS_RESERVE_COUNT);
 	views.reserve(ATLAS_RESERVE_COUNT);
-	LoadTexture(ATLAS_BASE_PATH);
+	LoadTexture(ATLAS_BASE_PATH, "test_checkers"); //test checkers = 0
 
 	base_desc.Width = descs[0]->Width;
 	base_desc.Height = descs[0]->Height;
@@ -29,10 +30,23 @@ TextureAtlas::TextureAtlas(Presenter* presenter)
 	base_desc.SampleDesc.Count = 1;
 	base_desc.SampleDesc.Quality = 0;
 	base_desc.ArraySize = 0;
+
+	//TODO: move to scene? dynamic lookup? list? config file?
+	LoadTexture(L"assets/textures/atlas/dirt.png", "dirt"); //dirt = 1
+	LoadTexture(L"assets/textures/atlas/grass.png", "grass"); //grass = 2
+
+	ReconstructTextureArray();
 }
 
 TextureAtlas::~TextureAtlas()
 {
+	DXRelease(texture_array);
+	DXRelease(shader_view);
+	for (auto& _item : textures)
+		DXRelease(_item);
+
+	for (auto& _item : views)
+		DXRelease(_item);
 }
 
 void TextureAtlas::ReconstructTextureArray()
@@ -40,7 +54,7 @@ void TextureAtlas::ReconstructTextureArray()
 	DXRelease(texture_array);
 	DXRelease(shader_view);
 
-	size_t _slices = textures.size();
+	unsigned int _slices = static_cast<unsigned int>(textures.size());
 	if (_slices == 0)
 		return ;
 
@@ -57,10 +71,10 @@ void TextureAtlas::ReconstructTextureArray()
 
 	DXAssert(device->CreateTexture2D(&base_desc, NULL, &texture_array));
 
-	std::size_t _mips = base_desc.MipLevels;
-	std::size_t _current_slice = 0;
-	std::size_t _current_mip = 0;
-	std::size_t _current_subresource = 0;
+	unsigned int _mips = base_desc.MipLevels;
+	unsigned int _current_slice = 0;
+	unsigned int _current_mip = 0;
+	unsigned int _current_subresource = 0;
 	for (auto _texture : textures)
 	{
 		for (_current_mip = 0; _current_mip < _mips; _current_mip++)
@@ -100,18 +114,36 @@ void TextureAtlas::Clear()
 	ReconstructTextureArray();
 }
 
-unsigned int TextureAtlas::LoadTexture(const std::wstring& file)
+unsigned int TextureAtlas::LoadTexture(const std::wstring& file, const std::string& name)
 {
 	ID3D11Texture2D* _texture = nullptr;
 	ID3D11ShaderResourceView* _view = nullptr;
-	DXAssert(DirectX::CreateDDSTextureFromFile(device, file.c_str(), (ID3D11Resource**)&_texture, &_view));
+	auto extension = file.substr(file.size() - 3, 3);
+	if (extension == L"dds")
+	{
+		DXAssert(DirectX::CreateDDSTextureFromFile(device, file.c_str(), (ID3D11Resource**)&_texture, &_view));
+	}
+	else
+	{
+		DXAssert(DirectX::CreateWICTextureFromFile(device, file.c_str(), (ID3D11Resource**)&_texture, &_view));
+	}
 	textures.push_back(_texture);
 	views.push_back(_view);
 	D3D11_TEXTURE2D_DESC* _desc = new D3D11_TEXTURE2D_DESC;
 	_texture->GetDesc(_desc);
 	descs.push_back(_desc);
+	unsigned int _index = static_cast<unsigned int>(textures.size()) - 1;
+	names.insert(std::pair(name, _index));
 
-	return textures.size() - 1;
+	return _index;
+}
+
+unsigned int TextureAtlas::FindTextureIndex(const std::string& name)
+{
+	auto _result = names.find(name);
+	if (_result == names.end())
+		return 0; //test checkers
+	return _result->second;
 }
 
 ID3D11Texture2D* TextureAtlas::GetTexture(size_t index)

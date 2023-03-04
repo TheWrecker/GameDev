@@ -2,11 +2,11 @@
 #pragma once
 
 #include <array>
-#include <d3d11.h>
 #include <memory>
-#include <DirectXMath.h>
 
+#include "defs_pipeline.h"
 #include "../visuals/elements/buffer_vertex.h"
+#include "../visuals/elements/buffer_index.h"
 #include "block_solid.h"
 #include "entity_basic.h"
 
@@ -15,6 +15,7 @@ constexpr unsigned int SEGMENT_ARRAY_SIZE = SEGMENT_DIMENSION_SIZE * SEGMENT_DIM
 constexpr float SOLID_BLOCK_SIZE = 1.0f;
 
 class IndexBuffer;
+class Scene;
 
 struct SegmentIndices
 {
@@ -24,7 +25,7 @@ struct SegmentIndices
 class Segment : public BasicEntity
 {
 public:
-	Segment(SolidBlockType type = SolidBlockType::TEST, bool fill = false);
+	Segment(Scene* scene, SolidBlockType type = SolidBlockType::TEST, bool fill = false, float x = 0.0f, float y = 0.0f, float z = 0.0f);
 	~Segment();
 
 	void Move(float x, float y, float z);
@@ -39,19 +40,13 @@ public:
 	void RebuildBuffers();
 
 	SegmentIndices GetArrayIndices(unsigned int value);
-	ID3D11Buffer* GetVertexBuffer();
-	ID3D11Buffer* GetIndexBuffer();
+	VertexBuffer<NormalVertexStruct>* GetVertexBuffer();
+	IndexBuffer* GetIndexBuffer();
 
 private:
 	friend class SolidBlockProcessor;
-	
-	struct NormalVertexStruct
-	{
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT2 uv;
-		DirectX::XMFLOAT3 normal;
-	};
 
+	Scene* scene;
 	SolidBlockType default_type;
 	SolidBlock* blocks[SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE];
 	std::unique_ptr<VertexBuffer<NormalVertexStruct>> vertex_buffer;

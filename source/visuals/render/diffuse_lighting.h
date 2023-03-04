@@ -18,12 +18,7 @@ public:
 private:
 	friend class Overlay;
 
-	struct PerObjectBuffer
-	{
-		DirectX::XMMATRIX world;
-	};
-
-	std::unique_ptr<ConstantBuffer<PerObjectBuffer>> object_buffer;
+	std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> object_buffer;
 
 	//TODO: add light entities
 	std::unique_ptr<TransformableEntity> object;

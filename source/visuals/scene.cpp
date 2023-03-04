@@ -19,6 +19,7 @@ Scene::Scene(Presenter* parent)
 	sun = std::make_unique<Sun>();
 	state_master = std::make_unique<StateMaster>(parent);
 	texture_manager = std::make_unique<TextureManager>(parent);
+	atlas = std::make_unique<TextureAtlas>(parent);
 	model_manager = std::make_unique<ModelManager>();
 	buffer_master = std::make_unique<BufferMaster>(this);
 	aggregator = std::make_unique<Aggregator>(this);
@@ -32,6 +33,10 @@ void Scene::SwitchMode(SceneMode mode)
 {
 	//switch
 	//load scene specific assets
+	// 
+	//test
+	segment1 = std::make_unique<Segment>(this, TEST, true, 10.0f, 0.0f, 5.0f);
+	segment2 = std::make_unique<Segment>(this, TEST, true, -10.0f, 10.0f, 5.0f);
 }
 
 void Scene::Draw()
@@ -74,6 +79,16 @@ void Scene::SwitchCameraType(CameraType type)
 	active_camera.swap(_temp);
 }
 
+ID3D11Device* Scene::GetDevice()
+{
+	return presenter->GetDevice();
+}
+
+ID3D11DeviceContext* Scene::GetContext()
+{
+	return presenter->GetContext();
+}
+
 Aggregator* Scene::GetAggregator()
 {
 	return aggregator.get();
@@ -107,6 +122,11 @@ BufferMaster* Scene::GetBufferMaster()
 TextureManager* Scene::GetTextureManager()
 {
 	return texture_manager.get();
+}
+
+TextureAtlas* Scene::GetTextureAtlas()
+{
+	return atlas.get();
 }
 
 ModelManager* Scene::GetModelManager()

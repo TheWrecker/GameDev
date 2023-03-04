@@ -17,7 +17,7 @@ SunMoon::SunMoon(Scene* scene)
 		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _sphere_slot)
 		.Build();
 
-	per_frame_buffer = std::make_unique<ConstantBuffer<PerFrameBuffer>>(device, context);
+	per_frame_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
 	camera = scene->GetActiveCamera();
 	sun = scene->GetSun();
 }
@@ -32,7 +32,7 @@ void SunMoon::Render()
 	//auto _pos2 = sun->Position();
 	//auto _worldMatrix = DirectX::XMMatrixTranslation(_pos1.x + _pos2.x, _pos1.y + _pos2.y, _pos1.z + _pos2.z);
 	auto _worldMatrix = sun->World_Matrix();
-	PerFrameBuffer _cb1 = { DirectX::XMMatrixTranspose(_worldMatrix) };
+	DefaultConstantStruct _cb1 = { DirectX::XMMatrixTranspose(_worldMatrix) };
 	per_frame_buffer->Update(_cb1);
 	per_frame_buffer->Bind(BindStage::VERTEX, 1);
 	input_layout->Bind();

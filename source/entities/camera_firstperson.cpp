@@ -9,7 +9,7 @@
 #include "camera_firstperson.h"
 
 FirstPersonCamera::FirstPersonCamera(Presenter* presenter)
-	:mouse_sensitivity(100.0f), move_speed(2.0f), rotation_speed(DirectX::XMConvertToRadians(2.0f))
+	:mouse_sensitivity(100.0f), move_speed(10.0f), rotation_speed(DirectX::XMConvertToRadians(2.0f))
 {
 	mouse = presenter->QueryService<Mouse*>("mouse");
 	keyboard = presenter->QueryService<Keyboard*>("keyboard");

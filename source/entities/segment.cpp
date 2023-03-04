@@ -1,23 +1,41 @@
 
-#include "../visuals/elements/buffer_index.h"
 #include "../processors/processor_solid_block.h"
+#include "../visuals/scene.h"
+#include "../visuals/presenter.h"
 
 #include "segment.h"
 
-Segment::Segment(SolidBlockType type, bool fill)
-    :default_type(type)
+Segment::Segment(Scene* scene, SolidBlockType type, bool fill, float x, float y, float z)
+    :BasicEntity(x, y, z), default_type(type), blocks(), scene(scene)
 {
+    vertex_buffer = std::make_unique<VertexBuffer<NormalVertexStruct>>(scene->GetDevice(), scene->GetContext());
+    index_buffer = std::make_unique<IndexBuffer>(scene->GetDevice(), scene->GetContext());
+
+    for (unsigned int i = 0; i < SEGMENT_DIMENSION_SIZE; i++)
+    {
+        for (unsigned int j = 0; j < SEGMENT_DIMENSION_SIZE; j++)
+        {
+            for (unsigned int k = 0; k < SEGMENT_DIMENSION_SIZE; k++)
+            {
+                blocks[i][j][k] = nullptr;
+            }
+        }
+    }
+
     if (fill)
+    {
         Fill(default_type);
+        RebuildBuffers();
+    }
 }
 
 Segment::~Segment()
 {
-    for (unsigned int i = 0; i < SEGMENT_ARRAY_SIZE; i++)
+    for (unsigned int i = 0; i < SEGMENT_DIMENSION_SIZE; i++)
     {
-        for (unsigned int j = 0; j < SEGMENT_ARRAY_SIZE; j++)
+        for (unsigned int j = 0; j < SEGMENT_DIMENSION_SIZE; j++)
         {
-            for (unsigned int k = 0; k < SEGMENT_ARRAY_SIZE; k++)
+            for (unsigned int k = 0; k < SEGMENT_DIMENSION_SIZE; k++)
             {
                 if (blocks[i][j][k])
                     delete blocks[i][j][k];
@@ -39,7 +57,8 @@ void Segment::AddBlock(SolidBlock* target, unsigned int x, unsigned int y, unsig
         delete blocks[x][y][z];
     blocks[x][y][z] = target;
     target->SetPosition(position.x + (x * SOLID_BLOCK_SIZE), position.y + (y * SOLID_BLOCK_SIZE), position.z + (z * SOLID_BLOCK_SIZE));
-    RebuildBuffers();
+    //TODO: should rebuild buffers?
+    //RebuildBuffers();
 }
 
 void Segment::AddBlock(SolidBlock* target, unsigned int index)
@@ -68,11 +87,11 @@ void Segment::AddBlock(SolidBlockType type, unsigned int index)
 
 void Segment::Fill(SolidBlockType type)
 {
-    for (unsigned int i = 0; i < SEGMENT_ARRAY_SIZE; i++)
+    for (unsigned int i = 0; i < SEGMENT_DIMENSION_SIZE; i++)
     {
-        for (unsigned int j = 0; j < SEGMENT_ARRAY_SIZE; j++)
+        for (unsigned int j = 0; j < SEGMENT_DIMENSION_SIZE; j++)
         {
-            for (unsigned int k = 0; k < SEGMENT_ARRAY_SIZE; k++)
+            for (unsigned int k = 0; k < SEGMENT_DIMENSION_SIZE; k++)
             {
                 if (blocks[i][j][k])
                     delete blocks[i][j][k];
@@ -110,12 +129,12 @@ SegmentIndices Segment::GetArrayIndices(unsigned int value)
     return _indices;
 }
 
-ID3D11Buffer* Segment::GetVertexBuffer()
+VertexBuffer<NormalVertexStruct>* Segment::GetVertexBuffer()
 {
-    return vertex_buffer->GetBuffer();
+    return vertex_buffer.get();
 }
 
-ID3D11Buffer* Segment::GetIndexBuffer()
+IndexBuffer* Segment::GetIndexBuffer()
 {
-    return index_buffer->GetBuffer();
+    return index_buffer.get();
 }

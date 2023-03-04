@@ -48,8 +48,6 @@ void IndexBuffer::Bind()
 void IndexBuffer::Unbind()
 {
 	ID3D11Buffer* _buffer = { nullptr };
-	DXGI_FORMAT _format;
-	unsigned int _int;
 	context->IAGetIndexBuffer(&_buffer, 0, 0);
 	if (_buffer == buffer)
 	{

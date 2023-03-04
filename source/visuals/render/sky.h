@@ -1,6 +1,7 @@
 
 #pragma once
 
+
 #include "render_base.h"
 
 class BasicCamera;
@@ -14,13 +15,9 @@ public:
 	void Render() override;
 
 private:
-	struct PerFrameBuffer
-	{
-		DirectX::XMMATRIX world;
-	};
 
 	DirectX::XMMATRIX scale_matrix;
 
 	BasicCamera* camera;
-	std::unique_ptr<ConstantBuffer<PerFrameBuffer>> per_frame_buffer;
+	std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> per_frame_buffer;
 };

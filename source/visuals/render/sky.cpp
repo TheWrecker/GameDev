@@ -16,7 +16,7 @@ SkyRender::SkyRender(Scene* scene)
 		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _sphere_slot)
 		.Build();
 
-	per_frame_buffer = std::make_unique<ConstantBuffer<PerFrameBuffer>>(device, context);
+	per_frame_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
 	scale_matrix = DirectX::XMMatrixScaling(500.0f, 500.0f, 500.0f);
 	camera = scene->GetActiveCamera();
 }
@@ -29,7 +29,7 @@ void SkyRender::Render()
 {
 	DirectX::XMFLOAT3 _currentPosition = camera->Position();
 	DirectX::XMMATRIX _worldMatrix = scale_matrix * DirectX::XMMatrixTranslation(_currentPosition.x, _currentPosition.y, _currentPosition.z);
-	PerFrameBuffer _cb1 = { DirectX::XMMatrixTranspose(_worldMatrix)};
+	DefaultConstantStruct _cb1 = { DirectX::XMMatrixTranspose(_worldMatrix)};
 	per_frame_buffer->Update(_cb1);
 	per_frame_buffer->Bind(BindStage::VERTEX, 1);
 	input_layout->Bind();

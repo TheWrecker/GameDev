@@ -16,11 +16,5 @@ public:
 	void Render() override;
 
 private:
-	struct PerObjectBuffer
-	{
-		DirectX::XMMATRIX world;
-	};
-
-	std::unique_ptr<BasicEntity> test_object;
-	std::unique_ptr<ConstantBuffer<PerObjectBuffer>> per_object_buffer;
+	std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> per_object_buffer;
 };

@@ -1,10 +1,10 @@
 
 #include "entity_basic.h"
 
-BasicEntity::BasicEntity()
+BasicEntity::BasicEntity(float x, float y, float z)
 	:position(), translation_matrix()
 {
-	SetPosition(0.0f, 0.0f, 0.0f);
+	SetPosition(x, y, z);
 }
 
 BasicEntity::~BasicEntity()
@@ -24,7 +24,7 @@ const DirectX::XMVECTOR BasicEntity::Position_Vector() const
 	return DirectX::XMLoadFloat3(&position);
 }
 
-const DirectX::XMFLOAT3& BasicEntity::Position() const
+DirectX::XMFLOAT3 BasicEntity::Position() const
 {
 	return position;
 }

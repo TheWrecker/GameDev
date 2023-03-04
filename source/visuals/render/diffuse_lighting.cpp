@@ -6,7 +6,7 @@ DiffuseLighting::DiffuseLighting(Scene* scene)
 	object = std::make_unique<TransformableEntity>();
 	object->SetPosition(4.0f, 0.0f, 0.0f);
 
-	object_buffer = std::make_unique<ConstantBuffer<PerObjectBuffer>>(device, context);
+	object_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
 
 	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/diffuse_lighting_v.hlsl");
 	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/diffuse_lighting_p.hlsl");
@@ -26,7 +26,7 @@ DiffuseLighting::~DiffuseLighting()
 
 void DiffuseLighting::Render()
 {
-	PerObjectBuffer _cb2 = { DirectX::XMMatrixTranspose(object->World_Matrix()) };
+	DefaultConstantStruct _cb2 = { DirectX::XMMatrixTranspose(object->World_Matrix()) };
 	object_buffer->Update(_cb2);
 	object_buffer->Bind(BindStage::VERTEX, 1);
 

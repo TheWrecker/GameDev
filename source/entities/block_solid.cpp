@@ -1,8 +1,8 @@
 
 #include "block_solid.h"
 
-SolidBlock::SolidBlock(SolidBlockType type)
-    :type(type)
+SolidBlock::SolidBlock(SolidBlockType type, float x, float y, float z)
+    :BasicEntity(x, y, z), type(type)
 {
 }
 

@@ -6,7 +6,7 @@
 class BasicEntity
 {
 public:
-	BasicEntity();
+	BasicEntity(float x = 0.0f, float y = 0.0f, float z = 0.0f);
 	virtual ~BasicEntity();
 
 	virtual void Render();
@@ -14,7 +14,7 @@ public:
 	virtual void SetPosition(float x, float y, float z);
 
 	virtual const DirectX::XMVECTOR Position_Vector() const;
-	virtual const DirectX::XMFLOAT3& Position() const;
+	virtual DirectX::XMFLOAT3 Position() const;
 	virtual const DirectX::XMMATRIX World_Matrix() const;
 	const DirectX::XMMATRIX Translation_Matrix() const;
 

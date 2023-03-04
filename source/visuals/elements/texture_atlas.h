@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 class Presenter;
 
@@ -16,7 +17,8 @@ public:
 	void ReconstructTextureArray();
 	void Clear();
 
-	unsigned int LoadTexture(const std::wstring& file);
+	unsigned int LoadTexture(const std::wstring& file, const std::string& name);
+	unsigned int FindTextureIndex(const std::string& name);
 	ID3D11Texture2D* GetTexture(size_t index);
 	ID3D11ShaderResourceView* GetShaderView(size_t index);
 	ID3D11Texture2D* GetTextureArray();
@@ -36,4 +38,5 @@ private:
 	std::vector<D3D11_TEXTURE2D_DESC*> descs;
 	std::vector<ID3D11ShaderResourceView*> views;
 	std::size_t slice_count;
+	std::unordered_map<std::string, unsigned int> names;
 };

@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include <memory>
 
+#include "defs_pipeline.h"
 #include "../elements/shader_pixel.h"
 #include "../elements/shader_vertex.h"
 #include "../entities/camera_basic.h"

@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 #include <vector>
 
+#include "defs_pipeline.h"
 #include "buffer_constant.h"
 #include "buffer_index.h"
 #include "buffer_vertex.h"
@@ -57,24 +58,6 @@ public:
 
 private:
 	void CreateObjectBuffers(unsigned int index, Model* model, bool addNormals = false);
-
-	struct DefaultVertexStruct
-	{
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT2 uv;
-	};
-
-	struct NormalVertexStruct
-	{
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT2 uv;
-		DirectX::XMFLOAT3 normal;
-	};
-
-	struct DefaultConstantStruct
-	{
-		DirectX::XMMATRIX matrix;
-	};
 
 	std::vector<VertexBuffer<DefaultVertexStruct>*> default_vertex_buffers;
 	std::vector<VertexBuffer<NormalVertexStruct>*> normal_vertex_buffers;
