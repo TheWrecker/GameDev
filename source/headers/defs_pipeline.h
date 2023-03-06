@@ -23,6 +23,14 @@ struct NormalVertexStruct
 	DirectX::XMFLOAT3 normal;
 };
 
+struct SolidBlockVertex
+{
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT2 uv;
+	DirectX::XMFLOAT3 normal;
+	float atlas_slice;
+};
+
 struct DefaultConstantStruct
 {
 	DirectX::XMMATRIX matrix;

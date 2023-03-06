@@ -146,6 +146,11 @@ unsigned int TextureAtlas::FindTextureIndex(const std::string& name)
 	return _result->second;
 }
 
+void TextureAtlas::Bind()
+{
+	context->PSSetShaderResources(127, 1, &shader_view);
+}
+
 ID3D11Texture2D* TextureAtlas::GetTexture(size_t index)
 {
     return textures[index];
@@ -166,12 +171,12 @@ ID3D11ShaderResourceView* TextureAtlas::GetArrayShaderView()
 	return shader_view;
 }
 
-size_t TextureAtlas::GetTextureCount()
+std::size_t TextureAtlas::GetTextureCount()
 {
 	return textures.size();
 }
 
-size_t TextureAtlas::GetArraySliceCount()
+std::size_t TextureAtlas::GetArraySliceCount()
 {
 	return slice_count;
 }

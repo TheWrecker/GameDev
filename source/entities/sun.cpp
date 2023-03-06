@@ -8,7 +8,7 @@ Sun::Sun()
     SetScale(25.0f, 25.0f, 25.0f);
     light_info.direction = { 0.0f, 1.0f, 0.0f, 1.0f };
     light_info.color = { 1.0f, 1.0f, 0.9f, 0.8f };
-    light_info.ambient = { 0.5f, 0.5f, 0.5f, 0.3f };
+    light_info.ambient = { 1.0f, 1.0f, 1.0f, 0.3f };
 }
 
 Sun::~Sun()

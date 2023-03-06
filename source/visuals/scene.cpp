@@ -6,6 +6,7 @@
 #include "elements/master_buffer.h"
 #include "elements/manager_model.h"
 #include "elements/manager_texture.h"
+#include "../processors/processor_solid_block.h"
 #include "presenter.h"
 #include "render/aggregator.h"
 
@@ -35,8 +36,17 @@ void Scene::SwitchMode(SceneMode mode)
 	//load scene specific assets
 	// 
 	//test
-	segment1 = std::make_unique<Segment>(this, TEST, true, 10.0f, 0.0f, 5.0f);
-	segment2 = std::make_unique<Segment>(this, TEST, true, -10.0f, 10.0f, 5.0f);
+	SolidBlockProcessor::Setup(atlas.get());
+
+	segment1 = std::make_unique<Segment>(this, SolidBlockType::TEST, true, 5.0f, 0.0f, -3.0f);
+	segment2 = std::make_unique<Segment>(this, SolidBlockType::GRASS, true, -5.0f, 2.0f, -3.0f);
+	segment2->RemoveBlock(2, 4, 2);
+	segment2->RemoveBlock(2, 3, 2);
+	segment2->RemoveBlock(2, 2, 2);
+	segment2->RemoveBlock(1, 2, 2);
+	segment2->RemoveBlock(3, 2, 2);
+	segment2->RemoveBlock(2, 2, 3);
+	segment2->RebuildBuffers();
 }
 
 void Scene::Draw()

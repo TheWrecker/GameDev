@@ -5,7 +5,7 @@ SamplerState BilinearSampler : register(s14);
 struct VS_OUTPUT
 {
     float4 position : SV_Position;
-    float2 uv : TEXCOORD;
+    float2 uv : TEXCOORDS;
 };
 
 

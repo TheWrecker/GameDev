@@ -40,7 +40,7 @@ public:
 	void RebuildBuffers();
 
 	SegmentIndices GetArrayIndices(unsigned int value);
-	VertexBuffer<NormalVertexStruct>* GetVertexBuffer();
+	VertexBuffer<SolidBlockVertex>* GetVertexBuffer();
 	IndexBuffer* GetIndexBuffer();
 
 private:
@@ -49,6 +49,6 @@ private:
 	Scene* scene;
 	SolidBlockType default_type;
 	SolidBlock* blocks[SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE];
-	std::unique_ptr<VertexBuffer<NormalVertexStruct>> vertex_buffer;
+	std::unique_ptr<VertexBuffer<SolidBlockVertex>> vertex_buffer;
 	std::unique_ptr<IndexBuffer> index_buffer;
 };

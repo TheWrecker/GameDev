@@ -8,7 +8,7 @@
 Segment::Segment(Scene* scene, SolidBlockType type, bool fill, float x, float y, float z)
     :BasicEntity(x, y, z), default_type(type), blocks(), scene(scene)
 {
-    vertex_buffer = std::make_unique<VertexBuffer<NormalVertexStruct>>(scene->GetDevice(), scene->GetContext());
+    vertex_buffer = std::make_unique<VertexBuffer<SolidBlockVertex>>(scene->GetDevice(), scene->GetContext());
     index_buffer = std::make_unique<IndexBuffer>(scene->GetDevice(), scene->GetContext());
 
     for (unsigned int i = 0; i < SEGMENT_DIMENSION_SIZE; i++)
@@ -105,7 +105,10 @@ void Segment::Fill(SolidBlockType type)
 void Segment::RemoveBlock(unsigned int x, unsigned int y, unsigned int z)
 {
     if (blocks[x][y][z])
+    {
         delete blocks[x][y][z];
+        blocks[x][y][z] = nullptr;
+    }
 }
 
 void Segment::RemoveBlock(unsigned int index)
@@ -129,7 +132,7 @@ SegmentIndices Segment::GetArrayIndices(unsigned int value)
     return _indices;
 }
 
-VertexBuffer<NormalVertexStruct>* Segment::GetVertexBuffer()
+VertexBuffer<SolidBlockVertex>* Segment::GetVertexBuffer()
 {
     return vertex_buffer.get();
 }

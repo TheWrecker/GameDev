@@ -1,6 +1,6 @@
 
 #include "../elements/render_target.h"
-#include "diffuse_lighting.h"
+#include "solid_blocks.h"
 #include "render_dev.h"
 #include "sun_moon.h"
 #include "sky.h"
@@ -34,8 +34,8 @@ Aggregator::Aggregator(Scene* scene)
 	//render pass
 	render_pass = std::make_unique<RenderPass>(scene, L"source/visuals/shaders/pass_p.hlsl");
 
-	//diffuse lighting
-	render_lighting_diffuse = std::make_unique<DiffuseLighting>(scene);
+	//solid blocks
+	render_solid_blocks = std::make_unique<SolidBlockRender>(scene);
 
 	//Sun and Moon
 	render_sun_moon = std::make_unique<SunMoon>(scene);
@@ -92,11 +92,8 @@ void Aggregator::AggregateAllRenders()
 	buffer_master->BindDefaultObject(DefaultObjects::BLOCK);
 	render_dev->Render();
 
-	//render diffuse lighting
-	_shaderView = texture_manager->GetShaderView("earth");
-	context->PSSetShaderResources(0, 1, &_shaderView);
-	buffer_master->BindDefaultObject(DefaultObjects::QUAD_NORMAL);
-	render_lighting_diffuse->Render();
+	//render solid blocks
+	render_solid_blocks->Render();
 
 	//render the pass
 	/*buffer_master->BindDefaultObject(DefaultObjects::QUAD);

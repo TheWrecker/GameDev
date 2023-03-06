@@ -7,6 +7,8 @@
 #include "../entities/entity_basic.h"
 #include "render_base.h"
 
+class TransformableEntity;
+
 class DevRender : public RenderBase
 {
 public:
@@ -16,5 +18,8 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> per_object_buffer;
+	friend class Overlay;
+
+	std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> object_buffer;
+	std::unique_ptr<TransformableEntity> object;
 };

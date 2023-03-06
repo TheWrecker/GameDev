@@ -85,9 +85,6 @@ inline void VertexBuffer<type>::Build()
 template<typename type>
 inline void VertexBuffer<type>::Bind(unsigned int slot)
 {
-	if (is_bound)
-		return;
-
 	context->IASetVertexBuffers(slot, 1, &buffer, &vertex_stride, &vertex_offset);
 	current_slot = slot;
 	is_bound = true;
@@ -107,6 +104,7 @@ inline void VertexBuffer<type>::Unbind()
 		ID3D11Buffer* _null_buffer = { nullptr };
 		_stride = _offset = 0;
 		context->IASetVertexBuffers(current_slot, 1, &_null_buffer, &_stride, &_offset);
+		is_bound = false;
 	}
 	DXRelease(_buffer);
 }

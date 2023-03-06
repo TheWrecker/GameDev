@@ -7,7 +7,7 @@
 
 #include "util_funcs.h"
 #include "../entities/sun.h"
-#include "render/diffuse_lighting.h"
+#include "render/render_dev.h"
 #include "render/aggregator.h"
 #include "scene.h"
 #include "../core/platform.h"
@@ -143,7 +143,7 @@ void Overlay::Draw()
 		{
 			static DirectX::XMFLOAT3 _rotation = {0.0f, 0.0f, 0.0f};
 			ImGui::DragFloat3("Object Rotation", (float*)&_rotation, 1.0f, 0.0f, 360.0f);
-			aggregator->render_lighting_diffuse->object->SetRotation(_rotation.x/57.2958f, _rotation.y/ 57.2958f, _rotation.z/ 57.2958f);
+			aggregator->render_dev->object->SetRotation(_rotation.x/57.2958f, _rotation.y/ 57.2958f, _rotation.z/ 57.2958f);
 		}
 
 		ImGui::Separator();

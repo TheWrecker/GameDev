@@ -14,12 +14,13 @@ struct VS_INPUT
     float3 position : POSITION;
     float2 uv : TEXCOORDS;
     float3 normals : NORMALS;
+    float atlas_slice : ATLAS_SLICE;
 };
 
 struct VS_OUTPUT
 {
     float4 position : SV_Position;
-    float2 uv : TEXCOORDS;
+    float3 uvw : TEXCOORDS;
     float3 normal : NORMALS;
 };
 
@@ -31,7 +32,7 @@ VS_OUTPUT main(VS_INPUT vertex)
     output.position = mul(output.position, view_projection_matrix);
     output.normal = mul(vertex.normals, world_matrix);
     output.normal = normalize(output.normal);
-    output.uv = vertex.uv;
+    output.uvw = float3(vertex.uv, vertex.atlas_slice);
     
     return output;
 }

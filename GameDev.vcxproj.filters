@@ -172,7 +172,7 @@
     <ClCompile Include="source\visuals\render\render_pass.cpp">
       <Filter>source\visuals\render</Filter>
     </ClCompile>
-    <ClCompile Include="source\visuals\render\diffuse_lighting.cpp">
+    <ClCompile Include="source\visuals\render\solid_blocks.cpp">
       <Filter>source\visuals\render</Filter>
     </ClCompile>
     <ClCompile Include="source\entities\sun.cpp">
@@ -357,7 +357,7 @@
     <ClInclude Include="source\visuals\elements\render_target.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
-    <ClInclude Include="source\visuals\render\diffuse_lighting.h">
+    <ClInclude Include="source\visuals\render\solid_blocks.h">
       <Filter>source\visuals\render</Filter>
     </ClInclude>
     <ClInclude Include="source\entities\sun.h">
@@ -398,10 +398,10 @@
     <FxCompile Include="source\visuals\shaders\pass_p.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="source\visuals\shaders\diffuse_lighting_v.hlsl">
+    <FxCompile Include="source\visuals\shaders\solid_blocks_v.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="source\visuals\shaders\diffuse_lighting_p.hlsl">
+    <FxCompile Include="source\visuals\shaders\solid_blocks_p.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
     <FxCompile Include="source\visuals\shaders\sun_moon_v.hlsl">

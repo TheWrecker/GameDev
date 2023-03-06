@@ -1,22 +1,23 @@
 
-#include "../scene.h"
-
 #include "render_dev.h"
 
 DevRender::DevRender(Scene* scene)
 	:RenderBase(scene)
 {
-	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/diffuse_lighting_v.hlsl");
-	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/diffuse_lighting_p.hlsl");
+	object = std::make_unique<TransformableEntity>();
+	object->SetPosition(4.0f, 0.0f, 0.0f);
 
-	unsigned int _slot = 1;//static_cast<unsigned int>(DefaultObjects::BLOCK);
+	object_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
+
+	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/dev_v.hlsl");
+	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/dev_p.hlsl");
+
+	unsigned int _slot = static_cast<unsigned int>(DefaultObjects::QUAD_NORMAL);
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
 	input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot)
 		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot)
 		.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, _slot)
 		.Build();
-
-	per_object_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
 }
 
 DevRender::~DevRender()
@@ -25,21 +26,13 @@ DevRender::~DevRender()
 
 void DevRender::Render()
 {
-	DefaultConstantStruct _cb1 = { DirectX::XMMatrixTranspose(scene->segment1->World_Matrix()) };
-	per_object_buffer->Update(_cb1);
-	per_object_buffer->Bind(BindStage::VERTEX, 1);
+	DefaultConstantStruct _cb2 = { DirectX::XMMatrixTranspose(object->World_Matrix()) };
+	object_buffer->Update(_cb2);
+	object_buffer->Bind(BindStage::VERTEX, 1);
+
 	input_layout->Bind();
 	vertex_shader->Apply();
 	pixel_shader->Apply();
-	scene->segment1->GetVertexBuffer()->Bind(1);
-	scene->segment1->GetIndexBuffer()->Bind();
-	context->DrawIndexed(scene->segment1->GetIndexBuffer()->GetIndexCount(), 0, 0);
 
-	_cb1 = { DirectX::XMMatrixTranspose(scene->segment2->World_Matrix()) };
-	per_object_buffer->Update(_cb1);
-	per_object_buffer->Bind(BindStage::VERTEX, 1);
-
-	scene->segment2->GetVertexBuffer()->Bind(1);
-	scene->segment2->GetIndexBuffer()->Bind();
-	context->DrawIndexed(scene->segment2->GetIndexBuffer()->GetIndexCount(), 0, 0);
+	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::QUAD_NORMAL), 0, 0);
 }

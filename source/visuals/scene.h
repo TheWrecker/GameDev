@@ -55,7 +55,7 @@ public:
 	ModelManager* GetModelManager();
 
 private:
-	friend class DevRender;
+	friend class SolidBlockRender;
 
 	Presenter* presenter;
 	std::unique_ptr<BasicCamera> active_camera;

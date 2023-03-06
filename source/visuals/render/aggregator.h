@@ -6,7 +6,7 @@
 
 #include "render_base.h"
 
-class DiffuseLighting;
+class SolidBlockRender;
 class DevRender;
 class SunMoon;
 class SkyRender;
@@ -38,5 +38,5 @@ private:
 	std::unique_ptr<DevRender> render_dev;
 	std::unique_ptr<SkyRender> render_sky;
 	std::unique_ptr<SunMoon> render_sun_moon;
-	std::unique_ptr<DiffuseLighting> render_lighting_diffuse;
+	std::unique_ptr<SolidBlockRender> render_solid_blocks;
 };

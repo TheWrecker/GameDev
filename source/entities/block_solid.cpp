@@ -20,7 +20,7 @@ SolidBlockType SolidBlock::GetBlockType()
     return type;
 }
 
-unsigned int SolidBlock::GetManagerIndex()
+unsigned int SolidBlock::GetAtlasIndex()
 {
     return static_cast<unsigned int>(type);
 }
