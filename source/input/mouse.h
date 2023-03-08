@@ -15,6 +15,7 @@ public:
 	~Mouse();
 
 	void Update() override;
+	void ToggleMode();
 
 	DirectX::Mouse* GetMouse();
 	DirectX::Mouse::ButtonStateTracker* GetButtonTracker();

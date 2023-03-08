@@ -2,6 +2,7 @@
 #include "directxtk/DDSTextureLoader.h"
 #include "directxtk/WICTextureLoader.h"
 
+#include "defs_pipeline.h"
 #include "util_funcs.h"
 #include "../presenter.h"
 
@@ -40,10 +41,15 @@ TextureAtlas::TextureAtlas(Presenter* presenter)
 
 TextureAtlas::~TextureAtlas()
 {
+	Unbind();
 	DXRelease(texture_array);
 	DXRelease(shader_view);
+
 	for (auto& _item : textures)
 		DXRelease(_item);
+
+	for (auto _desc : descs)
+		delete _desc;
 
 	for (auto& _item : views)
 		DXRelease(_item);
@@ -85,19 +91,21 @@ void TextureAtlas::ReconstructTextureArray()
 		_current_slice++;
 	}
 
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderView = {};
-	shaderView.Format = base_desc.Format;
-	shaderView.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-	shaderView.Texture2DArray.ArraySize = _slices;
-	shaderView.Texture2DArray.FirstArraySlice = 0;
-	shaderView.Texture2DArray.MipLevels = _mips;
-	shaderView.Texture2DArray.MostDetailedMip = 0;
-	DXAssert(device->CreateShaderResourceView(texture_array, &shaderView, &shader_view));
+	D3D11_SHADER_RESOURCE_VIEW_DESC _shader_view_desc = {};
+	_shader_view_desc.Format = base_desc.Format;
+	_shader_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+	_shader_view_desc.Texture2DArray.ArraySize = _slices;
+	_shader_view_desc.Texture2DArray.FirstArraySlice = 0;
+	_shader_view_desc.Texture2DArray.MipLevels = _mips;
+	_shader_view_desc.Texture2DArray.MostDetailedMip = 0;
+	DXAssert(device->CreateShaderResourceView(texture_array, &_shader_view_desc, &shader_view));
 	slice_count = _slices;
 }
 
 void TextureAtlas::Clear()
 {
+	Unbind();
+
 	for (auto _texture : textures)
 		_texture->Release();
 
@@ -106,6 +114,9 @@ void TextureAtlas::Clear()
 
 	for (auto _view : views)
 		_view->Release();
+
+	DXRelease(shader_view);
+	DXRelease(texture_array);
 
 	textures.clear();
 	descs.clear();
@@ -148,7 +159,13 @@ unsigned int TextureAtlas::FindTextureIndex(const std::string& name)
 
 void TextureAtlas::Bind()
 {
-	context->PSSetShaderResources(127, 1, &shader_view);
+	context->PSSetShaderResources(static_cast<unsigned int>(DefaultTextures::TEXTURE_ATLAS), 1, &shader_view);
+}
+
+void TextureAtlas::Unbind()
+{
+	ID3D11ShaderResourceView* _null_view = {nullptr};
+	context->PSSetShaderResources(static_cast<unsigned int>(DefaultTextures::TEXTURE_ATLAS), 1, &_null_view);
 }
 
 ID3D11Texture2D* TextureAtlas::GetTexture(size_t index)

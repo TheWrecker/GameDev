@@ -23,6 +23,18 @@ void Mouse::Update()
 	mouse_buttons->Update(state);
 }
 
+void Mouse::ToggleMode()
+{
+	if (state.positionMode == DirectX::Mouse::MODE_RELATIVE)
+	{
+		mouse->SetMode(DirectX::Mouse::MODE_ABSOLUTE);
+	}
+	else
+	{
+		mouse->SetMode(DirectX::Mouse::MODE_RELATIVE);
+	}
+}
+
 DirectX::Mouse* Mouse::GetMouse()
 {
 	return mouse.get();

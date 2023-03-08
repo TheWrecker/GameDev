@@ -5,17 +5,15 @@
 #include <memory>
 
 #include "interface_drawable.h"
-#include "elements/manager_texture.h"
-#include "elements/manager_model.h"
-#include "elements/texture_atlas.h"
-
-//test
-#include "../entities/segment.h"
 
 class Sun;
 class BasicCamera;
+class World;
 class StateMaster;
 class BufferMaster;
+class ModelManager;
+class TextureManager;
+class TextureAtlas;
 class Aggregator;
 class Presenter;
 
@@ -48,6 +46,7 @@ public:
 	Presenter* GetPresenter();
 	BasicCamera* GetActiveCamera();
 	Sun* GetSun();
+	World* GetWorld();
 	StateMaster* GetStateMaster();
 	BufferMaster* GetBufferMaster();
 	TextureManager* GetTextureManager();
@@ -55,19 +54,16 @@ public:
 	ModelManager* GetModelManager();
 
 private:
-	friend class SolidBlockRender;
-
 	Presenter* presenter;
+	CameraType camera_type;
+
 	std::unique_ptr<BasicCamera> active_camera;
 	std::unique_ptr<Sun> sun;
+	std::unique_ptr<World> world;
 	std::unique_ptr<StateMaster> state_master;
 	std::unique_ptr<BufferMaster> buffer_master;
 	std::unique_ptr<TextureManager> texture_manager;
 	std::unique_ptr<TextureAtlas> atlas;
 	std::unique_ptr<ModelManager> model_manager;
 	std::unique_ptr<Aggregator> aggregator;
-
-	std::unique_ptr<Segment> segment1, segment2;
-
-	CameraType camera_type;
 };

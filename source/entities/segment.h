@@ -5,14 +5,11 @@
 #include <memory>
 
 #include "defs_pipeline.h"
+#include "defs_world.h"
 #include "../visuals/elements/buffer_vertex.h"
 #include "../visuals/elements/buffer_index.h"
 #include "block_solid.h"
 #include "entity_basic.h"
-
-constexpr unsigned int SEGMENT_DIMENSION_SIZE = 5;
-constexpr unsigned int SEGMENT_ARRAY_SIZE = SEGMENT_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE;
-constexpr float SOLID_BLOCK_SIZE = 1.0f;
 
 class IndexBuffer;
 class Scene;

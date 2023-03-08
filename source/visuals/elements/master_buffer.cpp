@@ -1,6 +1,7 @@
 
 #include "mesh.h"
 #include "model.h"
+#include "manager_model.h"
 #include "../entities/sun.h"
 #include "../entities/camera_basic.h"
 #include "../scene.h"
@@ -156,11 +157,6 @@ void BufferMaster::BindDefaultConstant(DefaultConstants target)
 	}
 }
 
-void BufferMaster::UnbindDefaultConstant(DefaultConstants target)
-{
-	default_constant_buffers[static_cast<unsigned int>(target)]->Unbind();
-}
-
 void BufferMaster::BindDefaultObject(DefaultObjects target)
 {
 	auto _index = static_cast<unsigned int>(target);
@@ -184,31 +180,6 @@ void BufferMaster::BindDefaultObject(DefaultObjects target)
 			break;
 	}
 	default_index_buffers[_index]->Bind();
-}
-
-void BufferMaster::UnbindDefaultObject(DefaultObjects target)
-{
-	auto _index = static_cast<unsigned int>(target);
-	switch (target)
-	{
-	case DefaultObjects::QUAD_NORMAL:
-	case DefaultObjects::BLOCK_NORMAL:
-	case DefaultObjects::SPHERE_NORMAL:
-	{
-		normal_vertex_buffers[_index]->Unbind();
-		break;
-	}
-	case DefaultObjects::QUAD:
-	case DefaultObjects::BLOCK:
-	case DefaultObjects::SPHERE:
-	{
-		default_vertex_buffers[_index]->Unbind();
-		break;
-	}
-	default:
-		break;
-	}
-	default_index_buffers[_index]->Unbind();
 }
 
 unsigned int BufferMaster::GetIndexCount(DefaultObjects target)

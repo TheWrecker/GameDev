@@ -16,7 +16,6 @@ public:
 
 	void Update(type& info);
 	void Bind(BindStage stage, unsigned int slot);
-	void Unbind();
 
 private:
 	ID3D11Device* device;
@@ -25,14 +24,11 @@ private:
 	ID3D11Buffer* buffer;
 	D3D11_BUFFER_DESC desc;
 	D3D11_MAPPED_SUBRESOURCE subresource;
-	unsigned int current_slot;
-	BindStage current_stage;
-	bool is_bound;
 };
 
 template<typename type>
 inline ConstantBuffer<type>::ConstantBuffer(ID3D11Device* device, ID3D11DeviceContext* context)
-	:device(device), context(context), buffer(), desc(), subresource(), data(), is_bound(false)
+	:device(device), context(context), buffer(), desc(), subresource(), data()
 {
 	ZeroMemory(&desc, sizeof(desc));
 	desc.ByteWidth = sizeof(type);
@@ -46,33 +42,22 @@ inline ConstantBuffer<type>::ConstantBuffer(ID3D11Device* device, ID3D11DeviceCo
 template<typename type>
 inline ConstantBuffer<type>::~ConstantBuffer()
 {
-	Unbind();
 	DXRelease(buffer);
 }
 
 template<typename type>
 inline void ConstantBuffer<type>::Update(type& info)
 {
-	bool _was_bound = is_bound;
-	if (is_bound)
-		Unbind();
-
 	data = info;
 	ZeroMemory(&subresource, sizeof(subresource));
 	context->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subresource);
 	memcpy(subresource.pData, &data, sizeof(data));
 	context->Unmap(buffer, 0);
-
-	if (_was_bound)
-		Bind(current_stage, current_slot);
 }
 
 template<typename type>
 inline void ConstantBuffer<type>::Bind(BindStage stage, unsigned int slot)
 {
-	if (is_bound)
-		return;
-
 	switch (stage)
 	{
 		case BindStage::VERTEX:
@@ -91,47 +76,4 @@ inline void ConstantBuffer<type>::Bind(BindStage stage, unsigned int slot)
 			return;
 		}
 	}
-	current_stage = stage;
-	current_slot = slot;
-	is_bound = true;
-}
-
-template<typename type>
-inline void ConstantBuffer<type>::Unbind()
-{
-	if (!is_bound)
-		return;
-
-	ID3D11Buffer* _buffer = { nullptr };
-	switch (current_stage)
-	{
-		case BindStage::VERTEX:
-		{
-			context->VSGetConstantBuffers(current_slot, 1, &_buffer);
-			if (_buffer == buffer)
-			{
-				ID3D11Buffer* _null_buffer = { nullptr };
-				context->VSSetConstantBuffers(current_slot, 1, &_null_buffer);
-			}
-			DXRelease(_buffer);
-			break;
-		}
-		case BindStage::PIXEL:
-		{
-			context->PSGetConstantBuffers(current_slot, 1, &_buffer);
-			if (_buffer == buffer)
-			{
-				ID3D11Buffer* _null_buffer = { nullptr };
-				context->PSSetConstantBuffers(current_slot, 1, &_null_buffer);
-			}
-			DXRelease(_buffer);
-			break;
-		}
-		default:
-		{
-			assert(false);
-			break;
-		}
-	}
-	is_bound = false;
 }

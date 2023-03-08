@@ -47,7 +47,14 @@ Segment::~Segment()
 void Segment::Move(float x, float y, float z)
 {
     SetPosition(x, y, z);
-    RebuildBuffers();
+    //RebuildBuffers();
+    for (unsigned int x = 0; x < SEGMENT_DIMENSION_SIZE; x++)
+        for (unsigned int y = 0; y < SEGMENT_DIMENSION_SIZE; y++)
+            for (unsigned int z = 0; z < SEGMENT_DIMENSION_SIZE; z++)
+            {
+                if (blocks[x][y][z])
+                    blocks[x][y][z]->SetPosition(position.x + (x * SOLID_BLOCK_SIZE), position.y + (y * SOLID_BLOCK_SIZE), position.z + (z * SOLID_BLOCK_SIZE));
+            }
 }
 
 void Segment::AddBlock(SolidBlock* target, unsigned int x, unsigned int y, unsigned int z)

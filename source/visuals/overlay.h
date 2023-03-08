@@ -7,6 +7,8 @@
 #include"defs_platform.h"
 
 class Sun;
+class Keyboard;
+class Mouse;
 class Aggregator;
 class Scene;
 class Presenter;
@@ -20,6 +22,7 @@ public:
 
 	void Show();
 	void Hide();
+	void ToggleShow();
 	void Draw() override;
 	void Update() override;
 
@@ -29,5 +32,7 @@ private:
 	Scene* scene;
 	Presenter* presenter;
 	SystemTicker* ticker;
+	Keyboard* keyboard;
+	Mouse* mouse;
 	bool show;
 };

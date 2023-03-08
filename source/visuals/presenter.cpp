@@ -38,29 +38,32 @@ Presenter::Presenter(Supervisor* parent)
 	scene = std::make_unique<Scene>(this);
 	scene->SwitchMode(SceneMode::DEVELOPEMENT);
 	overlay = std::make_unique<Overlay>(this);
-	overlay->Show();
+	//overlay->Show();
 
 	//show all live d3d11device objects
-	//ID3D11Debug* _debug = nullptr;
-	//device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&_debug));
-	//supervisor->SetDebugQuery(_debug);
+	/*ID3D11Debug* _debug = nullptr;
+	device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&_debug));
+	supervisor->SetDebugQuery(_debug);*/
 }
 
 Presenter::~Presenter()
 {
-	DXRelease(device);
-	if (context)
-		context->ClearState();
-	DXRelease(context);
-	DXRelease(graphics_interface);
-	DXRelease(graphics_adapter);
-	DXRelease(graphics_factory);
-	DXRelease(swapchain);
 	DXRelease(back_buffer);
 	DXRelease(render_target_view);
 	DXRelease(depth_stencil);
 	DXRelease(depth_stencil_view);
 	DXRelease(rasterizer_state);
+	DXRelease(swapchain);
+	DXRelease(graphics_factory);
+	DXRelease(graphics_adapter);
+	DXRelease(graphics_interface);
+	if (context)
+	{
+		context->ClearState();
+		context->Flush();
+	}
+	DXRelease(context);
+	DXRelease(device);
 }
 
 void Presenter::Draw()

@@ -1,6 +1,6 @@
 
 SamplerState BilinearSampler : register(s14);
-Texture2DArray inputTexture : register(t127);
+Texture2DArray inputTexture : register(t126);
 
 cbuffer LightData : register(b11)
 {

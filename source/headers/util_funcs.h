@@ -10,7 +10,10 @@ template<typename type>
 void DXRelease(type& target)
 {
 	if (target)
+	{
 		target->Release();
+		target = nullptr;
+	}
 }
 
 //std::wstring String_To_WString(const std::string& str)

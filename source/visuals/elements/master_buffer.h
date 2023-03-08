@@ -14,30 +14,6 @@ class Model;
 class BasicCamera;
 class Scene;
 
-//we dont use first and last slots
-//TODO: add distinct lighting data
-enum class DefaultConstants : unsigned int
-{
-	//14 slots total
-	UNDEFINED = 0,
-	SUN_LIGHT_DATA = 11,
-	VIEW_PROJECTION_MATRIX = 12,
-	END_PADDING = 13 //D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT (14)
-};
-
-enum class DefaultObjects : unsigned int
-{
-	//32 slots total
-	UNDEFINED = 0,
-	QUAD_NORMAL = 25,
-	BLOCK_NORMAL = 26,
-	SPHERE_NORMAL = 27,
-	QUAD = 28,
-	BLOCK = 29,
-	SPHERE = 30,
-	END_PADDING = 31 //D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT (32)
-};
-
 class BufferMaster
 {
 public:
@@ -47,10 +23,8 @@ public:
 
 	void UpdateDefaultConstant(DefaultConstants target);
 	void BindDefaultConstant(DefaultConstants target);
-	void UnbindDefaultConstant(DefaultConstants target);
 
 	void BindDefaultObject(DefaultObjects target);
-	void UnbindDefaultObject(DefaultObjects target);
 	unsigned int GetIndexCount(DefaultObjects target);
 
 	unsigned int GetCurrentSlot(DefaultConstants target);

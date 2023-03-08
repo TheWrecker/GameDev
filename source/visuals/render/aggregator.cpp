@@ -1,5 +1,6 @@
 
 #include "../elements/render_target.h"
+#include "../elements/texture_atlas.h"
 #include "solid_blocks.h"
 #include "render_dev.h"
 #include "sun_moon.h"
@@ -70,15 +71,21 @@ void Aggregator::AggregateAllRenders()
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	state_master->BindDefaultTextureSampler(DefaultSampler::BILINEAR);
 
+	//TODO: bind default textures including the atlas
+	scene->GetTextureAtlas()->Bind();
+
 	//bind render pass
 	//render_pass->BindAsRenderTarget();
 
 	//render sky
+	presenter->SetRasterizerState(CullMode::CULL_NONE, false, false);
 	auto _shaderView = texture_manager->GetShaderView("sky");
 	context->PSSetShaderResources(0, 1, &_shaderView);
 	buffer_master->BindDefaultObject(DefaultObjects::SPHERE);
 	render_sky->Render();
 
+
+	presenter->SetRasterizerState(CullMode::CULL_BACK, false, false);
 	//render sun or moon
 	//TODO: dynamic time of day
 	_shaderView = texture_manager->GetShaderView("sun");
@@ -89,7 +96,7 @@ void Aggregator::AggregateAllRenders()
 	//render dev
 	_shaderView = texture_manager->GetShaderView("test_checkers");
 	context->PSSetShaderResources(0, 1, &_shaderView);
-	buffer_master->BindDefaultObject(DefaultObjects::BLOCK);
+	buffer_master->BindDefaultObject(DefaultObjects::BLOCK_NORMAL);
 	render_dev->Render();
 
 	//render solid blocks

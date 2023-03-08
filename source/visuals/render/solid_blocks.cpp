@@ -1,4 +1,6 @@
 
+#include "../entities/segment.h"
+#include "../entities/world.h"
 #include "../scene.h"
 
 #include "solid_blocks.h"
@@ -26,22 +28,16 @@ SolidBlockRender::~SolidBlockRender()
 
 void SolidBlockRender::Render()
 {
-	DefaultConstantStruct _cb1 = { DirectX::XMMatrixTranspose(scene->segment1->World_Matrix()) };
-	per_object_buffer->Update(_cb1);
-	per_object_buffer->Bind(BindStage::VERTEX, 1);
-	input_layout->Bind();
 	vertex_shader->Apply();
 	pixel_shader->Apply();
-	scene->GetTextureAtlas()->Bind();
-	scene->segment1->GetVertexBuffer()->Bind(1);
-	scene->segment1->GetIndexBuffer()->Bind();
-	context->DrawIndexed(scene->segment1->GetIndexBuffer()->GetIndexCount(), 0, 0);
-
-	_cb1 = { DirectX::XMMatrixTranspose(scene->segment2->World_Matrix()) };
-	per_object_buffer->Update(_cb1);
-	per_object_buffer->Bind(BindStage::VERTEX, 1);
-
-	scene->segment2->GetVertexBuffer()->Bind(1);
-	scene->segment2->GetIndexBuffer()->Bind();
-	context->DrawIndexed(scene->segment2->GetIndexBuffer()->GetIndexCount(), 0, 0);
+	input_layout->Bind();
+	for (auto& segment : scene->GetWorld()->segments)
+	{
+		DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(segment->World_Matrix())};
+		per_object_buffer->Update(_cb);
+		per_object_buffer->Bind(BindStage::VERTEX, 1);
+		segment->GetVertexBuffer()->Bind(1);
+		segment->GetIndexBuffer()->Bind();
+		context->DrawIndexed(segment->GetIndexBuffer()->GetIndexCount(), 0, 0);
+	}
 }

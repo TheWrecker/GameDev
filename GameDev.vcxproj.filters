@@ -193,6 +193,9 @@
     <ClCompile Include="source\visuals\elements\texture_atlas.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
+    <ClCompile Include="source\entities\world.cpp">
+      <Filter>source\entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\headers\defs_platform.h">
@@ -377,6 +380,12 @@
     </ClInclude>
     <ClInclude Include="source\visuals\elements\texture_atlas.h">
       <Filter>source\visuals\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\entities\world.h">
+      <Filter>source\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\defs_world.h">
+      <Filter>source\headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

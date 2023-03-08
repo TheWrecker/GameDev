@@ -2,10 +2,12 @@
 #include "../entities/camera_basic.h"
 #include "../entities/camera_firstperson.h"
 #include "../entities/sun.h"
+#include "../entities/world.h"
 #include "elements/master_state.h"
 #include "elements/master_buffer.h"
 #include "elements/manager_model.h"
 #include "elements/manager_texture.h"
+#include "elements/texture_atlas.h"
 #include "../processors/processor_solid_block.h"
 #include "presenter.h"
 #include "render/aggregator.h"
@@ -16,7 +18,7 @@ Scene::Scene(Presenter* parent)
 	:presenter(parent), camera_type(CameraType::FIRST_PERSON)
 {
 	active_camera = std::make_unique<FirstPersonCamera>(parent);
-	active_camera->SetPosition(0.0f, 0.0f, 2.0f);
+	active_camera->SetPosition(0.0f, 0.0f, 20.0f);
 	sun = std::make_unique<Sun>();
 	state_master = std::make_unique<StateMaster>(parent);
 	texture_manager = std::make_unique<TextureManager>(parent);
@@ -24,6 +26,7 @@ Scene::Scene(Presenter* parent)
 	model_manager = std::make_unique<ModelManager>();
 	buffer_master = std::make_unique<BufferMaster>(this);
 	aggregator = std::make_unique<Aggregator>(this);
+	world = std::make_unique<World>(this);
 }
 
 Scene::~Scene()
@@ -32,21 +35,17 @@ Scene::~Scene()
 
 void Scene::SwitchMode(SceneMode mode)
 {
-	//switch
-	//load scene specific assets
-	// 
-	//test
-	SolidBlockProcessor::Setup(atlas.get());
-
-	segment1 = std::make_unique<Segment>(this, SolidBlockType::TEST, true, 5.0f, 0.0f, -3.0f);
-	segment2 = std::make_unique<Segment>(this, SolidBlockType::GRASS, true, -5.0f, 2.0f, -3.0f);
-	segment2->RemoveBlock(2, 4, 2);
-	segment2->RemoveBlock(2, 3, 2);
-	segment2->RemoveBlock(2, 2, 2);
-	segment2->RemoveBlock(1, 2, 2);
-	segment2->RemoveBlock(3, 2, 2);
-	segment2->RemoveBlock(2, 2, 3);
-	segment2->RebuildBuffers();
+	switch (mode)
+	{
+		case SceneMode::DEVELOPEMENT:
+		{
+			SolidBlockProcessor::Setup(atlas.get());
+			world->SetupDevelopementWorld();
+			break;
+		}
+		default:
+			break;
+	}
 }
 
 void Scene::Draw()
@@ -117,6 +116,11 @@ BasicCamera* Scene::GetActiveCamera()
 Sun* Scene::GetSun()
 {
 	return sun.get();
+}
+
+World* Scene::GetWorld()
+{
+	return world.get();
 }
 
 StateMaster* Scene::GetStateMaster()

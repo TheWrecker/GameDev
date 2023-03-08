@@ -4,54 +4,6 @@
 #include "../visuals/elements/texture_atlas.h"
 #include "processor_solid_block.h"
 
-Face FrontFace = {
-	{
-	DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-	DirectX::XMFLOAT2(0.0f, 1.0f),
-	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
-	0.0f
-	}, {
-	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
-	DirectX::XMFLOAT2(0.0f, 0.0f),
-	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
-	0.0f
-	}, {
-	DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
-	DirectX::XMFLOAT2(1.0f, 1.0f),
-	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
-	0.0f
-	}, {
-	DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
-	DirectX::XMFLOAT2(1.0f, 0.0f),
-	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
-	0.0f
-	}
-};
-
-Face TopFace = {
-	{
-	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
-	DirectX::XMFLOAT2(0.0f, 1.0f),
-	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
-	0.0f
-	}, {
-	DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f),
-	DirectX::XMFLOAT2(0.0f, 0.0f),
-	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
-	0.0f
-	}, {
-	DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
-	DirectX::XMFLOAT2(1.0f, 1.0f),
-	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
-	0.0f
-	}, {
-	DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
-	DirectX::XMFLOAT2(1.0f, 0.0f),
-	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
-	0.0f
-	}
-};
-
 Face RightFace = {
 	{
 	DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
@@ -100,6 +52,30 @@ Face LeftFace = {
 	}
 };
 
+Face TopFace = {
+	{
+	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
+	DirectX::XMFLOAT2(0.0f, 1.0f),
+	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
+	0.0f
+	}, {
+	DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f),
+	DirectX::XMFLOAT2(0.0f, 0.0f),
+	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
+	0.0f
+	}, {
+	DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
+	DirectX::XMFLOAT2(1.0f, 1.0f),
+	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
+	0.0f
+	}, {
+	DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
+	DirectX::XMFLOAT2(1.0f, 0.0f),
+	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
+	0.0f
+	}
+};
+
 Face BottomFace = {
 	{
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
@@ -124,34 +100,58 @@ Face BottomFace = {
 	}
 };
 
-Face BackFace = {
+Face FrontFace = {
 	{
-	DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
+	DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
 	DirectX::XMFLOAT2(1.0f, 0.0f),
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}, {
-	DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f),
+	DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
 	DirectX::XMFLOAT2(1.0f, 1.0f),
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}, {
 
-	DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f),
+	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
 	DirectX::XMFLOAT2(0.0f, 0.0f),
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}, {
-	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 	DirectX::XMFLOAT2(0.0f, 1.0f),
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}
 };
 
+Face BackFace = {
+	{
+	DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f),
+	DirectX::XMFLOAT2(0.0f, 0.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
+	0.0f
+	}, {
+	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
+	DirectX::XMFLOAT2(0.0f, 1.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
+	0.0f
+	}, {
+	DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
+	DirectX::XMFLOAT2(1.0f, 0.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
+	0.0f
+	}, {
+	DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f),
+	DirectX::XMFLOAT2(1.0f, 1.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
+	0.0f
+	}
+};
+
 const std::vector<unsigned int> Indices = {
-	0, 1, 3,
-	0, 3, 2
+	0, 3, 1,
+	0, 2, 3
 };
 
 unsigned int SolidBlockProcessor::index_x = 0;
@@ -238,10 +238,10 @@ void SolidBlockProcessor::AddFaceVertices(Segment* target, Face& face)
 	for (auto& _face_vertex : face)
 	{
 		_vertex = _face_vertex;
-		auto _pos = target->blocks[index_x][index_y][index_z]->Position();
-		_vertex.position.x = _face_vertex.position.x + _pos.x;
-		_vertex.position.y = _face_vertex.position.y + _pos.y;
-		_vertex.position.z = _face_vertex.position.z + _pos.z;
+		//auto _pos = target->blocks[index_x][index_y][index_z]->Position();
+		_vertex.position.x = _face_vertex.position.x + (index_x * SOLID_BLOCK_SIZE); //_pos.x;
+		_vertex.position.y = _face_vertex.position.y + (index_y * SOLID_BLOCK_SIZE); //_pos.y;
+		_vertex.position.z = _face_vertex.position.z + (index_z * SOLID_BLOCK_SIZE); //_pos.z;
 		_vertex.atlas_slice = static_cast<float>(target->blocks[index_x][index_y][index_z]->GetAtlasIndex()) / _array_range;
 		target->vertex_buffer->AddVertex(_vertex);
 	}

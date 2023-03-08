@@ -4,16 +4,10 @@
 #include <d3d11.h>
 #include <vector>
 
+#include "defs_pipeline.h"
+
 class TextureSampler;
 class Presenter;
-
-enum class DefaultSampler
-{
-	UNDEFINED = 0,
-	POINT = 13,
-	BILINEAR = 14,
-	END_PADDING = 15 //D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT (16)
-};
 
 class StateMaster
 {

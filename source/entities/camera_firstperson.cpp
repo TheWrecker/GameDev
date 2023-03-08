@@ -34,9 +34,8 @@ void FirstPersonCamera::Update()
 		rotationAmount.x = -(mouse->GetState().x * mouse_sensitivity);
 		rotationAmount.y = -(mouse->GetState().y * mouse_sensitivity);
 	}
-	mouse->GetMouse()->SetMode(mouse->GetState().leftButton ? DirectX::Mouse::MODE_RELATIVE : DirectX::Mouse::MODE_ABSOLUTE);
-	float elapsedTime = ticker->GetLastTickDuration();
 
+	float elapsedTime = ticker->GetLastTickDuration();
 	{
 		using namespace DirectX;
 		XMVECTOR rotationVector = XMLoadFloat2(&rotationAmount) * rotation_speed * elapsedTime;
@@ -55,3 +54,4 @@ void FirstPersonCamera::Update()
 	}
 	UpdateViewMatrix();
 }
+

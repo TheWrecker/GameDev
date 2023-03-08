@@ -20,6 +20,7 @@ public:
 	unsigned int LoadTexture(const std::wstring& file, const std::string& name);
 	unsigned int FindTextureIndex(const std::string& name);
 	void Bind();
+	void Unbind();
 
 	ID3D11Texture2D* GetTexture(size_t index);
 	ID3D11ShaderResourceView* GetShaderView(size_t index);

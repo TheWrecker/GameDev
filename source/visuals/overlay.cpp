@@ -5,8 +5,12 @@
 #endif // _WINDOWS
 #include "../external/ImGui/imgui_impl_dx11.h"
 
+#include "../input/keyboard.h"
+#include "../input/mouse.h"
 #include "util_funcs.h"
 #include "../entities/sun.h"
+#include "../entities/segment.h"
+#include "../entities/world.h"
 #include "render/render_dev.h"
 #include "render/aggregator.h"
 #include "scene.h"
@@ -27,6 +31,9 @@ Overlay::Overlay(Presenter* parent)
 	scene = parent->GetActiveScene();
 	aggregator = scene->GetAggregator();
 	sun = scene->GetSun();
+	mouse = presenter->QueryService<Mouse*>("mouse");
+	keyboard = presenter->QueryService<Keyboard*>("keyboard");
+	mouse->ToggleMode();
 }
 
 Overlay::~Overlay()
@@ -48,8 +55,20 @@ void Overlay::Hide()
 	show = false;
 }
 
+void Overlay::ToggleShow()
+{
+	show = !show;
+}
+
 void Overlay::Draw() 
 {
+	//TODO: move to update?
+	if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::Escape))
+		ToggleShow();
+
+	if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::LeftControl))
+		mouse->ToggleMode();
+
 	if (!show) return;
 
 	//setup new frame
@@ -139,11 +158,34 @@ void Overlay::Draw()
 			ImGui::DragFloat3("Light Direction", (float*)&sun->light_info.direction, 0.01f, -1.0f, 1.0f);
 		}
 
-		if (ImGui::CollapsingHeader("Objects"))
+		if (ImGui::CollapsingHeader("Object"))
 		{
-			static DirectX::XMFLOAT3 _rotation = {0.0f, 0.0f, 0.0f};
+			static DirectX::XMFLOAT3 _rotation = aggregator->render_dev->object->Rotation();
 			ImGui::DragFloat3("Object Rotation", (float*)&_rotation, 1.0f, 0.0f, 360.0f);
 			aggregator->render_dev->object->SetRotation(_rotation.x/57.2958f, _rotation.y/ 57.2958f, _rotation.z/ 57.2958f);
+
+			static DirectX::XMFLOAT3 _scale = aggregator->render_dev->object->Scale();
+			ImGui::DragFloat3("Object Scale", (float*)&_scale, 0.1f, 0.01f, 100.0f);
+			aggregator->render_dev->object->SetScale(_scale.x, _scale.y, _scale.z);
+
+			static DirectX::XMFLOAT3 _position = aggregator->render_dev->object->Position();
+			ImGui::DragFloat3("Object Position", (float*)&_position, 0.5f, -50.01f, 50.0f);
+			aggregator->render_dev->object->SetPosition(_position.x, _position.y, _position.z);
+		}
+
+		if (ImGui::CollapsingHeader("World"))
+		{
+			static DirectX::XMFLOAT3 _position0 = scene->GetWorld()->segments[0]->Position();
+			ImGui::DragFloat3("Segment0 Position", (float*)&_position0, 0.5f, -50.01f, 50.0f);
+			scene->GetWorld()->segments[0]->Move(_position0.x, _position0.y, _position0.z);
+
+			static DirectX::XMFLOAT3 _position1 = scene->GetWorld()->segments[1]->Position();
+			ImGui::DragFloat3("Segment1 Position", (float*)&_position1, 0.5f, -50.01f, 50.0f);
+			scene->GetWorld()->segments[1]->Move(_position1.x, _position1.y, _position1.z);
+
+			static DirectX::XMFLOAT3 _position2 = scene->GetWorld()->segments[2]->Position();
+			ImGui::DragFloat3("Segment2 Position", (float*)&_position2, 0.5f, -50.01f, 50.0f);
+			scene->GetWorld()->segments[2]->Move(_position2.x, _position2.y, _position2.z);
 		}
 
 		ImGui::Separator();

@@ -13,10 +13,7 @@ public:
 	void Clear();
 	void Build();
 	void Bind();
-	void Unbind();
 
-	ID3D11Buffer* GetBuffer();
-	D3D11_BUFFER_DESC GetDesc();
 	unsigned int GetIndexCount();
 
 private:
@@ -26,4 +23,5 @@ private:
 	ID3D11Buffer* buffer;
 	D3D11_BUFFER_DESC desc;
 	D3D11_SUBRESOURCE_DATA subresource;
+	bool is_built;
 };

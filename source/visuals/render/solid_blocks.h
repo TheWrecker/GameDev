@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "../elements/buffer_vertex.h"
 #include "../elements/buffer_constant.h"
 #include "render_base.h"
 

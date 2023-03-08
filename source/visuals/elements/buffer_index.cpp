@@ -4,7 +4,7 @@
 #include "buffer_index.h"
 
 IndexBuffer::IndexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, std::size_t reserve)
-	:device(device), context(context), buffer(), desc(), subresource()
+	:device(device), context(context), buffer(), desc(), subresource(), is_built(false)
 {
 	ZeroMemory(&desc, sizeof(desc));
 	desc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -16,8 +16,8 @@ IndexBuffer::IndexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, std
 
 IndexBuffer::~IndexBuffer()
 {
-	Unbind();
-	DXRelease(buffer);
+	if (is_built)
+		DXRelease(buffer);
 }
 
 void IndexBuffer::AddIndex(unsigned int index)
@@ -27,44 +27,35 @@ void IndexBuffer::AddIndex(unsigned int index)
 
 void IndexBuffer::Clear()
 {
+	if (is_built)
+	{
+		DXRelease(buffer);
+		is_built = false;
+	}
 	indices.clear();
 }
 
 void IndexBuffer::Build()
 {
+	if(is_built)
+		DXRelease(buffer);
+
 	if (indices.size() > 0)
 	{
 		subresource.pSysMem = &indices.at(0);
 		desc.ByteWidth = sizeof(unsigned int) * static_cast<unsigned int>(indices.size());
 		DXAssert(device->CreateBuffer(&desc, &subresource, &buffer));
+		is_built = true;
+	}
+	else
+	{
+		is_built = false;
 	}
 }
 
 void IndexBuffer::Bind()
 {
 	context->IASetIndexBuffer(buffer, DXGI_FORMAT_R32_UINT, 0);
-}
-
-void IndexBuffer::Unbind()
-{
-	ID3D11Buffer* _buffer = { nullptr };
-	context->IAGetIndexBuffer(&_buffer, 0, 0);
-	if (_buffer == buffer)
-	{
-		ID3D11Buffer* _null_buffer = { nullptr };
-		context->IASetIndexBuffer(_null_buffer, DXGI_FORMAT_R32_UINT, 0);
-	}
-	DXRelease(_buffer);
-}
-
-ID3D11Buffer* IndexBuffer::GetBuffer()
-{
-	return buffer;
-}
-
-D3D11_BUFFER_DESC IndexBuffer::GetDesc()
-{
-	return desc;
 }
 
 unsigned int IndexBuffer::GetIndexCount()
