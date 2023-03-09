@@ -2,7 +2,7 @@
 #pragma once
 
 constexpr unsigned int
-SEGMENT_DIMENSION_SIZE = 5;
+SEGMENT_DIMENSION_SIZE = 10;
 	
 constexpr float
 SOLID_BLOCK_SIZE = 1.0f,

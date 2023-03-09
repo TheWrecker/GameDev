@@ -1,6 +1,6 @@
 
 SamplerState BilinearSampler : register(s14);
-texture2D inputTexture : register(t123);
+texture2D inputTexture : register(t121);
 
 struct PS_INPUT
 {
@@ -8,8 +8,7 @@ struct PS_INPUT
     float2 uv : TEXCOORDS;
 };
 
-
-float4 main(PS_INPUT input) : SV_TARGET
+float4 main(PS_INPUT input) : SV_Target
 {
     float4 color = inputTexture.Sample(BilinearSampler, input.uv);
     return color;

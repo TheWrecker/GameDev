@@ -3,6 +3,7 @@
 
 #include <d3d11.h>
 
+#include "defs_pipeline.h"
 #include "texture.h"
 #include "interface_manager.h"
 
@@ -15,8 +16,9 @@ public:
 	~TextureManager();
 
 	void Load(const std::wstring& file, const std::string& name = "");
-	//void BindShaderView(BindStage stage, unsigned int slot);
+	void BindDefaultTextures();
 	ID3D11ShaderResourceView* GetShaderView(const std::string& name);
+	unsigned int GetDefaultTextureIndex(DefaultTextures target);
 
 private:
 	Presenter* presenter;

@@ -1,5 +1,5 @@
 
-Texture2D SunTexture;
+Texture2D SunTexture : register(t124);
 SamplerState BilinearSampler : register(s14);
 
 struct VS_OUTPUT

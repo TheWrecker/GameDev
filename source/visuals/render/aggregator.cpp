@@ -1,6 +1,7 @@
 
 #include "../elements/render_target.h"
 #include "../elements/texture_atlas.h"
+#include "hud.h"
 #include "solid_blocks.h"
 #include "render_dev.h"
 #include "sun_moon.h"
@@ -35,11 +36,42 @@ Aggregator::Aggregator(Scene* scene)
 	//render pass
 	render_pass = std::make_unique<RenderPass>(scene, L"source/visuals/shaders/pass_p.hlsl");
 
+	//Sun and Moon
+	render_sun_moon = std::make_unique<SunMoon>(scene);
+
 	//solid blocks
 	render_solid_blocks = std::make_unique<SolidBlockRender>(scene);
 
-	//Sun and Moon
-	render_sun_moon = std::make_unique<SunMoon>(scene);
+	//hud
+	render_hud = std::make_unique<HUDRender>(scene);
+
+	//setup all render parameters
+	//bind default objects
+	buffer_master->BindDefaultObject(DefaultObjects::QUAD);
+	buffer_master->BindDefaultObject(DefaultObjects::QUAD_FULLSCREEN);
+	buffer_master->BindDefaultObject(DefaultObjects::QUAD_NORMAL);
+	buffer_master->BindDefaultObject(DefaultObjects::BLOCK);
+	buffer_master->BindDefaultObject(DefaultObjects::BLOCK_NORMAL);
+	buffer_master->BindDefaultObject(DefaultObjects::SPHERE);
+	buffer_master->BindDefaultObject(DefaultObjects::SPHERE_NORMAL);
+
+	//bind default constants
+	buffer_master->BindDefaultConstant(DefaultConstants::HUD_MATRIX);
+	buffer_master->BindDefaultConstant(DefaultConstants::SUN_LIGHT_DATA);
+	buffer_master->BindDefaultConstant(DefaultConstants::VIEW_PROJECTION_MATRIX);
+
+	//bind  default samplers 
+	state_master->BindDefaultTextureSampler(DefaultSampler::BILINEAR);
+
+	//bind default textures and the atlas
+	scene->GetTextureAtlas()->Bind();
+	texture_manager->BindDefaultTextures();
+
+	//setup states
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	presenter->SetRasterizerState(CullMode::CULL_BACK, false, false);
+
+
 }
 
 Aggregator::~Aggregator()
@@ -56,54 +88,42 @@ void Aggregator::AggregateAllRenders()
 	//clear rendertargets
 	context->ClearRenderTargetView(presenter->render_target_view, reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
 	context->ClearDepthStencilView(presenter->depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	context->ClearRenderTargetView(render_pass->GetRenderTarget()->GetTargetView(), reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
-	context->ClearDepthStencilView(render_pass->GetRenderTarget()->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	//context->ClearRenderTargetView(render_pass->GetRenderTarget()->GetTargetView(), reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
+	//context->ClearDepthStencilView(render_pass->GetRenderTarget()->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	//update constants
-	//view projection
 	buffer_master->UpdateDefaultConstant(DefaultConstants::VIEW_PROJECTION_MATRIX);
-	buffer_master->BindDefaultConstant(DefaultConstants::VIEW_PROJECTION_MATRIX);
 	buffer_master->UpdateDefaultConstant(DefaultConstants::SUN_LIGHT_DATA);
-	buffer_master->BindDefaultConstant(DefaultConstants::SUN_LIGHT_DATA);
-
-	//TODO: bind  default samplers to predewfined slots and change shaders accordingly
-	//setup states
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	state_master->BindDefaultTextureSampler(DefaultSampler::BILINEAR);
-
-	//TODO: bind default textures including the atlas
-	scene->GetTextureAtlas()->Bind();
+	//we only update hud matrix when there is a change in hud parameters
 
 	//bind render pass
 	//render_pass->BindAsRenderTarget();
 
 	//render sky
-	presenter->SetRasterizerState(CullMode::CULL_NONE, false, false);
-	auto _shaderView = texture_manager->GetShaderView("sky");
-	context->PSSetShaderResources(0, 1, &_shaderView);
-	buffer_master->BindDefaultObject(DefaultObjects::SPHERE);
+	presenter->SetRasterizerState(CullMode::CULL_FRONT, false, false);
+	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
 	render_sky->Render();
-
-
 	presenter->SetRasterizerState(CullMode::CULL_BACK, false, false);
+
 	//render sun or moon
 	//TODO: dynamic time of day
-	_shaderView = texture_manager->GetShaderView("sun");
-	context->PSSetShaderResources(0, 1, &_shaderView);
-	buffer_master->BindDefaultObject(DefaultObjects::SPHERE);
+	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
 	render_sun_moon->Render();
 
 	//render dev
-	_shaderView = texture_manager->GetShaderView("test_checkers");
-	context->PSSetShaderResources(0, 1, &_shaderView);
-	buffer_master->BindDefaultObject(DefaultObjects::BLOCK_NORMAL);
+	buffer_master->BindDefaultIndexBuffer(DefaultObjects::BLOCK_NORMAL);
 	render_dev->Render();
 
 	//render solid blocks
 	render_solid_blocks->Render();
 
+
+	//render hud
+	buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD);
+	render_hud->Render();
+
 	//render the pass
-	/*buffer_master->BindDefaultObject(DefaultObjects::QUAD);
+	/*buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD_FULLSCREEN);
 	context->OMSetRenderTargets(1, &presenter->render_target_view, presenter->depth_stencil_view);
 	render_pass->Render();*/
 

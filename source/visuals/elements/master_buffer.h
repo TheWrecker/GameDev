@@ -25,6 +25,7 @@ public:
 	void BindDefaultConstant(DefaultConstants target);
 
 	void BindDefaultObject(DefaultObjects target);
+	void BindDefaultIndexBuffer(DefaultObjects target);
 	unsigned int GetIndexCount(DefaultObjects target);
 
 	unsigned int GetCurrentSlot(DefaultConstants target);

@@ -18,7 +18,7 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 position : SV_Position;
-    float3 uvw : TEXCOORD;
+    float3 uvw : TEXCOORDS;
 };
 
 VS_OUTPUT main(VS_INPUT vertex)

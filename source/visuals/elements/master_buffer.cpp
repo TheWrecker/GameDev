@@ -53,51 +53,87 @@ void BufferMaster::RebuildDefaults()
 	default_vertex_buffers.resize(static_cast<unsigned int>(DefaultObjects::END_PADDING));
 	normal_vertex_buffers.resize(static_cast<unsigned int>(DefaultObjects::END_PADDING));
 	default_index_buffers.resize(static_cast<unsigned int>(DefaultObjects::END_PADDING));
+
 	unsigned int _index = 0;
+	DefaultConstantStruct _info = {};
+
+	//hud matrix
+	{
+		_index = static_cast<unsigned int>(DefaultConstants::HUD_MATRIX);
+		auto _scale_matrix = DirectX::XMMatrixScaling(2.0f / 32.0f, 2.0f / 32.0f, 1.0f);
+		DirectX::XMFLOAT2 _crosshair_position = { -1.0f * (1.0f / 64.0f), -1.0f * (1.0f / 64.0f) };
+		auto _translation_matrix = DirectX::XMMatrixTranslation(_crosshair_position.x, _crosshair_position.y, 0.0f);
+		auto _final_matrix = DirectX::XMMatrixMultiply(_scale_matrix, _translation_matrix);
+		_info = { DirectX::XMMatrixTranspose(_final_matrix) };
+		default_constant_buffers[_index] = new ConstantBuffer<DefaultConstantStruct>(device, context);
+		default_constant_buffers[_index]->Update(_info);
+	}
 
 	//sun light data
-	_index = static_cast<unsigned int>(DefaultConstants::SUN_LIGHT_DATA);
-	DefaultConstantStruct _info = { scene->GetSun()->GetLightInfo() };
-	default_constant_buffers[_index] = new ConstantBuffer<DefaultConstantStruct>(device, context);
-	default_constant_buffers[_index]->Update(_info);
+	{
+		_index = static_cast<unsigned int>(DefaultConstants::SUN_LIGHT_DATA);
+		_info = { scene->GetSun()->GetLightInfo() };
+		default_constant_buffers[_index] = new ConstantBuffer<DefaultConstantStruct>(device, context);
+		default_constant_buffers[_index]->Update(_info);
+	}
 
 	//view projection matrix
-	_index = static_cast<unsigned int>(DefaultConstants::VIEW_PROJECTION_MATRIX);
-	_info = { camera->View_Projection_Matrix() };
-	default_constant_buffers[_index] = new ConstantBuffer<DefaultConstantStruct>(device, context);
-	default_constant_buffers[_index]->Update(_info);
+	{
+		_index = static_cast<unsigned int>(DefaultConstants::VIEW_PROJECTION_MATRIX);
+		_info = { camera->View_Projection_Matrix() };
+		default_constant_buffers[_index] = new ConstantBuffer<DefaultConstantStruct>(device, context);
+		default_constant_buffers[_index]->Update(_info);
+	}
 
 	Model* _model = nullptr;
+	//quad buffers for fullscreen  rendering
+	{
+		_index = static_cast<unsigned int>(DefaultObjects::QUAD_FULLSCREEN);
+		_model = scene->GetModelManager()->Get("fullscreen_quad");
+		CreateObjectBuffers(_index, _model);
+	}
+
 	//quad buffers without normals
-	_index = static_cast<unsigned int>(DefaultObjects::QUAD);
-	_model = scene->GetModelManager()->Get("quad");
-	CreateObjectBuffers(_index, _model);
+	{
+		_index = static_cast<unsigned int>(DefaultObjects::QUAD);
+		_model = scene->GetModelManager()->Get("quad");
+		CreateObjectBuffers(_index, _model);
+	}
 
 	//block buffers without normals
-	_index = static_cast<unsigned int>(DefaultObjects::BLOCK);
-	_model = scene->GetModelManager()->Get("block");
-	CreateObjectBuffers(_index, _model);
+	{
+		_index = static_cast<unsigned int>(DefaultObjects::BLOCK);
+		_model = scene->GetModelManager()->Get("block");
+		CreateObjectBuffers(_index, _model);
+	}
 
 	//sphere buffer without normals
-	_index = static_cast<unsigned int>(DefaultObjects::SPHERE);
-	_model = scene->GetModelManager()->Get("sphere");
-	CreateObjectBuffers(_index, _model);
+	{
+		_index = static_cast<unsigned int>(DefaultObjects::SPHERE);
+		_model = scene->GetModelManager()->Get("sphere");
+		CreateObjectBuffers(_index, _model);
+	}
 
-	_model = nullptr;
 	//quad buffers with normals
-	_index = static_cast<unsigned int>(DefaultObjects::QUAD_NORMAL);
-	_model = scene->GetModelManager()->Get("quad");
-	CreateObjectBuffers(_index, _model, true);
+	{
+		_index = static_cast<unsigned int>(DefaultObjects::QUAD_NORMAL);
+		_model = scene->GetModelManager()->Get("quad");
+		CreateObjectBuffers(_index, _model, true);
+	}
 
 	//block buffers with normals
-	_index = static_cast<unsigned int>(DefaultObjects::BLOCK_NORMAL);
-	_model = scene->GetModelManager()->Get("block");
-	CreateObjectBuffers(_index, _model, true);
+	{
+		_index = static_cast<unsigned int>(DefaultObjects::BLOCK_NORMAL);
+		_model = scene->GetModelManager()->Get("block");
+		CreateObjectBuffers(_index, _model, true);
+	}
 
 	//sphere buffer with normals
-	_index = static_cast<unsigned int>(DefaultObjects::SPHERE_NORMAL);
-	_model = scene->GetModelManager()->Get("sphere");
-	CreateObjectBuffers(_index, _model, true);
+	{
+		_index = static_cast<unsigned int>(DefaultObjects::SPHERE_NORMAL);
+		_model = scene->GetModelManager()->Get("sphere");
+		CreateObjectBuffers(_index, _model, true);
+	}
 }
 
 BufferMaster::~BufferMaster()
@@ -120,6 +156,17 @@ void BufferMaster::UpdateDefaultConstant(DefaultConstants target)
 	auto _index = static_cast<unsigned int>(target);
 	switch (target)
 	{
+		case DefaultConstants::HUD_MATRIX:
+		{
+			//TODO: calculate someplace else?
+			//TODO: add dynamic params
+			auto _scale_matrix = DirectX::XMMatrixScaling(2.0f / 32.0f, 2.0f / 32.0f, 1.0f);
+			DirectX::XMFLOAT2 _crosshair_position = { -1.0f * (1.0f / 64.0f), -1.0f * (1.0f / 64.0f) };
+			auto _translation_matrix = DirectX::XMMatrixTranslation(_crosshair_position.x, _crosshair_position.y, 0.0f);
+			auto _final_matrix = DirectX::XMMatrixMultiply(_scale_matrix, _translation_matrix);
+			DefaultConstantStruct _info = { DirectX::XMMatrixTranspose(_final_matrix) };
+			default_constant_buffers[_index]->Update(_info);
+		}
 		case DefaultConstants::SUN_LIGHT_DATA:
 		{
 			DefaultConstantStruct _info = { scene->GetSun()->GetLightInfo()};
@@ -142,6 +189,11 @@ void BufferMaster::BindDefaultConstant(DefaultConstants target)
 	auto _index = static_cast<unsigned int>(target);
 	switch (target)
 	{
+		case DefaultConstants::HUD_MATRIX:
+		{
+			default_constant_buffers[_index]->Bind(BindStage::VERTEX, _index);
+			break;
+		}
 		case DefaultConstants::VIEW_PROJECTION_MATRIX:
 		{
 			default_constant_buffers[_index]->Bind(BindStage::VERTEX, _index);
@@ -169,6 +221,7 @@ void BufferMaster::BindDefaultObject(DefaultObjects target)
 			normal_vertex_buffers[_index]->Bind(_index);
 			break;
 		}
+		case DefaultObjects::QUAD_FULLSCREEN:
 		case DefaultObjects::QUAD:
 		case DefaultObjects::BLOCK:
 		case DefaultObjects::SPHERE:
@@ -180,6 +233,11 @@ void BufferMaster::BindDefaultObject(DefaultObjects target)
 			break;
 	}
 	default_index_buffers[_index]->Bind();
+}
+
+void BufferMaster::BindDefaultIndexBuffer(DefaultObjects target)
+{
+	default_index_buffers[static_cast<unsigned int>(target)]->Bind();
 }
 
 unsigned int BufferMaster::GetIndexCount(DefaultObjects target)

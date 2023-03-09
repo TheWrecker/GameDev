@@ -41,6 +41,7 @@ enum class DefaultConstants : unsigned int
 {
 	//14 slots total
 	UNDEFINED = 0,
+	HUD_MATRIX = 10,
 	SUN_LIGHT_DATA = 11,
 	VIEW_PROJECTION_MATRIX = 12,
 	END_PADDING = 13 //D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT (14)
@@ -50,6 +51,7 @@ enum class DefaultObjects : unsigned int
 {
 	//32 slots total
 	UNDEFINED = 0,
+	QUAD_FULLSCREEN = 24,
 	QUAD_NORMAL = 25,
 	BLOCK_NORMAL = 26,
 	SPHERE_NORMAL = 27,
@@ -61,6 +63,13 @@ enum class DefaultObjects : unsigned int
 
 enum class DefaultTextures : unsigned int
 {
+	UNDEFINED = 0,
+	FIRST_PASS = 120,
+	CROSSHAIR_1 = 121,
+	SKY_1 = 122,
+	TEST_CHECKERS = 123,
+	SUN = 124,
+	EARTH = 125,
 	TEXTURE_ATLAS = 126,
 	END_PADDING = 127 //D3D10_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT (128)
 };

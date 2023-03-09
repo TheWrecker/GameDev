@@ -1,7 +1,6 @@
 
 #pragma once
 
-
 #include "render_base.h"
 
 class BasicCamera;

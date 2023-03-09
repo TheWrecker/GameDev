@@ -7,11 +7,13 @@
 TextureManager::TextureManager(Presenter* presenter)
     :presenter(presenter)
 {
+    //TODO: Load from file/list?
     //load essential textures
     Load(L"assets/textures/earth.dds", "earth"); //earth
     Load(L"assets/textures/test.dds", "test_checkers"); //test checkers
-    Load(L"assets/textures/sky.dds", "sky"); //sky
+    Load(L"assets/textures/sky1.dds", "sky1"); //sky 1
     Load(L"assets/textures/sun.dds", "sun"); //sun
+    Load(L"assets/textures/crosshair1.png", "crosshair1"); //crosshair 1
 }
 
 TextureManager::~TextureManager()
@@ -41,7 +43,26 @@ void TextureManager::Load(const std::wstring& file, const std::string& name)
     }
 }
 
+void TextureManager::BindDefaultTextures()
+{
+    auto _shader_view = GetShaderView("earth");
+    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::EARTH), 1, &_shader_view);
+    _shader_view = GetShaderView("sun");
+    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::SUN), 1, &_shader_view);
+    _shader_view = GetShaderView("test_checkers");
+    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::TEST_CHECKERS), 1, &_shader_view);
+    _shader_view = GetShaderView("sky1");
+    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::SKY_1), 1, &_shader_view);
+    _shader_view = GetShaderView("crosshair1");
+    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::CROSSHAIR_1), 1, &_shader_view);
+}
+
 ID3D11ShaderResourceView* TextureManager::GetShaderView(const std::string& name)
 {
     return Get(name)->GetShaderView();
+}
+
+unsigned int TextureManager::GetDefaultTextureIndex(DefaultTextures target)
+{
+    return static_cast<unsigned int>(target);
 }

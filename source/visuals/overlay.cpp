@@ -175,17 +175,17 @@ void Overlay::Draw()
 
 		if (ImGui::CollapsingHeader("World"))
 		{
-			static DirectX::XMFLOAT3 _position0 = scene->GetWorld()->segments[0]->Position();
-			ImGui::DragFloat3("Segment0 Position", (float*)&_position0, 0.5f, -50.01f, 50.0f);
-			scene->GetWorld()->segments[0]->Move(_position0.x, _position0.y, _position0.z);
+			//static DirectX::XMFLOAT3 _position0 = scene->GetWorld()->segments[0]->Position();
+			//ImGui::DragFloat3("Segment0 Position", (float*)&_position0, 0.5f, -50.01f, 50.0f);
+			//scene->GetWorld()->segments[0]->Move(_position0.x, _position0.y, _position0.z);
 
-			static DirectX::XMFLOAT3 _position1 = scene->GetWorld()->segments[1]->Position();
-			ImGui::DragFloat3("Segment1 Position", (float*)&_position1, 0.5f, -50.01f, 50.0f);
-			scene->GetWorld()->segments[1]->Move(_position1.x, _position1.y, _position1.z);
+			//static DirectX::XMFLOAT3 _position1 = scene->GetWorld()->segments[1]->Position();
+			//ImGui::DragFloat3("Segment1 Position", (float*)&_position1, 0.5f, -50.01f, 50.0f);
+			//scene->GetWorld()->segments[1]->Move(_position1.x, _position1.y, _position1.z);
 
-			static DirectX::XMFLOAT3 _position2 = scene->GetWorld()->segments[2]->Position();
-			ImGui::DragFloat3("Segment2 Position", (float*)&_position2, 0.5f, -50.01f, 50.0f);
-			scene->GetWorld()->segments[2]->Move(_position2.x, _position2.y, _position2.z);
+			//static DirectX::XMFLOAT3 _position2 = scene->GetWorld()->segments[2]->Position();
+			//ImGui::DragFloat3("Segment2 Position", (float*)&_position2, 0.5f, -50.01f, 50.0f);
+			//scene->GetWorld()->segments[2]->Move(_position2.x, _position2.y, _position2.z);
 		}
 
 		ImGui::Separator();

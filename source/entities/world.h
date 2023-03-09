@@ -21,5 +21,5 @@ private:
 	friend class Overlay;
 
 	Scene* scene;
-	std::vector<Segment*> segments;
+	Segment* segments[10][10];
 };
