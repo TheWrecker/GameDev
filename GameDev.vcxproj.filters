@@ -44,6 +44,9 @@
     <Filter Include="source\visuals\utils">
       <UniqueIdentifier>{aaa33365-8e38-4f20-ad89-3fede9c3c78a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\gameplay\events">
+      <UniqueIdentifier>{10b1f5d6-cde5-4ef3-87d9-ac19b62ac912}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\entry.cpp">
@@ -416,6 +419,21 @@
     </ClInclude>
     <ClInclude Include="source\visuals\utils\ray.h">
       <Filter>source\visuals\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameplay\events\interface_event.h">
+      <Filter>source\gameplay\events</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameplay\events\begin_dig.h">
+      <Filter>source\gameplay\events</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameplay\events\block_digged.h">
+      <Filter>source\gameplay\events</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameplay\events\finish_dig.h">
+      <Filter>source\gameplay\events</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameplay\events\cancel_dig.h">
+      <Filter>source\gameplay\events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

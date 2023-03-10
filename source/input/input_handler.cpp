@@ -67,7 +67,7 @@ void InputHandler::Update()
 		//player
 		if (player) //in-game?
 		{
-			if (mouse->GetButtonTracker()->leftButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
+			if (mouse->GetButtonTracker()->leftButton == DirectX::Mouse::ButtonStateTracker::HELD)
 				player->Dig();
 		}
 	}

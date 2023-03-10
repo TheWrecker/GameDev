@@ -5,7 +5,8 @@
 
 SolidBlock::SolidBlock(SolidBlockType type, float x, float y, float z)
     :BasicEntity(x, y, z), type(type), 
-    collision_box(DirectX::XMFLOAT3(x, y, z), DirectX::XMFLOAT3(SOLID_BLOCK_SIZE / 2.0f, SOLID_BLOCK_SIZE / 2.0f, SOLID_BLOCK_SIZE / 2.0f) )
+    collision_box(DirectX::XMFLOAT3(x + SOLID_BLOCK_SIZE / 2.0f, y + SOLID_BLOCK_SIZE / 2.0f, z + SOLID_BLOCK_SIZE / 2.0f),
+        DirectX::XMFLOAT3(SOLID_BLOCK_SIZE / 2.0f, SOLID_BLOCK_SIZE / 2.0f, SOLID_BLOCK_SIZE / 2.0f) )
 {
 }
 

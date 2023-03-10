@@ -15,20 +15,9 @@ Ray::~Ray()
 
 void Ray::Advance(float scale)
 {
-    float yaw = 0.0f;
-    if (direction.y > 0.0f)
-    {
-        yaw = 1.0f - direction.y;
-    }
-    else
-    {
-        yaw = -1.0f - direction.y;
-    }
-    float pitch = direction.x;
-
-    end.x -= cos(yaw) * scale;
-    end.z -= sin(yaw) * scale;
-    end.y -= tan(pitch) * scale;
+    end.x += direction.x * scale;
+    end.y += direction.y * scale;
+    end.z += direction.z * scale;
 
     end_vector = DirectX::XMLoadFloat3(&end);
 
