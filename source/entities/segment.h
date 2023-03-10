@@ -42,6 +42,7 @@ public:
 
 private:
 	friend class SolidBlockProcessor;
+	friend class World;
 
 	Scene* scene;
 	SolidBlockType default_type;

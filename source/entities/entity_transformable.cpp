@@ -56,6 +56,12 @@ void TransformableEntity::SetPosition(float x, float y, float z)
 	UpdateWorldMatrix();
 }
 
+void TransformableEntity::SetPosition(DirectX::XMFLOAT3 position)
+{
+	BasicEntity::SetPosition(position);
+	UpdateWorldMatrix();
+}
+
 void TransformableEntity::UpdateWorldMatrix()
 {
 	auto _scale_rotation_matrix = DirectX::XMMatrixMultiply(Scale_Matrix(), Rotation_Matrix());

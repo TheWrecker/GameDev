@@ -2,6 +2,7 @@
 #pragma once
 
 #include <string>
+#include <DirectXCollision.h>
 
 #include "entity_basic.h"
 
@@ -19,9 +20,13 @@ public:
 	~SolidBlock();
 
 	void SetType(SolidBlockType what);
+	void SetPosition(float x, float y, float z) override;
+	void SetPosition(DirectX::XMFLOAT3 pos) override;
+
 	SolidBlockType GetBlockType();
 	unsigned int GetAtlasIndex();
 
 private:
 	SolidBlockType type;
+	DirectX::BoundingBox collision_box;
 };

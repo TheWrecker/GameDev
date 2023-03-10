@@ -173,7 +173,7 @@
     <ClCompile Include="source\external\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_tables.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="source\gameplay\input_handler.cpp" />
+    <ClCompile Include="source\input\input_handler.cpp" />
     <ClCompile Include="source\input\keyboard.cpp" />
     <ClCompile Include="source\input\mouse.cpp" />
     <ClCompile Include="source\processors\processor_solid_block.cpp" />
@@ -204,6 +204,7 @@
     <ClCompile Include="source\visuals\render\sky.cpp" />
     <ClCompile Include="source\visuals\render\sun_moon.cpp" />
     <ClCompile Include="source\visuals\scene.cpp" />
+    <ClCompile Include="source\visuals\utils\ray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\interface_sys_platform.h" />
@@ -232,7 +233,6 @@
     <ClInclude Include="source\external\ImGui\imstb_rectpack.h" />
     <ClInclude Include="source\external\ImGui\imstb_textedit.h" />
     <ClInclude Include="source\external\ImGui\imstb_truetype.h" />
-    <ClInclude Include="source\gameplay\input_handler.h" />
     <ClInclude Include="source\headers\defs_world.h" />
     <ClInclude Include="source\headers\interface_drawable.h" />
     <ClInclude Include="source\headers\interface_manager.h" />
@@ -240,6 +240,7 @@
     <ClInclude Include="source\headers\defs_pipeline.h" />
     <ClInclude Include="source\headers\defs_platform.h" />
     <ClInclude Include="source\headers\util_funcs.h" />
+    <ClInclude Include="source\input\input_handler.h" />
     <ClInclude Include="source\input\keyboard.h" />
     <ClInclude Include="source\input\mouse.h" />
     <ClInclude Include="source\processors\processor_solid_block.h" />
@@ -272,6 +273,7 @@
     <ClInclude Include="source\visuals\render\render_dev.h" />
     <ClInclude Include="source\visuals\render\sun_moon.h" />
     <ClInclude Include="source\visuals\scene.h" />
+    <ClInclude Include="source\visuals\utils\ray.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="source\visuals\shaders\dev_p.hlsl">

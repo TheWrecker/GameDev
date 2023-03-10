@@ -38,6 +38,11 @@ void BasicEntity::SetPosition(float x, float y, float z)
 	UpdateWorldMatrix();
 }
 
+void BasicEntity::SetPosition(DirectX::XMFLOAT3 position)
+{
+	SetPosition(position.x, position.y, position.z);
+}
+
 const DirectX::XMMATRIX BasicEntity::World_Matrix() const
 {
 	return DirectX::XMLoadFloat4x4(&world_matrix);

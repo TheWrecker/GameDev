@@ -12,6 +12,7 @@ public:
 	virtual void Render();
 	virtual void Update();
 	virtual void SetPosition(float x, float y, float z);
+	virtual void SetPosition(DirectX::XMFLOAT3 position);
 
 	virtual const DirectX::XMVECTOR Position_Vector() const;
 	virtual DirectX::XMFLOAT3 Position() const;

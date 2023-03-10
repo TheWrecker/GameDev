@@ -28,8 +28,8 @@ Scene::Scene(Presenter* parent)
 	model_manager = std::make_unique<ModelManager>();
 	buffer_master = std::make_unique<BufferMaster>(this);
 	aggregator = std::make_unique<Aggregator>(this);
-	player = std::make_unique<Player>(this);
 	world = std::make_unique<World>(this);
+	player = std::make_unique<Player>(this);
 }
 
 Scene::~Scene()
@@ -59,6 +59,7 @@ void Scene::Draw()
 void Scene::Update()
 {
 	//active_camera->Update();
+	player->Update();
 }
 
 void Scene::SwitchCameraType(CameraType type)

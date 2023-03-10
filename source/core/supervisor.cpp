@@ -1,9 +1,9 @@
 
 #include "../external/ImGui/imgui.h"
 
-#include "../gameplay/input_handler.h"
 #include "../input/mouse.h"
 #include "../input/keyboard.h"
+#include "../input/input_handler.h"
 #include "platform.h"
 #include "service_manager.h"
 #include "sys_profiler.h"

@@ -1,5 +1,6 @@
 
 #include "../entities/camera_firstperson.h"
+#include "../entities/player.h"
 #include "../visuals/scene.h"
 #include "../input/keyboard.h"
 #include "../input/mouse.h"
@@ -30,6 +31,7 @@ InputHandler::~InputHandler()
 void InputHandler::Update()
 {
 	//TODO: assignable/dynamic keys
+	//TODO: issue events whenever possible
 	if (true) //is playing / in-game?
 	{
 		//camera
@@ -65,9 +67,8 @@ void InputHandler::Update()
 		//player
 		if (player) //in-game?
 		{
-			if (mouse->GetButtonTracker()->leftButton == mouse->GetButtonTracker()->HELD)
-				int i = 0;
-				//player dig event?
+			if (mouse->GetButtonTracker()->leftButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
+				player->Dig();
 		}
 	}
 }

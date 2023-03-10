@@ -41,6 +41,9 @@
     <Filter Include="source\gameplay">
       <UniqueIdentifier>{ecd08d53-8a3a-48f9-96ff-56136b3c9d25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\visuals\utils">
+      <UniqueIdentifier>{aaa33365-8e38-4f20-ad89-3fede9c3c78a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\entry.cpp">
@@ -202,11 +205,14 @@
     <ClCompile Include="source\visuals\render\hud.cpp">
       <Filter>source\visuals\render</Filter>
     </ClCompile>
-    <ClCompile Include="source\gameplay\input_handler.cpp">
-      <Filter>source\gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="source\entities\player.cpp">
       <Filter>source\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\input\input_handler.cpp">
+      <Filter>source\input</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\utils\ray.cpp">
+      <Filter>source\visuals\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -402,11 +408,14 @@
     <ClInclude Include="source\visuals\render\hud.h">
       <Filter>source\visuals\render</Filter>
     </ClInclude>
-    <ClInclude Include="source\gameplay\input_handler.h">
-      <Filter>source\gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="source\entities\player.h">
       <Filter>source\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\input\input_handler.h">
+      <Filter>source\input</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\utils\ray.h">
+      <Filter>source\visuals\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
