@@ -107,7 +107,7 @@ void Aggregator::AggregateAllRenders()
 
 	//render sun or moon
 	//TODO: dynamic time of day
-	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
+	//buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
 	render_sun_moon->Render();
 
 	//render dev
@@ -117,10 +117,11 @@ void Aggregator::AggregateAllRenders()
 	//render solid blocks
 	render_solid_blocks->Render();
 
-
 	//render hud
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD);
+	presenter->SetBlendMode(BlendMode::ENABLED);
 	render_hud->Render();
+	presenter->SetBlendMode(BlendMode::DISABLED);
 
 	//render the pass
 	/*buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD_FULLSCREEN);

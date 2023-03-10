@@ -9,7 +9,7 @@
 #include "presenter.h"
 
 Presenter::Presenter(Supervisor* parent)
-	:supervisor(parent), depth_stencil_enabled(true), multisampling_enabled(false), isFullscreen(false)
+	:supervisor(parent), depth_stencil_enabled(true), multisampling_enabled(false), isFullscreen(false), blend_enabled(false)
 {
 	HRESULT result = 0;
 	UINT createDeviceFlags = 0;
@@ -34,6 +34,8 @@ Presenter::Presenter(Supervisor* parent)
 
 	RetAssert(SetMultiSampling(MultiSamplingType::NONE, 1, 0));
 	RetAssert(SetRasterizerState(CullMode::CULL_NONE, false, false));
+	CreateBlendStates();
+	SetBlendMode(BlendMode::DISABLED);
 
 	scene = std::make_unique<Scene>(this);
 	scene->SwitchMode(SceneMode::DEVELOPEMENT);
@@ -48,6 +50,8 @@ Presenter::Presenter(Supervisor* parent)
 
 Presenter::~Presenter()
 {
+	DXRelease(blend_state_disabled);
+	DXRelease(blend_state_enabled);
 	DXRelease(back_buffer);
 	DXRelease(render_target_view);
 	DXRelease(depth_stencil);
@@ -268,6 +272,31 @@ bool Presenter::CreateViewPort()
 	return true;
 }
 
+void Presenter::CreateBlendStates()
+{
+	D3D11_BLEND_DESC blend_desc;
+	
+	//blend disabled
+	ZeroMemory(&blend_desc, sizeof(blend_desc));
+	blend_desc.RenderTarget[0].BlendEnable = FALSE;
+	blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	DXAssert(device->CreateBlendState(&blend_desc, &blend_state_disabled));
+	
+	//blend enabled
+	ZeroMemory(&blend_desc, sizeof(blend_desc));
+	blend_desc.AlphaToCoverageEnable = FALSE;
+	blend_desc.IndependentBlendEnable = FALSE;
+	blend_desc.RenderTarget[0].BlendEnable = TRUE;
+	blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blend_desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blend_desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+	blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
+	blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	DXAssert(device->CreateBlendState(&blend_desc, &blend_state_enabled));
+}
+
 bool Presenter::SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc)
 {
 	assert(device);
@@ -327,9 +356,37 @@ bool Presenter::SetRasterizerState(CullMode cullmodle, bool wireframe, bool fron
 	return true;
 }
 
+void Presenter::SetBlendMode(BlendMode mode)
+{
+	float blend_factor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	unsigned int blend_mask = 0xffffffff;
+	switch (mode)
+	{
+		case BlendMode::DISABLED:
+		{
+			context->OMSetBlendState(blend_state_disabled, blend_factor, blend_mask);
+			blend_enabled = false;
+			break;
+		}
+		case BlendMode::ENABLED:
+		{
+			context->OMSetBlendState(blend_state_enabled, blend_factor, blend_mask);
+			blend_enabled = true;
+			break;
+		}
+		default:
+			break;
+	}
+}
+
 Supervisor* Presenter::GetSupervisor()
 {
 	return supervisor;
+}
+
+Overlay* Presenter::GetOverlay()
+{
+	return overlay.get();
 }
 
 Scene* Presenter::GetActiveScene()

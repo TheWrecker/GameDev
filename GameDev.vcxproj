@@ -161,6 +161,7 @@
     <ClCompile Include="source\entities\entity_basic.cpp" />
     <ClCompile Include="source\entities\camera_basic.cpp" />
     <ClCompile Include="source\entities\entity_transformable.cpp" />
+    <ClCompile Include="source\entities\player.cpp" />
     <ClCompile Include="source\entities\segment.cpp" />
     <ClCompile Include="source\entities\sun.cpp" />
     <ClCompile Include="source\entities\world.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="source\external\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_tables.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="source\gameplay\input_handler.cpp" />
     <ClCompile Include="source\input\keyboard.cpp" />
     <ClCompile Include="source\input\mouse.cpp" />
     <ClCompile Include="source\processors\processor_solid_block.cpp" />
@@ -218,6 +220,7 @@
     <ClInclude Include="source\entities\entity_basic.h" />
     <ClInclude Include="source\entities\camera_basic.h" />
     <ClInclude Include="source\entities\entity_transformable.h" />
+    <ClInclude Include="source\entities\player.h" />
     <ClInclude Include="source\entities\segment.h" />
     <ClInclude Include="source\entities\sun.h" />
     <ClInclude Include="source\entities\world.h" />
@@ -229,6 +232,7 @@
     <ClInclude Include="source\external\ImGui\imstb_rectpack.h" />
     <ClInclude Include="source\external\ImGui\imstb_textedit.h" />
     <ClInclude Include="source\external\ImGui\imstb_truetype.h" />
+    <ClInclude Include="source\gameplay\input_handler.h" />
     <ClInclude Include="source\headers\defs_world.h" />
     <ClInclude Include="source\headers\interface_drawable.h" />
     <ClInclude Include="source\headers\interface_manager.h" />

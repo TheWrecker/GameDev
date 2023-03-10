@@ -33,7 +33,6 @@ Overlay::Overlay(Presenter* parent)
 	sun = scene->GetSun();
 	mouse = presenter->QueryService<Mouse*>("mouse");
 	keyboard = presenter->QueryService<Keyboard*>("keyboard");
-	mouse->ToggleMode();
 }
 
 Overlay::~Overlay()
@@ -62,13 +61,6 @@ void Overlay::ToggleShow()
 
 void Overlay::Draw() 
 {
-	//TODO: move to update?
-	if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::Escape))
-		ToggleShow();
-
-	if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::LeftControl))
-		mouse->ToggleMode();
-
 	if (!show) return;
 
 	//setup new frame

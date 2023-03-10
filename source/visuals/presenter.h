@@ -24,6 +24,12 @@ enum class CullMode
 	CULL_FRONT
 };
 
+enum class BlendMode
+{
+	DISABLED,
+	ENABLED
+};
+
 class Aggregator;
 
 class Presenter : public IService, public IDrawable
@@ -38,8 +44,10 @@ public:
 	bool SetMultiSampling(MultiSamplingType type, UINT count, UINT quality);
 	bool SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc);
 	bool SetRasterizerState(CullMode cullmodle, bool wireframe, bool frontCCW);
+	void SetBlendMode(BlendMode mode);
 
 	Supervisor* GetSupervisor();
+	Overlay* GetOverlay();
 	Scene* GetActiveScene();
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
@@ -54,6 +62,7 @@ private:
 
 	bool CreateSwapChain(bool isResize);
 	bool CreateViewPort();
+	void CreateBlendStates();
 
 	std::unique_ptr<Scene> scene;
 	std::unique_ptr<Overlay> overlay;
@@ -87,11 +96,14 @@ private:
 	D3D11_RASTERIZER_DESC rasterizer_state_desc;
 
 	//pipeline states
-	bool depth_stencil_enabled, multisampling_enabled;
+	bool depth_stencil_enabled, multisampling_enabled, blend_enabled;
 
 	//multisampling
 	MultiSamplingType multisampling_type;
 	UINT multisampling_count, multisampling_quality;
+
+	//blend
+	ID3D11BlendState *blend_state_enabled, *blend_state_disabled;
 };
 
 template<typename type>

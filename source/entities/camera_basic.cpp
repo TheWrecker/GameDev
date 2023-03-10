@@ -15,6 +15,10 @@ BasicCamera::~BasicCamera()
 {
 }
 
+void BasicCamera::FeedInput(float movX, float movY, float rotX, float rotY)
+{
+}
+
 void BasicCamera::UpdateViewMatrix()
 {
 	DirectX::XMStoreFloat4x4(&view_matrix, DirectX::XMMatrixLookToRH(Position_Vector(), Direction_Vector(), Up_Vector()));
@@ -34,6 +38,31 @@ void BasicCamera::SetProperties(float fieldOfView, float aspectRatio, float near
 	near_plane = near;
 	far_plane = far;
 	UpdateProjectionMatrix();
+}
+
+void BasicCamera::SetDirection(float x, float y, float z)
+{
+	DirectX::XMFLOAT3 _direction = { x, y, z };
+	if ((_direction.x == 0.0f) && (_direction.y == 1.0f) && (_direction.z == 0.0f))
+		_direction.y = 0.99f;
+	auto _new_direction = DirectX::XMLoadFloat3(&_direction);
+	_new_direction = DirectX::XMVector3Normalize(_new_direction);
+	_new_direction = DirectX::XMVectorNegate(_new_direction);
+	DirectX::XMVECTOR _up_vector = { 0.0f, 1.0f, 0.0f, 0.0f };
+	auto _side_vector = DirectX::XMVector3Cross(_up_vector, _new_direction);
+	_side_vector = DirectX::XMVector3Normalize(_side_vector);
+	_up_vector = DirectX::XMVector3Cross(_new_direction, _side_vector);
+	_up_vector = DirectX::XMVector3Normalize(_up_vector);
+
+	DirectX::XMVECTOR _bottom_row = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+	DirectX::XMMATRIX _orientation_matrix = {
+		_side_vector,
+		_up_vector,
+		_new_direction,
+		_bottom_row};
+
+	Rotate(_orientation_matrix);
 }
 
 void BasicCamera::SetRotation(float x, float y, float z)

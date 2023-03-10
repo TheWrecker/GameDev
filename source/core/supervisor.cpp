@@ -1,6 +1,7 @@
 
 #include "../external/ImGui/imgui.h"
 
+#include "../gameplay/input_handler.h"
 #include "../input/mouse.h"
 #include "../input/keyboard.h"
 #include "platform.h"
@@ -29,6 +30,8 @@ Supervisor::Supervisor(InstanceHandle instance)
 	services->AdoptService("keyboard", _keyboard);
 	IService* _presenter = new Presenter(this);
 	services->AdoptService("presenter", _presenter);
+	IService* _input_handler = new InputHandler(this);
+	services->AdoptService("input_handler", _input_handler);
 }
 
 Supervisor::~Supervisor()

@@ -14,6 +14,7 @@ public:
 	FirstPersonCamera(Presenter* presenter);
 	~FirstPersonCamera();
 
+	void FeedInput(float movX, float movY, float rotX, float rotY) override;
 	void Update() override;
 
 private:

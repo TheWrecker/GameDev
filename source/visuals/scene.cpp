@@ -1,6 +1,7 @@
 
 #include "../entities/camera_basic.h"
 #include "../entities/camera_firstperson.h"
+#include "../entities/player.h"
 #include "../entities/sun.h"
 #include "../entities/world.h"
 #include "elements/master_state.h"
@@ -18,7 +19,8 @@ Scene::Scene(Presenter* parent)
 	:presenter(parent), camera_type(CameraType::FIRST_PERSON)
 {
 	active_camera = std::make_unique<FirstPersonCamera>(parent);
-	active_camera->SetPosition(0.0f, 0.0f, 20.0f);
+	active_camera->SetPosition(0.0f, 20.0f, 20.0f);
+	active_camera->SetDirection(1.0f, -1.0f, 0.0f);
 	sun = std::make_unique<Sun>();
 	state_master = std::make_unique<StateMaster>(parent);
 	texture_manager = std::make_unique<TextureManager>(parent);
@@ -26,6 +28,7 @@ Scene::Scene(Presenter* parent)
 	model_manager = std::make_unique<ModelManager>();
 	buffer_master = std::make_unique<BufferMaster>(this);
 	aggregator = std::make_unique<Aggregator>(this);
+	player = std::make_unique<Player>(this);
 	world = std::make_unique<World>(this);
 }
 
@@ -55,7 +58,7 @@ void Scene::Draw()
 
 void Scene::Update()
 {
-	active_camera->Update();
+	//active_camera->Update();
 }
 
 void Scene::SwitchCameraType(CameraType type)
@@ -111,6 +114,11 @@ Presenter* Scene::GetPresenter()
 BasicCamera* Scene::GetActiveCamera()
 {
 	return active_camera.get();
+}
+
+Player* Scene::GetPlayer()
+{
+	return player.get();
 }
 
 Sun* Scene::GetSun()

@@ -20,38 +20,30 @@ FirstPersonCamera::~FirstPersonCamera()
 {
 }
 
+void FirstPersonCamera::FeedInput(float movX, float movY, float rotX, float rotY)
+{
+	using namespace DirectX;
+	float elapsedTime = ticker->GetLastTickDuration();
+	XMVECTOR rotation = { rotX, rotY, 0.0f, 0.0f };
+	XMVECTOR movement = { movX, movY, 0.0f, 0.0f };
+	rotation = rotation * mouse_sensitivity * rotation_speed * elapsedTime;
+	XMVECTOR rightHand = Right_Vector();
+	XMMATRIX pitchMatrix = XMMatrixRotationAxis(rightHand, XMVectorGetY(rotation));
+	XMMATRIX yawMatrix = XMMatrixRotationY(XMVectorGetX(rotation));
+	Rotate(XMMatrixMultiply(pitchMatrix, yawMatrix));
+
+	XMVECTOR positionVector = Position_Vector();
+	movement = movement * move_speed * elapsedTime;
+	XMVECTOR strafe = Right_Vector() * XMVectorGetX(movement);
+	positionVector += strafe;
+	XMVECTOR forward = Direction_Vector() * XMVectorGetY(movement);
+	positionVector += forward;
+	XMStoreFloat3(&position, positionVector);
+	Update();
+}
+
 void FirstPersonCamera::Update()
 {
-	DirectX::XMFLOAT2 movementAmount = DirectX::XMFLOAT2(0.0f, 0.0f);
-	if (keyboard->GetState().W)	movementAmount.y = 1.0f;
-	if (keyboard->GetState().S)	movementAmount.y = -1.0f;
-	if (keyboard->GetState().A)	movementAmount.x = -1.0f;
-	if (keyboard->GetState().D)	movementAmount.x = 1.0f;
-
-	DirectX::XMFLOAT2 rotationAmount = DirectX::XMFLOAT2(0.0f, 0.0f);
-	if (mouse->GetState().positionMode == DirectX::Mouse::MODE_RELATIVE)
-	{
-		rotationAmount.x = -(mouse->GetState().x * mouse_sensitivity);
-		rotationAmount.y = -(mouse->GetState().y * mouse_sensitivity);
-	}
-
-	float elapsedTime = ticker->GetLastTickDuration();
-	{
-		using namespace DirectX;
-		XMVECTOR rotationVector = XMLoadFloat2(&rotationAmount) * rotation_speed * elapsedTime;
-		XMVECTOR rightHand = Right_Vector();
-		XMMATRIX pitchMatrix = XMMatrixRotationAxis(rightHand, XMVectorGetY(rotationVector));
-		XMMATRIX yawMatrix = XMMatrixRotationY(XMVectorGetX(rotationVector));
-		Rotate(XMMatrixMultiply(pitchMatrix, yawMatrix));
-
-		XMVECTOR positionVector = Position_Vector();
-		XMVECTOR movement = XMLoadFloat2(&movementAmount) * move_speed * elapsedTime;
-		XMVECTOR strafe = Right_Vector() * XMVectorGetX(movement);
-		positionVector += strafe;
-		XMVECTOR forward = Direction_Vector() * XMVectorGetY(movement);
-		positionVector += forward;
-		XMStoreFloat3(&position, positionVector);
-	}
 	UpdateViewMatrix();
 }
 

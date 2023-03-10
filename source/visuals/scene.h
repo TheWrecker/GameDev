@@ -8,6 +8,7 @@
 
 class Sun;
 class BasicCamera;
+class Player;
 class World;
 class StateMaster;
 class BufferMaster;
@@ -45,6 +46,7 @@ public:
 	Aggregator* GetAggregator();
 	Presenter* GetPresenter();
 	BasicCamera* GetActiveCamera();
+	Player* GetPlayer();
 	Sun* GetSun();
 	World* GetWorld();
 	StateMaster* GetStateMaster();
@@ -59,6 +61,7 @@ private:
 
 	std::unique_ptr<BasicCamera> active_camera;
 	std::unique_ptr<Sun> sun;
+	std::unique_ptr<Player> player;
 	std::unique_ptr<World> world;
 	std::unique_ptr<StateMaster> state_master;
 	std::unique_ptr<BufferMaster> buffer_master;
