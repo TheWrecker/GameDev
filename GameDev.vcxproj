@@ -173,6 +173,7 @@
     <ClCompile Include="source\external\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_tables.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="source\gameplay\event_handler.cpp" />
     <ClCompile Include="source\input\input_handler.cpp" />
     <ClCompile Include="source\input\keyboard.cpp" />
     <ClCompile Include="source\input\mouse.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="source\gameplay\events\cancel_dig.h" />
     <ClInclude Include="source\gameplay\events\finish_dig.h" />
     <ClInclude Include="source\gameplay\events\interface_event.h" />
+    <ClInclude Include="source\gameplay\event_handler.h" />
     <ClInclude Include="source\headers\defs_world.h" />
     <ClInclude Include="source\headers\interface_drawable.h" />
     <ClInclude Include="source\headers\interface_manager.h" />

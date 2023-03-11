@@ -217,6 +217,9 @@
     <ClCompile Include="source\visuals\utils\ray.cpp">
       <Filter>source\visuals\utils</Filter>
     </ClCompile>
+    <ClCompile Include="source\gameplay\event_handler.cpp">
+      <Filter>source\gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\headers\defs_platform.h">
@@ -434,6 +437,9 @@
     </ClInclude>
     <ClInclude Include="source\gameplay\events\cancel_dig.h">
       <Filter>source\gameplay\events</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameplay\event_handler.h">
+      <Filter>source\gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,28 +1,48 @@
 
 #pragma once
 
-enum class Event
+#include <functional>
+
+enum class EventType
 {
 	UNDEFINED,
 	BEGIN_DIG,
 	BLOCK_DIGGED
 };
 
+typedef std::function<void()> CallbackFunction;
+
 class IEvent
 {
 public:
-	IEvent(Event event)
+	IEvent(EventType event)
 		:type(event)
 	{}
 	virtual ~IEvent() {}
 
 	virtual void Fire() = 0;
 
-	Event GetType()
+	void Callback()
+	{
+		callback();
+	}
+
+	void AddCallback(CallbackFunction func)
+	{
+		callback = func;
+	}
+
+	bool HasCallback()
+	{
+		return static_cast<bool>(callback);
+	}
+
+	EventType GetType()
 	{
 		return type;
 	}
 
 private:
-	Event type;
+	EventType type;
+	CallbackFunction callback;
 };
