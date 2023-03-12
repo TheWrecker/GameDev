@@ -7,16 +7,19 @@ enum class EventType
 {
 	UNDEFINED,
 	BEGIN_DIG,
+	FINISH_DIG,
 	BLOCK_DIGGED
 };
 
 typedef std::function<void()> CallbackFunction;
 
+class EventHandler;
+
 class IEvent
 {
 public:
-	IEvent(EventType event)
-		:type(event)
+	IEvent(EventType event, EventHandler* handler)
+		:type(event), parent(handler)
 	{}
 	virtual ~IEvent() {}
 
@@ -42,7 +45,8 @@ public:
 		return type;
 	}
 
-private:
+protected:
 	EventType type;
 	CallbackFunction callback;
+	EventHandler* parent;
 };

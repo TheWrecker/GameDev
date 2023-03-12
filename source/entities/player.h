@@ -2,6 +2,7 @@
 #pragma once
 
 #include "entity_transformable.h"
+#include "block_solid.h"
 
 class BasicCamera;
 class World;
@@ -14,7 +15,10 @@ public:
 	~Player();
 
 	void Update() override;
-	void Dig();
+	SolidBlock* GetInteractionBlock();
+
+	World* GetWorld();
+	Scene* GetScene();
 
 private:
 	Scene* scene;

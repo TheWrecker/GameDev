@@ -4,7 +4,7 @@
 #include "../input/mouse.h"
 #include "../input/keyboard.h"
 #include "../input/input_handler.h"
-#include "../gameplay/event_handler.h"
+#include "../events/event_handler.h"
 #include "platform.h"
 #include "service_manager.h"
 #include "sys_profiler.h"
@@ -31,10 +31,10 @@ Supervisor::Supervisor(InstanceHandle instance)
 	services->AdoptService("keyboard", _keyboard);
 	IService* _presenter = new Presenter(this);
 	services->AdoptService("presenter", _presenter);
-	IService* _input_handler = new InputHandler(this);
-	services->AdoptService("input_handler", _input_handler);
 	IService* _event_handler = new EventHandler(this);
 	services->AdoptService("event_handler", _event_handler);
+	IService* _input_handler = new InputHandler(this);
+	services->AdoptService("input_handler", _input_handler);
 }
 
 Supervisor::~Supervisor()

@@ -27,24 +27,30 @@ void Player::Update()
 
 }
 
-void Player::Dig()
+SolidBlock* Player::GetInteractionBlock()
 {
     Ray _ray(position, rotation);
-    while (_ray.GetLength() < 5.0f)
+    //TODO: gameplay constants/variables?
+    while (_ray.GetLength() < 4.0f)
     {
-        _ray.Advance(0.1f);
+        //TODO: gameplay cosntants? algorithm constants?
+        _ray.Advance(0.2f);
         auto _block = world->GetBlock(_ray.GetEnd().x, _ray.GetEnd().y, _ray.GetEnd().z);
-        if (_block)
+        if (_block) //and block is diggable?
         {
-            auto _segment = world->GetSegment(_ray.GetEnd().x, _ray.GetEnd().z);
-            if (!_segment)
-                assert(false);
-            unsigned int _x = static_cast<unsigned int>(fmod(_ray.GetEnd().x, SEGMENT_LENGTH));
-            unsigned int _y = static_cast<unsigned int>(fmod(_ray.GetEnd().y, SEGMENT_LENGTH));
-            unsigned int _z = static_cast<unsigned int>(fmod(_ray.GetEnd().z, SEGMENT_LENGTH));
-            _segment->RemoveBlock(_x, _y, _z);
-            _segment->RebuildBuffers();
-            break;
+            //do other stuff?
+            return _block;
         }
     }
+    return nullptr;
+}
+
+World* Player::GetWorld()
+{
+    return world;
+}
+
+Scene* Player::GetScene()
+{
+    return scene;
 }

@@ -1,4 +1,6 @@
 
+#include "../events/finish_dig.h"
+#include "../events/event_handler.h"
 #include "../entities/camera_firstperson.h"
 #include "../entities/player.h"
 #include "../visuals/scene.h"
@@ -17,6 +19,7 @@ InputHandler::InputHandler(Supervisor* supervisor)
 	presenter = supervisor->Services()->QueryService<Presenter*>("presenter");
 	mouse = supervisor->Services()->QueryService<Mouse*>("mouse");
 	keyboard = supervisor->Services()->QueryService<Keyboard*>("keyboard");
+	event_handler = supervisor->Services()->QueryService<EventHandler*>("event_handler");
 	overlay = presenter->GetOverlay();
 	scene = presenter->GetActiveScene();
 	camera = scene->GetActiveCamera();
@@ -68,7 +71,16 @@ void InputHandler::Update()
 		if (player) //in-game?
 		{
 			if (mouse->GetButtonTracker()->leftButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
-				player->Dig();
+			{
+				//TODO: hold for 0.4 sec to dig block
+				auto _block = player->GetInteractionBlock();
+
+				if (!_block)
+					return;
+
+				auto _event = new FinishDigEvent(event_handler, player, _block);
+				event_handler->FeedEvent(_event);
+			}
 		}
 	}
 }

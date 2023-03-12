@@ -2,17 +2,17 @@
 
 #include "interface_event.h"
 
-class Block;
+class SolidBlock;
 class Player;
 
 class FinishDigEvent : public IEvent
 {
 public:
-	FinishDigEvent(Player* player, Block* block);
+	FinishDigEvent(EventHandler* handler ,Player* player, SolidBlock* block);
 
 	void Fire() override;
 
 private:
 	Player* player;
-	Block* block;
+	SolidBlock* block;
 };

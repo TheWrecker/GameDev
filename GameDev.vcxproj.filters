@@ -44,7 +44,7 @@
     <Filter Include="source\visuals\utils">
       <UniqueIdentifier>{aaa33365-8e38-4f20-ad89-3fede9c3c78a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\gameplay\events">
+    <Filter Include="source\events">
       <UniqueIdentifier>{10b1f5d6-cde5-4ef3-87d9-ac19b62ac912}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -217,8 +217,14 @@
     <ClCompile Include="source\visuals\utils\ray.cpp">
       <Filter>source\visuals\utils</Filter>
     </ClCompile>
-    <ClCompile Include="source\gameplay\event_handler.cpp">
-      <Filter>source\gameplay</Filter>
+    <ClCompile Include="source\events\event_handler.cpp">
+      <Filter>source\events</Filter>
+    </ClCompile>
+    <ClCompile Include="source\events\finish_dig.cpp">
+      <Filter>source\events</Filter>
+    </ClCompile>
+    <ClCompile Include="source\events\block_digged.cpp">
+      <Filter>source\events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -423,23 +429,23 @@
     <ClInclude Include="source\visuals\utils\ray.h">
       <Filter>source\visuals\utils</Filter>
     </ClInclude>
-    <ClInclude Include="source\gameplay\events\interface_event.h">
-      <Filter>source\gameplay\events</Filter>
+    <ClInclude Include="source\events\begin_dig.h">
+      <Filter>source\events</Filter>
     </ClInclude>
-    <ClInclude Include="source\gameplay\events\begin_dig.h">
-      <Filter>source\gameplay\events</Filter>
+    <ClInclude Include="source\events\block_digged.h">
+      <Filter>source\events</Filter>
     </ClInclude>
-    <ClInclude Include="source\gameplay\events\block_digged.h">
-      <Filter>source\gameplay\events</Filter>
+    <ClInclude Include="source\events\cancel_dig.h">
+      <Filter>source\events</Filter>
     </ClInclude>
-    <ClInclude Include="source\gameplay\events\finish_dig.h">
-      <Filter>source\gameplay\events</Filter>
+    <ClInclude Include="source\events\event_handler.h">
+      <Filter>source\events</Filter>
     </ClInclude>
-    <ClInclude Include="source\gameplay\events\cancel_dig.h">
-      <Filter>source\gameplay\events</Filter>
+    <ClInclude Include="source\events\finish_dig.h">
+      <Filter>source\events</Filter>
     </ClInclude>
-    <ClInclude Include="source\gameplay\event_handler.h">
-      <Filter>source\gameplay</Filter>
+    <ClInclude Include="source\headers\interface_event.h">
+      <Filter>source\headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

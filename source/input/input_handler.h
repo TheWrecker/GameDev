@@ -5,8 +5,9 @@
 
 class Mouse;
 class Keyboard;
-class Player;
 class BasicCamera;
+class EventHandler;
+class Player;
 class World;
 class Scene;
 class Overlay;
@@ -27,6 +28,7 @@ private:
 	Player* player;
 	BasicCamera* camera;
 	World* world;
+	EventHandler* event_handler;
 	Scene* scene;
 	Overlay* overlay;
 	Presenter* presenter;

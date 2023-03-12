@@ -24,16 +24,21 @@ void EventHandler::RegisterCallback(EventType type, CallbackFunction func)
 {
 	auto _type_container = callbacks.find(type);
 	if (_type_container != callbacks.end())
-		_type_container->second.push_back(func);
+		_type_container->second.push_back(&func);
+}
+
+void EventHandler::RemoveCallback(EventType type, CallbackFunction func)
+{
+	auto _type_container = callbacks.find(type);
+	if (_type_container != callbacks.end())
+		_type_container->second.remove(&func);
 }
 
 void EventHandler::ProcessEvents(unsigned int count)
 {
-	if (queue.empty())
-		return;
 
 	unsigned int _i = 0;
-	while (_i < count)
+	while ((!queue.empty()) && (_i < count))
 	{
 		auto _event = queue.front().get();
 		_event->Fire();
@@ -45,10 +50,11 @@ void EventHandler::ProcessEvents(unsigned int count)
 		if (_type_container != callbacks.end())
 		{
 			for (auto& func : _type_container->second)
-				func();
+				(*func)();
 		}
 
 		queue.pop();
+		_i++;
 	}
 }
 
