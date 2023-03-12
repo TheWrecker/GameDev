@@ -17,7 +17,6 @@ DevRender::DevRender(Scene* scene)
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
 	input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot)
 		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot)
-		.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, _slot)
 		.Build();
 }
 

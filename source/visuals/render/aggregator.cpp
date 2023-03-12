@@ -2,6 +2,7 @@
 #include "../elements/render_target.h"
 #include "../elements/texture_atlas.h"
 #include "hud.h"
+#include "highlight.h"
 #include "solid_blocks.h"
 #include "render_dev.h"
 #include "sun_moon.h"
@@ -42,6 +43,9 @@ Aggregator::Aggregator(Scene* scene)
 	//solid blocks
 	render_solid_blocks = std::make_unique<SolidBlockRender>(scene);
 
+	//block highlight
+	render_highlight = std::make_unique<HighlightRender>(scene);
+
 	//hud
 	render_hud = std::make_unique<HUDRender>(scene);
 
@@ -70,8 +74,7 @@ Aggregator::Aggregator(Scene* scene)
 	//setup states
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	presenter->SetRasterizerState(CullMode::CULL_BACK, false, false);
-
-
+	presenter->SetBlendMode(BlendMode::DISABLED);
 }
 
 Aggregator::~Aggregator()
@@ -117,11 +120,20 @@ void Aggregator::AggregateAllRenders()
 	//render solid blocks
 	render_solid_blocks->Render();
 
+	//enable alpha blending
+	presenter->SetBlendMode(BlendMode::ENABLED);
+
+	//render block highlights
+	buffer_master->BindDefaultIndexBuffer(DefaultObjects::BLOCK);
+	render_highlight->Render();
+
 	//render hud
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD);
-	presenter->SetBlendMode(BlendMode::ENABLED);
 	render_hud->Render();
+
+	//disable alpha blending
 	presenter->SetBlendMode(BlendMode::DISABLED);
+
 
 	//render the pass
 	/*buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD_FULLSCREEN);

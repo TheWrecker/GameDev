@@ -7,6 +7,7 @@
 #include "render_base.h"
 
 class HUDRender;
+class HighlightRender;
 class SolidBlockRender;
 class DevRender;
 class SunMoon;
@@ -40,5 +41,6 @@ private:
 	std::unique_ptr<SkyRender> render_sky;
 	std::unique_ptr<SunMoon> render_sun_moon;
 	std::unique_ptr<SolidBlockRender> render_solid_blocks;
+	std::unique_ptr<HighlightRender> render_highlight;
 	std::unique_ptr<HUDRender> render_hud;
 };

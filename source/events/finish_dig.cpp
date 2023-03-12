@@ -17,8 +17,10 @@ void FinishDigEvent::Fire()
     auto _pos = block->Position();
     auto _type = block->GetBlockType();
     auto _segment = player->GetWorld()->GetSegment(_pos.x, _pos.z);
+
     if (!_segment)
         assert(false);
+
     unsigned int _x = static_cast<unsigned int>(fmod(_pos.x, SEGMENT_LENGTH));
     unsigned int _y = static_cast<unsigned int>(fmod(_pos.y, SEGMENT_LENGTH));
     unsigned int _z = static_cast<unsigned int>(fmod(_pos.z, SEGMENT_LENGTH));

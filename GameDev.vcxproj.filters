@@ -226,6 +226,9 @@
     <ClCompile Include="source\events\block_digged.cpp">
       <Filter>source\events</Filter>
     </ClCompile>
+    <ClCompile Include="source\visuals\render\highlight.cpp">
+      <Filter>source\visuals\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\headers\defs_platform.h">
@@ -447,6 +450,9 @@
     <ClInclude Include="source\headers\interface_event.h">
       <Filter>source\headers</Filter>
     </ClInclude>
+    <ClInclude Include="source\visuals\render\highlight.h">
+      <Filter>source\visuals\render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="source\visuals\shaders\dev_v.hlsl">
@@ -483,6 +489,12 @@
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
     <FxCompile Include="source\visuals\shaders\hud_p.hlsl">
+      <Filter>source\visuals\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="source\visuals\shaders\highlight_v.hlsl">
+      <Filter>source\visuals\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="source\visuals\shaders\highlight_p.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
   </ItemGroup>

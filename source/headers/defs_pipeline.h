@@ -64,6 +64,7 @@ enum class DefaultObjects : unsigned int
 enum class DefaultTextures : unsigned int
 {
 	UNDEFINED = 0,
+	HIGHLIGHT = 119,
 	FIRST_PASS = 120,
 	CROSSHAIR_1 = 121,
 	SKY_1 = 122,

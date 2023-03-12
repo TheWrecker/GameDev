@@ -322,6 +322,7 @@ bool Presenter::SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc)
 
 bool Presenter::SetRasterizerState(CullMode cullmodle, bool wireframe, bool frontCCW)
 {
+	//TODO: create all states and only bind them
 	assert(context);
 	DXRelease(rasterizer_state);
 

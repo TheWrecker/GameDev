@@ -31,7 +31,7 @@ SolidBlock* Player::GetInteractionBlock()
 {
     Ray _ray(position, rotation);
     //TODO: gameplay constants/variables?
-    while (_ray.GetLength() < 4.0f)
+    while (_ray.GetLength() < 3.0f)
     {
         //TODO: gameplay cosntants? algorithm constants?
         _ray.Advance(0.2f);

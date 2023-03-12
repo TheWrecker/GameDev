@@ -14,6 +14,7 @@ TextureManager::TextureManager(Presenter* presenter)
     Load(L"assets/textures/sky1.dds", "sky1"); //sky 1
     Load(L"assets/textures/sun.dds", "sun"); //sun
     Load(L"assets/textures/crosshair1.png", "crosshair1"); //crosshair 1
+    Load(L"assets/textures/highlight.png", "highlight"); //block highlight
 }
 
 TextureManager::~TextureManager()
@@ -55,6 +56,8 @@ void TextureManager::BindDefaultTextures()
     presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::SKY_1), 1, &_shader_view);
     _shader_view = GetShaderView("crosshair1");
     presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::CROSSHAIR_1), 1, &_shader_view);
+    _shader_view = GetShaderView("highlight");
+    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::HIGHLIGHT), 1, &_shader_view);
 }
 
 ID3D11ShaderResourceView* TextureManager::GetShaderView(const std::string& name)
