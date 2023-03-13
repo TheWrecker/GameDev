@@ -1,34 +1,76 @@
 
-#pragma once
+#ifndef WORLD_H
+    #define WORLD_H
 
-#include <memory>
-#include <vector>
+    #include <memory>
+    #include <unordered_map>
 
-#include "defs_world.h"
+    #include "defs_world.h"
 
-class SolidBlock;
-class Segment;
-class Scene;
+    class SolidBlock;
+    class Segment;
+    class Scene;
 
-class World
-{
-public:
-	World(Scene* scene);
-	~World();
+    struct BlockIndex
+    {
+        unsigned int x, y, z;
 
-	void SetupDevelopementWorld();
+        BlockIndex(unsigned int x, unsigned int y, unsigned int z);
+    };
 
-	Segment* GetSegment(float x, float y);
-	SolidBlock* GetBlock(float x, float y, float z);
+    bool operator ==(const BlockIndex& left, const BlockIndex& right) noexcept;
 
-	bool IsWithinBounds(float x, float y);
-	bool IsWithinBounds(unsigned int x, unsigned int y);
+    struct SegmentIndex
+    {
+        int x, z;
 
-private:
-	friend class Aggregator;
-	friend class SolidBlockRender;
-	friend class Overlay;
+        SegmentIndex(int x, int z);
+    };
 
-	Scene* scene;
-	Segment* segments[TEMP_WORLD_DIMENSION_SIZE][TEMP_WORLD_DIMENSION_SIZE];
-};
+    bool operator ==(const SegmentIndex& left, const SegmentIndex& right) noexcept;
+
+    namespace std
+    {
+        template<>
+        struct hash<SegmentIndex>
+        {
+            size_t operator()(const SegmentIndex& index) const noexcept
+            {
+                long long _combination = ((long long)index.x << 32) | index.z;
+                std::hash<decltype(_combination)> hasher;
+                auto hash = hasher(index.x);
+
+                return std::hash<decltype(_combination)>{}(hash);
+            }
+        };
+    }
+
+    class World
+    {
+    public:
+	    World(Scene* scene);
+	    ~World();
+
+	    void SetupDevelopementWorld();
+
+	    Segment* GetSegment(float x, float y);
+	    Segment* GetSegment(SegmentIndex& index);
+	    SolidBlock* GetBlock(float x, float y, float z);
+	    SolidBlock* GetBlock(Segment* segment, BlockIndex& index);
+
+        BlockIndex GetBlockIndex(float x, float y, float z);
+        SegmentIndex GetSegmentIndex(float x, float z);
+
+	    bool IsSegmentWithinBounds(SegmentIndex index);
+	    bool IsBlockWithinBounds(BlockIndex& index);
+
+    private:
+	    friend class Aggregator;
+	    friend class SolidBlockRender;
+	    friend class Overlay;
+
+	    Scene* scene;
+	    std::unordered_map<SegmentIndex, Segment*, std::hash<SegmentIndex>> segments;
+    };
+
+#endif // !WORLD_H

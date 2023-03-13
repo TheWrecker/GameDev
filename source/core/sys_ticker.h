@@ -1,35 +1,40 @@
 
-#pragma once
+#ifndef SYS_TICKER_H
+	#define SYS_TICKER_H
 
-#include "interface_service.h"
-#include "defs_platform.h"
+	#include <cstddef>
 
-class SystemTicker : public IService
-{
-public:
-	SystemTicker();
-	~SystemTicker();
+	#include "interface_service.h"
+	#include "defs_platform.h"
 
-	void Update() override;
+	class SystemTicker : public IService
+	{
+	public:
+		SystemTicker();
+		~SystemTicker();
 
-	float GetLastTickDuration();
-	float GetAverageTickDuration();
-	std::size_t GetTickPerSecond();
+		void Update() override;
 
-private:
-	SysTickValue
-		start_tick,
-		previous_tick,
-		current_tick;
+		float GetLastTickDuration();
+		float GetAverageTickDuration();
+		std::size_t GetTickPerSecond();
 
-	double frequency;
+	private:
+		SysTickValue
+			start_tick,
+			previous_tick,
+			current_tick;
 
-	float 
-		last_tick_duration,
-		current_tick_sum,
-		average_tick_duration;
+		double frequency;
 
-	std::size_t
-		tick_per_second,
-		current_tick_count;
-};
+		float 
+			last_tick_duration,
+			current_tick_sum,
+			average_tick_duration;
+
+		std::size_t
+			tick_per_second,
+			current_tick_count;
+	};
+
+#endif // !SYS_TICKER_H

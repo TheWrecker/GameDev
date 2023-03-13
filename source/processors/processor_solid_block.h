@@ -1,40 +1,42 @@
 
-#pragma once
+#ifndef PROCESSOR_SOLID_BLOCK_H
+	#define PROCESSOR_SOLID_BLOCK_H
 
-#include <vector>
+	#include <vector>
 
-#include "defs_pipeline.h"
-#include "../entities/segment.h"
+	#include "defs_pipeline.h"
 
-typedef const std::vector<SolidBlockVertex> Face;
+	typedef const std::vector<SolidBlockVertex> Face;
 
-enum class FaceName
-{
-	LEFT,
-	RIGHT,
-	TOP,
-	BOTTOM,
-	FRONT,
-	BACK
-};
+	enum class FaceName
+	{
+		LEFT,
+		RIGHT,
+		TOP,
+		BOTTOM,
+		FRONT,
+		BACK
+	};
 
-class TextureAtlas;
+	class TextureAtlas;
+	class Segment;
 
-class SolidBlockProcessor
-{
-public:
-	static void Setup(TextureAtlas* atlas);
-	static void Rebuild(Segment* target);
+	class SolidBlockProcessor
+	{
+	public:
+		static void Setup(TextureAtlas* atlas);
+		static void Rebuild(Segment* target);
 
-private:
-	static bool CheckBlockFace(Segment* target, FaceName face);
-	static void AddFaceVertices(Segment* target, Face& face);
-	//static void IterateSide(Segment* target, Face& face, unsigned int maxX, unsigned int maxY, unsigned int maxZ, unsigned int& fixed);
-	static unsigned int
-		index_x,
-		index_y,
-		index_z,
-		solids,
-		current_index;
-	static TextureAtlas* texture_atlas;
-};
+	private:
+		static bool CheckBlockFace(Segment* target, FaceName face);
+		static void AddFaceVertices(Segment* target, Face& face);
+		static unsigned int
+			index_x,
+			index_y,
+			index_z,
+			solids,
+			current_index;
+		static TextureAtlas* texture_atlas;
+	};
+
+#endif // !PROCESSOR_SOLID_BLOCK_H

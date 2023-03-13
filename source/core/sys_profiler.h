@@ -1,39 +1,41 @@
 
-#pragma once
+#ifndef SYS_PROFILER_H
+	#define SYS_PROFILER_H
 
-#include <cstddef>
-#include <memory>
+	#include <cstddef>
+	#include <memory>
 
-#include "interface_service.h"
-#include "interface_sys_profiler.h"
+	#include "interface_service.h"
+	#include "interface_sys_profiler.h"
 
-class SystemProfiler : public IService
-{
-public:
-	SystemProfiler();
-	~SystemProfiler();
+	class SystemProfiler : public IService
+	{
+	public:
+		SystemProfiler();
+		~SystemProfiler();
 
-	void Update() override;
+		void Update() override;
 
-	std::size_t GetCPUConsumption();
-	std::size_t GetCPULoad();
-	std::size_t GetPhysMemUsed();
-	std::size_t GetPhysMemAvailable();
-	std::size_t GetPhysMemTotal();
+		std::size_t GetCPUConsumption();
+		std::size_t GetCPULoad();
+		std::size_t GetPhysMemUsed();
+		std::size_t GetPhysMemAvailable();
+		std::size_t GetPhysMemTotal();
 
-private:
+	private:
 
-	std::unique_ptr<ISystemProfiler> impl;
+		std::unique_ptr<ISystemProfiler> impl;
 
-	std::size_t
-		cpu_consumption,
-		cpu_load,
-		ram_load,
-		physical_memory_used,
-		physical_memory_available,
-		physical_memory_total,
-		virtual_memory_used,
-		virtual_memory_available,
-		virtual_memory_total;
+		std::size_t
+			cpu_consumption,
+			cpu_load,
+			ram_load,
+			physical_memory_used,
+			physical_memory_available,
+			physical_memory_total,
+			virtual_memory_used,
+			virtual_memory_available,
+			virtual_memory_total;
+	};
 
-};
+#endif // !SYS_PROFILER_H

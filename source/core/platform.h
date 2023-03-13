@@ -1,25 +1,28 @@
 
-#pragma once
+#ifndef PLATFORM_H
+	#define PLATFORM_H
 
-#include <memory>
+	#include <memory>
 
-#include "interface_service.h"
-#include "defs_platform.h"
+	#include "interface_service.h"
+	#include "defs_platform.h"
 
-#include SysPlatformInitializerHeader
+	#include SysPlatformInitializerHeader
 
-class Platform : public IService
-{
-public:
+	class Platform : public IService
+	{
+	public:
 
-	Platform(InstanceHandle handle);
-	~Platform();
+		Platform(InstanceHandle handle);
+		~Platform();
 
-	SysWindowHandle GetWindowHandle();
-	bool ProcessPlatfromMessages();
+		SysWindowHandle GetWindowHandle();
+		bool ProcessPlatfromMessages();
 
-private:
+	private:
 
-	std::unique_ptr<PlatformImpl> impl;
+		std::unique_ptr<PlatformImpl> impl;
 
-};
+	};
+
+#endif // !PLATFORM_H

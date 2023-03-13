@@ -33,7 +33,7 @@ SolidBlock* Player::GetInteractionBlock()
     //TODO: gameplay constants/variables?
     while (_ray.GetLength() < 3.0f)
     {
-        //TODO: gameplay cosntants? algorithm constants?
+        //TODO: gameplay constants? algorithm constants?
         _ray.Advance(0.2f);
         auto _block = world->GetBlock(_ray.GetEnd().x, _ray.GetEnd().y, _ray.GetEnd().z);
         if (_block) //and block is diggable?

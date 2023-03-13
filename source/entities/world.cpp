@@ -11,15 +11,8 @@ World::World(Scene* scene)
 
 World::~World()
 {
-	/*for (auto& item : segments)
-		delete item;*/
-
-	for (unsigned int i = 0; i < TEMP_WORLD_DIMENSION_SIZE; i++)
-		for (unsigned int j = 0; j < TEMP_WORLD_DIMENSION_SIZE; j++)
-		{
-			if (segments[i][j])
-				delete segments[i][j];
-		}
+	for (auto& item : segments)
+		delete item.second;
 }
 
 void World::SetupDevelopementWorld()
@@ -27,57 +20,110 @@ void World::SetupDevelopementWorld()
 	for (unsigned int i = 0; i < TEMP_WORLD_DIMENSION_SIZE; i++)
 		for (unsigned int j = 0; j < TEMP_WORLD_DIMENSION_SIZE; j++)
 		{
-			segments[i][j] = new Segment(scene, SolidBlockType::GRASS, true, i * SEGMENT_LENGTH, 0.0f, j * SEGMENT_LENGTH);
+			auto _segment = GetSegment(i * SEGMENT_LENGTH, j * SEGMENT_LENGTH);
+			auto _rand = (i % 2) + (j % 2);
+			switch (_rand)
+			{
+				case 0:
+				{
+					_segment->Fill(SolidBlockType::TEST);
+					break;
+				}
+				case 1:
+				{
+					_segment->Fill(SolidBlockType::GRASS);
+					break;
+				}
+				case 2:
+				{
+					_segment->Fill(SolidBlockType::DIRT);
+					break;
+				}
+				default:
+					assert(false);
+			}
+			_segment->RebuildBuffers();
 		}
-}
 
-//TODO: more efficient lookup/storage? (possibly unordered_map)
-//TODO: dynamic world storage (again, unordered_map?)
+	auto _segment1 = GetSegment(-10.0f, -10.0f);
+	_segment1->Fill(SolidBlockType::DIRT);
+	_segment1->RebuildBuffers();
+
+}
 
 Segment* World::GetSegment(float x, float z)
 {
-	unsigned int _x = static_cast<unsigned int>(x / SEGMENT_LENGTH);
-	unsigned int _z = static_cast<unsigned int>(z / SEGMENT_LENGTH);
-	assert(IsWithinBounds(_x, _z));
-	return segments[_x][_z];
+	SegmentIndex _index = GetSegmentIndex(x, z);
+	return GetSegment(_index);
+}
+
+Segment* World::GetSegment(SegmentIndex& index)
+{
+	assert(IsSegmentWithinBounds(index));
+	if (!segments.contains(index))
+		segments[index] = new Segment(scene, SolidBlockType::TEST, false, index.x * SEGMENT_LENGTH, 0.0f, index.z * SEGMENT_LENGTH);
+	return segments[index];
 }
 
 SolidBlock* World::GetBlock(float x, float y, float z)
 {
-	unsigned int _x = static_cast<unsigned int>(x / SEGMENT_LENGTH);
-	unsigned int _z = static_cast<unsigned int>(z / SEGMENT_LENGTH);
-
-	if (!IsWithinBounds(_x, _z))
-		return nullptr;
-
-	unsigned int _y = static_cast<unsigned int>(y / SEGMENT_LENGTH);
-
-	if (_y != 0)
-		return nullptr;
-
-	unsigned int _b_x = static_cast<unsigned int>(fmod(x, SEGMENT_LENGTH));
-	unsigned int _b_y = static_cast<unsigned int>(fmod(y, SEGMENT_LENGTH));
-	unsigned int _b_z = static_cast<unsigned int>(fmod(z, SEGMENT_LENGTH));
-	return segments[_x][_z]->blocks[_b_x][_b_y][_b_z];
+	SegmentIndex _segment_index = GetSegmentIndex(x, z);
+	auto _segment = GetSegment(_segment_index);
+	BlockIndex _block_index = GetBlockIndex(x, y, z);
+	return GetBlock(_segment, _block_index);
 }
 
-bool World::IsWithinBounds(float x, float z)
+SolidBlock* World::GetBlock(Segment* segment, BlockIndex& index)
 {
-	unsigned int _x = static_cast<unsigned int>(x / SEGMENT_LENGTH);
-	unsigned int _z = static_cast<unsigned int>(z / SEGMENT_LENGTH);
-
-	if ((_x < TEMP_WORLD_DIMENSION_SIZE) && (_x >= 0))
-		if ((_z < TEMP_WORLD_DIMENSION_SIZE) && (_z >= 0))
-			return true;
-
-	return false;
+	assert(IsBlockWithinBounds(index));
+	return segment->blocks[index.x][index.y][index.z];
 }
 
-bool World::IsWithinBounds(unsigned int x, unsigned int z)
+BlockIndex World::GetBlockIndex(float x, float y, float z)
 {
-	if ((x < TEMP_WORLD_DIMENSION_SIZE) && (x >= 0))
-		if ((z < TEMP_WORLD_DIMENSION_SIZE) && (z >= 0))
-			return true;
+	auto _x = fmod(x, SEGMENT_LENGTH);
+	auto _y = fmod(y, SEGMENT_LENGTH);
+	auto _z = fmod(z, SEGMENT_LENGTH);
 
-	return false;
+	return BlockIndex{
+		 x < 0 ? (unsigned int)(SEGMENT_LENGTH - abs(_x)) : (unsigned int)_x,
+		 y < 0 ? (unsigned int)(SEGMENT_LENGTH - abs(_y)) : (unsigned int)_y,
+		 z < 0 ? (unsigned int)(SEGMENT_LENGTH - abs(_z)) : (unsigned int)_z};
+}
+
+SegmentIndex World::GetSegmentIndex(float x, float z)
+{
+	return SegmentIndex{ (int)floor(x / SEGMENT_LENGTH),  (int)floor(z / SEGMENT_LENGTH) };
+}
+
+bool World::IsSegmentWithinBounds(SegmentIndex index)
+{
+	assert((index.x < INT32_MAX) && (index.z < INT32_MAX));
+	return true;
+}
+
+bool World::IsBlockWithinBounds(BlockIndex& index)
+{
+	assert((index.x < SEGMENT_DIMENSION_SIZE) && (index.x < SEGMENT_DIMENSION_SIZE) && (index.z < SEGMENT_DIMENSION_SIZE));
+	return true;
+}
+
+BlockIndex::BlockIndex(unsigned int x, unsigned int y, unsigned int z)
+	:x(x), y(y), z(z)
+{
+}
+
+bool operator ==(const BlockIndex& left, const BlockIndex& right) noexcept
+{
+	return (left.x == right.x) && (left.y == right.y) && (left.z == right.z);
+}
+
+SegmentIndex::SegmentIndex(int x, int z)
+	:x(x), z(z)
+{
+}
+
+bool operator ==(const SegmentIndex& left, const SegmentIndex& right) noexcept
+{
+	return (left.x == right.x) && (left.z == right.z);
 }

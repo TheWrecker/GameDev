@@ -1,26 +1,29 @@
 
-#pragma once
+#ifndef SUPERVISOR_H
+	#define SUPERVISOR_H
 
-#include <d3d11.h>
-#include <memory>
+	#include <d3d11.h>
+	#include <memory>
 
-#include "defs_platform.h"
+	#include "defs_platform.h"
 
-class ServiceManager;
+	class ServiceManager;
 
-class Supervisor
-{
-public:
-	Supervisor(InstanceHandle instance);
-	~Supervisor();
+	class Supervisor
+	{
+	public:
+		Supervisor(InstanceHandle instance);
+		~Supervisor();
 
-	void PassControl();
+		void PassControl();
 
-	void SetDebugQuery(ID3D11Debug* target);
-	ID3D11Debug* GetDebugQuery();
-	ServiceManager* Services();
+		void SetDebugQuery(ID3D11Debug* target);
+		ID3D11Debug* GetDebugQuery();
+		ServiceManager* Services();
 
-private:
-	std::unique_ptr<ServiceManager> services;
-	ID3D11Debug* d3d11_debug = nullptr;
-};
+	private:
+		std::unique_ptr<ServiceManager> services;
+		ID3D11Debug* d3d11_debug = nullptr;
+	};
+
+#endif // !SUPERVISOR_H

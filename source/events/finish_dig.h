@@ -1,18 +1,22 @@
-#pragma once
 
-#include "interface_event.h"
+#ifndef FINISH_DIG_H
+	#define FINISH_DIG_H
 
-class SolidBlock;
-class Player;
+	#include "interface_event.h"
 
-class FinishDigEvent : public IEvent
-{
-public:
-	FinishDigEvent(EventHandler* handler ,Player* player, SolidBlock* block);
+	class SolidBlock;
+	class Player;
 
-	void Fire() override;
+	class FinishDigEvent : public IEvent
+	{
+	public:
+		FinishDigEvent(EventHandler* handler ,Player* player, SolidBlock* block);
 
-private:
-	Player* player;
-	SolidBlock* block;
-};
+		void Fire() override;
+
+	private:
+		Player* player;
+		SolidBlock* block;
+	};
+
+#endif // !FINISH_DIG_H

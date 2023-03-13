@@ -2,6 +2,8 @@
 #include <DirectXMath.h>
 
 #include "../visuals/elements/texture_atlas.h"
+#include "../entities/segment.h"
+
 #include "processor_solid_block.h"
 
 Face RightFace = {

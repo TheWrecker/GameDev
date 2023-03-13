@@ -44,6 +44,11 @@ Segment::~Segment()
     }
 }
 
+void Segment::SetType(SolidBlockType type)
+{
+    default_type = type;
+}
+
 void Segment::Move(float x, float y, float z)
 {
     SetPosition(x, y, z);
@@ -68,12 +73,6 @@ void Segment::AddBlock(SolidBlock* target, unsigned int x, unsigned int y, unsig
     //RebuildBuffers();
 }
 
-void Segment::AddBlock(SolidBlock* target, unsigned int index)
-{
-    auto _indices = GetArrayIndices(index);
-    AddBlock(target, _indices.x, _indices.y, _indices.z);
-}
-
 void Segment::AddBlock(SolidBlock* target)
 {
     AddBlock(target, 0, 0, 0);
@@ -85,15 +84,15 @@ void Segment::AddBlock(SolidBlockType type, unsigned int x, unsigned int y, unsi
     AddBlock(_block, x, y, z);
 }
 
-void Segment::AddBlock(SolidBlockType type, unsigned int index)
+void Segment::AddBlock(unsigned int x, unsigned int y, unsigned int z)
 {
-    SolidBlock* _block = new SolidBlock(type);
-    auto _indices = GetArrayIndices(index);
-    AddBlock(_block, _indices.x, _indices.y, _indices.z);
+    SolidBlock* _block = new SolidBlock(default_type);
+    AddBlock(_block, x, y, z);
 }
 
 void Segment::Fill(SolidBlockType type)
 {
+    SetType(type);
     for (unsigned int i = 0; i < SEGMENT_DIMENSION_SIZE; i++)
     {
         for (unsigned int j = 0; j < SEGMENT_DIMENSION_SIZE; j++)
@@ -102,8 +101,7 @@ void Segment::Fill(SolidBlockType type)
             {
                 if (blocks[i][j][k])
                     delete blocks[i][j][k];
-                SolidBlock* _block = new SolidBlock(type);
-                AddBlock(_block, i, j, k);
+                AddBlock(i, j, k);
             }
         }
     }

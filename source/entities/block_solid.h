@@ -1,32 +1,35 @@
 
-#pragma once
+#ifndef BLOCK_SOLID_H
+	#define BLOCK_SOLID_H
 
-#include <string>
-#include <DirectXCollision.h>
+	#include <string>
+	#include <DirectXCollision.h>
 
-#include "entity_basic.h"
+	#include "entity_basic.h"
 
-enum class SolidBlockType
-{
-	TEST = 1,
-	DIRT = 2,
-	GRASS = 3
-};
+	enum class SolidBlockType
+	{
+		TEST = 1,
+		DIRT = 2,
+		GRASS = 3
+	};
 
-class SolidBlock : public BasicEntity
-{
-public:
-	SolidBlock(SolidBlockType type = SolidBlockType::TEST, float x = 0.0f, float y = 0.0f, float z = 0.0f);
-	~SolidBlock();
+	class SolidBlock : public BasicEntity
+	{
+	public:
+		SolidBlock(SolidBlockType type = SolidBlockType::TEST, float x = 0.0f, float y = 0.0f, float z = 0.0f);
+		~SolidBlock();
 
-	void SetType(SolidBlockType what);
-	void SetPosition(float x, float y, float z) override;
-	void SetPosition(DirectX::XMFLOAT3 pos) override;
+		void SetType(SolidBlockType what);
+		void SetPosition(float x, float y, float z) override;
+		void SetPosition(DirectX::XMFLOAT3 pos) override;
 
-	SolidBlockType GetBlockType();
-	unsigned int GetAtlasIndex();
+		SolidBlockType GetBlockType();
+		unsigned int GetAtlasIndex();
 
-private:
-	SolidBlockType type;
-	DirectX::BoundingBox collision_box;
-};
+	private:
+		SolidBlockType type;
+		DirectX::BoundingBox collision_box;
+	};
+
+#endif // !BLOCK_SOLID_H

@@ -1,11 +1,12 @@
 
-#pragma once
+#ifndef ISERVICE_H
+	#define ISERVICE_H
 
-#include <string>
+	class IService
+	{
+	public:
+		virtual void Update() {}
+		virtual ~IService() {}
+	};
 
-class IService
-{
-public:
-	virtual void Update() {}
-	virtual ~IService() {}
-};
+#endif // !ISERVICE_H
