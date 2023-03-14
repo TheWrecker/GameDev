@@ -34,7 +34,7 @@ SolidBlock* Player::GetInteractionBlock()
     while (_ray.GetLength() < 3.0f)
     {
         //TODO: gameplay constants? algorithm constants?
-        _ray.Advance(0.3f);
+        _ray.Advance(0.1f);
         auto _block = world->GetBlock(_ray.end.x, _ray.end.y, _ray.end.z);
         if (_block) //and block is diggable?
         {
@@ -55,11 +55,11 @@ bool Player::GetPlacementBlockPos(DirectX::XMFLOAT3& pos)
     while (_ray.GetLength() < 3.0f)
     {
         //TODO: gameplay constants? algorithm constants?
-        _ray.Advance(0.3f);
+        _ray.Advance(0.1f);
         auto _block = world->GetBlock(_ray.end.x, _ray.end.y, _ray.end.z);
         if (_block)
         {
-            //do other stuff?
+            //TODO: enhance algorithm?
             pos = _block->Position();
             DirectX::XMFLOAT3 _bbox_min = pos;
             DirectX::XMFLOAT3 _bbox_max = { _bbox_min.x + SOLID_BLOCK_SIZE, _bbox_min.y + SOLID_BLOCK_SIZE, _bbox_min.z + SOLID_BLOCK_SIZE };
@@ -86,57 +86,42 @@ bool Player::GetPlacementBlockPos(DirectX::XMFLOAT3& pos)
 
             assert(tmax >= tmin);
 
-            DirectX::XMFLOAT3 _pos = {
-                (tmin * rotation.x) + position.x,
-                (tmin * rotation.y) + position.y,
-                (tmin * rotation.z) + position.z};
+            DirectX::XMFLOAT3 _pos = {};
+            _pos.x = (tmin * rotation.x) + position.x;
+            _pos.y = (tmin * rotation.y) + position.y;
+            _pos.z = (tmin * rotation.z) + position.z;
 
-            /*if (_pos.x < position.x + (SOLID_BLOCK_SIZE / 2.0f))
-            {
-                if (_pos.y < position.y + (SOLID_BLOCK_SIZE / 2.0f))
-                {
-                    if (_pos.z < position.z + (SOLID_BLOCK_SIZE / 2.0f))
-                    {
-                        pos.z -= 1.0f;
-                    }
-                    else
-                    {
-
-                    }
-                }
-            }*/
-
-            if (_pos.x == pos.x)
+            if (abs(_pos.x - pos.x) < 0.00001f) //left (-x) face
             {
                 pos.x -= 1.0f;
                 return true;
             }
 
-            if (_pos.x == pos.x + 1.0f)
+            if (abs(_pos.x - pos.x) > 0.99990f) // right (+x) face
             {
                 pos.x += 1.0f;
                 return true;
             }
 
-            if (_pos.y == pos.y)
+            if (abs(_pos.y - pos.y) < 0.00001f) // bot (-y) face
             {
                 pos.y -= 1.0f;
                 return true;
             }
 
-            if (_pos.y == pos.y + 1.0f)
+            if (abs(_pos.y - pos.y) > 0.99990f) // top (+y) face
             {
                 pos.y += 1.0f;
                 return true;
             }
 
-            if (_pos.z == pos.z)
+            if (abs(_pos.z - pos.z) < 0.00001f) // front (-z) face
             {
                 pos.z -= 1.0f;
                 return true;
             }
 
-            if (_pos.z == pos.z + 1.0f)
+            if (abs(_pos.z - pos.z) > 0.99990f) // back (+z) face
             {
                 pos.z += 1.0f;
                 return true;
@@ -150,8 +135,9 @@ bool Player::GetPlacementBlockPos(DirectX::XMFLOAT3& pos)
                 tmax = min(tmax, max(t1, t2));
             }*/
 
-
-            return true;
+            //should not reach here
+            assert(false);
+            return false;
         }
     }
     return false;

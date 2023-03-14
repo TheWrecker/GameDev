@@ -17,6 +17,8 @@
 
 		void Update() override;
 		SolidBlock* GetInteractionBlock();
+
+		//if it finds an eligible spot, it sets pos to the origin point of block to be displayed/created and returns true
 		bool GetPlacementBlockPos(DirectX::XMFLOAT3& pos);
 
 		World* GetWorld();

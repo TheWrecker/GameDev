@@ -86,9 +86,9 @@ BlockIndex World::GetBlockIndex(float x, float y, float z)
 	auto _z = fmod(z, SEGMENT_LENGTH);
 
 	return BlockIndex{
-		 x < 0 ? (unsigned int)(SEGMENT_LENGTH - abs(_x)) : (unsigned int)_x,
-		 y < 0 ? (unsigned int)(SEGMENT_LENGTH - abs(_y)) : (unsigned int)_y,
-		 z < 0 ? (unsigned int)(SEGMENT_LENGTH - abs(_z)) : (unsigned int)_z};
+		 x < 0 ? (unsigned int)floorf(SEGMENT_LENGTH - abs(_x)) : (unsigned int)_x,
+		 y < 0 ? (unsigned int)floorf(SEGMENT_LENGTH - abs(_y)) : (unsigned int)_y,
+		 z < 0 ? (unsigned int)floorf(SEGMENT_LENGTH - abs(_z)) : (unsigned int)_z};
 }
 
 SegmentIndex World::GetSegmentIndex(float x, float y, float z)
