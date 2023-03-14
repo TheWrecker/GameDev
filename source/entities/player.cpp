@@ -35,14 +35,126 @@ SolidBlock* Player::GetInteractionBlock()
     {
         //TODO: gameplay constants? algorithm constants?
         _ray.Advance(0.3f);
-        auto _block = world->GetBlock(_ray.GetEnd().x, _ray.GetEnd().y, _ray.GetEnd().z);
+        auto _block = world->GetBlock(_ray.end.x, _ray.end.y, _ray.end.z);
         if (_block) //and block is diggable?
         {
             //do other stuff?
+            float _dist = 0.0f;
+            _block->GetBoundingBox().Intersects(Position_Vector(), DirectX::XMLoadFloat3(&rotation), _dist);
             return _block;
         }
     }
     return nullptr;
+}
+
+bool Player::GetPlacementBlockPos(DirectX::XMFLOAT3& pos)
+{
+    Ray _ray(position, rotation);
+    DirectX::XMFLOAT3 _inv_slope = { 1.0f / rotation.x, 1.0f / rotation.y, 1.0f / rotation.z };
+    //TODO: gameplay constants/variables?
+    while (_ray.GetLength() < 3.0f)
+    {
+        //TODO: gameplay constants? algorithm constants?
+        _ray.Advance(0.3f);
+        auto _block = world->GetBlock(_ray.end.x, _ray.end.y, _ray.end.z);
+        if (_block)
+        {
+            //do other stuff?
+            pos = _block->Position();
+            DirectX::XMFLOAT3 _bbox_min = pos;
+            DirectX::XMFLOAT3 _bbox_max = { _bbox_min.x + SOLID_BLOCK_SIZE, _bbox_min.y + SOLID_BLOCK_SIZE, _bbox_min.z + SOLID_BLOCK_SIZE };
+            float tmin = 0.0, tmax = INFINITY;
+
+            float tx1 = (_bbox_min.x - _ray.position.x) * _inv_slope.x;
+            float tx2 = (_bbox_max.x - _ray.position.x) * _inv_slope.x;
+
+            tmin = min(tx1, tx2);
+            tmax = max(tx1, tx2);
+
+            float ty1 = (_bbox_min.y - _ray.position.y) * _inv_slope.y;
+            float ty2 = (_bbox_max.y - _ray.position.y) * _inv_slope.y;
+
+            tmin = max(tmin, min(ty1, ty2));
+            tmax = min(tmax, max(ty1, ty2));
+
+
+            float tz1 = (_bbox_min.z - _ray.position.z) * _inv_slope.z;
+            float tz2 = (_bbox_max.z - _ray.position.z) * _inv_slope.z;
+
+            tmin = max(tmin, min(tz1, tz2));
+            tmax = min(tmax, max(tz1, tz2));
+
+            assert(tmax >= tmin);
+
+            DirectX::XMFLOAT3 _pos = {
+                (tmin * rotation.x) + position.x,
+                (tmin * rotation.y) + position.y,
+                (tmin * rotation.z) + position.z};
+
+            /*if (_pos.x < position.x + (SOLID_BLOCK_SIZE / 2.0f))
+            {
+                if (_pos.y < position.y + (SOLID_BLOCK_SIZE / 2.0f))
+                {
+                    if (_pos.z < position.z + (SOLID_BLOCK_SIZE / 2.0f))
+                    {
+                        pos.z -= 1.0f;
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }*/
+
+            if (_pos.x == pos.x)
+            {
+                pos.x -= 1.0f;
+                return true;
+            }
+
+            if (_pos.x == pos.x + 1.0f)
+            {
+                pos.x += 1.0f;
+                return true;
+            }
+
+            if (_pos.y == pos.y)
+            {
+                pos.y -= 1.0f;
+                return true;
+            }
+
+            if (_pos.y == pos.y + 1.0f)
+            {
+                pos.y += 1.0f;
+                return true;
+            }
+
+            if (_pos.z == pos.z)
+            {
+                pos.z -= 1.0f;
+                return true;
+            }
+
+            if (_pos.z == pos.z + 1.0f)
+            {
+                pos.z += 1.0f;
+                return true;
+            }
+
+            /*for (int d = 0; d < 3; ++d) {
+                float t1 = (_bbox. ->min[d] - ray->origin[d]) * ray->dir_inv[d];
+                float t2 = (box->max[d] - ray->origin[d]) * ray->dir_inv[d];
+
+                tmin = max(tmin, min(t1, t2));
+                tmax = min(tmax, max(t1, t2));
+            }*/
+
+
+            return true;
+        }
+    }
+    return false;
 }
 
 World* Player::GetWorld()

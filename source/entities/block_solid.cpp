@@ -35,6 +35,11 @@ SolidBlockType SolidBlock::GetBlockType()
     return type;
 }
 
+DirectX::BoundingBox& SolidBlock::GetBoundingBox()
+{
+    return collision_box;
+}
+
 unsigned int SolidBlock::GetAtlasIndex()
 {
     return static_cast<unsigned int>(type);

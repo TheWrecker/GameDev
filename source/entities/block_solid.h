@@ -7,6 +7,17 @@
 
 	#include "entity_basic.h"
 
+	enum class FaceName
+	{
+		UNDEFINED,
+		LEFT,
+		RIGHT,
+		TOP,
+		BOTTOM,
+		FRONT,
+		BACK
+	};
+
 	enum class SolidBlockType
 	{
 		TEST = 1,
@@ -25,6 +36,7 @@
 		void SetPosition(DirectX::XMFLOAT3 pos) override;
 
 		SolidBlockType GetBlockType();
+		DirectX::BoundingBox& GetBoundingBox();
 		unsigned int GetAtlasIndex();
 
 	private:

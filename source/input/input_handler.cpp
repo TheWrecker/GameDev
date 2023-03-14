@@ -70,7 +70,7 @@ void InputHandler::Update()
 		//player
 		if (player) //in-game?
 		{
-			if (mouse->GetButtonTracker()->leftButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
+			if (mouse->GetButtonTracker()->leftButton == DirectX::Mouse::ButtonStateTracker::HELD)
 			{
 				//TODO: hold for 0.4 sec to dig block
 				auto _block = player->GetInteractionBlock();

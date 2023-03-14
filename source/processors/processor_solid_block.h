@@ -5,18 +5,9 @@
 	#include <vector>
 
 	#include "defs_pipeline.h"
+	#include "../entities/block_solid.h"
 
 	typedef const std::vector<SolidBlockVertex> Face;
-
-	enum class FaceName
-	{
-		LEFT,
-		RIGHT,
-		TOP,
-		BOTTOM,
-		FRONT,
-		BACK
-	};
 
 	class TextureAtlas;
 	class Segment;

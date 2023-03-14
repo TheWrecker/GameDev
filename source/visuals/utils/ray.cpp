@@ -35,8 +35,3 @@ float Ray::GetLength()
 {
     return length;
 }
-
-const DirectX::XMFLOAT3& Ray::GetEnd() const
-{
-    return end;
-}

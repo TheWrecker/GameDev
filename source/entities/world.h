@@ -36,11 +36,11 @@
         {
             std::size_t operator()(const SegmentIndex& index) const noexcept
             {
-                long long _combination = (((long long)index.x << 17) * 53) + (((long long)index.y << 7) * 67) + ((long long)index.z * 83);
-                std::hash<decltype(_combination)> hasher;
-                auto hash = hasher(index.x);
-
-                return std::hash<decltype(_combination)>{}(hash);
+                std::size_t _combination = 
+                    (((std::size_t)index.x << 23) * 53) +
+                    (((std::size_t)index.y << 17) * 67) + 
+                    ((std::size_t)index.z * 83);
+                return _combination;
             }
         };
     }

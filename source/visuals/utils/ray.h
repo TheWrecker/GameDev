@@ -15,10 +15,10 @@ public:
 	bool DoesIntersectBox(DirectX::BoundingBox& target, float distance);
 
 	float GetLength();
-	const DirectX::XMFLOAT3& GetEnd() const;
+
+	DirectX::XMFLOAT3 position, direction, end;
 
 private:
 	DirectX::XMVECTOR position_vector, direction_vector, end_vector;
-	DirectX::XMFLOAT3 position, direction, end;
 	float length;
 };

@@ -17,6 +17,7 @@
 
 		void Update() override;
 		SolidBlock* GetInteractionBlock();
+		bool GetPlacementBlockPos(DirectX::XMFLOAT3& pos);
 
 		World* GetWorld();
 		Scene* GetScene();
