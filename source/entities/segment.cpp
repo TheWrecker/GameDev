@@ -6,7 +6,7 @@
 #include "segment.h"
 
 Segment::Segment(Scene* scene, SolidBlockType type, bool fill, float x, float y, float z)
-    :BasicEntity(x, y, z), default_type(type), blocks(), scene(scene)
+    :BasicEntity(x, y, z), default_type(type), blocks(), scene(scene), block_count(0)
 {
     vertex_buffer = std::make_unique<VertexBuffer<SolidBlockVertex>>(scene->GetDevice(), scene->GetContext());
     index_buffer = std::make_unique<IndexBuffer>(scene->GetDevice(), scene->GetContext());
@@ -69,6 +69,7 @@ void Segment::AddBlock(SolidBlock* target, unsigned int x, unsigned int y, unsig
         delete blocks[x][y][z];
     blocks[x][y][z] = target;
     target->SetPosition(position.x + (x * SOLID_BLOCK_SIZE), position.y + (y * SOLID_BLOCK_SIZE), position.z + (z * SOLID_BLOCK_SIZE));
+    block_count++;
     //TODO: should rebuild buffers?
     //RebuildBuffers();
 }
@@ -113,13 +114,8 @@ void Segment::RemoveBlock(unsigned int x, unsigned int y, unsigned int z)
     {
         delete blocks[x][y][z];
         blocks[x][y][z] = nullptr;
+        block_count--;
     }
-}
-
-void Segment::RemoveBlock(unsigned int index)
-{
-    auto _indices = GetArrayIndices(index);
-    RemoveBlock(_indices.x, _indices.y, _indices.z);
 }
 
 void Segment::RebuildBuffers()
@@ -145,4 +141,9 @@ VertexBuffer<SolidBlockVertex>* Segment::GetVertexBuffer()
 IndexBuffer* Segment::GetIndexBuffer()
 {
     return index_buffer.get();
+}
+
+bool Segment::IsEmpty()
+{
+    return block_count == 0;
 }

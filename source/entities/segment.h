@@ -34,12 +34,12 @@
 		void AddBlock(unsigned int x, unsigned int y, unsigned int z);
 		void Fill(SolidBlockType type);
 		void RemoveBlock(unsigned int x, unsigned int y, unsigned int z);
-		void RemoveBlock(unsigned int index = 0);
 		void RebuildBuffers();
 
 		SegmentIndices GetArrayIndices(unsigned int value);
 		VertexBuffer<SolidBlockVertex>* GetVertexBuffer();
 		IndexBuffer* GetIndexBuffer();
+		bool IsEmpty();
 
 	private:
 		friend class SolidBlockProcessor;
@@ -50,6 +50,7 @@
 		SolidBlock* blocks[SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE];
 		std::unique_ptr<VertexBuffer<SolidBlockVertex>> vertex_buffer;
 		std::unique_ptr<IndexBuffer> index_buffer;
+		unsigned int block_count;
 	};
 
 #endif // !SEGMENT_H

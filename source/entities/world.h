@@ -22,9 +22,9 @@
 
     struct SegmentIndex
     {
-        int x, z;
+        int x, y, z;
 
-        SegmentIndex(int x, int z);
+        SegmentIndex(int x, int y, int z);
     };
 
     bool operator ==(const SegmentIndex& left, const SegmentIndex& right) noexcept;
@@ -34,9 +34,9 @@
         template<>
         struct hash<SegmentIndex>
         {
-            size_t operator()(const SegmentIndex& index) const noexcept
+            std::size_t operator()(const SegmentIndex& index) const noexcept
             {
-                long long _combination = ((long long)index.x << 32) | index.z;
+                long long _combination = (((long long)index.x << 17) * 53) + (((long long)index.y << 7) * 67) + ((long long)index.z * 83);
                 std::hash<decltype(_combination)> hasher;
                 auto hash = hasher(index.x);
 
@@ -53,13 +53,13 @@
 
 	    void SetupDevelopementWorld();
 
-	    Segment* GetSegment(float x, float y);
+	    Segment* GetSegment(float x, float y, float z);
 	    Segment* GetSegment(SegmentIndex& index);
 	    SolidBlock* GetBlock(float x, float y, float z);
 	    SolidBlock* GetBlock(Segment* segment, BlockIndex& index);
 
         BlockIndex GetBlockIndex(float x, float y, float z);
-        SegmentIndex GetSegmentIndex(float x, float z);
+        SegmentIndex GetSegmentIndex(float x, float y, float z);
 
 	    bool IsSegmentWithinBounds(SegmentIndex index);
 	    bool IsBlockWithinBounds(BlockIndex& index);

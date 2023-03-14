@@ -33,6 +33,9 @@ void SolidBlockRender::Render()
 	input_layout->Bind();
 	for (auto& _segment : scene->GetWorld()->segments)
 	{
+		if (_segment.second->IsEmpty())
+			continue;
+
 		DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_segment.second->World_Matrix()) };
 		per_object_buffer->Update(_cb);
 		per_object_buffer->Bind(BindStage::VERTEX, 1);
