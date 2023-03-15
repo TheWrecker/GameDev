@@ -1,22 +1,24 @@
 
-#pragma once
+#ifndef SUN_MOON_H
+	#define SUN_MOON_H
 
 #include "render_base.h"
 
-class BasicCamera;
-class Sun;
+	class BasicCamera;
+	class Sun;
 
-class SunMoon : public RenderBase
-{
-public:
-	SunMoon(Scene* scene);
-	~SunMoon();
+	class SunMoon : public RenderBase
+	{
+	public:
+		SunMoon(Scene* scene);
+		~SunMoon();
 
-	void Render() override;
+		void Render() override;
 
-private:
+	private:
+		BasicCamera* camera;
+		Sun* sun;
+		std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> per_frame_buffer;
+	};
 
-	BasicCamera* camera;
-	Sun* sun;
-	std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> per_frame_buffer;
-};
+#endif // !SUN_MOON_H

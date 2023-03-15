@@ -1,17 +1,20 @@
 
-#pragma once
+#ifndef HUD_H
+	#define HUD_H
 
-#include "render_base.h"
+	#include "render_base.h"
 
-class BasicCamera;
+	class BasicCamera;
 
-class HUDRender : public RenderBase
-{
-public:
-	HUDRender(Scene* scene);
-	~HUDRender();
+	class HUDRender : public RenderBase
+	{
+	public:
+		HUDRender(Scene* scene);
+		~HUDRender();
 
-	void Render() override;
+		void Render() override;
 
-private:
-};
+	private:
+	};
+
+#endif // !HUD_H

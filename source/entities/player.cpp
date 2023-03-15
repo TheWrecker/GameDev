@@ -1,4 +1,5 @@
 
+#include "../gameplay/item_container.h"
 #include "../visuals/utils/ray.h"
 #include "camera_basic.h"
 #include "block_solid.h"
@@ -13,6 +14,7 @@ Player::Player(Scene* scene)
 {
 	camera = scene->GetActiveCamera();
     world = scene->GetWorld();
+    inventory = std::make_unique<ItemContainer>(8);
 }
 
 Player::~Player()
@@ -151,4 +153,9 @@ World* Player::GetWorld()
 Scene* Player::GetScene()
 {
     return scene;
+}
+
+ItemContainer* Player::GetInventory()
+{
+    return inventory.get();
 }

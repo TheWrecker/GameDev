@@ -1,72 +1,75 @@
 
-#pragma once
+#ifndef SCENE_H
+	#define SCENE_H
 
-#include <d3d11.h>
-#include <memory>
+	#include <d3d11.h>
+	#include <memory>
 
-#include "interface_drawable.h"
+	#include "interface_drawable.h"
 
-class Sun;
-class BasicCamera;
-class Player;
-class World;
-class StateMaster;
-class BufferMaster;
-class ModelManager;
-class TextureManager;
-class TextureAtlas;
-class Aggregator;
-class Presenter;
+	class Sun;
+	class BasicCamera;
+	class Player;
+	class World;
+	class StateMaster;
+	class BufferMaster;
+	class ModelManager;
+	class TextureManager;
+	class TextureAtlas;
+	class Aggregator;
+	class Presenter;
 
-enum class SceneMode
-{
-	DEVELOPEMENT
-};
+	enum class SceneMode
+	{
+		DEVELOPEMENT
+	};
 
-enum class CameraType
-{
-	UNDEFINED,
-	STATIC,
-	FIRST_PERSON
-};
+	enum class CameraType
+	{
+		UNDEFINED,
+		STATIC,
+		FIRST_PERSON
+	};
 
-class Scene : public IDrawable
-{
-public:
-	Scene(Presenter* parent);
-	~Scene();
+	class Scene : public IDrawable
+	{
+	public:
+		Scene(Presenter* parent);
+		~Scene();
 
-	void SwitchMode(SceneMode mode);
-	void Draw() override;
-	void Update() override;
-	void SwitchCameraType(CameraType type);
+		void SwitchMode(SceneMode mode);
+		void Draw() override;
+		void Update() override;
+		void SwitchCameraType(CameraType type);
 
-	ID3D11Device* GetDevice();
-	ID3D11DeviceContext* GetContext();
-	Aggregator* GetAggregator();
-	Presenter* GetPresenter();
-	BasicCamera* GetActiveCamera();
-	Player* GetPlayer();
-	Sun* GetSun();
-	World* GetWorld();
-	StateMaster* GetStateMaster();
-	BufferMaster* GetBufferMaster();
-	TextureManager* GetTextureManager();
-	TextureAtlas* GetTextureAtlas();
-	ModelManager* GetModelManager();
+		ID3D11Device* GetDevice();
+		ID3D11DeviceContext* GetContext();
+		Aggregator* GetAggregator();
+		Presenter* GetPresenter();
+		BasicCamera* GetActiveCamera();
+		Player* GetPlayer();
+		Sun* GetSun();
+		World* GetWorld();
+		StateMaster* GetStateMaster();
+		BufferMaster* GetBufferMaster();
+		TextureManager* GetTextureManager();
+		TextureAtlas* GetTextureAtlas();
+		ModelManager* GetModelManager();
 
-private:
-	Presenter* presenter;
-	CameraType camera_type;
+	private:
+		Presenter* presenter;
+		CameraType camera_type;
 
-	std::unique_ptr<BasicCamera> active_camera;
-	std::unique_ptr<Sun> sun;
-	std::unique_ptr<Player> player;
-	std::unique_ptr<World> world;
-	std::unique_ptr<StateMaster> state_master;
-	std::unique_ptr<BufferMaster> buffer_master;
-	std::unique_ptr<TextureManager> texture_manager;
-	std::unique_ptr<TextureAtlas> atlas;
-	std::unique_ptr<ModelManager> model_manager;
-	std::unique_ptr<Aggregator> aggregator;
-};
+		std::unique_ptr<BasicCamera> active_camera;
+		std::unique_ptr<Sun> sun;
+		std::unique_ptr<Player> player;
+		std::unique_ptr<World> world;
+		std::unique_ptr<StateMaster> state_master;
+		std::unique_ptr<BufferMaster> buffer_master;
+		std::unique_ptr<TextureManager> texture_manager;
+		std::unique_ptr<TextureAtlas> atlas;
+		std::unique_ptr<ModelManager> model_manager;
+		std::unique_ptr<Aggregator> aggregator;
+	};
+
+#endif // !SCENE_H

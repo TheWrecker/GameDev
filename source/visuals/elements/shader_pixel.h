@@ -1,20 +1,23 @@
 
-#pragma once
+#ifndef SHADER_PIXEL_H
+	#define SHADER_PIXEL_H
 
-#include <d3d11.h>
+	#include <d3d11.h>
 
-#include "shader_interface.h"
+	#include "shader_interface.h"
 
-class Presenter;
+	class Presenter;
 
-class PixelShader : public IShader
-{
-public:
-	PixelShader(Presenter* presenter, const std::wstring& file);
-	~PixelShader();
+	class PixelShader : public IShader
+	{
+	public:
+		PixelShader(Presenter* presenter, const std::wstring& file);
+		~PixelShader();
 
-	void Apply() override;
+		void Apply() override;
 
-private:
-	ID3D11PixelShader* shader;
-};
+	private:
+		ID3D11PixelShader* shader;
+	};
+
+#endif // !SHADER_PIXEL_H

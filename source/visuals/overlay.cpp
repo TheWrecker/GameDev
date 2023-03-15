@@ -5,9 +5,11 @@
 #endif // _WINDOWS
 #include "../external/ImGui/imgui_impl_dx11.h"
 
+#include "util_funcs.h"
 #include "../input/keyboard.h"
 #include "../input/mouse.h"
-#include "util_funcs.h"
+#include "../gameplay/item_container.h"
+#include "../entities/player.h"
 #include "../entities/sun.h"
 #include "../entities/segment.h"
 #include "../entities/world.h"
@@ -33,6 +35,7 @@ Overlay::Overlay(Presenter* parent)
 	sun = scene->GetSun();
 	mouse = presenter->QueryService<Mouse*>("mouse");
 	keyboard = presenter->QueryService<Keyboard*>("keyboard");
+	player = scene->GetPlayer();
 }
 
 Overlay::~Overlay()
@@ -178,6 +181,18 @@ void Overlay::Draw()
 			//static DirectX::XMFLOAT3 _position2 = scene->GetWorld()->segments[2]->Position();
 			//ImGui::DragFloat3("Segment2 Position", (float*)&_position2, 0.5f, -50.01f, 50.0f);
 			//scene->GetWorld()->segments[2]->Move(_position2.x, _position2.y, _position2.z);
+		}
+
+		if (ImGui::CollapsingHeader("Player"))
+		{
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "Inventory:");
+			unsigned int _i = 1;
+			for (auto _item : player->inventory->container)
+			{
+				ImGui::Text("Slot %u: %s - %u / %u", _i, _item->GetName().c_str(), _item->GetCurrentCount(), _item->GetCapacity());
+				_i++;
+			}
+
 		}
 
 		ImGui::Separator();

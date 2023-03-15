@@ -1,5 +1,6 @@
 
-#pragma once
+#ifndef RAY_H
+	#define RAY_H
 
 #include <DirectXMath.h>
 #include <DirectXCollision.h>
@@ -22,3 +23,5 @@ private:
 	DirectX::XMVECTOR position_vector, direction_vector, end_vector;
 	float length;
 };
+
+#endif // !RAY_H

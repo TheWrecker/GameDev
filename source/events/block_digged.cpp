@@ -1,5 +1,5 @@
 
-#include "block_digged.h"
+#include "../gameplay/item_container.h"
 #include "..\entities\player.h"
 #include "..\entities\segment.h"
 #include "..\entities\world.h"
@@ -13,6 +13,31 @@ BlockDiggedEvent::BlockDiggedEvent(EventHandler* handler, Player* player, SolidB
 
 void BlockDiggedEvent::Fire()
 {
-    //TODO: add functionality
-    //do nothing for now, maybe add effect? or handle inventory changes?
+    ItemType _type = ItemType::UNDEFINED;
+	switch (type)
+	{
+		case SolidBlockType::TEST:
+		{
+			_type = ItemType::TEST_BLOCK;
+			break;
+		}
+		case SolidBlockType::DIRT:
+		{
+			_type = ItemType::DIRT_BLOCK;
+			break;
+		}
+		case SolidBlockType::GRASS:
+		{
+			_type = ItemType::GRASS_BLOCK;
+			break;
+		}
+		default:
+			break;
+	}
+	if (_type == ItemType::UNDEFINED)
+		return;
+
+	player->GetInventory()->AddItem(_type, 1);
+
+	//TODO: emit item add event?
 }

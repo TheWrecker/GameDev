@@ -1,27 +1,31 @@
-#pragma once
 
-#include <d3d11.h>
-#include <vector>
+#ifndef BUFFER_INDEX_H
+	#define BUFFER_INDEX_H
 
-class IndexBuffer
-{
-public:
-	IndexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, std::size_t reserve = 0);
-	~IndexBuffer();
+	#include <d3d11.h>
+	#include <vector>
 
-	void AddIndex(unsigned int index);
-	void Clear();
-	void Build();
-	void Bind();
+	class IndexBuffer
+	{
+	public:
+		IndexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, std::size_t reserve = 0);
+		~IndexBuffer();
 
-	unsigned int GetIndexCount();
+		void AddIndex(unsigned int index);
+		void Clear();
+		void Build();
+		void Bind();
 
-private:
-	ID3D11Device* device;
-	ID3D11DeviceContext* context;
-	std::vector<unsigned int> indices;
-	ID3D11Buffer* buffer;
-	D3D11_BUFFER_DESC desc;
-	D3D11_SUBRESOURCE_DATA subresource;
-	bool is_built;
-};
+		unsigned int GetIndexCount();
+
+	private:
+		ID3D11Device* device;
+		ID3D11DeviceContext* context;
+		std::vector<unsigned int> indices;
+		ID3D11Buffer* buffer;
+		D3D11_BUFFER_DESC desc;
+		D3D11_SUBRESOURCE_DATA subresource;
+		bool is_built;
+	};
+
+#endif // !BUFFER_INDEX_H

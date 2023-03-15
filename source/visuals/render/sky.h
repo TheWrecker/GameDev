@@ -1,22 +1,24 @@
 
-#pragma once
+#ifndef SKY_H
+	#define SKY_H
 
-#include "render_base.h"
+	#include "render_base.h"
 
-class BasicCamera;
+	class BasicCamera;
 
-class SkyRender : public RenderBase
-{
-public:
-	SkyRender(Scene* scene);
-	~SkyRender();
+	class SkyRender : public RenderBase
+	{
+	public:
+		SkyRender(Scene* scene);
+		~SkyRender();
 
-	void Render() override;
+		void Render() override;
 
-private:
+	private:
+		DirectX::XMMATRIX scale_matrix;
 
-	DirectX::XMMATRIX scale_matrix;
+		BasicCamera* camera;
+		std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> per_frame_buffer;
+	};
 
-	BasicCamera* camera;
-	std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> per_frame_buffer;
-};
+#endif // !SKY_H
