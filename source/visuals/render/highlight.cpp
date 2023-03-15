@@ -28,21 +28,38 @@ HighlightRender::~HighlightRender()
 
 void HighlightRender::Render()
 {
-	//auto _block = scene->GetPlayer()->GetInteractionBlock();
-	//if (!_block)
-	//	return;
-	//DefaultConstantStruct _cb = { DirectX::XMMatrixMultiplyTranspose(transformation_matrix, _block->World_Matrix()) };
-	DirectX::XMFLOAT3 _temp_pos = {};
-	if (scene->GetPlayer()->GetPlacementBlockPos(_temp_pos))
+	DefaultConstantStruct _cb = { };
+	switch (scene->GetPlayer()->GetInteractionMode())
 	{
-		DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(_temp_pos.x , _temp_pos.y, _temp_pos.z)) };
-		object_buffer->Update(_cb);
-		object_buffer->Bind(BindStage::VERTEX, 1);
+		case InteractionMode::DEFAULT: return;
+			break;
+		case InteractionMode::BLOCK_SELECT:
+		{
+			auto _block = scene->GetPlayer()->GetInteractionBlock();
+			if (!_block)
+				return;
+			_cb = { DirectX::XMMatrixMultiplyTranspose(transformation_matrix, _block->World_Matrix()) };
+			break;
+		}
+		case InteractionMode::BLOCK_PLACEMENT:
+		{
+			DirectX::XMFLOAT3 _temp_pos = {};
+			if (!scene->GetPlayer()->GetPlacementBlockPos(_temp_pos))
+				return;
 
-		input_layout->Bind();
-		vertex_shader->Apply();
-		pixel_shader->Apply();
-
-		context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::BLOCK), 0, 0);
+			_cb = { DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(_temp_pos.x , _temp_pos.y, _temp_pos.z)) };
+			break;
+		}
+		default:
+			break;
 	}
+
+	object_buffer->Update(_cb);
+	object_buffer->Bind(BindStage::VERTEX, 1);
+
+	input_layout->Bind();
+	vertex_shader->Apply();
+	pixel_shader->Apply();
+
+	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::BLOCK), 0, 0);
 }

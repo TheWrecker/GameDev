@@ -5,25 +5,8 @@
 	#include <string>
 	#include <DirectXCollision.h>
 
+	#include "defs_blocks.h"
 	#include "entity_basic.h"
-
-	enum class FaceName
-	{
-		UNDEFINED,
-		LEFT,
-		RIGHT,
-		TOP,
-		BOTTOM,
-		FRONT,
-		BACK
-	};
-
-	enum class SolidBlockType
-	{
-		TEST = 1,
-		DIRT = 2,
-		GRASS = 3
-	};
 
 	class SolidBlock : public BasicEntity
 	{

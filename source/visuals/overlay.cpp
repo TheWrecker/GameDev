@@ -22,6 +22,12 @@
 
 #include "overlay.h"
 
+std::vector<std::string> InteractionModeNames = {
+	"Default",
+	"Dig Mode",
+	"Placement Mode"
+};
+
 Overlay::Overlay(Presenter* parent)
 	:presenter(parent), show(false)
 {
@@ -185,11 +191,23 @@ void Overlay::Draw()
 
 		if (ImGui::CollapsingHeader("Player"))
 		{
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "Mode: %s", InteractionModeNames[static_cast<unsigned int>(player->interaction_mode)].c_str());
+
+			ImGui::Separator();
+
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), "Inventory:");
-			unsigned int _i = 1;
-			for (auto _item : player->inventory->container)
+			unsigned int _i = 0;
+			for (auto& _item : player->inventory->container)
 			{
-				ImGui::Text("Slot %u: %s - %u / %u", _i, _item->GetName().c_str(), _item->GetCurrentCount(), _item->GetCapacity());
+				if (_i == player->selected_slot)
+				{
+					ImGui::TextColored(ImVec4(0, 1, 0, 1), "Slot %u: %s - %u / %u",
+						_i, _item.GetName().c_str(), _item.GetCurrentCount(), _item.GetCapacity());
+				}
+				else
+				{
+					ImGui::Text("Slot %u: %s - %u / %u", _i, _item.GetName().c_str(), _item.GetCurrentCount(), _item.GetCapacity());
+				}
 				_i++;
 			}
 

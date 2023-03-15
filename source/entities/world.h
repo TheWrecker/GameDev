@@ -53,9 +53,10 @@
 
 	    void SetupDevelopementWorld();
 
+        SolidBlock* CreateBlock(SolidBlockType type, float x, float y, float z, bool rebuildSegment = false);
 	    Segment* GetSegment(float x, float y, float z);
 	    Segment* GetSegment(SegmentIndex& index);
-	    SolidBlock* GetBlock(float x, float y, float z);
+        SolidBlock* GetBlock(float x, float y, float z);
 	    SolidBlock* GetBlock(Segment* segment, BlockIndex& index);
 
         BlockIndex GetBlockIndex(float x, float y, float z);

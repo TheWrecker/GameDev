@@ -12,6 +12,13 @@
 	class Scene;
 	class ItemContainer;
 
+	enum class InteractionMode
+	{
+		DEFAULT = 0,
+		BLOCK_SELECT,
+		BLOCK_PLACEMENT
+	};
+
 	class Player : public TransformableEntity
 	{
 	public:
@@ -19,14 +26,17 @@
 		~Player();
 
 		void Update() override;
-		SolidBlock* GetInteractionBlock();
+		void SetInteractionMode(InteractionMode mode);
+		void SetActiveInventorySlot(unsigned int slot);
 
-		//if it finds an eligible spot, it sets pos to the origin point of block to be displayed/created and returns true
+		SolidBlock* GetInteractionBlock();
 		bool GetPlacementBlockPos(DirectX::XMFLOAT3& pos);
 
 		World* GetWorld();
 		Scene* GetScene();
 		ItemContainer* GetInventory();
+		unsigned int GetActiveInventorySlot();
+		InteractionMode GetInteractionMode();
 
 	private:
 		friend class Overlay;
@@ -35,7 +45,10 @@
 		BasicCamera* camera;
 		World* world;
 
+		InteractionMode interaction_mode;
+
 		std::unique_ptr<ItemContainer> inventory;
+		unsigned int selected_slot;
 	};
 
 #endif // !PLAYER_H

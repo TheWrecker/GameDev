@@ -10,11 +10,13 @@
 #include "player.h"
 
 Player::Player(Scene* scene)
-	:scene(scene)
+	:scene(scene), selected_slot(0)
 {
 	camera = scene->GetActiveCamera();
     world = scene->GetWorld();
-    inventory = std::make_unique<ItemContainer>(8);
+    //TODO: inventory capacity?
+    inventory = std::make_unique<ItemContainer>(5);
+    interaction_mode = InteractionMode::DEFAULT;
 }
 
 Player::~Player()
@@ -27,6 +29,19 @@ void Player::Update()
 	//TODO: rotate based on 2D camera direction only?
 	SetRotation(camera->Rotation().x, camera->Rotation().y, camera->Rotation().z);
 
+}
+
+void Player::SetInteractionMode(InteractionMode mode)
+{
+    interaction_mode = mode;
+}
+
+void Player::SetActiveInventorySlot(unsigned int slot)
+{
+    if ((slot < 0) || (slot >= inventory->GetCapacity()))
+        return;
+
+    selected_slot = slot;
 }
 
 SolidBlock* Player::GetInteractionBlock()
@@ -158,4 +173,14 @@ Scene* Player::GetScene()
 ItemContainer* Player::GetInventory()
 {
     return inventory.get();
+}
+
+unsigned int Player::GetActiveInventorySlot()
+{
+    return selected_slot;
+}
+
+InteractionMode Player::GetInteractionMode()
+{
+    return interaction_mode;
 }

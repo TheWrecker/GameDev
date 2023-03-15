@@ -46,6 +46,7 @@ void ItemStack::Fill()
 void ItemStack::Clear()
 {
     stack_current = 0;
+    type = ItemType::NO_ITEM;
 }
 
 unsigned int ItemStack::GetCurrentCount()
@@ -63,11 +64,6 @@ ItemType ItemStack::GetType()
     return type;
 }
 
-ItemContainer* ItemStack::GetParentContainer()
-{
-    return nullptr;
-}
-
 const std::string& ItemStack::GetName()
 {
     if (name == "")
@@ -78,7 +74,7 @@ const std::string& ItemStack::GetName()
 
 bool ItemStack::IsEmpty()
 {
-    return stack_current > 0;
+    return (stack_current == 0) || (type == ItemType::NO_ITEM);
 }
 
 bool ItemStack::IsFull()

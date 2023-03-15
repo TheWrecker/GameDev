@@ -47,6 +47,9 @@
     <Filter Include="source\events">
       <UniqueIdentifier>{10b1f5d6-cde5-4ef3-87d9-ac19b62ac912}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\helpers">
+      <UniqueIdentifier>{4e0daf65-f98a-4de8-8316-de0e6e8a05ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\entry.cpp">
@@ -234,6 +237,9 @@
     </ClCompile>
     <ClCompile Include="source\gameplay\item_container.cpp">
       <Filter>source\gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="source\events\begin_placement.cpp">
+      <Filter>source\events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -464,6 +470,18 @@
     </ClInclude>
     <ClInclude Include="source\gameplay\item_container.h">
       <Filter>source\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="source\events\begin_placement.h">
+      <Filter>source\events</Filter>
+    </ClInclude>
+    <ClInclude Include="source\helpers\conversion_item_block.h">
+      <Filter>source\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\defs_blocks.h">
+      <Filter>source\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\headers\defs_items.h">
+      <Filter>source\headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

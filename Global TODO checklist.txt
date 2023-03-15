@@ -2,3 +2,7 @@
 - assignable keys for actions/events
 
 - add orbit/third person/top-down camera
+
+- rebuild buffers at most once perframe, using a need_rebuild flag/.... (we are now calling rebuild() eachtime  arbitrarily)
+
+- mechanism to update invalid pointers to scene elements after object construction

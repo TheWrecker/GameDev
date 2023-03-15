@@ -1,8 +1,10 @@
 
+#include "../events/begin_placement.h"
 #include "../events/finish_dig.h"
 #include "../events/event_handler.h"
 #include "../entities/camera_firstperson.h"
 #include "../entities/player.h"
+#include "../entities/world.h"
 #include "../visuals/scene.h"
 #include "../input/keyboard.h"
 #include "../input/mouse.h"
@@ -70,17 +72,68 @@ void InputHandler::Update()
 		//player
 		if (player) //in-game?
 		{
-			if (mouse->GetButtonTracker()->leftButton == DirectX::Mouse::ButtonStateTracker::HELD)
+			switch (player->GetInteractionMode())
 			{
-				//TODO: hold for 0.4 sec to dig block
-				auto _block = player->GetInteractionBlock();
+				case InteractionMode::DEFAULT:
+				{
+					break;
+				}
+				case InteractionMode::BLOCK_SELECT:
+				{
+					if (mouse->GetButtonTracker()->leftButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
+					{
+						//TODO: hold for 0.4 sec to dig block
+						auto _block = player->GetInteractionBlock();
 
-				if (!_block)
-					return;
+						if (!_block)
+							return;
 
-				auto _event = new FinishDigEvent(event_handler, player, _block);
-				event_handler->FeedEvent(_event);
+						auto _event = new FinishDigEvent(event_handler, player, _block);
+						event_handler->FeedEvent(_event);
+					}
+					break;
+				}
+				case InteractionMode::BLOCK_PLACEMENT:
+				{
+					if (mouse->GetButtonTracker()->rightButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
+					{
+						DirectX::XMFLOAT3 _pos = {};
+						if (!player->GetPlacementBlockPos(_pos))
+							return;
+
+						auto _event = new BeginPlacementEvent(event_handler, player, _pos);
+						event_handler->FeedEvent(_event);
+					}
+					break;
+				}
+				default:
+					break;
 			}
+
+			if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::D1))
+				player->SetActiveInventorySlot(0);
+
+			if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::D2))
+				player->SetActiveInventorySlot(1);
+
+			if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::D3))
+				player->SetActiveInventorySlot(2);
+
+			if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::D4))
+				player->SetActiveInventorySlot(3);
+
+			if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::D5))
+				player->SetActiveInventorySlot(4);
+
+			if(keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::D9))
+				player->SetInteractionMode(InteractionMode::DEFAULT);
+
+			if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::D0))
+				player->SetInteractionMode(InteractionMode::BLOCK_SELECT);
+
+			if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::OemMinus))
+				player->SetInteractionMode(InteractionMode::BLOCK_PLACEMENT);
+
 		}
 	}
 }

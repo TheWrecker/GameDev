@@ -166,6 +166,7 @@
     <ClCompile Include="source\entities\sun.cpp" />
     <ClCompile Include="source\entities\world.cpp" />
     <ClCompile Include="Source\entry.cpp" />
+    <ClCompile Include="source\events\begin_placement.cpp" />
     <ClCompile Include="source\events\block_digged.cpp" />
     <ClCompile Include="source\events\event_handler.cpp" />
     <ClCompile Include="source\events\finish_dig.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="source\entities\sun.h" />
     <ClInclude Include="source\entities\world.h" />
     <ClInclude Include="source\events\begin_dig.h" />
+    <ClInclude Include="source\events\begin_placement.h" />
     <ClInclude Include="source\events\block_digged.h" />
     <ClInclude Include="source\events\cancel_dig.h" />
     <ClInclude Include="source\events\event_handler.h" />
@@ -246,6 +248,8 @@
     <ClInclude Include="source\external\ImGui\imstb_truetype.h" />
     <ClInclude Include="source\gameplay\item_container.h" />
     <ClInclude Include="source\gameplay\item_stack.h" />
+    <ClInclude Include="source\headers\defs_blocks.h" />
+    <ClInclude Include="source\headers\defs_items.h" />
     <ClInclude Include="source\headers\defs_world.h" />
     <ClInclude Include="source\headers\interface_drawable.h" />
     <ClInclude Include="source\headers\interface_event.h" />
@@ -254,6 +258,7 @@
     <ClInclude Include="source\headers\defs_pipeline.h" />
     <ClInclude Include="source\headers\defs_platform.h" />
     <ClInclude Include="source\headers\util_funcs.h" />
+    <ClInclude Include="source\helpers\conversion_item_block.h" />
     <ClInclude Include="source\input\input_handler.h" />
     <ClInclude Include="source\input\keyboard.h" />
     <ClInclude Include="source\input\mouse.h" />

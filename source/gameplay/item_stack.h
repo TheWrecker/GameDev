@@ -4,13 +4,7 @@
 
 	#include <string>
 
-	enum class ItemType
-	{
-		UNDEFINED = 0,
-		TEST_BLOCK,
-		GRASS_BLOCK,
-		DIRT_BLOCK
-	};
+	#include "defs_items.h"
 
 	class ItemContainer;
 
@@ -34,13 +28,11 @@
 		bool IsFull();
 
 		ItemType GetType();
-		ItemContainer* GetParentContainer();
 		const std::string& GetName();
 
 	private:
 		friend class ItemContainer;
 
-		ItemContainer* parent_container;
 		ItemType type;
 		unsigned int stack_current, stack_max;
 		std::string name;

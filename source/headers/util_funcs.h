@@ -9,7 +9,7 @@
 	#include <locale>
 
 	template<typename type>
-	void DXRelease(type& target)
+	inline void DXRelease(type& target)
 	{
 		if (target)
 		{

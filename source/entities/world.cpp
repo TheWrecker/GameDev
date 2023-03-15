@@ -51,6 +51,25 @@ void World::SetupDevelopementWorld()
 
 }
 
+SolidBlock* World::CreateBlock(SolidBlockType type, float x, float y, float z, bool rebuildSegment)
+{
+	SegmentIndex _segment_index = GetSegmentIndex(x, y, z);
+	auto _segment = GetSegment(_segment_index);
+	BlockIndex _block_index = GetBlockIndex(x, y, z);
+
+	auto _block = GetBlock(_segment, _block_index);
+
+	if (_block)
+		return _block;
+
+	_segment->AddBlock(type, _block_index.x, _block_index.y, _block_index.z);
+
+	if (rebuildSegment)
+		_segment->RebuildBuffers();
+
+	return GetBlock(_segment, _block_index);
+}
+
 Segment* World::GetSegment(float x, float y, float z)
 {
 	SegmentIndex _index = GetSegmentIndex(x, y, z);

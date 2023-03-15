@@ -9,7 +9,9 @@
 		UNDEFINED,
 		BEGIN_DIG,
 		FINISH_DIG,
-		BLOCK_DIGGED
+		BLOCK_DIGGED,
+		BEGIN_PLACEMENT,
+		BLOCK_PLACED
 	};
 
 	typedef std::function<void()> CallbackFunction;

@@ -5,7 +5,7 @@
 	#include <DirectXMath.h>
 
 	#include "interface_event.h"
-	#include "../entities/block_solid.h"
+	#include "defs_blocks.h"
 
 	class Player;
 
