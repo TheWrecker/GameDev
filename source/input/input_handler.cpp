@@ -42,6 +42,7 @@ void InputHandler::Update()
 		//camera
 		if (camera)
 		{
+			float elapsedTime = ticker->GetLastTickDuration();
 			float _movX, _movY, _rotX, _rotY;
 			_movX = _movY = _rotX = _rotY = 0.0f;
 
@@ -78,7 +79,7 @@ void InputHandler::Update()
 				{
 					break;
 				}
-				case InteractionMode::BLOCK_SELECT:
+				case InteractionMode::DIG_MODE:
 				{
 					if (mouse->GetButtonTracker()->leftButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
 					{
@@ -90,10 +91,20 @@ void InputHandler::Update()
 
 						auto _event = new FinishDigEvent(event_handler, player, _block);
 						event_handler->FeedEvent(_event);
+						break;
+					}
+					if (mouse->GetButtonTracker()->rightButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
+					{
+						DirectX::XMFLOAT3 _pos = {};
+						if (!player->GetPlacementBlockPos(_pos))
+							return;
+
+						auto _event = new BeginPlacementEvent(event_handler, player, _pos);
+						event_handler->FeedEvent(_event);
 					}
 					break;
 				}
-				case InteractionMode::BLOCK_PLACEMENT:
+				case InteractionMode::PLACEMENT_MODE:
 				{
 					if (mouse->GetButtonTracker()->rightButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
 					{
@@ -129,10 +140,10 @@ void InputHandler::Update()
 				player->SetInteractionMode(InteractionMode::DEFAULT);
 
 			if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::D0))
-				player->SetInteractionMode(InteractionMode::BLOCK_SELECT);
+				player->SetInteractionMode(InteractionMode::DIG_MODE);
 
 			if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::OemMinus))
-				player->SetInteractionMode(InteractionMode::BLOCK_PLACEMENT);
+				player->SetInteractionMode(InteractionMode::PLACEMENT_MODE);
 
 		}
 	}

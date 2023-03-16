@@ -10,9 +10,13 @@
 		BasicCamera(float fieldOfView = 90.0f, float aspectRatio = 4.0f/3.0f, float near = 0.001f, float far = 1000.0f);
 		~BasicCamera();
 
-		virtual void FeedInput(float movX, float movY, float rotX, float rotY);
+		virtual void FeedRotation(float rotX, float rotY);
+		virtual void FeedMovement(float movX, float movY);
 		virtual void UpdateViewMatrix();
 		virtual void UpdateProjectionMatrix();
+
+		void Update() override;
+		void HookToEntity(BasicEntity* target);
 
 		void SetProperties(float fieldOfView, float aspectRatio, float near, float far);
 		void SetDirection(float x, float y, float z);
@@ -30,6 +34,8 @@
 		friend class Scene;
 
 		virtual void UpdateViewProjectionMatrix();
+
+		BasicEntity* hook_target;
 
 		float
 			fov,

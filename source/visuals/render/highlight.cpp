@@ -33,7 +33,7 @@ void HighlightRender::Render()
 	{
 		case InteractionMode::DEFAULT: return;
 			break;
-		case InteractionMode::BLOCK_SELECT:
+		case InteractionMode::DIG_MODE:
 		{
 			auto _block = scene->GetPlayer()->GetInteractionBlock();
 			if (!_block)
@@ -41,7 +41,7 @@ void HighlightRender::Render()
 			_cb = { DirectX::XMMatrixMultiplyTranspose(transformation_matrix, _block->World_Matrix()) };
 			break;
 		}
-		case InteractionMode::BLOCK_PLACEMENT:
+		case InteractionMode::PLACEMENT_MODE:
 		{
 			DirectX::XMFLOAT3 _temp_pos = {};
 			if (!scene->GetPlayer()->GetPlacementBlockPos(_temp_pos))

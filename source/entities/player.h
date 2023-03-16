@@ -5,6 +5,7 @@
 	#include <memory>
 	
 	#include "entity_transformable.h"
+	#include "attributes/move_physics.h"
 	#include "block_solid.h"
 
 	class BasicCamera;
@@ -15,11 +16,11 @@
 	enum class InteractionMode
 	{
 		DEFAULT = 0,
-		BLOCK_SELECT,
-		BLOCK_PLACEMENT
+		DIG_MODE,
+		PLACEMENT_MODE
 	};
 
-	class Player : public TransformableEntity
+	class Player : public TransformableEntity, public MovePhysics
 	{
 	public:
 		Player(Scene* scene);

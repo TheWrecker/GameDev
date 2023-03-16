@@ -4,6 +4,7 @@
 
 	#include "interface_service.h"
 
+	class SystemTicker;
 	class Mouse;
 	class Keyboard;
 	class BasicCamera;
@@ -34,6 +35,10 @@
 		Overlay* overlay;
 		Presenter* presenter;
 		Supervisor* supervisor;
+
+		float
+			mouse_sensitivity,
+			rotation_speed;
 	};
 
 #endif // !INPUT_HANDLER_H

@@ -156,6 +156,7 @@
     <ClCompile Include="source\core\sys_win_profiler.cpp" />
     <ClCompile Include="source\core\sys_ticker.cpp" />
     <ClCompile Include="source\core\sys_win_platform.cpp" />
+    <ClCompile Include="source\entities\attributes\move_physics.cpp" />
     <ClCompile Include="source\entities\block_solid.cpp" />
     <ClCompile Include="source\entities\camera_firstperson.cpp" />
     <ClCompile Include="source\entities\entity_basic.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="source\external\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="source\gameplay\item_container.cpp" />
     <ClCompile Include="source\gameplay\item_stack.cpp" />
+    <ClCompile Include="source\gameplay\physics_engine.cpp" />
     <ClCompile Include="source\input\input_handler.cpp" />
     <ClCompile Include="source\input\keyboard.cpp" />
     <ClCompile Include="source\input\mouse.cpp" />
@@ -223,6 +225,7 @@
     <ClInclude Include="source\core\sys_ticker.h" />
     <ClInclude Include="source\core\sys_win_platform.h" />
     <ClInclude Include="source\core\sys_win_profiler.h" />
+    <ClInclude Include="source\entities\attributes\move_physics.h" />
     <ClInclude Include="source\entities\block_solid.h" />
     <ClInclude Include="source\entities\camera_firstperson.h" />
     <ClInclude Include="source\entities\entity_basic.h" />
@@ -246,8 +249,10 @@
     <ClInclude Include="source\external\ImGui\imstb_rectpack.h" />
     <ClInclude Include="source\external\ImGui\imstb_textedit.h" />
     <ClInclude Include="source\external\ImGui\imstb_truetype.h" />
+    <ClInclude Include="source\gameplay\game_time.h" />
     <ClInclude Include="source\gameplay\item_container.h" />
     <ClInclude Include="source\gameplay\item_stack.h" />
+    <ClInclude Include="source\gameplay\physics_engine.h" />
     <ClInclude Include="source\headers\defs_blocks.h" />
     <ClInclude Include="source\headers\defs_items.h" />
     <ClInclude Include="source\headers\defs_world.h" />

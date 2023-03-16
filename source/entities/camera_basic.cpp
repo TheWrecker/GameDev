@@ -2,6 +2,7 @@
 #include "camera_basic.h"
 
 BasicCamera::BasicCamera(float fieldOfView, float aspectRatio, float near, float far)
+	:hook_target(nullptr)
 {
 	SetPosition(0.0f, 0.0f, 0.0f);
 	direction = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
@@ -15,8 +16,28 @@ BasicCamera::~BasicCamera()
 {
 }
 
-void BasicCamera::FeedInput(float movX, float movY, float rotX, float rotY)
+void BasicCamera::FeedRotation(float rotX, float rotY)
 {
+	using namespace DirectX;
+	
+	XMVECTOR rotation = { rotX, rotY, 0.0f, 0.0f };
+	XMVECTOR rightHand = Right_Vector();
+	XMMATRIX pitchMatrix = XMMatrixRotationAxis(rightHand, XMVectorGetY(rotation));
+	XMMATRIX yawMatrix = XMMatrixRotationY(XMVectorGetX(rotation));
+	Rotate(XMMatrixMultiply(pitchMatrix, yawMatrix));
+}
+
+void BasicCamera::FeedMovement(float movX, float movY)
+{
+	using namespace DirectX;
+
+	XMVECTOR movement = { movX, movY, 0.0f, 0.0f };
+	XMVECTOR positionVector = Position_Vector();
+	XMVECTOR strafe = Right_Vector() * XMVectorGetX(movement);
+	positionVector += strafe;
+	XMVECTOR forward = Direction_Vector() * XMVectorGetY(movement);
+	positionVector += forward;
+	XMStoreFloat3(&position, positionVector);
 }
 
 void BasicCamera::UpdateViewMatrix()
@@ -29,6 +50,19 @@ void BasicCamera::UpdateProjectionMatrix()
 {
 	DirectX::XMStoreFloat4x4(&projection_matrix, DirectX::XMMatrixPerspectiveFovRH(fov, aspect_ratio, near_plane, far_plane));
 	UpdateViewProjectionMatrix();
+}
+
+void BasicCamera::Update()
+{
+	if (hook_target)
+		SetPosition(hook_target->Position());
+
+	UpdateViewMatrix();
+}
+
+void BasicCamera::HookToEntity(BasicEntity* target)
+{
+	hook_target = target;
 }
 
 void BasicCamera::SetProperties(float fieldOfView, float aspectRatio, float near, float far)
