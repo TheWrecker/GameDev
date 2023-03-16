@@ -13,9 +13,13 @@
 			break;
 		case ItemType::TEST_BLOCK: return SolidBlockType::TEST;
 			break;
-		case ItemType::GRASS_BLOCK: return SolidBlockType::GRASS;
-			break;
 		case ItemType::DIRT_BLOCK: return SolidBlockType::DIRT;
+			break;
+		case ItemType::GRASS_BLOCK: return SolidBlockType::GRASS_ON_DIRT;
+			break;
+		case ItemType::STONE_BLOCK: return SolidBlockType::STONE;
+			break;
+		case ItemType::SAND_BLOCK: return SolidBlockType::SAND;
 			break;
 		default: return SolidBlockType::UNDEFINED;
 			break;
@@ -33,6 +37,12 @@
 		case SolidBlockType::DIRT: return ItemType::DIRT_BLOCK;
 			break;
 		case SolidBlockType::GRASS: return ItemType::GRASS_BLOCK;
+			break;
+		case SolidBlockType::GRASS_ON_DIRT: return ItemType::GRASS_BLOCK;
+			break;
+		case SolidBlockType::STONE: return ItemType::STONE_BLOCK;
+			break;
+		case SolidBlockType::SAND: return ItemType::SAND_BLOCK;
 			break;
 		default: return ItemType::NO_ITEM;
 			break;

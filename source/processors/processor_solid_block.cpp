@@ -6,25 +6,28 @@
 
 #include "processor_solid_block.h"
 
+constexpr auto ONE_THIRD = 1.0f / 3.0f;
+constexpr auto TWO_THIRDS = 2.0f / 3.0f;
+
 Face RightFace = {
 	{
 	DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
-	DirectX::XMFLOAT2(0.0f, 1.0f),
+	DirectX::XMFLOAT2(0.0f, TWO_THIRDS),
 	DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
-	DirectX::XMFLOAT2(0.0f, 0.0f),
+	DirectX::XMFLOAT2(0.0f, ONE_THIRD),
 	DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f),
-	DirectX::XMFLOAT2(1.0f, 1.0f),
+	DirectX::XMFLOAT2(1.0f, TWO_THIRDS),
 	DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
-	DirectX::XMFLOAT2(1.0f, 0.0f),
+	DirectX::XMFLOAT2(1.0f, ONE_THIRD),
 	DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
 	0.0f
 	}
@@ -33,22 +36,22 @@ Face RightFace = {
 Face LeftFace = {
 	{
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
-	DirectX::XMFLOAT2(0.0f, 1.0f),
+	DirectX::XMFLOAT2(0.0f, TWO_THIRDS),
 	DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f),
-	DirectX::XMFLOAT2(0.0f, 0.0f),
+	DirectX::XMFLOAT2(0.0f, ONE_THIRD),
 	DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-	DirectX::XMFLOAT2(1.0f, 1.0f),
+	DirectX::XMFLOAT2(1.0f, TWO_THIRDS),
 	DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
-	DirectX::XMFLOAT2(1.0f, 0.0f),
+	DirectX::XMFLOAT2(1.0f, ONE_THIRD),
 	DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f),
 	0.0f
 	}
@@ -57,7 +60,7 @@ Face LeftFace = {
 Face TopFace = {
 	{
 	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
-	DirectX::XMFLOAT2(0.0f, 1.0f),
+	DirectX::XMFLOAT2(0.0f, ONE_THIRD),
 	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
 	0.0f
 	}, {
@@ -67,7 +70,7 @@ Face TopFace = {
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
-	DirectX::XMFLOAT2(1.0f, 1.0f),
+	DirectX::XMFLOAT2(1.0f, ONE_THIRD),
 	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
 	0.0f
 	}, {
@@ -86,7 +89,7 @@ Face BottomFace = {
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-	DirectX::XMFLOAT2(0.0f, 0.0f),
+	DirectX::XMFLOAT2(0.0f, TWO_THIRDS),
 	DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f),
 	0.0f
 	}, {
@@ -96,7 +99,7 @@ Face BottomFace = {
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
-	DirectX::XMFLOAT2(1.0f, 0.0f),
+	DirectX::XMFLOAT2(1.0f, TWO_THIRDS),
 	DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f),
 	0.0f
 	}
@@ -105,23 +108,23 @@ Face BottomFace = {
 Face FrontFace = {
 	{
 	DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
-	DirectX::XMFLOAT2(1.0f, 0.0f),
+	DirectX::XMFLOAT2(1.0f, ONE_THIRD),
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
-	DirectX::XMFLOAT2(1.0f, 1.0f),
+	DirectX::XMFLOAT2(1.0f, TWO_THIRDS),
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}, {
 
 	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
-	DirectX::XMFLOAT2(0.0f, 0.0f),
+	DirectX::XMFLOAT2(0.0f, ONE_THIRD),
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-	DirectX::XMFLOAT2(0.0f, 1.0f),
+	DirectX::XMFLOAT2(0.0f, TWO_THIRDS),
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}
@@ -130,22 +133,22 @@ Face FrontFace = {
 Face BackFace = {
 	{
 	DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f),
-	DirectX::XMFLOAT2(0.0f, 0.0f),
+	DirectX::XMFLOAT2(0.0f, ONE_THIRD),
 	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
-	DirectX::XMFLOAT2(0.0f, 1.0f),
+	DirectX::XMFLOAT2(0.0f, TWO_THIRDS),
 	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
-	DirectX::XMFLOAT2(1.0f, 0.0f),
+	DirectX::XMFLOAT2(1.0f, ONE_THIRD),
 	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f),
-	DirectX::XMFLOAT2(1.0f, 1.0f),
+	DirectX::XMFLOAT2(1.0f, TWO_THIRDS),
 	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
 	0.0f
 	}
@@ -236,7 +239,7 @@ bool SolidBlockProcessor::CheckBlockFace(Segment* target, FaceName face)
 void SolidBlockProcessor::AddFaceVertices(Segment* target, Face& face)
 {
 	SolidBlockVertex _vertex = {};
-	auto _array_range = texture_atlas->GetArraySliceCount() - 1.0f;
+	auto _array_range = texture_atlas->GetArraySliceCount();
 	for (auto& _face_vertex : face)
 	{
 		_vertex = _face_vertex;
@@ -244,7 +247,7 @@ void SolidBlockProcessor::AddFaceVertices(Segment* target, Face& face)
 		_vertex.position.x = _face_vertex.position.x + (index_x * SOLID_BLOCK_SIZE); //_pos.x;
 		_vertex.position.y = _face_vertex.position.y + (index_y * SOLID_BLOCK_SIZE); //_pos.y;
 		_vertex.position.z = _face_vertex.position.z + (index_z * SOLID_BLOCK_SIZE); //_pos.z;
-		_vertex.atlas_slice = static_cast<float>(target->blocks[index_x][index_y][index_z]->GetAtlasIndex()) / _array_range;
+		_vertex.atlas_slice = (static_cast<float>(target->blocks[index_x][index_y][index_z]->GetAtlasIndex()) - 1.0f) /* / _array_range*/;
 		target->vertex_buffer->AddVertex(_vertex);
 	}
 	for (auto& _index : Indices)

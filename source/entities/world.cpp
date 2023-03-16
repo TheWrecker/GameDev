@@ -21,22 +21,32 @@ void World::SetupDevelopementWorld()
 		for (unsigned int j = 0; j < TEMP_WORLD_DIMENSION_SIZE; j++)
 		{
 			auto _segment = GetSegment(i * SEGMENT_LENGTH, 0.0f, j * SEGMENT_LENGTH);
-			auto _rand = (i % 2) + (j % 2);
+			auto _rand = (i % 3) + (j % 3);
 			switch (_rand)
 			{
 				case 0:
 				{
-					_segment->Fill(SolidBlockType::TEST);
+					_segment->Fill(SolidBlockType::GRASS);
 					break;
 				}
 				case 1:
 				{
-					_segment->Fill(SolidBlockType::GRASS);
+					_segment->Fill(SolidBlockType::DIRT);
 					break;
 				}
 				case 2:
 				{
-					_segment->Fill(SolidBlockType::DIRT);
+					_segment->Fill(SolidBlockType::GRASS_ON_DIRT);
+					break;
+				}
+				case 3:
+				{
+					_segment->Fill(SolidBlockType::STONE);
+					break;
+				}
+				case 4:
+				{
+					_segment->Fill(SolidBlockType::SAND);
 					break;
 				}
 				default:

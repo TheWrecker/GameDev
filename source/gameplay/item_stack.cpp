@@ -6,8 +6,10 @@
 std::vector<std::string> itemNames = {
     "Undefined",
     "Test Block",
+    "Dirt Block",
     "Grass Block",
-    "Dirt Block"
+    "Stone Block",
+    "Sand Block"
 };
 
 ItemStack::ItemStack(ItemType type, unsigned int max, unsigned int current)

@@ -17,7 +17,10 @@
 		UNDEFINED = 0,
 		TEST = 1,
 		DIRT = 2,
-		GRASS = 3
+		GRASS_ON_DIRT = 3,
+		GRASS = 4,
+		STONE = 5,
+		SAND = 6
 	};
 
 #endif // !DEFS_BLOCKS_H

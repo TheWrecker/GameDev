@@ -56,8 +56,6 @@ SolidBlock* Player::GetInteractionBlock()
         if (_block) //and block is diggable?
         {
             //do other stuff?
-            float _dist = 0.0f;
-            _block->GetBoundingBox().Intersects(Position_Vector(), DirectX::XMLoadFloat3(&rotation), _dist);
             return _block;
         }
     }

@@ -9,7 +9,6 @@
 #include "texture_atlas.h"
 
 constexpr unsigned int ATLAS_RESERVE_COUNT = 64;
-constexpr auto ATLAS_BASE_PATH = L"assets/textures/atlas/test_checkers.png";
 
 TextureAtlas::TextureAtlas(Presenter* presenter)
     :presenter(presenter), texture_array(), base_desc(), shader_view(), textures(), descs(), views(), slice_count(0)
@@ -20,7 +19,7 @@ TextureAtlas::TextureAtlas(Presenter* presenter)
 	textures.reserve(ATLAS_RESERVE_COUNT);
 	descs.reserve(ATLAS_RESERVE_COUNT);
 	views.reserve(ATLAS_RESERVE_COUNT);
-	LoadTexture(ATLAS_BASE_PATH, "test_checkers"); //test checkers = 0
+	LoadTexture(L"assets/textures/atlas/test.png", "test"); //test checkers = 0
 
 	base_desc.Width = descs[0]->Width;
 	base_desc.Height = descs[0]->Height;
@@ -35,6 +34,9 @@ TextureAtlas::TextureAtlas(Presenter* presenter)
 	//TODO: move to scene? dynamic lookup? list? config file?
 	LoadTexture(L"assets/textures/atlas/dirt.png", "dirt"); //dirt = 1
 	LoadTexture(L"assets/textures/atlas/grass.png", "grass"); //grass = 2
+	LoadTexture(L"assets/textures/atlas/grass2.png", "grass2"); //grass all sides = 3
+	LoadTexture(L"assets/textures/atlas/stone.png", "stone"); //stone = 4
+	LoadTexture(L"assets/textures/atlas/sand.png", "sand"); //sand = 5
 
 	ReconstructTextureArray();
 }
