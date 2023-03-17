@@ -1,4 +1,5 @@
 
+#include "../core/sys_ticker.h"
 #include "../events/begin_placement.h"
 #include "../events/finish_dig.h"
 #include "../events/event_handler.h"
@@ -9,19 +10,19 @@
 #include "../input/keyboard.h"
 #include "../input/mouse.h"
 #include "../visuals/presenter.h"
-#include "../core/service_manager.h"
 #include "../core/supervisor.h"
 
 #include "input_handler.h"
 
 InputHandler::InputHandler(Supervisor* supervisor)
 	:supervisor(supervisor), camera(nullptr), world(nullptr), scene(nullptr), keyboard(nullptr), mouse(nullptr), overlay(nullptr)
-	,player(nullptr)
+	, player(nullptr), mouse_sensitivity(2.0f), rotation_speed(1.0f)
 {
-	presenter = supervisor->Services()->QueryService<Presenter*>("presenter");
-	mouse = supervisor->Services()->QueryService<Mouse*>("mouse");
-	keyboard = supervisor->Services()->QueryService<Keyboard*>("keyboard");
-	event_handler = supervisor->Services()->QueryService<EventHandler*>("event_handler");
+	presenter = supervisor->QueryService<Presenter*>("presenter");
+	ticker = supervisor->QueryService<SystemTicker*>("ticker");
+	mouse = supervisor->QueryService<Mouse*>("mouse");
+	keyboard = supervisor->QueryService<Keyboard*>("keyboard");
+	event_handler = supervisor->QueryService<EventHandler*>("event_handler");
 	overlay = presenter->GetOverlay();
 	scene = presenter->GetActiveScene();
 	camera = scene->GetActiveCamera();
@@ -37,27 +38,25 @@ void InputHandler::Update()
 {
 	//TODO: assignable/dynamic keys
 	//TODO: issue events whenever possible
-	if (true) //is playing / in-game?
+
+	float _elapsed_time = ticker->GetLastTickDuration();
+
+	if (true) //TODO: is playing / in-game? / is game paused?
 	{
 		//camera
+		// we only do rotation here, movement is done by player, which camera is hooked to
 		if (camera)
 		{
-			float elapsedTime = ticker->GetLastTickDuration();
-			float _movX, _movY, _rotX, _rotY;
-			_movX = _movY = _rotX = _rotY = 0.0f;
-
-			if (keyboard->GetState().W)	_movY = 1.0f;
-			if (keyboard->GetState().S)	_movY = -1.0f;
-			if (keyboard->GetState().A)	_movX = -1.0f;
-			if (keyboard->GetState().D)	_movX = 1.0f;
+			float _rotX = 0.0f;
+			float _rotY = 0.0f;
 
 			if (mouse->GetState().positionMode == DirectX::Mouse::MODE_RELATIVE)
 			{
-				_rotX = static_cast<float>(-1.0f * (mouse->GetState().x));
-				_rotY = static_cast<float>(-1.0f * (mouse->GetState().y));
+				_rotX = static_cast<float>(-1.0f * (mouse->GetState().x) * _elapsed_time * mouse_sensitivity);
+				_rotY = static_cast<float>(-1.0f * (mouse->GetState().y) * _elapsed_time * mouse_sensitivity);
 			}
 
-			camera->FeedInput(_movX, _movY, _rotX, _rotY);
+			camera->FeedRotation(_rotX, _rotY);
 		}
 
 		//overlay
@@ -73,6 +72,7 @@ void InputHandler::Update()
 		//player
 		if (player) //in-game?
 		{
+			//world interaction
 			switch (player->GetInteractionMode())
 			{
 				case InteractionMode::DEFAULT:
@@ -121,6 +121,7 @@ void InputHandler::Update()
 					break;
 			}
 
+			//hud and inventory interaction
 			if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::D1))
 				player->SetActiveInventorySlot(0);
 
@@ -145,6 +146,16 @@ void InputHandler::Update()
 			if (keyboard->GetKeyTracker()->IsKeyReleased(DirectX::Keyboard::OemMinus))
 				player->SetInteractionMode(InteractionMode::PLACEMENT_MODE);
 
+			//movement
+			float _mov1 = 0;
+			float _mov2 = 0;
+
+			if (keyboard->GetState().W)	_mov1 += 1.0f;
+			if (keyboard->GetState().S)	_mov1 += -1.0f;
+			if (keyboard->GetState().A)	_mov2 += -1.0f;
+			if (keyboard->GetState().D)	_mov2 += 1.0f;
+
+			player->FeedMovementInfo(_mov1, _mov2);
 		}
 	}
 }

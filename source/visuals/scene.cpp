@@ -12,13 +12,15 @@
 #include "../processors/processor_solid_block.h"
 #include "presenter.h"
 #include "render/aggregator.h"
+#include "../gameplay/physics_engine.h"
 
 #include "scene.h"
 
 Scene::Scene(Presenter* parent)
 	:presenter(parent), camera_type(CameraType::FIRST_PERSON)
 {
-	active_camera = std::make_unique<FirstPersonCamera>(parent);
+	physics_engine = presenter->QueryService<PhysicsEngine*>("physics_engine");
+	active_camera = std::make_unique<FirstPersonCamera>();
 	active_camera->SetPosition(0.0f, 20.0f, 20.0f);
 	active_camera->SetDirection(1.0f, -1.0f, 0.0f);
 	sun = std::make_unique<Sun>();
@@ -30,6 +32,9 @@ Scene::Scene(Presenter* parent)
 	aggregator = std::make_unique<Aggregator>(this);
 	world = std::make_unique<World>(this);
 	player = std::make_unique<Player>(this);
+	player->SetPosition(0.0f, 20.0f, 20.0f);
+	active_camera->HookToEntity(player.get());
+	physics_engine->RegisterMovementComponent(player.get());
 }
 
 Scene::~Scene()
@@ -58,8 +63,8 @@ void Scene::Draw()
 
 void Scene::Update()
 {
-	//active_camera->Update();
 	player->Update();
+	active_camera->Update();
 }
 
 void Scene::SwitchCameraType(CameraType type)
@@ -79,7 +84,7 @@ void Scene::SwitchCameraType(CameraType type)
 	}
 	case CameraType::FIRST_PERSON:
 	{
-		_temp = std::make_unique<FirstPersonCamera>(presenter);
+		_temp = std::make_unique<FirstPersonCamera>();
 		_temp->SetProperties(active_camera->fov, active_camera->aspect_ratio, active_camera->near_plane, active_camera->far_plane);
 		_temp->SetPosition(active_camera->position.x, active_camera->position.y, active_camera->position.z);
 		_temp->SetRotation(active_camera->rotation.x, active_camera->rotation.y, active_camera->rotation.z);

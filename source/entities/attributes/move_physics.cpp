@@ -3,9 +3,11 @@
 
 #include "move_physics.h"
 
+constexpr float MOVEMENT_GAIN = 1.0f;
+
 MovePhysics::MovePhysics(float maxSpeed, float frictionRate, float gravityRate, float gravityAccel)
     :max_speed(maxSpeed), friction_rate(frictionRate), front_speed(0.0f), side_speed(0.0f), vertical_speed(0.0f),
-    gravity_rate(gravityRate), gravity_acceleration(gravityAccel)
+    gravity_rate(gravityRate), gravity_acceleration(gravityAccel), front(0.0f), side(0.0f), falling(false)
 {
 }
 
@@ -13,7 +15,18 @@ MovePhysics::~MovePhysics()
 {
 }
 
-void MovePhysics::UpdateMoveParams(float front, float side, bool falling)
+void MovePhysics::FeedMovementInfo(bool fallingInfo)
+{
+    falling = fallingInfo;
+}
+
+void MovePhysics::FeedMovementInfo(float frontInfo, float sideInfo)
+{
+    front = fmax(-MOVEMENT_GAIN, fmin(frontInfo, MOVEMENT_GAIN));
+    side = fmax(-MOVEMENT_GAIN, fmin(sideInfo, MOVEMENT_GAIN));
+}
+
+void MovePhysics::UpdateMovementParams()
 {
     if (front > 0.0f)
     {
@@ -26,6 +39,8 @@ void MovePhysics::UpdateMoveParams(float front, float side, bool falling)
     else
     {
         front_speed *= friction_rate;
+        if (abs(front_speed < 0.1f))
+            front_speed = 0.0;
     }
 
     if (side > 0.0f)
@@ -39,6 +54,8 @@ void MovePhysics::UpdateMoveParams(float front, float side, bool falling)
     else
     {
         side_speed *= friction_rate;
+        if (abs(side_speed < 0.1f))
+            side_speed = 0.0;
     }
 
     if (falling)

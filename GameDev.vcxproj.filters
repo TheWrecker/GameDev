@@ -250,6 +250,9 @@
     <ClCompile Include="source\gameplay\physics_engine.cpp">
       <Filter>source\gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="source\gameplay\game_time.cpp">
+      <Filter>source\gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\headers\defs_platform.h">

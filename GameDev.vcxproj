@@ -178,6 +178,7 @@
     <ClCompile Include="source\external\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_tables.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="source\gameplay\game_time.cpp" />
     <ClCompile Include="source\gameplay\item_container.cpp" />
     <ClCompile Include="source\gameplay\item_stack.cpp" />
     <ClCompile Include="source\gameplay\physics_engine.cpp" />

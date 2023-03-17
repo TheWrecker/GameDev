@@ -2,7 +2,6 @@
 #include <DirectXMath.h>
 
 #include "../core/platform.h"
-#include "../core/service_manager.h"
 #include "../core/supervisor.h"
 #include "util_funcs.h"
 
@@ -29,7 +28,7 @@ Presenter::Presenter(Supervisor* parent)
 
 #ifdef _WINDOWS
 	//disable user-side fullscreen switching
-	DXAssert(graphics_factory->MakeWindowAssociation(supervisor->Services()->QueryService<Platform*>("platform")->GetWindowHandle(), DXGI_MWA_NO_ALT_ENTER));
+	DXAssert(graphics_factory->MakeWindowAssociation(QueryService<Platform*>("platform")->GetWindowHandle(), DXGI_MWA_NO_ALT_ENTER));
 #endif
 
 	RetAssert(SetMultiSampling(MultiSamplingType::NONE, 1, 0));
@@ -85,7 +84,7 @@ void Presenter::Update()
 
 void Presenter::ToggleFullscreen()
 {
-	SysWindowHandle windowHandle = supervisor->Services()->QueryService<Platform*>("platform")->GetWindowHandle();
+	SysWindowHandle windowHandle = QueryService<Platform*>("platform")->GetWindowHandle();
 
 #ifdef _WINDOWS
 	static WINDOWPLACEMENT previousWindowPlacement = { sizeof(previousWindowPlacement) };
@@ -172,7 +171,7 @@ bool Presenter::CreateSwapChain(bool isResize)
 	//TODO: make dynamic resoulution - done?
 	//TODO: less Magic Numbers
 	RECT _rect = {};
-	GetClientRect(supervisor->Services()->QueryService<Platform*>("platform")->GetWindowHandle(), &_rect);
+	GetClientRect(QueryService<Platform*>("platform")->GetWindowHandle(), &_rect);
 	if (isResize)
 	{
 		swapchain_desc.Width = _rect.right - _rect.left;
@@ -219,7 +218,7 @@ bool Presenter::CreateSwapChain(bool isResize)
 		}
 
 		//create the swap chain
-		DXAssert(graphics_factory->CreateSwapChainForHwnd(graphics_interface, supervisor->Services()->QueryService<Platform*>("platform")->GetWindowHandle(), 
+		DXAssert(graphics_factory->CreateSwapChainForHwnd(graphics_interface, QueryService<Platform*>("platform")->GetWindowHandle(), 
 			&swapchain_desc, &swapchain_fullscreen_desc, nullptr, &swapchain));
 	}
 

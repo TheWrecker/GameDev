@@ -25,6 +25,7 @@
 		void Update() override;
 
 	private:
+		SystemTicker* ticker;
 		Mouse* mouse;
 		Keyboard* keyboard;
 		Player* player;

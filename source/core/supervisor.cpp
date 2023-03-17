@@ -1,15 +1,17 @@
 
 #include "../external/ImGui/imgui.h"
 
-#include "../input/mouse.h"
-#include "../input/keyboard.h"
-#include "../input/input_handler.h"
-#include "../events/event_handler.h"
-#include "platform.h"
 #include "service_manager.h"
+#include "platform.h"
 #include "sys_profiler.h"
 #include "sys_ticker.h"
+#include "../gameplay/game_time.h"
+#include "../input/mouse.h"
+#include "../input/keyboard.h"
 #include "../visuals/presenter.h"
+#include "../events/event_handler.h"
+#include "../input/input_handler.h"
+#include "../gameplay/physics_engine.h"
 
 #include "supervisor.h"
 
@@ -25,6 +27,10 @@ Supervisor::Supervisor(InstanceHandle instance)
 	services->AdoptService("ticker", _ticker);
 	IService* _profiler = new SystemProfiler();
 	services->AdoptService("profiler", _profiler);
+	IService* _game_time = new GameTime(static_cast<SystemTicker*>(_ticker));
+	services->AdoptService("game_time", _game_time);
+	IService* _physics_engine = new PhysicsEngine(this);
+	services->AdoptService("physics_engine", _physics_engine);
 	IService* _mouse = new Mouse(static_cast<Platform*>(_platform)->GetWindowHandle());
 	services->AdoptService("mouse", _mouse);
 	IService* _keyboard = new Keyboard();
@@ -35,6 +41,7 @@ Supervisor::Supervisor(InstanceHandle instance)
 	services->AdoptService("event_handler", _event_handler);
 	IService* _input_handler = new InputHandler(this);
 	services->AdoptService("input_handler", _input_handler);
+
 }
 
 Supervisor::~Supervisor()

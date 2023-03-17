@@ -10,7 +10,7 @@
 #include "player.h"
 
 Player::Player(Scene* scene)
-	:scene(scene), selected_slot(0)
+    :scene(scene), selected_slot(0), MovePhysics(20, 0.9f)
 {
 	camera = scene->GetActiveCamera();
     world = scene->GetWorld();
@@ -25,8 +25,10 @@ Player::~Player()
 
 void Player::Update()
 {
-	SetPosition(camera->Position());
-	//TODO: rotate based on 2D camera direction only?
+
+	//SetPosition(camera->Position());
+    
+	//TODO: rotate based on 2D camera direction only? rotate head only?
 	SetRotation(camera->Rotation().x, camera->Rotation().y, camera->Rotation().z);
 
 }
