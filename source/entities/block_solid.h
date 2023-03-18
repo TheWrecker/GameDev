@@ -19,12 +19,12 @@
 		void SetPosition(DirectX::XMFLOAT3 pos) override;
 
 		SolidBlockType GetBlockType();
-		DirectX::BoundingBox& GetBoundingBox();
 		unsigned int GetAtlasIndex();
+
+		DirectX::BoundingBox collision_box;
 
 	private:
 		SolidBlockType type;
-		DirectX::BoundingBox collision_box;
 	};
 
 #endif // !BLOCK_SOLID_H

@@ -156,6 +156,7 @@
     <ClCompile Include="source\core\sys_win_profiler.cpp" />
     <ClCompile Include="source\core\sys_ticker.cpp" />
     <ClCompile Include="source\core\sys_win_platform.cpp" />
+    <ClCompile Include="source\entities\attributes\collision_physics.cpp" />
     <ClCompile Include="source\entities\attributes\move_physics.cpp" />
     <ClCompile Include="source\entities\block_solid.cpp" />
     <ClCompile Include="source\entities\camera_firstperson.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="source\core\sys_ticker.h" />
     <ClInclude Include="source\core\sys_win_platform.h" />
     <ClInclude Include="source\core\sys_win_profiler.h" />
+    <ClInclude Include="source\entities\attributes\collision_physics.h" />
     <ClInclude Include="source\entities\attributes\move_physics.h" />
     <ClInclude Include="source\entities\block_solid.h" />
     <ClInclude Include="source\entities\camera_firstperson.h" />

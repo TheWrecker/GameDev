@@ -253,6 +253,9 @@
     <ClCompile Include="source\gameplay\game_time.cpp">
       <Filter>source\gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="source\entities\attributes\collision_physics.cpp">
+      <Filter>source\entities\attributes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\headers\defs_platform.h">
@@ -503,6 +506,9 @@
     </ClInclude>
     <ClInclude Include="source\gameplay\game_time.h">
       <Filter>source\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="source\entities\attributes\collision_physics.h">
+      <Filter>source\entities\attributes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

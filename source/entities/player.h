@@ -6,6 +6,7 @@
 	
 	#include "entity_transformable.h"
 	#include "attributes/move_physics.h"
+	#include "attributes/collision_physics.h"
 	#include "block_solid.h"
 
 	class BasicCamera;
@@ -20,7 +21,7 @@
 		PLACEMENT_MODE
 	};
 
-	class Player : public TransformableEntity, public MovePhysics
+	class Player : public TransformableEntity, public MovePhysics, public CollisionPhysics
 	{
 	public:
 		Player(Scene* scene);

@@ -4,10 +4,10 @@
 #include "block_solid.h"
 
 SolidBlock::SolidBlock(SolidBlockType type, float x, float y, float z)
-    :BasicEntity(x, y, z), type(type), 
-    collision_box(DirectX::XMFLOAT3(x + SOLID_BLOCK_SIZE / 2.0f, y + SOLID_BLOCK_SIZE / 2.0f, z + SOLID_BLOCK_SIZE / 2.0f),
-        DirectX::XMFLOAT3(SOLID_BLOCK_SIZE / 2.0f, SOLID_BLOCK_SIZE / 2.0f, SOLID_BLOCK_SIZE / 2.0f) )
+    :BasicEntity(x, y, z), type(type)
 {
+    collision_box.Center = DirectX::XMFLOAT3(x + (SOLID_BLOCK_SIZE / 2.0f), y + (SOLID_BLOCK_SIZE / 2.0f), z + (SOLID_BLOCK_SIZE / 2.0f));
+    collision_box.Extents = { SOLID_BLOCK_SIZE / 2.0f, SOLID_BLOCK_SIZE / 2.0f, SOLID_BLOCK_SIZE / 2.0f };
 }
 
 SolidBlock::~SolidBlock()
@@ -33,11 +33,6 @@ void SolidBlock::SetPosition(DirectX::XMFLOAT3 pos)
 SolidBlockType SolidBlock::GetBlockType()
 {
     return type;
-}
-
-DirectX::BoundingBox& SolidBlock::GetBoundingBox()
-{
-    return collision_box;
 }
 
 unsigned int SolidBlock::GetAtlasIndex()

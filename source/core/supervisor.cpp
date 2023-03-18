@@ -57,6 +57,8 @@ void Supervisor::PassControl()
 {
 	Platform* _platform = services->QueryService<Platform*>("platform");
 	Presenter* _presenter = services->QueryService<Presenter*>("presenter");
+	PhysicsEngine* _physics_engine = services->QueryService<PhysicsEngine*>("physics_engine");
+	_physics_engine->Start();
 	while (!_platform->ProcessPlatfromMessages())
 	{
 		//update components
