@@ -83,10 +83,9 @@ void PhysicsEngine::UpdateAllSystems()
 	//predefinitions
 	//TODO: check if ticker is valid?
 	auto _elapsed_time = ticker->GetLastTickDuration();
-
 	DirectX::XMVECTOR _up = { 0.0f, 1.0f, 0.0f, 0.0f };
-	DirectX::XMVECTOR _xz_direction, _right_vector, _movement, _front_move, _side_move, _vertical_move, _position_vector;
-	DirectX::XMFLOAT3 _rotation, _front_check, _side_check, _vertical_check, _temp_pos;
+	DirectX::XMVECTOR _xz_direction, _right_vector, _front_move, _side_move;
+	DirectX::XMFLOAT3 _rotation, _temp_pos;
 
 	SolidBlock* _block = nullptr;
 	TransformableEntity* _entity = nullptr;
@@ -105,146 +104,158 @@ void PhysicsEngine::UpdateAllSystems()
 
 		_entity = dynamic_cast<TransformableEntity*>(_component);
 		_collision = dynamic_cast<CollisionPhysics*>(_entity);
+
 		if (_entity)
 		{
 			//TODO: improve?
+
+			//get position and orientation
 			using namespace DirectX;
 			_rotation = _entity->Rotation();
 			_rotation.y = 0.0f;
 			_temp_pos = _entity->Position();
-			_position_vector = _entity->Position_Vector();
-			_xz_direction = XMLoadFloat3(&_rotation);
-			_right_vector = XMVector3Cross(_xz_direction, _up);
-			XMVector3Normalize(_right_vector);
 
-			_movement = { _component->front_speed, _component->side_speed, _component->vertical_speed, 0.0f };
-			_movement *= _elapsed_time;
-
-			_front_move = _xz_direction * XMVectorGetX(_movement);
-			_side_move = _right_vector * XMVectorGetY(_movement);
-			_vertical_move = _up * XMVectorGetZ(_movement);
-
-			XMStoreFloat3(&_front_check, _front_move);
-			_front_check.x < 0.0f ? _temp_pos.x -= _collision->half_width : _temp_pos.x += _collision->half_width;
-			//_front_check.y < 0.0f ? _front_check.y -= _collision->half_height : _front_check.y += _collision->half_height;
-			_front_check.z < 0.0f ? _temp_pos.z -= _collision->half_width : _temp_pos.z += _collision->half_width;
-
-			_block = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z);
+			_block = world->GetBlock(_temp_pos.x, _temp_pos.y - (_collision->half_height + 0.1f) , _temp_pos.z);
+			//is there a block directly below us?
 			if (_block)
 			{
-				if (!_block->collision_box.Intersects(_collision->collision_box))
-					_position_vector += _front_move;
-				else
-					int i = 0;
-			}
-			else
-			{
-				_position_vector += _front_move;
-			}
-
-			XMStoreFloat3(&_side_check, _side_move);
-			_side_check.x < 0.0f ? _temp_pos.x -= _collision->half_width : _temp_pos.x += _collision->half_width;
-			//_side_check.y < 0.0f ? _side_check.y -= _collision->half_height : _side_check.y += _collision->half_height;
-			_side_check.z < 0.0f ? _temp_pos.z -= _collision->half_width : _temp_pos.z += _collision->half_width;
-
-			_block = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z);
-			if (_block)
-			{
-				if (!_block->collision_box.Intersects(_collision->collision_box))
-					_position_vector += _side_move;
-				else
-					int i = 0;
-			}
-			else
-			{
-				_position_vector += _side_move;
-			}
-
-			_block = world->GetBlock(_temp_pos.x, _temp_pos.y - _collision->half_height, _temp_pos.z);
-			if (_block)
-			{
+				//there is, so stop falling
 				_component->falling = false;
+				_temp_pos.y = _block->Position().y + SOLID_BLOCK_SIZE + _collision->half_height;
 			}
 			else
 			{
+				//there isn't, so start falling
 				_component->falling = true;
-				XMStoreFloat3(&_vertical_check, _vertical_move);
-				//_vertical_check.x < 0.0f ? _vertical_check.x -= _collision->half_width : _vertical_check.x += _collision->half_width;
-				_vertical_check.y < 0.0f ? _temp_pos.y -= _collision->half_height : _temp_pos.y += _collision->half_height;
-				//_vertical_check.z < 0.0f ? _vertical_check.z -= _collision->half_width : _vertical_check.z += _collision->half_width;
+			}
 
-				_block = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z);
-				if (_block)
+			//are we falling?
+			if (_component->falling)
+			{
+				//we are, so only check for vertical collisions
+				//are we going upwards?
+				if (_component->vertical_speed > 0.0f)
 				{
-					if (!_block->collision_box.Intersects(_collision->collision_box))
-						_position_vector += _vertical_move;
+					//we are going upwards, check above us
+					_block = world->GetBlock(_temp_pos.x, _temp_pos.y + _collision->half_height, _temp_pos.z);
+					//is there a block directly above us?
+					if (_block)
+					{
+						//there is, so stop going upwards
+						_component->vertical_speed = 0.0f;
+						_temp_pos.y = _block->Position().y - _collision->half_height;
+					}
 					else
-						int i = 0;
+					{
+						//there is nothing above us for now, we can ascend freely
+						_temp_pos.y += _component->vertical_speed * _elapsed_time * _elapsed_time;
+					}
 				}
+				//we are going downwards, check below us
 				else
 				{
-					_position_vector += _vertical_move;
+					//there is nothing below us for now, we can fall freely aaaaaaaaaaaaaaaa
+					_temp_pos.y += _component->vertical_speed * _elapsed_time;
 				}
 			}
-			
+			//we are not falling
+			else
+			{
+				//calculate movement 2D XZ vector
+				_xz_direction = XMLoadFloat3(&_rotation);
+				_xz_direction = XMVector3Normalize(_xz_direction);
 
+				//do we have any speed in frontal direction
+				if (true/*abs(_component->front_speed) > 0.0f*/)
+				{
+					_front_move = _xz_direction * _elapsed_time * _component->front_speed;
+					XMVECTOR _coll = _xz_direction * _collision->half_width * copysignf(1.0f, _component->front_speed);
 
-			/*XMFLOAT3 _temp = _entity->Position();
-			XMVECTOR _movement = { _component->front_speed, _component->side_speed, _component->vertical_speed, 0.0f };
-			_movement *= _elapsed_time;
-			XMVECTOR _up = { 0.0f, 1.0f, 0.0f, 0.0f };
-			XMVECTOR _position_vector = _entity->Position_Vector();
-			XMFLOAT3 _rotation = _entity->Rotation();
-			XMVECTOR _direction = XMLoadFloat3(&_rotation);
-			XMVECTOR _right_vector = XMVector3Cross(_direction, _up);
-			XMVECTOR _strafe = _right_vector * XMVectorGetY(_movement);
-			XMVECTOR _strafe_check = _right_vector * _collision->half_width * XMVectorGetY(_movement);
-			_position_vector += _strafe_check;
-			XMStoreFloat3(&_temp, _position_vector);
-			SolidBlock* _block = world->GetBlock(_temp.x, _temp.y, _temp.z);
-			if (_block)
-				if (_block->collision_box.Intersects(_collision->collision_box))
-				{
-					_position_vector -= _strafe_check;
+					//check if we collide with a block
+					_block = world->GetBlock(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
+					if (_block)
+					{
+						//we do, so stop frontal movement and stand aside the block
+						_component->front_speed = 0.0f;
+						//auto _diffX = _block->Position().x - _temp_pos.x;
+						//auto _diffY = _block->Position().y - _temp_pos.y;
+						//_temp_pos.x -= _collision->half_width - _diffX - (floorf(_diffX / (_diffX * 2)) * SOLID_BLOCK_SIZE);
+						//_temp_pos.z -= _collision->half_width - _diffX - (floorf(_diffY / (_diffY * 2)) * SOLID_BLOCK_SIZE);
+					}
+					else
+					{
+						//check if we collide with a block
+						_block = world->GetBlock(_temp_pos.x + XMVectorGetX(_front_move), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_front_move));
+						if (_block)
+						{
+							//we do, so stop frontal movement and stand aside the block
+							_component->front_speed = 0.0f;
+							//auto _diffX = _block->Position().x - _temp_pos.x;
+							//auto _diffY = _block->Position().y - _temp_pos.y;
+							//_temp_pos.x -= _collision->half_width - _diffX - (floorf(_diffX / (_diffX * 2)) * SOLID_BLOCK_SIZE);
+							//_temp_pos.z -= _collision->half_width - _diffX - (floorf(_diffY / (_diffY * 2)) * SOLID_BLOCK_SIZE);
+						}
+						//we don't so move freely (we do the check next tick)
+						_temp_pos.x += XMVectorGetX(_front_move);
+						_temp_pos.z += XMVectorGetZ(_front_move);
+					}
 				}
-				else
+
+				//do we have any speed in side direction
+				if (true/*abs(_component->side_speed) > 0.0f*/)
 				{
-					_position_vector -= _strafe_check;
-					_position_vector += _strafe;
+					_right_vector = XMVector3Cross(_xz_direction, _up);
+					_right_vector = XMVector3Normalize(_right_vector);
+					_side_move = _right_vector * _elapsed_time * _component->side_speed;
+					XMVECTOR _coll = _right_vector * _collision->half_width * copysignf(1.0f, _component->side_speed);
+
+					//check if we collide with a block
+					_block = world->GetBlock(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
+					if (_block)
+					{
+						//we do, so stop side movement and stand aside the block
+						_component->side_speed = 0.0f;
+						//auto _diffX = _block->Position().x - _temp_pos.x;
+						//auto _diffY = _block->Position().y - _temp_pos.y;
+						//_temp_pos.x -= _collision->half_width - _diffX - (floorf(_diffX / (_diffX * 2)) * SOLID_BLOCK_SIZE);
+						//_temp_pos.z -= _collision->half_width - _diffX - (floorf(_diffY / (_diffY * 2)) * SOLID_BLOCK_SIZE);
+					}
+					else
+					{
+						//check if we collide with a block
+						_block = world->GetBlock(_temp_pos.x + XMVectorGetX(_side_move), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_side_move));
+						if (_block)
+						{
+							//we do, so stop side movement and stand aside the block
+							_component->side_speed = 0.0f;
+							//auto _diffX = _block->Position().x - _temp_pos.x;
+							//auto _diffY = _block->Position().y - _temp_pos.y;
+							//_temp_pos.x -= _collision->half_width - _diffX - (floorf(_diffX / (_diffX * 2)) * SOLID_BLOCK_SIZE);
+							//_temp_pos.z -= _collision->half_width - _diffX - (floorf(_diffY / (_diffY * 2)) * SOLID_BLOCK_SIZE);
+						}
+						else
+						{
+							//we don't so move freely (we do the check next tick)
+							_temp_pos.x += XMVectorGetX(_side_move);
+							_temp_pos.z += XMVectorGetZ(_side_move);
+						}
+					}
 				}
-			XMVECTOR _forward = _direction * XMVectorGetX(_movement);
-			XMVECTOR _forward_check = _direction * _collision->half_width * XMVectorGetX(_movement);
-			_position_vector += _forward_check;
-			XMStoreFloat3(&_temp, _position_vector);
-			_block = world->GetBlock(_temp.x, _temp.y, _temp.z);
-			if (_block)
-				if (_block->collision_box.Intersects(_collision->collision_box))
-				{
-					_position_vector -= _forward_check;
-				}
-				else
-				{
-					_position_vector -= _forward_check;
-					_position_vector += _forward;
-				}
-			XMVECTOR _vertical = _up * XMVectorGetZ(_movement);
-			XMVECTOR _vertical_check = _up * _collision->half_height * XMVectorGetZ(_movement);
-			_position_vector += _vertical_check;
-			XMStoreFloat3(&_temp, _position_vector);
-			_block = world->GetBlock(_temp.x, _temp.y, _temp.z);
-			if (_block)
-				if (_block->collision_box.Intersects(_collision->collision_box))
-				{
-					_position_vector -= _vertical_check;
-				}
-				else
-				{
-					_position_vector -= _vertical_check;
-					_position_vector += _vertical;
-				}*/
-			XMFLOAT3 _final_pos = {};
-			XMStoreFloat3(&_final_pos, _position_vector);
-			_entity->SetPosition(_final_pos);
+			}
+
+			_block = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z);
+			//are we inside a block?
+			//if (_block)
+			//{
+			//	//well we are but we shouldn't be
+			//	//for now only step back once, later maybe loop untill we are 100% outside blocks
+			//	_temp_pos.x -= _rotation.x;
+			//	_temp_pos.z -= _rotation.z;
+			//	_temp_pos.y += 1.0f;
+			//}
+
+			_entity->SetPosition(_temp_pos);
 		}
 	}
+
 }

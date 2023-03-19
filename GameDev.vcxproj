@@ -446,6 +446,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Current Tasklist.txt" />
     <Text Include="Global TODO checklist.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

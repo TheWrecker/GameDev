@@ -17,6 +17,7 @@
 
 		virtual const DirectX::XMMATRIX Rotation_Matrix() const;
 		virtual const DirectX::XMFLOAT3& Rotation() const;
+		virtual DirectX::XMVECTOR Rotation_Vector() const;
 		virtual const DirectX::XMMATRIX Scale_Matrix() const;
 		virtual const DirectX::XMFLOAT3& Scale() const;
 

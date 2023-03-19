@@ -32,7 +32,7 @@ Scene::Scene(Presenter* parent)
 	aggregator = std::make_unique<Aggregator>(this);
 	world = std::make_unique<World>(this);
 	player = std::make_unique<Player>(this);
-	player->SetPosition(20.0f, 20.0f, 20.0f);
+	player->SetPosition(20.0f, 70.0f, 20.0f);
 	active_camera->HookToEntity(player.get());
 	//TODO: move to a unit factory?
 	physics_engine->RegisterMovementComponent(player.get());

@@ -1,0 +1,5 @@
+Physics Engine:
+ - while falling, ignore movements, check directly below
+ - If collision test return true, move the entity away
+ - remove the effect of vertical look direction on move speed
+ - try to replace last tick duration?

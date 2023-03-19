@@ -22,6 +22,11 @@ const DirectX::XMFLOAT3& TransformableEntity::Rotation() const
 	return rotation;
 }
 
+DirectX::XMVECTOR TransformableEntity::Rotation_Vector() const
+{
+	return DirectX::XMLoadFloat3(&rotation);
+}
+
 void TransformableEntity::SetRotation(float x, float y, float z)
 {
 	rotation.x = x;

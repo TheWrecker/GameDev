@@ -557,5 +557,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Global TODO checklist.txt" />
+    <Text Include="Current Tasklist.txt" />
   </ItemGroup>
 </Project>
