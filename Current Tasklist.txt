@@ -1,5 +1,7 @@
 Physics Engine:
- - while falling, ignore movements, check directly below
+ - while falling, ignore movements, check directly below - done
  - If collision test return true, move the entity away
- - remove the effect of vertical look direction on move speed
+ - remove the effect of vertical look direction on move speed - done
  - try to replace last tick duration?
+ - apply gamespeed and gamestate to movements,etc but in realtime ticks since we don't want physics to get clunky at low game speeds
+ - prevent infinite jumps

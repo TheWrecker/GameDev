@@ -10,7 +10,7 @@
 #include "player.h"
 
 Player::Player(Scene* scene)
-    :scene(scene), selected_slot(0), MovePhysics(50, 50.0f, 0.8f), CollisionPhysics(position, 0.6f, 1.4f)
+    :scene(scene), selected_slot(0), MovePhysics(50, 50.0f), CollisionPhysics(position, 0.6f, 1.4f)
 {
 	camera = scene->GetActiveCamera();
     world = scene->GetWorld();

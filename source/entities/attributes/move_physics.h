@@ -5,11 +5,11 @@
 class MovePhysics
 {
 public:
-	MovePhysics(float maxSpeed = 5.0f, float speedGain = 1.0f, float frictionRate = 0.95f, float gravityRate = 0.95, float gravityAccel = 2.0f);
+	MovePhysics(float maxSpeed = 5.0f, float speedGain = 1.0f, float frictionRate = 0.98f, float gravityRate = 0.98f, float gravityAccel = 1.0f);
 	virtual ~MovePhysics();
 
 	void FeedMovementInfo(bool falling);
-	void FeedMovementInfo(float front, float side);
+	void FeedMovementInfo(float front, float side, float vertical);
 	void UpdateMovementParams();
 
 	void SetMaxSpeed(float value);
@@ -17,8 +17,6 @@ public:
 	void SetFrictionRate(float value);
 
 	float
-		front,
-		side,
 		front_speed,
 		side_speed,
 		vertical_speed,
@@ -28,6 +26,12 @@ public:
 		gravity_rate,
 		gravity_acceleration;
 	bool falling;
+
+private:
+	float
+		front,
+		side,
+		vertical;
 };
 
 #endif // !MOVE_PHYSICS_H

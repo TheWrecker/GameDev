@@ -216,8 +216,9 @@ void Overlay::Draw()
 		ImGui::Separator();
 
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Performance");
-		ImGui::Text("Last Tick Duration: %fms", ticker->GetLastTickDuration() * 1000);
+		ImGui::Text("Last Tick Duration: %fms", ticker->GetLastTickDuration() * 1000.0f);
 		ImGui::Text("Ticks Per Second: %u", ticker->GetTickPerSecond());
+		ImGui::Text("Average Tick Duration: %fms", ticker->GetAverageTickDuration() * 1000.0f);
 
 		ImGui::Separator();
 

@@ -3,6 +3,7 @@
 	#define SYS_TICKER_H
 
 	#include <cstddef>
+	#include <chrono>
 
 	#include "interface_service.h"
 	#include "defs_platform.h"
@@ -20,17 +21,21 @@
 		std::size_t GetTickPerSecond();
 
 	private:
-		SysTickValue
+		/*SysTickValue
 			start_tick,
 			previous_tick,
-			current_tick;
+			current_tick,
+			frequency_i;*/
 
-		double frequency;
-
-		float 
+		float
+			/*frequency_d,*/
 			last_tick_duration,
 			current_tick_sum,
 			average_tick_duration;
+
+		std::chrono::high_resolution_clock::time_point
+			current_tp,
+			prev_tp;
 
 		std::size_t
 			tick_per_second,

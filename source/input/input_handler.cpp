@@ -147,15 +147,19 @@ void InputHandler::Update()
 				player->SetInteractionMode(InteractionMode::PLACEMENT_MODE);
 
 			//movement
-			float _mov1 = 0;
-			float _mov2 = 0;
+			float _mov1 = 0.0f;
+			float _mov2 = 0.0f;
+			float _mov3 = 0.0f;
 
 			if (keyboard->GetState().W)	_mov1 += 1.0f;
 			if (keyboard->GetState().S)	_mov1 += -1.0f;
 			if (keyboard->GetState().A)	_mov2 += -1.0f;
 			if (keyboard->GetState().D)	_mov2 += 1.0f;
 
-			player->FeedMovementInfo(_mov1, _mov2);
+			if (keyboard->GetKeyTracker()->IsKeyPressed(DirectX::Keyboard::Space))
+				_mov3 = +300.0f;
+
+			player->FeedMovementInfo(_mov1, _mov2, _mov3);
 		}
 	}
 }

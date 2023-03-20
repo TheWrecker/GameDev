@@ -124,8 +124,6 @@ WindowsInitializer::WindowsInitializer(HINSTANCE instance)
 
 	ShowWindow(window_handle, 1);
 	UpdateWindow(window_handle);
-	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
-
 }
 
 WindowsInitializer::~WindowsInitializer()
