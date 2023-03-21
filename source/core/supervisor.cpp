@@ -5,6 +5,7 @@
 #include "platform.h"
 #include "sys_profiler.h"
 #include "sys_ticker.h"
+#include "../gameplay/world_engine.h"
 #include "../gameplay/game_time.h"
 #include "../input/mouse.h"
 #include "../input/keyboard.h"
@@ -12,6 +13,7 @@
 #include "../events/event_handler.h"
 #include "../input/input_handler.h"
 #include "../gameplay/physics_engine.h"
+#include "../visuals/scene.h"
 
 #include "supervisor.h"
 
@@ -23,25 +25,36 @@ Supervisor::Supervisor(InstanceHandle instance)
 
 	IService* _platform = new Platform(instance);
 	services->AdoptService("platform", _platform);
+
 	IService* _ticker = new SystemTicker();
 	services->AdoptService("ticker", _ticker);
+
 	IService* _profiler = new SystemProfiler();
 	services->AdoptService("profiler", _profiler);
+
 	IService* _game_time = new GameTime(static_cast<SystemTicker*>(_ticker));
 	services->AdoptService("game_time", _game_time);
+
 	IService* _physics_engine = new PhysicsEngine(this);
 	services->AdoptService("physics_engine", _physics_engine);
+
+	IService* _world_engine = new WorldEngine(1); //dev seed
+	services->AdoptService("world_engine", _world_engine);
+
 	IService* _mouse = new Mouse(static_cast<Platform*>(_platform)->GetWindowHandle());
 	services->AdoptService("mouse", _mouse);
+
 	IService* _keyboard = new Keyboard();
 	services->AdoptService("keyboard", _keyboard);
+
 	IService* _presenter = new Presenter(this);
 	services->AdoptService("presenter", _presenter);
+
 	IService* _event_handler = new EventHandler(this);
 	services->AdoptService("event_handler", _event_handler);
+
 	IService* _input_handler = new InputHandler(this);
 	services->AdoptService("input_handler", _input_handler);
-
 }
 
 Supervisor::~Supervisor()
@@ -57,8 +70,8 @@ void Supervisor::PassControl()
 {
 	Platform* _platform = services->QueryService<Platform*>("platform");
 	Presenter* _presenter = services->QueryService<Presenter*>("presenter");
-	PhysicsEngine* _physics_engine = services->QueryService<PhysicsEngine*>("physics_engine");
-	_physics_engine->Start();
+	//TODO: create a gamestate manager and move there?
+	_presenter->GetActiveScene()->SwitchMode(SceneMode::DEVELOPEMENT);
 	while (!_platform->ProcessPlatfromMessages())
 	{
 		//update components

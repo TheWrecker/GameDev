@@ -10,7 +10,7 @@
 #include "player.h"
 
 Player::Player(Scene* scene)
-    :scene(scene), selected_slot(0), MovePhysics(50, 50.0f), CollisionPhysics(position, 0.6f, 1.4f)
+    :scene(scene), selected_slot(0), MovePhysics(50, 50.0f), CollisionPhysics(position, 0.8f, 1.8f)
 {
 	camera = scene->GetActiveCamera();
     world = scene->GetWorld();
@@ -48,7 +48,7 @@ void Player::SetActiveInventorySlot(unsigned int slot)
 
 SolidBlock* Player::GetInteractionBlock()
 {
-    Ray _ray(position, rotation);
+    Ray _ray(camera->Position(), rotation);
     //TODO: gameplay constants/variables?
     while (_ray.GetLength() < 3.0f)
     {
@@ -66,7 +66,7 @@ SolidBlock* Player::GetInteractionBlock()
 
 bool Player::GetPlacementBlockPos(DirectX::XMFLOAT3& pos)
 {
-    Ray _ray(position, rotation);
+    Ray _ray(camera->Position(), rotation);
     DirectX::XMFLOAT3 _inv_slope = { 1.0f / rotation.x, 1.0f / rotation.y, 1.0f / rotation.z };
     //TODO: gameplay constants/variables?
     while (_ray.GetLength() < 3.0f)
@@ -104,43 +104,43 @@ bool Player::GetPlacementBlockPos(DirectX::XMFLOAT3& pos)
             assert(tmax >= tmin);
 
             DirectX::XMFLOAT3 _pos = {};
-            _pos.x = (tmin * rotation.x) + position.x;
-            _pos.y = (tmin * rotation.y) + position.y;
-            _pos.z = (tmin * rotation.z) + position.z;
+            _pos.x = (tmin * rotation.x) + camera->Position().x;
+            _pos.y = (tmin * rotation.y) + camera->Position().y;
+            _pos.z = (tmin * rotation.z) + camera->Position().z;
 
             if (abs(_pos.x - pos.x) < 0.00001f) //left (-x) face
             {
-                pos.x -= 1.0f;
+                pos.x -= SOLID_BLOCK_SIZE;
                 return true;
             }
 
             if (abs(_pos.x - pos.x) > 0.99990f) // right (+x) face
             {
-                pos.x += 1.0f;
+                pos.x += SOLID_BLOCK_SIZE;
                 return true;
             }
 
             if (abs(_pos.y - pos.y) < 0.00001f) // bot (-y) face
             {
-                pos.y -= 1.0f;
+                pos.y -= SOLID_BLOCK_SIZE;
                 return true;
             }
 
             if (abs(_pos.y - pos.y) > 0.99990f) // top (+y) face
             {
-                pos.y += 1.0f;
+                pos.y += SOLID_BLOCK_SIZE;
                 return true;
             }
 
             if (abs(_pos.z - pos.z) < 0.00001f) // front (-z) face
             {
-                pos.z -= 1.0f;
+                pos.z -= SOLID_BLOCK_SIZE;
                 return true;
             }
 
             if (abs(_pos.z - pos.z) > 0.99990f) // back (+z) face
             {
-                pos.z += 1.0f;
+                pos.z += SOLID_BLOCK_SIZE;
                 return true;
             }
 

@@ -69,6 +69,7 @@
 	    friend class Aggregator;
 	    friend class SolidBlockRender;
 	    friend class Overlay;
+        friend class WorldEngine;
 
 	    Scene* scene;
 	    std::unordered_map<SegmentIndex, Segment*, std::hash<SegmentIndex>> segments;

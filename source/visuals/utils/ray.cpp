@@ -1,7 +1,7 @@
 
 #include "ray.h"
 
-Ray::Ray(DirectX::XMFLOAT3& pos, DirectX::XMFLOAT3& dir)
+Ray::Ray(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir)
     :position(pos), direction(dir), end(pos), length(0.0f)
 {
     position_vector = DirectX::XMLoadFloat3(&pos);

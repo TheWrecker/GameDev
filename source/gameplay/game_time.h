@@ -2,6 +2,7 @@
 #ifndef GAME_TIME_H
 	#define GAME_TIME_H
 
+#include <chrono>
 	#include <functional>
 	#include <list>
 
@@ -13,13 +14,13 @@
 
 	struct PeriodicTaskInfo
 	{
-		PeriodicTaskInfo(Callback callback, unsigned int interval)
+		PeriodicTaskInfo(Callback callback, float interval)
 			:func(callback), call_limit(interval), current(0)
 		{
 		}
 
 		Callback func;
-		unsigned int
+		float
 			call_limit,
 			current;
 	};
@@ -38,7 +39,7 @@
 		void Pause();
 		void Resume();
 
-		PeriodicTask RegisterFunction(Callback func, unsigned int interval, bool realTime = false);
+		PeriodicTask RegisterFunction(Callback func, float interval, bool realTime = false);
 		void RemoveFunction(PeriodicTask target, bool realTime = false);
 
 		float GetGameSpeed();
@@ -53,6 +54,7 @@
 
 		SystemTicker* ticker;
 		float
+			diff,
 			speed,
 			real_time,
 			game_time;

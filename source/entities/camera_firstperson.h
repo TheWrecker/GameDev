@@ -4,6 +4,7 @@
 
 	#include "camera_basic.h"
 
+	class SolidBlock;
 	class Presenter;
 
 	class FirstPersonCamera : public BasicCamera
@@ -13,6 +14,10 @@
 		~FirstPersonCamera();
 
 		void Update() override;
+		void SetEyeHeight(float value);
+
+	private:
+		float eye_height;
 	};
 
 #endif // !CAMERA_FIRSTPERSON_H

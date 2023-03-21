@@ -17,11 +17,14 @@ World::~World()
 
 void World::SetupDevelopementWorld()
 {
-	for (unsigned int i = 0; i < TEMP_WORLD_DIMENSION_SIZE; i++)
-		for (unsigned int j = 0; j < TEMP_WORLD_DIMENSION_SIZE; j++)
+
+	return;
+
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 2; j++)
 		{
 			auto _segment = GetSegment(i * SEGMENT_LENGTH, 0.0f, j * SEGMENT_LENGTH);
-			auto _rand = (i % 3) + (j % 3);
+			auto _rand = abs((i % 3) + (j % 3));
 			switch (_rand)
 			{
 				case 0:
@@ -54,10 +57,6 @@ void World::SetupDevelopementWorld()
 			}
 			_segment->RebuildBuffers();
 		}
-
-	auto _segment1 = GetSegment(-10.0f, 0.0f, -10.0f);
-	_segment1->Fill(SolidBlockType::DIRT);
-	_segment1->RebuildBuffers();
 
 }
 
@@ -114,10 +113,16 @@ BlockIndex World::GetBlockIndex(float x, float y, float z)
 	auto _y = fmod(y, SEGMENT_LENGTH);
 	auto _z = fmod(z, SEGMENT_LENGTH);
 
-	return BlockIndex{
-		 x < 0 ? (unsigned int)floorf(SEGMENT_LENGTH - abs(_x)) : (unsigned int)_x,
-		 y < 0 ? (unsigned int)floorf(SEGMENT_LENGTH - abs(_y)) : (unsigned int)_y,
-		 z < 0 ? (unsigned int)floorf(SEGMENT_LENGTH - abs(_z)) : (unsigned int)_z};
+	BlockIndex _index = {
+	x < 0 ? (unsigned int)floorf(SEGMENT_LENGTH - abs(_x)) : (unsigned int)_x,
+	y < 0 ? (unsigned int)floorf(SEGMENT_LENGTH - abs(_y)) : (unsigned int)_y,
+	z < 0 ? (unsigned int)floorf(SEGMENT_LENGTH - abs(_z)) : (unsigned int)_z };
+
+	_index.x %= 10;
+	_index.y %= 10;
+	_index.z %= 10;
+
+	return _index;
 }
 
 SegmentIndex World::GetSegmentIndex(float x, float y, float z)

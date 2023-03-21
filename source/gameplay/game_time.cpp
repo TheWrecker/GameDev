@@ -4,7 +4,7 @@
 #include "game_time.h"
 
 GameTime::GameTime(SystemTicker* ticker)
-    :ticker(ticker), speed(1.0f), game_time(0.0f), real_time(0.0f), paused(true), realtime_container(), gametime_container()
+    :ticker(ticker), speed(1.0f), game_time(0.0f), real_time(0.0f), paused(false), realtime_container(), gametime_container(), diff(0.0f)
 {
 }
 
@@ -14,15 +14,16 @@ GameTime::~GameTime()
 
 void GameTime::Update()
 {
+    diff = ticker->GetLastTickDuration();
+    auto _ms = diff * 1000.0f;
+
     if (!paused)
     {
-        auto _game_diff = (ticker->GetLastTickDuration() * speed);
-        game_time += _game_diff;
-        auto _game_ms = static_cast<unsigned int>(_game_diff * 1000);
-
+        game_time += diff * speed;
         for (auto& _element : gametime_container)
         {
-            _element.current += _game_ms;
+
+            _element.current += _ms * speed;
             if (_element.current > _element.call_limit)
             {
                 _element.current -= _element.call_limit;
@@ -31,13 +32,11 @@ void GameTime::Update()
         }
     }
 
-    auto _real_diff = ticker->GetLastTickDuration();
-    real_time += (_real_diff);
-    auto _real_ms = static_cast<unsigned int>(_real_diff * 1000);
+    real_time += (diff);
 
     for (auto& _element : realtime_container)
     {
-        _element.current += _real_ms;
+        _element.current += _ms;
         if (_element.current > _element.call_limit)
         {
             _element.current -= _element.call_limit;
@@ -61,7 +60,7 @@ void GameTime::Resume()
     paused = false;
 }
 
-PeriodicTask GameTime::RegisterFunction(Callback func, unsigned int interval, bool realTime)
+PeriodicTask GameTime::RegisterFunction(Callback func, float interval, bool realTime)
 {
     if (realTime)
     {

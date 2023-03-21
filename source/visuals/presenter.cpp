@@ -37,7 +37,6 @@ Presenter::Presenter(Supervisor* parent)
 	SetBlendMode(BlendMode::DISABLED);
 
 	scene = std::make_unique<Scene>(this);
-	scene->SwitchMode(SceneMode::DEVELOPEMENT);
 	overlay = std::make_unique<Overlay>(this);
 	//overlay->Show();
 

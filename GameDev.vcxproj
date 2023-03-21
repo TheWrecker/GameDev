@@ -172,6 +172,7 @@
     <ClCompile Include="source\events\block_digged.cpp" />
     <ClCompile Include="source\events\event_handler.cpp" />
     <ClCompile Include="source\events\finish_dig.cpp" />
+    <ClCompile Include="source\external\FastNoiseLite\FastNoise.cpp" />
     <ClCompile Include="source\external\ImGui\imgui.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_demo.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_draw.cpp" />
@@ -183,9 +184,11 @@
     <ClCompile Include="source\gameplay\item_container.cpp" />
     <ClCompile Include="source\gameplay\item_stack.cpp" />
     <ClCompile Include="source\gameplay\physics_engine.cpp" />
+    <ClCompile Include="source\gameplay\world_engine.cpp" />
     <ClCompile Include="source\input\input_handler.cpp" />
     <ClCompile Include="source\input\keyboard.cpp" />
     <ClCompile Include="source\input\mouse.cpp" />
+    <ClCompile Include="source\processors\processor_biome.cpp" />
     <ClCompile Include="source\processors\processor_solid_block.cpp" />
     <ClCompile Include="source\visuals\elements\buffer_index.cpp" />
     <ClCompile Include="source\visuals\elements\input_layout.cpp" />
@@ -244,6 +247,7 @@
     <ClInclude Include="source\events\cancel_dig.h" />
     <ClInclude Include="source\events\event_handler.h" />
     <ClInclude Include="source\events\finish_dig.h" />
+    <ClInclude Include="source\external\FastNoiseLite\FastNoise.h" />
     <ClInclude Include="source\external\ImGui\imconfig.h" />
     <ClInclude Include="source\external\ImGui\imgui.h" />
     <ClInclude Include="source\external\ImGui\imgui_impl_dx11.h" />
@@ -256,6 +260,7 @@
     <ClInclude Include="source\gameplay\item_container.h" />
     <ClInclude Include="source\gameplay\item_stack.h" />
     <ClInclude Include="source\gameplay\physics_engine.h" />
+    <ClInclude Include="source\gameplay\world_engine.h" />
     <ClInclude Include="source\headers\defs_blocks.h" />
     <ClInclude Include="source\headers\defs_items.h" />
     <ClInclude Include="source\headers\defs_world.h" />
@@ -270,6 +275,7 @@
     <ClInclude Include="source\input\input_handler.h" />
     <ClInclude Include="source\input\keyboard.h" />
     <ClInclude Include="source\input\mouse.h" />
+    <ClInclude Include="source\processors\processor_biome.h" />
     <ClInclude Include="source\processors\processor_solid_block.h" />
     <ClInclude Include="source\visuals\elements\buffer_constant.h" />
     <ClInclude Include="source\visuals\elements\buffer_index.h" />

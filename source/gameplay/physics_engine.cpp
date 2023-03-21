@@ -44,6 +44,7 @@ void PhysicsEngine::Update()
 {
 	//service specific updates, nothing for now
 	// physics components get updated each 10ms via UpdateAllSystems(), registered at GameTime
+	//UpdateAllSystems();
 }
 
 void PhysicsEngine::RegisterMovementComponent(MovePhysics* target)
@@ -79,11 +80,11 @@ void PhysicsEngine::UpdateAllSystems()
 	//TODO: check if global physics are enabled?
 	//TODO: per-system checks?
 	//TODO: per-component checks?
-	//TODO: gamespeed affects movement
+	//TODO: make gamespeed affect movement speed
 
 	//predefinitions
 	//TODO: check if ticker is valid?
-	auto _elapsed_time = 0.001f;//ticker->GetLastTickDuration();
+	auto _elapsed_time = ticker->GetLastTickDuration();
 	DirectX::XMVECTOR _up = { 0.0f, 1.0f, 0.0f, 0.0f };
 	DirectX::XMVECTOR _xz_direction, _right_vector, _front_move, _side_move, _coll;
 	DirectX::XMFLOAT3 _rotation, _temp_pos;
@@ -174,7 +175,7 @@ void PhysicsEngine::UpdateAllSystems()
 			}
 			else
 			{
-				//check if we collide with a block
+				//check if we will collide with a block
 				_block1 = world->GetBlock(_temp_pos.x + XMVectorGetX(_front_move) + XMVectorGetX(_coll),
 					_temp_pos.y,
 					_temp_pos.z + XMVectorGetZ(_front_move) + +XMVectorGetZ(_coll));
@@ -213,7 +214,7 @@ void PhysicsEngine::UpdateAllSystems()
 			}
 			else
 			{
-				//check if we collide with a block
+				//check if we will collide with a block
 				_block1 = world->GetBlock(_temp_pos.x + XMVectorGetX(_front_move) + XMVectorGetX(_coll),
 					_temp_pos.y,
 					_temp_pos.z + XMVectorGetZ(_front_move) + +XMVectorGetZ(_coll));
@@ -235,6 +236,7 @@ void PhysicsEngine::UpdateAllSystems()
 
 			}
 
+			//anti-stuck temporary measurement
 			_block1 = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z);
 			//are we inside a block?
 			if (_block1)

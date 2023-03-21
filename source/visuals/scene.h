@@ -17,6 +17,7 @@
 	class TextureManager;
 	class TextureAtlas;
 	class PhysicsEngine;
+	class WorldEngine;
 	class Aggregator;
 	class Presenter;
 
@@ -61,6 +62,7 @@
 		Presenter* presenter;
 		CameraType camera_type;
 		PhysicsEngine* physics_engine;
+		WorldEngine* world_engine;
 
 		std::unique_ptr<BasicCamera> active_camera;
 		std::unique_ptr<Sun> sun;

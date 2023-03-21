@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /Build_Debug
 /Build_Release
 *.cso
+/exebackups

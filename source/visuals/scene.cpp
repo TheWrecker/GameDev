@@ -13,6 +13,7 @@
 #include "presenter.h"
 #include "render/aggregator.h"
 #include "../gameplay/physics_engine.h"
+#include "../gameplay/world_engine.h"
 
 #include "scene.h"
 
@@ -20,6 +21,7 @@ Scene::Scene(Presenter* parent)
 	:presenter(parent), camera_type(CameraType::FIRST_PERSON)
 {
 	physics_engine = presenter->QueryService<PhysicsEngine*>("physics_engine");
+	world_engine = presenter->QueryService<WorldEngine*>("world_engine");
 	active_camera = std::make_unique<FirstPersonCamera>();
 	active_camera->SetPosition(0.0f, 20.0f, 20.0f);
 	active_camera->SetDirection(1.0f, -1.0f, 0.0f);
@@ -32,7 +34,7 @@ Scene::Scene(Presenter* parent)
 	aggregator = std::make_unique<Aggregator>(this);
 	world = std::make_unique<World>(this);
 	player = std::make_unique<Player>(this);
-	player->SetPosition(20.0f, 11.0f, 20.0f);
+	player->SetPosition(0.0f, 11.0f, 00.0f);
 	active_camera->HookToEntity(player.get());
 	//TODO: move to a unit factory?
 	physics_engine->RegisterMovementComponent(player.get());
@@ -51,6 +53,8 @@ void Scene::SwitchMode(SceneMode mode)
 		{
 			SolidBlockProcessor::Setup(atlas.get());
 			world->SetupDevelopementWorld();
+			world_engine->SetupWorld(this);
+			physics_engine->Start();
 			break;
 		}
 		default:

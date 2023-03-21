@@ -8,7 +8,7 @@
 class Ray
 {
 public:
-	Ray(DirectX::XMFLOAT3& pos, DirectX::XMFLOAT3& dir);
+	Ray(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir);
 	~Ray();
 
 	void Advance(float distance);
