@@ -50,7 +50,7 @@ void WorldEngine::SetupWorld(Scene* scene)
 		{
 			_bX = -(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f) + _x;
 			_bZ = -(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f) + _z;
-			_val = WORLD_GENERATION_MAX_HEIGHT_DIFF * noise_generator->GetPerlin(_bX, _bZ);
+			_val = noise_generator->GetPerlin(_bX, _bZ);
 			BiomeProcessor::ProcessBiome(world, _bX, _val, _bZ);
 		}
 

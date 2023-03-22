@@ -8,6 +8,7 @@
 	#include "interface_service.h"
 	#include "game_time.h"
 
+	class Player;
 	class Scene;
 	class World;
 	class MovePhysics;
@@ -30,13 +31,11 @@
 		void RegisterCollisionComponent(CollisionPhysics* target);
 		void RemoveCollisionComponent(CollisionPhysics* target);
 
-		float GetLastPhysicsTickDuration();
-
-		std::chrono::high_resolution_clock::time_point _tp1, _tp2;
-		float last_tick;
-
 	private:
+		friend class Overlay;
+
 		void UpdateAllSystems();
+		void ProcessPlayerNoPhysics();
 
 		Supervisor* supervisor;
 		SystemTicker* ticker;
@@ -44,6 +43,9 @@
 		PeriodicTask update_task;
 		World* world;
 		Scene* scene;
+		Player* player;
+
+		bool enabled;
 
 		std::list<MovePhysics*> movements;
 		std::list<CollisionPhysics*> collisions;

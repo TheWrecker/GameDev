@@ -28,6 +28,8 @@ public:
 	bool falling;
 
 private:
+	friend class PhysicsEngine;
+
 	float
 		front,
 		side,

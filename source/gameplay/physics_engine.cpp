@@ -8,6 +8,7 @@
 #include "game_time.h"
 #include "../entities/entity_transformable.h"
 #include "../entities/block_solid.h"
+#include "../entities/player.h"
 #include "../entities/segment.h"
 #include "../entities/world.h"
 #include "../visuals/scene.h"
@@ -17,7 +18,7 @@
 #include "physics_engine.h"
 
 PhysicsEngine::PhysicsEngine(Supervisor* supervisor)
-	:supervisor(supervisor), game_time(nullptr), scene(nullptr), world(nullptr), ticker(nullptr)
+	:supervisor(supervisor), game_time(nullptr), scene(nullptr), world(nullptr), ticker(nullptr), enabled(false)
 {
 }
 
@@ -36,8 +37,10 @@ void PhysicsEngine::Start()
 	game_time = supervisor->QueryService<GameTime*>("game_time");
 	scene = supervisor->QueryService<Presenter*>("presenter")->GetActiveScene();
 	world = scene->GetWorld();
+	player = scene->GetPlayer();
 	//100 global physics engine ticks per second
 	update_task = game_time->RegisterFunction(std::bind(&PhysicsEngine::UpdateAllSystems, this), 10, true);
+	enabled = true;
 }
 
 void PhysicsEngine::Update()
@@ -78,6 +81,12 @@ void PhysicsEngine::RemoveCollisionComponent(CollisionPhysics* target)
 void PhysicsEngine::UpdateAllSystems()
 {
 	//TODO: check if global physics are enabled?
+	if (!enabled)
+	{
+		ProcessPlayerNoPhysics();
+		return;
+	}
+	
 	//TODO: per-system checks?
 	//TODO: per-component checks?
 	//TODO: make gamespeed affect movement speed
@@ -251,4 +260,20 @@ void PhysicsEngine::UpdateAllSystems()
 			_entity->SetPosition(_temp_pos);
 		}
 	}
+}
+
+void PhysicsEngine::ProcessPlayerNoPhysics()
+{
+	using namespace DirectX;
+	auto _elapsed_time = ticker->GetLastTickDuration();
+	XMVECTOR _up = { 0.0f, 1.0f, 0.0f, 0.0f };
+	auto _front_dir = player->Rotation_Vector();
+	auto _right_dir = XMVector3Cross(_front_dir, _up);
+	_right_dir = XMVector3Normalize(_right_dir);
+	auto _front_move = _front_dir * _elapsed_time * player->front * 20.0f;
+	auto _side_move = _right_dir * _elapsed_time * player->side * 20.0f;
+	auto _position = player->Position_Vector() + _front_move + _side_move;
+	XMFLOAT3 _final_pos = {};
+	XMStoreFloat3(&_final_pos, _position);
+	player->SetPosition(_final_pos);
 }

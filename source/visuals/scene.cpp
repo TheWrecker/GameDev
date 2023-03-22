@@ -10,6 +10,7 @@
 #include "elements/manager_texture.h"
 #include "elements/texture_atlas.h"
 #include "../processors/processor_solid_block.h"
+#include "../processors/processor_biome.h"
 #include "presenter.h"
 #include "render/aggregator.h"
 #include "../gameplay/physics_engine.h"
