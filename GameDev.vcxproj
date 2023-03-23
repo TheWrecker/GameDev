@@ -163,6 +163,7 @@
     <ClCompile Include="source\entities\entity_basic.cpp" />
     <ClCompile Include="source\entities\camera_basic.cpp" />
     <ClCompile Include="source\entities\entity_transformable.cpp" />
+    <ClCompile Include="source\entities\pillar.cpp" />
     <ClCompile Include="source\entities\player.cpp" />
     <ClCompile Include="source\entities\segment.cpp" />
     <ClCompile Include="source\entities\sun.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="source\entities\entity_basic.h" />
     <ClInclude Include="source\entities\camera_basic.h" />
     <ClInclude Include="source\entities\entity_transformable.h" />
+    <ClInclude Include="source\entities\pillar.h" />
     <ClInclude Include="source\entities\player.h" />
     <ClInclude Include="source\entities\segment.h" />
     <ClInclude Include="source\entities\sun.h" />

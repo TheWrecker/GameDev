@@ -34,8 +34,6 @@
 		std::unique_ptr<FastNoise> noise_generator;
 		int seed;
 
-		void ProcessBiome(BiomeInfo& biome);
-
 		std::vector<BiomeInfo> biomes;
 	};
 

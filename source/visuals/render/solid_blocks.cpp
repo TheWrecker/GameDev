@@ -1,9 +1,12 @@
 
 #include "../entities/segment.h"
+#include "../entities/pillar.h"
 #include "../entities/world.h"
 #include "../scene.h"
 
 #include "solid_blocks.h"
+
+//TODO: near player container for rendering pillars?
 
 SolidBlockRender::SolidBlockRender(Scene* scene)
 	:RenderBase(scene)
@@ -31,16 +34,19 @@ void SolidBlockRender::Render()
 	vertex_shader->Apply();
 	pixel_shader->Apply();
 	input_layout->Bind();
-	for (auto& _segment : scene->GetWorld()->segments)
+	for (auto& _pillar : scene->GetWorld()->pillars)
 	{
-		if (_segment.second->IsEmpty())
-			continue;
+		for (auto& _segment : _pillar.second->segments)
+		{
+			if (_segment.second->IsEmpty())
+				continue;
 
-		DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_segment.second->World_Matrix()) };
-		per_object_buffer->Update(_cb);
-		per_object_buffer->Bind(BindStage::VERTEX, 1);
-		_segment.second->GetVertexBuffer()->Bind(1);
-		_segment.second->GetIndexBuffer()->Bind();
-		context->DrawIndexed(_segment.second->GetIndexBuffer()->GetIndexCount(), 0, 0);
+			DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_segment.second->World_Matrix()) };
+			per_object_buffer->Update(_cb);
+			per_object_buffer->Bind(BindStage::VERTEX, 1);
+			_segment.second->GetVertexBuffer()->Bind(1);
+			_segment.second->GetIndexBuffer()->Bind();
+			context->DrawIndexed(_segment.second->GetIndexBuffer()->GetIndexCount(), 0, 0);
+		}
 	}
 }

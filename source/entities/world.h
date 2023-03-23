@@ -9,6 +9,7 @@
 
     class SolidBlock;
     class Segment;
+    class Pillar;
     class Scene;
 
     struct BlockIndex
@@ -29,18 +30,29 @@
 
     bool operator ==(const SegmentIndex& left, const SegmentIndex& right) noexcept;
 
+    struct PillarIndex
+    {
+        int x, z;
+
+        PillarIndex(int x, int z);
+    };
+
+    bool operator ==(const PillarIndex& left, const PillarIndex& right) noexcept;
+
     namespace std
     {
         template<>
-        struct hash<SegmentIndex>
+        struct hash<PillarIndex>
         {
-            std::size_t operator()(const SegmentIndex& index) const noexcept
+            std::size_t operator()(const PillarIndex& index) const noexcept
             {
-                std::size_t _combination = 
-                    (((std::size_t)index.x << 23) * 53) +
-                    (((std::size_t)index.y << 17) * 67) + 
-                    ((std::size_t)index.z * 83);
-                return _combination;
+                uint64_t _combination = 0;
+                uintptr_t _add = (uintptr_t)&_combination;
+                _add += 4;
+                memcpy(&_combination, &index.x, 4);
+                memcpy((void*)(((uintptr_t)&_combination) + 4), &index.z, 4);
+                std::hash<uint64_t> hash1;
+                return hash1(_combination);
             }
         };
     }
@@ -54,10 +66,12 @@
 	    void SetupDevelopementWorld();
 
         SolidBlock* CreateBlock(SolidBlockType type, float x, float y, float z, bool rebuildSegment = false);
-	    Segment* GetSegment(float x, float y, float z);
-	    Segment* GetSegment(SegmentIndex& index);
         SolidBlock* GetBlock(float x, float y, float z);
 	    SolidBlock* GetBlock(Segment* segment, BlockIndex& index);
+
+        Segment* CreateSegment(float x, float y, float z);
+        Segment* GetSegment(float x, float y, float z, bool force = false);
+        Segment* GetSegment(SegmentIndex& index, bool force = false);
 
         BlockIndex GetBlockIndex(float x, float y, float z);
         SegmentIndex GetSegmentIndex(float x, float y, float z);
@@ -72,7 +86,8 @@
         friend class WorldEngine;
 
 	    Scene* scene;
-	    std::unordered_map<SegmentIndex, Segment*, std::hash<SegmentIndex>> segments;
+
+	    std::unordered_map<PillarIndex, Pillar*, std::hash<PillarIndex>> pillars;
     };
 
 #endif // !WORLD_H

@@ -1,5 +1,6 @@
 
 #include "segment.h"
+#include "pillar.h"
 
 #include "world.h"
 
@@ -11,8 +12,8 @@ World::World(Scene* scene)
 
 World::~World()
 {
-	for (auto& item : segments)
-		delete item.second;
+	for (auto& _element : pillars)
+		delete _element.second;
 }
 
 void World::SetupDevelopementWorld()
@@ -63,7 +64,8 @@ void World::SetupDevelopementWorld()
 SolidBlock* World::CreateBlock(SolidBlockType type, float x, float y, float z, bool rebuildSegment)
 {
 	SegmentIndex _segment_index = GetSegmentIndex(x, y, z);
-	auto _segment = GetSegment(_segment_index);
+	auto _segment = GetSegment(_segment_index, true);
+
 	BlockIndex _block_index = GetBlockIndex(x, y, z);
 
 	auto _block = GetBlock(_segment, _block_index);
@@ -79,24 +81,55 @@ SolidBlock* World::CreateBlock(SolidBlockType type, float x, float y, float z, b
 	return GetBlock(_segment, _block_index);
 }
 
-Segment* World::GetSegment(float x, float y, float z)
+Segment* World::GetSegment(float x, float y, float z, bool force)
 {
 	SegmentIndex _index = GetSegmentIndex(x, y, z);
-	return GetSegment(_index);
+	return GetSegment(_index, force);
 }
 
-Segment* World::GetSegment(SegmentIndex& index)
+Segment* World::GetSegment(SegmentIndex& index, bool force)
 {
 	assert(IsSegmentWithinBounds(index));
-	if (!segments.contains(index))
+	auto _result = pillars.find(PillarIndex(index.x, index.z));
+	if (_result != pillars.end())
+		return _result->second->GetSegment(index.y, force);
+	else if (force)
+	{
+		auto _pillar = new Pillar(scene, index.x * SEGMENT_LENGTH, index.z * SEGMENT_LENGTH);
+		pillars.insert(std::pair(PillarIndex(index.x, index.z), _pillar));
+		return _pillar->GetSegment(index.y, true);
+	}
+
+	return nullptr;
+
+	/*if (!segments.contains(index))
 		segments[index] = new Segment(scene, SolidBlockType::TEST, false, index.x * SEGMENT_LENGTH, index.y * SEGMENT_LENGTH, index.z * SEGMENT_LENGTH);
-	return segments[index];
+	return segments[index];*/
+}
+
+Segment* World::CreateSegment(float x, float y, float z)
+{
+	SegmentIndex _index = GetSegmentIndex(x, y, z);
+	assert(IsSegmentWithinBounds(_index));
+	auto _result = pillars.find(PillarIndex(_index.x, _index.z));
+	if (_result != pillars.end())
+		return _result->second->GetSegment(_index.y, true);
+	else
+	{
+		auto _pillar = new Pillar(scene, _index.x * SEGMENT_LENGTH, _index.z * SEGMENT_LENGTH);
+		pillars.insert(std::pair(PillarIndex(_index.x, _index.z), _pillar));
+		return _pillar->CreateSegment(_index.y);
+	}
 }
 
 SolidBlock* World::GetBlock(float x, float y, float z)
 {
 	SegmentIndex _segment_index = GetSegmentIndex(x, y, z);
 	auto _segment = GetSegment(_segment_index);
+
+	if (!_segment)
+		return nullptr;
+
 	BlockIndex _block_index = GetBlockIndex(x, y, z);
 	return GetBlock(_segment, _block_index);
 }
@@ -160,4 +193,14 @@ SegmentIndex::SegmentIndex(int x, int y, int z)
 bool operator ==(const SegmentIndex& left, const SegmentIndex& right) noexcept
 {
 	return (left.x == right.x) && (left.y == right.y) && (left.z == right.z);
+}
+
+PillarIndex::PillarIndex(int x, int z)
+	:x(x),z(z)
+{
+}
+
+bool operator ==(const PillarIndex& left, const PillarIndex& right) noexcept
+{
+	return (left.x == right.x) && (left.z == right.z);
 }

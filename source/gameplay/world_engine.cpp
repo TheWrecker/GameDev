@@ -1,12 +1,14 @@
 
 #include <cassert>
 #include <chrono>
+#include <unordered_map>
 
 #include "../external/FastNoiseLite/FastNoise.h"
 
 #include "defs_world.h"
 #include "../entities/player.h"
 #include "../entities/segment.h"
+#include "../entities/pillar.h"
 #include "../entities/world.h"
 #include "../visuals/scene.h"
 #include "../processors/processor_biome.h"
@@ -55,9 +57,24 @@ void WorldEngine::SetupWorld(Scene* scene)
 		}
 
 	//rebuild all world segments' buffers?
-	for (auto& _segment : world->segments)
+	/*for (auto& _segment : world->segments)
 	{
 		_segment.second->RebuildBuffers();
+	}*/
+
+	for (auto& _pillar : world->pillars)
+	{
+		for (auto& _segment : _pillar.second->segments)
+			_segment.second->RebuildBuffers();
+	}
+
+	bool has_collision = false;
+	for (size_t bucket = 0; bucket < world->pillars.bucket_count(); bucket++) {
+		auto _size = world->pillars.bucket_size(bucket);
+		if (_size > 1) {
+			has_collision = true;
+			//break;
+		}
 	}
 
 	auto _tp2 = std::chrono::high_resolution_clock::now();

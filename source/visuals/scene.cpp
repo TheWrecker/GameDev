@@ -52,7 +52,8 @@ void Scene::SwitchMode(SceneMode mode)
 	{
 		case SceneMode::DEVELOPEMENT:
 		{
-			SolidBlockProcessor::Setup(atlas.get());
+			SolidBlockProcessor::Setup(world.get(), atlas.get());
+			BiomeProcessor::Setup();
 			world->SetupDevelopementWorld();
 			world_engine->SetupWorld(this);
 			physics_engine->Start();

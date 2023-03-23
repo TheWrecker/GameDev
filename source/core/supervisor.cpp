@@ -38,7 +38,7 @@ Supervisor::Supervisor(InstanceHandle instance)
 	IService* _physics_engine = new PhysicsEngine(this);
 	services->AdoptService("physics_engine", _physics_engine);
 
-	IService* _world_engine = new WorldEngine(1); //dev seed
+	IService* _world_engine = new WorldEngine(3); //dev seed
 	services->AdoptService("world_engine", _world_engine);
 
 	IService* _mouse = new Mouse(static_cast<Platform*>(_platform)->GetWindowHandle());

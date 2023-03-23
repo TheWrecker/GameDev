@@ -11,15 +11,17 @@
 
 	class TextureAtlas;
 	class Segment;
+	class World;
 
 	class SolidBlockProcessor
 	{
 	public:
-		static void Setup(TextureAtlas* atlas);
+		static void Setup(World* world, TextureAtlas* atlas);
 		static void Rebuild(Segment* target);
 
 	private:
-		static bool CheckBlockFace(Segment* target, FaceName face);
+		static bool CheckNextSegmentBlock(SolidBlock* block, FaceName face);
+		static bool CheckBlockFace(Segment* segment, SolidBlock* block, FaceName face);
 		static void AddFaceVertices(Segment* target, Face& face);
 		static unsigned int
 			index_x,
@@ -28,6 +30,7 @@
 			solids,
 			current_index;
 		static TextureAtlas* texture_atlas;
+		static World* world;
 	};
 
 #endif // !PROCESSOR_SOLID_BLOCK_H

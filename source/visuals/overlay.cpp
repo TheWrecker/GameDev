@@ -190,6 +190,10 @@ void Overlay::Draw()
 
 		if (ImGui::CollapsingHeader("Player"))
 		{
+			ImGui::Text("Position: x:%f - y:%f - z:%f", player->position.x, player->position.y, player->position.z);
+
+			ImGui::Separator();
+
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), "Mode: %s", InteractionModeNames[static_cast<unsigned int>(player->interaction_mode)].c_str());
 
 			ImGui::Separator();
