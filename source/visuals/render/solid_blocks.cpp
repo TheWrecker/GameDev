@@ -2,6 +2,7 @@
 #include "../entities/segment.h"
 #include "../entities/pillar.h"
 #include "../entities/world.h"
+#include "vision_perimeter.h"
 #include "../scene.h"
 
 #include "solid_blocks.h"
@@ -23,10 +24,17 @@ SolidBlockRender::SolidBlockRender(Scene* scene)
 		.Build();
 
 	per_object_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
+	perimeter = std::make_unique<VisionPerimeter>(scene);
 }
 
 SolidBlockRender::~SolidBlockRender()
 {
+}
+
+void SolidBlockRender::Update()
+{
+	render_segments.clear();
+	perimeter->CollectVisionPerimeter(render_segments);
 }
 
 void SolidBlockRender::Render()
@@ -34,7 +42,8 @@ void SolidBlockRender::Render()
 	vertex_shader->Apply();
 	pixel_shader->Apply();
 	input_layout->Bind();
-	for (auto& _pillar : scene->GetWorld()->pillars)
+
+	/*for (auto& _pillar : scene->GetWorld()->pillars)
 	{
 		for (auto& _segment : _pillar.second->segments)
 		{
@@ -48,5 +57,19 @@ void SolidBlockRender::Render()
 			_segment.second->GetIndexBuffer()->Bind();
 			context->DrawIndexed(_segment.second->GetIndexBuffer()->GetIndexCount(), 0, 0);
 		}
+	}*/
+
+	for (auto _segment : render_segments)
+	{
+		if (_segment->IsEmpty())
+			continue;
+
+		DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_segment->World_Matrix()) };
+		per_object_buffer->Update(_cb);
+		per_object_buffer->Bind(BindStage::VERTEX, 1);
+		_segment->GetVertexBuffer()->Bind(1);
+		_segment->GetIndexBuffer()->Bind();
+		context->DrawIndexed(_segment->GetIndexBuffer()->GetIndexCount(), 0, 0);
 	}
+
 }

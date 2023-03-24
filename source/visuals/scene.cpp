@@ -24,7 +24,7 @@ Scene::Scene(Presenter* parent)
 	physics_engine = presenter->QueryService<PhysicsEngine*>("physics_engine");
 	world_engine = presenter->QueryService<WorldEngine*>("world_engine");
 	active_camera = std::make_unique<FirstPersonCamera>();
-	active_camera->SetPosition(0.0f, 20.0f, 20.0f);
+	active_camera->position = { 0.0f, 20.0f, 20.0f };
 	active_camera->SetDirection(1.0f, -1.0f, 0.0f);
 	sun = std::make_unique<Sun>();
 	state_master = std::make_unique<StateMaster>(parent);
@@ -32,7 +32,6 @@ Scene::Scene(Presenter* parent)
 	atlas = std::make_unique<TextureAtlas>(parent);
 	model_manager = std::make_unique<ModelManager>();
 	buffer_master = std::make_unique<BufferMaster>(this);
-	aggregator = std::make_unique<Aggregator>(this);
 	world = std::make_unique<World>(this);
 	player = std::make_unique<Player>(this);
 	player->SetPosition(0.0f, 11.0f, 00.0f);
@@ -40,6 +39,7 @@ Scene::Scene(Presenter* parent)
 	//TODO: move to a unit factory?
 	physics_engine->RegisterMovementComponent(player.get());
 	physics_engine->RegisterCollisionComponent(player.get());
+	aggregator = std::make_unique<Aggregator>(this);
 }
 
 Scene::~Scene()
@@ -86,16 +86,16 @@ void Scene::SwitchCameraType(CameraType type)
 	{
 		_temp = std::make_unique<BasicCamera>();
 		_temp->SetProperties(active_camera->fov, active_camera->aspect_ratio, active_camera->near_plane, active_camera->far_plane);
-		_temp->SetPosition(active_camera->position.x, active_camera->position.y, active_camera->position.z);
-		_temp->SetRotation(active_camera->rotation.x, active_camera->rotation.y, active_camera->rotation.z);
+		_temp->position = { active_camera->position.x, active_camera->position.y, active_camera->position.z };
+		_temp->SetDirection(active_camera->direction.x, active_camera->direction.y, active_camera->direction.z);
 		break;
 	}
 	case CameraType::FIRST_PERSON:
 	{
 		_temp = std::make_unique<FirstPersonCamera>();
 		_temp->SetProperties(active_camera->fov, active_camera->aspect_ratio, active_camera->near_plane, active_camera->far_plane);
-		_temp->SetPosition(active_camera->position.x, active_camera->position.y, active_camera->position.z);
-		_temp->SetRotation(active_camera->rotation.x, active_camera->rotation.y, active_camera->rotation.z);
+		_temp->position = { active_camera->position.x, active_camera->position.y, active_camera->position.z };
+		_temp->SetDirection(active_camera->direction.x, active_camera->direction.y, active_camera->direction.z);
 		break;
 	}
 	default:

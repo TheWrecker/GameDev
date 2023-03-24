@@ -158,8 +158,8 @@ Face BackFace = {
 };
 
 const std::vector<unsigned int> Indices = {
-	0, 3, 1,
-	0, 2, 3
+	0, 1, 3,
+	0, 3, 2
 };
 
 unsigned int SolidBlockProcessor::index_x = 0;

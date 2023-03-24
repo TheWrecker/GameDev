@@ -79,15 +79,10 @@
 	    bool IsSegmentWithinBounds(SegmentIndex index);
 	    bool IsBlockWithinBounds(BlockIndex& index);
 
+        std::unordered_map<PillarIndex, Pillar*, std::hash<PillarIndex>> pillars;
+
     private:
-	    friend class Aggregator;
-	    friend class SolidBlockRender;
-	    friend class Overlay;
-        friend class WorldEngine;
-
 	    Scene* scene;
-
-	    std::unordered_map<PillarIndex, Pillar*, std::hash<PillarIndex>> pillars;
     };
 
 #endif // !WORLD_H

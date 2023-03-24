@@ -18,15 +18,10 @@
 		Segment* GetSegment(int index, bool force = false);
 
 		float x, z;
+		std::unordered_map<int, Segment*> segments;
 
 	private:
-		friend class World;
-		friend class WorldEngine;
-		friend class SolidBlockRender;
-
 		Scene* scene;
-
-		std::unordered_map<int, Segment*> segments;
 	};
 
 #endif // !PILLAR_H

@@ -29,7 +29,7 @@ void Player::Update()
 	//SetPosition(camera->Position());
     
 	//TODO: rotate based on 2D camera direction only? rotate head only?
-	SetRotation(camera->Rotation().x, camera->Rotation().y, camera->Rotation().z);
+	SetRotation(camera->direction.x, camera->direction.y, camera->direction.z);
 
 }
 
@@ -48,7 +48,7 @@ void Player::SetActiveInventorySlot(unsigned int slot)
 
 SolidBlock* Player::GetInteractionBlock()
 {
-    Ray _ray(camera->Position(), rotation);
+    Ray _ray(camera->position, rotation);
     //TODO: gameplay constants/variables?
     while (_ray.GetLength() < 3.0f)
     {
@@ -66,7 +66,7 @@ SolidBlock* Player::GetInteractionBlock()
 
 bool Player::GetPlacementBlockPos(DirectX::XMFLOAT3& pos)
 {
-    Ray _ray(camera->Position(), rotation);
+    Ray _ray(camera->position, rotation);
     DirectX::XMFLOAT3 _inv_slope = { 1.0f / rotation.x, 1.0f / rotation.y, 1.0f / rotation.z };
     //TODO: gameplay constants/variables?
     while (_ray.GetLength() < 3.0f)
@@ -104,9 +104,9 @@ bool Player::GetPlacementBlockPos(DirectX::XMFLOAT3& pos)
             assert(tmax >= tmin);
 
             DirectX::XMFLOAT3 _pos = {};
-            _pos.x = (tmin * rotation.x) + camera->Position().x;
-            _pos.y = (tmin * rotation.y) + camera->Position().y;
-            _pos.z = (tmin * rotation.z) + camera->Position().z;
+            _pos.x = (tmin * rotation.x) + camera->position.x;
+            _pos.y = (tmin * rotation.y) + camera->position.y;
+            _pos.z = (tmin * rotation.z) + camera->position.z;
 
             if (abs(_pos.x - pos.x) < 0.00001f) //left (-x) face
             {

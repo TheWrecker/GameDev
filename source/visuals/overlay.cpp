@@ -191,6 +191,7 @@ void Overlay::Draw()
 		if (ImGui::CollapsingHeader("Player"))
 		{
 			ImGui::Text("Position: x:%f - y:%f - z:%f", player->position.x, player->position.y, player->position.z);
+			ImGui::Text("Direction: x:%f - y:%f - z:%f", player->rotation.x, player->rotation.y, player->rotation.z);
 
 			ImGui::Separator();
 

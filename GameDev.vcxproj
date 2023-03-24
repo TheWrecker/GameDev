@@ -218,7 +218,9 @@
     <ClCompile Include="source\visuals\render\render_pass.cpp" />
     <ClCompile Include="source\visuals\render\sky.cpp" />
     <ClCompile Include="source\visuals\render\sun_moon.cpp" />
+    <ClCompile Include="source\visuals\render\vision_perimeter.cpp" />
     <ClCompile Include="source\visuals\scene.cpp" />
+    <ClCompile Include="source\visuals\utils\frustrum.cpp" />
     <ClCompile Include="source\visuals\utils\ray.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -308,7 +310,9 @@
     <ClInclude Include="source\visuals\render\sky.h" />
     <ClInclude Include="source\visuals\render\render_dev.h" />
     <ClInclude Include="source\visuals\render\sun_moon.h" />
+    <ClInclude Include="source\visuals\render\vision_perimeter.h" />
     <ClInclude Include="source\visuals\scene.h" />
+    <ClInclude Include="source\visuals\utils\frustrum.h" />
     <ClInclude Include="source\visuals\utils\ray.h" />
   </ItemGroup>
   <ItemGroup>
