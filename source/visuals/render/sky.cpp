@@ -27,7 +27,7 @@ SkyRender::~SkyRender()
 
 void SkyRender::Render()
 {
-	DirectX::XMFLOAT3 _currentPosition = camera->position;
+	DirectX::XMFLOAT3 _currentPosition = camera->Position();
 	DirectX::XMMATRIX _worldMatrix = scale_matrix * DirectX::XMMatrixTranslation(_currentPosition.x, _currentPosition.y, _currentPosition.z);
 	DefaultConstantStruct _cb1 = { DirectX::XMMatrixTranspose(_worldMatrix)};
 	per_frame_buffer->Update(_cb1);

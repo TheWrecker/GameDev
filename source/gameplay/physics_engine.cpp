@@ -207,7 +207,7 @@ void PhysicsEngine::UpdateAllSystems()
 			}
 
 			//calculate side movement 2D XZ vector
-			_right_vector = XMVector3Cross(_up, _xz_direction);
+			_right_vector = XMVector3Cross(_xz_direction, _up);
 			_right_vector = XMVector3Normalize(_right_vector);
 
 			_side_move = _right_vector * _elapsed_time * _component->side_speed;
@@ -268,7 +268,7 @@ void PhysicsEngine::ProcessPlayerNoPhysics()
 	auto _elapsed_time = ticker->GetLastTickDuration();
 	XMVECTOR _up = { 0.0f, 1.0f, 0.0f, 0.0f };
 	auto _front_dir = player->Rotation_Vector();
-	auto _right_dir = XMVector3Cross(_up, _front_dir);
+	auto _right_dir = XMVector3Cross(_front_dir, _up);
 	_right_dir = XMVector3Normalize(_right_dir);
 	auto _front_move = _front_dir * _elapsed_time * player->front * 20.0f;
 	auto _side_move = _right_dir * _elapsed_time * player->side * 20.0f;

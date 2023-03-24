@@ -52,8 +52,8 @@ void InputHandler::Update()
 
 			if (mouse->GetState().positionMode == DirectX::Mouse::MODE_RELATIVE)
 			{
-				_rotX = static_cast<float>(1.0f * (mouse->GetState().x) * _elapsed_time * mouse_sensitivity);
-				_rotY = static_cast<float>(1.0f * (mouse->GetState().y) * _elapsed_time * mouse_sensitivity);
+				_rotX = static_cast<float>(-1.0f * (mouse->GetState().x) * _elapsed_time * mouse_sensitivity);
+				_rotY = static_cast<float>(-1.0f * (mouse->GetState().y) * _elapsed_time * mouse_sensitivity);
 			}
 
 			camera->FeedRotation(_rotX, _rotY);

@@ -12,7 +12,6 @@
 
 		virtual void SetScale(float x, float y, float z);
 		virtual void SetRotation(float x, float y, float z);
-		virtual void SetRotation(DirectX::XMMATRIX& matrix, float x, float y, float z);
 		void SetPosition(float x, float y, float z) override;
 		void SetPosition(DirectX::XMFLOAT3 position) override;
 

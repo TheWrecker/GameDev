@@ -68,7 +68,7 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 	//brute-force for now
 	{
 		using namespace DirectX;
-		XMVECTOR _segment_length = { 10.0f, 10.0f, 10.0f, 0.0f };
+		XMVECTOR _segment_length = { SEGMENT_LENGTH, SEGMENT_LENGTH, SEGMENT_LENGTH, 0.0f };
 
 		for (auto& _pillar : world->pillars)
 			for (auto& _segment : _pillar.second->segments)

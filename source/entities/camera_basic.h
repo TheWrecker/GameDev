@@ -19,9 +19,12 @@
 		void HookToEntity(BasicEntity* target);
 
 		void SetProperties(float fieldOfView, float aspectRatio, float near, float far);
+		void SetPosition(float x, float y, float z);
 		void SetDirection(float x, float y, float z);
 		void Rotate(DirectX::CXMMATRIX matrix);
 
+		const DirectX::XMFLOAT3 Position();
+		const DirectX::XMFLOAT3 Direction();
 		const DirectX::XMVECTOR Position_Vector() const;
 		const DirectX::XMVECTOR Direction_Vector() const;
 		const DirectX::XMVECTOR Right_Vector() const;
@@ -30,11 +33,12 @@
 		const DirectX::XMMATRIX Projection_Matrix() const;
 		const DirectX::XMMATRIX View_Projection_Matrix() const;
 
-		DirectX::XMFLOAT3
-			position,
-			direction,
-			up,
-			right;
+	protected:
+		friend class Scene;
+
+		virtual void UpdateViewProjectionMatrix();
+
+		BasicEntity* hook_target;
 
 		float
 			fov,
@@ -42,12 +46,11 @@
 			near_plane,
 			far_plane;
 
-	protected:
-		friend class Scene;
-
-		virtual void UpdateViewProjectionMatrix();
-
-		BasicEntity* hook_target;
+		DirectX::XMFLOAT3
+			position,
+			direction,
+			up,
+			right;
 
 		DirectX::XMFLOAT4X4
 			view_matrix,

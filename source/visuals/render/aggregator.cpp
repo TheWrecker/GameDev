@@ -103,24 +103,21 @@ void Aggregator::AggregateAllRenders()
 	//render_pass->BindAsRenderTarget();
 
 	//render sky
-	presenter->SetRasterizerState(CullMode::CULL_NONE, false, false);
+	presenter->SetRasterizerState(CullMode::CULL_FRONT, false, false);
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
 	render_sky->Render();
-
+	presenter->SetRasterizerState(CullMode::CULL_BACK, false, false);
 
 	//render sun or moon
 	//TODO: dynamic time of day
 	//buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
-	//presenter->SetRasterizerState(CullMode::CULL_NONE, false, false);
 	render_sun_moon->Render();
-	//presenter->SetRasterizerState(CullMode::CULL_BACK, false, false);
 
 	//render dev
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::BLOCK_NORMAL);
 	render_dev->Render();
 
 	//render solid blocks
-	render_solid_blocks->Update();
 	render_solid_blocks->Render();
 
 	//enable alpha blending

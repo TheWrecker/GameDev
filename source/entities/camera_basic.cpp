@@ -5,7 +5,7 @@ BasicCamera::BasicCamera(float fieldOfView, float aspectRatio, float near, float
 	:hook_target(nullptr)
 {
 	position = { 0.0f, 0.0f, 0.0f };
-	direction = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
+	direction = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
 	up = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 	right = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
 	SetProperties(fieldOfView, aspectRatio, near, far);
@@ -20,43 +20,42 @@ void BasicCamera::FeedRotation(float rotX, float rotY)
 {
 	using namespace DirectX;
 	
-	XMVECTOR _rotation = { rotX, rotY, 0.0f, 0.0f };
-	XMVECTOR _rightHand = Right_Vector();
-	XMMATRIX _pitchMatrix = XMMatrixRotationAxis(_rightHand, XMVectorGetY(_rotation));
-	XMMATRIX _yawMatrix = XMMatrixRotationY(XMVectorGetX(_rotation));
-	Rotate(XMMatrixMultiply(_pitchMatrix, _yawMatrix));
+	XMVECTOR rotation = { rotX, rotY, 0.0f, 0.0f };
+	XMVECTOR rightHand = Right_Vector();
+	XMMATRIX pitchMatrix = XMMatrixRotationAxis(rightHand, XMVectorGetY(rotation));
+	XMMATRIX yawMatrix = XMMatrixRotationY(XMVectorGetX(rotation));
+	Rotate(XMMatrixMultiply(pitchMatrix, yawMatrix));
 }
 
 void BasicCamera::FeedMovement(float movX, float movY)
 {
 	using namespace DirectX;
 
-	XMVECTOR _pos_v = Position_Vector();
-	XMVECTOR _strafe = Right_Vector() * movX;
-	_pos_v += _strafe;
-	XMVECTOR _forward = Direction_Vector() * movY;
-	_pos_v += _forward;
-	XMStoreFloat3(&position, _pos_v);
+	XMVECTOR movement = { movX, movY, 0.0f, 0.0f };
+	XMVECTOR positionVector = Position_Vector();
+	XMVECTOR strafe = Right_Vector() * XMVectorGetX(movement);
+	positionVector += strafe;
+	XMVECTOR forward = Direction_Vector() * XMVectorGetY(movement);
+	positionVector += forward;
+	XMStoreFloat3(&position, positionVector);
 }
 
 void BasicCamera::UpdateViewMatrix()
 {
-	DirectX::XMStoreFloat4x4(&view_matrix, DirectX::XMMatrixLookToLH(Position_Vector(), Direction_Vector(), Up_Vector()));
+	DirectX::XMStoreFloat4x4(&view_matrix, DirectX::XMMatrixLookToRH(Position_Vector(), Direction_Vector(), Up_Vector()));
 	UpdateViewProjectionMatrix();
 }
 
 void BasicCamera::UpdateProjectionMatrix()
 {
-	DirectX::XMStoreFloat4x4(&projection_matrix, DirectX::XMMatrixPerspectiveFovLH(fov, aspect_ratio, near_plane, far_plane));
+	DirectX::XMStoreFloat4x4(&projection_matrix, DirectX::XMMatrixPerspectiveFovRH(fov, aspect_ratio, near_plane, far_plane));
 	UpdateViewProjectionMatrix();
 }
 
 void BasicCamera::Update()
 {
 	if (hook_target)
-	{
-		position = hook_target->Position();
-	}
+		SetPosition(hook_target->Position().x, hook_target->Position().y, hook_target->Position().z);
 
 	UpdateViewMatrix();
 }
@@ -78,13 +77,11 @@ void BasicCamera::SetProperties(float fieldOfView, float aspectRatio, float near
 void BasicCamera::SetDirection(float x, float y, float z)
 {
 	DirectX::XMFLOAT3 _direction = { x, y, z };
-	if ((_direction.x == 0.0f) && (_direction.z == 0.0f))
-	{
-		if (fabs(_direction.y == 1.0f))
-			_direction.y *= 0.99f;
-	}
+	if ((_direction.x == 0.0f) && (_direction.y == 1.0f) && (_direction.z == 0.0f))
+		_direction.y = 0.99f;
 	auto _new_direction = DirectX::XMLoadFloat3(&_direction);
 	_new_direction = DirectX::XMVector3Normalize(_new_direction);
+	_new_direction = DirectX::XMVectorNegate(_new_direction);
 	DirectX::XMVECTOR _up_vector = { 0.0f, 1.0f, 0.0f, 0.0f };
 	auto _side_vector = DirectX::XMVector3Cross(_up_vector, _new_direction);
 	_side_vector = DirectX::XMVector3Normalize(_side_vector);
@@ -102,6 +99,13 @@ void BasicCamera::SetDirection(float x, float y, float z)
 	Rotate(_orientation_matrix);
 }
 
+void BasicCamera::SetPosition(float x, float y, float z)
+{
+	position.x = x;
+	position.y = y;
+	position.z = z;
+}
+
 void BasicCamera::Rotate(DirectX::CXMMATRIX matrix)
 {
 	auto _new_direction = DirectX::XMVector3TransformNormal(Direction_Vector(), matrix);
@@ -116,8 +120,16 @@ void BasicCamera::Rotate(DirectX::CXMMATRIX matrix)
 	DirectX::XMStoreFloat3(&direction, _new_direction);
 	DirectX::XMStoreFloat3(&up, _new_up);
 	DirectX::XMStoreFloat3(&right, _new_right);
+}
 
-	UpdateViewMatrix();
+const DirectX::XMFLOAT3 BasicCamera::Position()
+{
+	return position;
+}
+
+const DirectX::XMFLOAT3 BasicCamera::Direction()
+{
+	return direction;
 }
 
 const DirectX::XMVECTOR BasicCamera::Position_Vector() const

@@ -271,6 +271,12 @@
     <ClCompile Include="source\entities\pillar.cpp">
       <Filter>source\entities</Filter>
     </ClCompile>
+    <ClCompile Include="source\visuals\utils\frustrum.cpp">
+      <Filter>source\visuals\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\render\vision_perimeter.cpp">
+      <Filter>source\visuals\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\headers\defs_platform.h">
@@ -536,6 +542,12 @@
     </ClInclude>
     <ClInclude Include="source\entities\pillar.h">
       <Filter>source\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\utils\frustrum.h">
+      <Filter>source\visuals\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\render\vision_perimeter.h">
+      <Filter>source\visuals\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
