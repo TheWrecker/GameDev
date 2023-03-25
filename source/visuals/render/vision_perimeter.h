@@ -19,12 +19,17 @@
 		~VisionPerimeter();
 
 		void CollectVisionPerimeter(std::vector<Segment*>& container);
+		void SetPerimeterRange(float value = 50.0f);
 
 	private:
 		BasicCamera* camera;
 		World* world;
 		Player* player;
 		Scene* scene;
+
+		float range;
+		Pillar* last_pillar;
+		std::vector<Pillar*> near_pillars;
 
 		Frustrum frustrum;
 	};

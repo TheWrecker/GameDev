@@ -107,6 +107,21 @@ Segment* World::GetSegment(SegmentIndex& index, bool force)
 	return segments[index];*/
 }
 
+Pillar* World::GetPillar(float x, float z, bool force)
+{
+	PillarIndex _index = GetPillarIndex(x, z);
+	auto _result = pillars.find(_index);
+	if (_result != pillars.end())
+		return _result->second;
+	else if (force)
+	{
+		auto _pillar = new Pillar(scene, _index.x * SEGMENT_LENGTH, _index.z * SEGMENT_LENGTH);
+		pillars.insert(std::pair(_index, _pillar));
+		return _pillar;
+	}
+	return nullptr;
+}
+
 Segment* World::CreateSegment(float x, float y, float z)
 {
 	SegmentIndex _index = GetSegmentIndex(x, y, z);
@@ -161,6 +176,11 @@ BlockIndex World::GetBlockIndex(float x, float y, float z)
 SegmentIndex World::GetSegmentIndex(float x, float y, float z)
 {
 	return SegmentIndex{ (int)floor(x / SEGMENT_LENGTH), (int)floor(y / SEGMENT_LENGTH), (int)floor(z / SEGMENT_LENGTH) };
+}
+
+PillarIndex World::GetPillarIndex(float x, float z)
+{
+	return PillarIndex{ (int)floor(x / SEGMENT_LENGTH), (int)floor(z / SEGMENT_LENGTH) };
 }
 
 bool World::IsSegmentWithinBounds(SegmentIndex index)

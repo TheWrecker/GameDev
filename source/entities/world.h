@@ -73,8 +73,11 @@
         Segment* GetSegment(float x, float y, float z, bool force = false);
         Segment* GetSegment(SegmentIndex& index, bool force = false);
 
+        Pillar* GetPillar(float x, float z, bool force = false);
+
         BlockIndex GetBlockIndex(float x, float y, float z);
         SegmentIndex GetSegmentIndex(float x, float y, float z);
+        PillarIndex GetPillarIndex(float x, float z);
 
 	    bool IsSegmentWithinBounds(SegmentIndex index);
 	    bool IsBlockWithinBounds(BlockIndex& index);

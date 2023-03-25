@@ -16,6 +16,7 @@ public:
 	void CalculateFrustrum(DirectX::XMMATRIX viewProjMatrix);
 
 	bool IntersectsCube(DirectX::XMFLOAT3 center, float radius);
+	bool IntersectsPillar(float x, float z);
 
 	DirectX::BoundingFrustum frustrum;
 

@@ -1,9 +1,12 @@
 
-
+#include "defs_world.h"
 
 #include "frustrum.h"
 
+//constexpr float SEGMENT_HALF_LENGTH = SEGMENT_LENGTH / 2.0f;
+
 Frustrum::Frustrum()
+	:planes()
 {
 }
 
@@ -137,4 +140,41 @@ bool Frustrum::IntersectsCube(DirectX::XMFLOAT3 center, float radius)
 
 	return true;
 
+}
+
+bool Frustrum::IntersectsPillar(float x, float z)
+{
+	using namespace DirectX;
+
+	XMVECTOR _plane, _result, _pos1, _pos2, _pos3, _pos4;
+	_pos1 = { x - SOLID_BLOCK_SIZE				   , 0.0f, z - SOLID_BLOCK_SIZE					, 0.0f };
+	_pos2 = { x + SEGMENT_LENGTH + SOLID_BLOCK_SIZE, 0.0f, z - SOLID_BLOCK_SIZE					, 0.0f };
+	_pos3 = { x - SOLID_BLOCK_SIZE                 , 0.0f, z + SEGMENT_LENGTH + SOLID_BLOCK_SIZE, 0.0f };
+	_pos4 = { x + SEGMENT_LENGTH + SOLID_BLOCK_SIZE, 0.0f, z + SEGMENT_LENGTH + SOLID_BLOCK_SIZE, 0.0f };
+	// Check if any one point of the cube is in the view frustum.
+
+	for (unsigned int _i = 0; _i < 4; _i++)
+	{
+		_plane = XMLoadFloat4(&planes[_i]);
+
+		_result = XMPlaneDotCoord(_plane, _pos1);
+		if (_result.m128_f32[0] >= 0.0f)
+			continue;
+
+		_result = XMPlaneDotCoord(_plane, _pos2);
+		if (_result.m128_f32[0] >= 0.0f)
+			continue;
+
+		_result = XMPlaneDotCoord(_plane, _pos3);
+		if (_result.m128_f32[0] >= 0.0f)
+			continue;
+
+		_result = XMPlaneDotCoord(_plane, _pos4);
+		if (_result.m128_f32[0] >= 0.0f)
+			continue;
+
+		return false;
+	}
+
+	return true;
 }
