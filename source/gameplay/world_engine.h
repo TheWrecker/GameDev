@@ -9,6 +9,7 @@
 	#include "defs_world.h"
 
 	class Player;
+	class Pillar;
 	class Segment;
 	class World;
 	class Scene;
@@ -22,16 +23,19 @@
 
 		void SetupWorld(Scene* scene);
 		void BeginWorldLoading();
+		void WorldLoadTick();
+
+		std::unique_ptr<FastNoise> noise_generator;
 
 	private:
 
-		void WorldLoadTick();
+
 		void LoadWorld(float x, float z);
 
 		Scene* scene;
 		World* world;
 		Player* player;
-		std::unique_ptr<FastNoise> noise_generator;
+		Pillar* last_pillar;
 		int seed;
 
 		std::vector<BiomeInfo> biomes;

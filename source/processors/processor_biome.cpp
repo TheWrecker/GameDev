@@ -1,7 +1,9 @@
 
 #include <random>
 
+#include "../external/FastNoiseLite/FastNoise.h"
 #include "../entities/segment.h"
+#include "../entities/pillar.h"
 #include "../entities/world.h"
 
 #include "processor_biome.h"
@@ -64,4 +66,18 @@ void BiomeProcessor::ProcessBiome(World* world, float x, float y, float z)
 		_inc += SOLID_BLOCK_SIZE;
 		_curr -= SOLID_BLOCK_SIZE;
 	}
+}
+
+void BiomeProcessor::ProcessBiome(FastNoise* noise, World* world, Pillar* pillar)
+{
+	float _bX, _bZ;
+	float _val = 0.0f;
+	for (unsigned int _i = 0; _i < SEGMENT_DIMENSION_SIZE; _i++)
+		for (unsigned int _j = 0; _j < SEGMENT_DIMENSION_SIZE; _j++)
+		{
+			_bX = pillar->x + (_i * SOLID_BLOCK_SIZE);
+			_bZ = pillar->z + (_j * SOLID_BLOCK_SIZE);
+			_val = noise->GetPerlin(_bX, _bZ);
+			BiomeProcessor::ProcessBiome(world, _bX, _val, _bZ);
+		}
 }

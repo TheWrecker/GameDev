@@ -19,7 +19,7 @@ SysWindowHandle Platform::GetWindowHandle()
 	return static_cast<SysWindowHandle>(impl->GetWindowHandle());
 }
 
-bool Platform::ProcessPlatfromMessages()
+bool Platform::ProcessPlatformMessages()
 {
 	return impl->ProcessPlatformMessages();
 }

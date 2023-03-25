@@ -4,7 +4,7 @@
 #include "pillar.h"
 
 Pillar::Pillar(Scene* scene, float x, float z)
-    :scene(scene), x(x), z(z)
+    :scene(scene), x(x), z(z), biome_processed(false)
 {
 }
 

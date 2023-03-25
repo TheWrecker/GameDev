@@ -64,6 +64,7 @@
 	    ~World();
 
 	    void SetupDevelopementWorld();
+        void Update();
 
         SolidBlock* CreateBlock(SolidBlockType type, float x, float y, float z, bool rebuildSegment = false);
         SolidBlock* GetBlock(float x, float y, float z);
@@ -83,6 +84,8 @@
 	    bool IsBlockWithinBounds(BlockIndex& index);
 
         std::unordered_map<PillarIndex, Pillar*, std::hash<PillarIndex>> pillars;
+        std::vector<Pillar*> near_pillars;
+        Pillar* last_pillar;
 
     private:
 	    Scene* scene;

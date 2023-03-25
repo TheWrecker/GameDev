@@ -1,11 +1,14 @@
 
+#include "player.h"
 #include "segment.h"
 #include "pillar.h"
+#include "../visuals/scene.h"
+#include "../processors/processor_biome.h"
 
 #include "world.h"
 
 World::World(Scene* scene)
-	:scene(scene)
+	:scene(scene), last_pillar(nullptr)
 {
 	
 }
@@ -59,6 +62,39 @@ void World::SetupDevelopementWorld()
 			_segment->RebuildBuffers();
 		}
 
+}
+
+void World::Update()
+{
+	Player* player = scene->GetPlayer();
+	if (!player)
+		return;
+
+	auto _current_pillar = GetPillar(player->Position().x, player->Position().z, true);
+	if (_current_pillar != last_pillar)
+	{
+		//it has changed, we need to reacquire all the pillars in vision perimeter range
+		near_pillars.clear();
+
+		for (int _i = -5; _i < 6; _i++)
+			for (int _j = -5; _j < 6; _j++)
+			{
+				near_pillars.push_back(GetPillar(player->Position().x + (_i * SEGMENT_LENGTH)
+					, player->Position().z + (_j * SEGMENT_LENGTH), true));
+			}
+
+		//for now brute force
+		//for (auto& _pillar : pillars)
+		//{
+		//	//calculate the distance between the pillar and player
+		//	float _dist = ((_pillar.second->x - player->Position().x) * (_pillar.second->x - player->Position().x)) +
+		//		((_pillar.second->z - player->Position().z) * (_pillar.second->z - player->Position().z));
+		//	if (_dist < (50.0f * 50.0f))
+		//	{
+		//		near_pillars.push_back(_pillar.second);
+		//	}
+		//}
+	}
 }
 
 SolidBlock* World::CreateBlock(SolidBlockType type, float x, float y, float z, bool rebuildSegment)

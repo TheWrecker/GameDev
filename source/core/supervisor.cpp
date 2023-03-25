@@ -72,7 +72,7 @@ void Supervisor::PassControl()
 	Presenter* _presenter = services->QueryService<Presenter*>("presenter");
 	//TODO: create a gamestate manager and move there?
 	_presenter->GetActiveScene()->SwitchMode(SceneMode::DEVELOPEMENT);
-	while (!_platform->ProcessPlatfromMessages())
+	while (!_platform->ProcessPlatformMessages())
 	{
 		//update components
 		for (auto& service : services->Services())

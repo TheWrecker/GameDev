@@ -17,7 +17,7 @@
 		~Platform();
 
 		SysWindowHandle GetWindowHandle();
-		bool ProcessPlatfromMessages();
+		bool ProcessPlatformMessages();
 
 	private:
 

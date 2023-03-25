@@ -17,7 +17,6 @@ VisionPerimeter::VisionPerimeter(Scene* scene)
 	player = scene->GetPlayer();
 	world = scene->GetWorld();
 	camera = scene->GetActiveCamera();
-	last_pillar = world->GetPillar(player->Position().x, player->Position().z);
 }
 
 VisionPerimeter::~VisionPerimeter()
@@ -29,24 +28,6 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 	using namespace DirectX;
 
 	//check if the pillar we are on has changed since last update
-	auto _current_pillar = world->GetPillar(player->Position().x, player->Position().z);
-	if (_current_pillar != last_pillar)
-	{
-		//it has changed, we need to reacquire all the pillars in vision perimeter range
-		near_pillars.clear();
-
-		//for now brute force
-		for (auto& _pillar : world->pillars)
-		{
-			//calculate the distance between the pillar and player
-			float _dist = ((_pillar.second->x - player->Position().x) * (_pillar.second->x - player->Position().x)) +
-				((_pillar.second->z - player->Position().z) * (_pillar.second->z - player->Position().z));
-			if (_dist < (range * range))
-			{
-				near_pillars.push_back(_pillar.second);
-			}
-		}
-	}
 
 	//calculate the vision frustrum
 	DirectX::XMFLOAT4X4 _proj = {};
@@ -54,8 +35,8 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 	frustrum.CalculateFrustrum(camera->View_Matrix(), _proj);
 
 	//filter all near pillars
-
-	for (auto& _pillar : near_pillars)
+	//TODO: render range idfferent than world near range? less?
+	for (auto& _pillar : world->near_pillars)
 	{
 		if (frustrum.IntersectsPillar(_pillar->x, _pillar->z))
 		{

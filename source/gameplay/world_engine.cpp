@@ -66,6 +66,8 @@ void WorldEngine::SetupWorld(Scene* scene)
 	{
 		for (auto& _segment : _pillar.second->segments)
 			_segment.second->RebuildBuffers();
+
+		_pillar.second->biome_processed = true;
 	}
 
 	bool has_collision = false;
@@ -88,6 +90,28 @@ void WorldEngine::BeginWorldLoading()
 
 void WorldEngine::WorldLoadTick()
 {
+	Player* player = scene->GetPlayer();
+	if (!player)
+		return;
+
+	auto _current_pillar = world->GetPillar(player->Position().x, player->Position().z);
+	if (_current_pillar == last_pillar)
+		return;
+
+	for (auto& _pillar : world->near_pillars)
+	{
+		if (_pillar->biome_processed)
+			continue;
+
+		BiomeProcessor::ProcessBiome(noise_generator.get(), world, _pillar);
+
+		for (auto& _segment : _pillar->segments)
+		{
+			_segment.second->RebuildBuffers();
+		}
+
+		_pillar->biome_processed = true;
+	}
 }
 
 void WorldEngine::LoadWorld(float x, float z)

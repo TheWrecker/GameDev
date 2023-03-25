@@ -20,6 +20,8 @@
 		float x, z;
 		std::unordered_map<int, Segment*> segments;
 
+		bool biome_processed;
+
 	private:
 		Scene* scene;
 	};
