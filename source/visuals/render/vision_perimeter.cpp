@@ -64,7 +64,30 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 	}*/
 	using namespace DirectX;
 	//frustrum.CalculateFrustrum(camera->View_Projection_Matrix());
-	 frustrum.CalculateFrustrum(camera->View_Matrix(), camera->Projection_Matrix());
+	//frustrum.CalculateFrustrum(camera->View_Matrix(), camera->Projection_Matrix());
+	/*DirectX::BoundingFrustum::CreateFromMatrix(frustrum.frustrum, camera->Projection_Matrix());
+	frustrum.frustrum.Origin = camera->Position();
+	auto _new_direction = camera->Direction_Vector();
+	_new_direction = DirectX::XMVector3Normalize(_new_direction);
+	DirectX::XMVECTOR _up_vector = { 0.0f, 1.0f, 0.0f, 0.0f };
+	auto _side_vector = DirectX::XMVector3Cross(_up_vector, _new_direction);
+	_side_vector = DirectX::XMVector3Normalize(_side_vector);
+	_up_vector = DirectX::XMVector3Cross(_new_direction, _side_vector);
+	_up_vector = DirectX::XMVector3Normalize(_up_vector);
+
+	DirectX::XMVECTOR _bottom_row = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+	DirectX::XMMATRIX _orientation_matrix = {
+		_side_vector,
+		_up_vector,
+		_new_direction,
+		_bottom_row };
+
+	XMStoreFloat4(&frustrum.frustrum.Orientation, XMQuaternionRotationMatrix(_orientation_matrix));*/
+	DirectX::XMFLOAT4X4 _proj = {};
+	DirectX::XMStoreFloat4x4(&_proj, camera->Projection_Matrix());
+	frustrum.CalculateFrustrum(camera->View_Matrix(), _proj);
+
 	//brute-force for now
 	{
 		using namespace DirectX;
@@ -73,7 +96,7 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 		for (auto& _pillar : world->pillars)
 			for (auto& _segment : _pillar.second->segments)
 			{
-				if (frustrum.IntersectsCube(_segment.second->Position_Vector(), _segment.second->Position_Vector() + _segment_length))
+				if (frustrum.IntersectsCube(_segment.second->Position(), SEGMENT_LENGTH / 2.0f))
 				{
 					container.push_back(_segment.second);
 				}

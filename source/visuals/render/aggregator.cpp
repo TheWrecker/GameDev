@@ -118,6 +118,7 @@ void Aggregator::AggregateAllRenders()
 	render_dev->Render();
 
 	//render solid blocks
+	render_solid_blocks->Update();
 	render_solid_blocks->Render();
 
 	//enable alpha blending

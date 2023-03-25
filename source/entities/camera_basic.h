@@ -32,6 +32,7 @@
 		const DirectX::XMMATRIX View_Matrix() const;
 		const DirectX::XMMATRIX Projection_Matrix() const;
 		const DirectX::XMMATRIX View_Projection_Matrix() const;
+		const DirectX::XMMATRIX Rotation_Matrix() const;
 
 	protected:
 		friend class Scene;
@@ -56,6 +57,8 @@
 			view_matrix,
 			projection_matrix,
 			view_projection_matrix;
+
+		DirectX::XMMATRIX rotation_matrix;
 	};
 
 #endif // !CAMERA_BASIC_H

@@ -12,14 +12,16 @@ public:
 	Frustrum();
 	~Frustrum();
 
-	void CalculateFrustrum(DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projMatrix);
+	void CalculateFrustrum(DirectX::CXMMATRIX viewMatrix, DirectX::XMFLOAT4X4& projMatrix, float screenDepth = 1000.0f);
 	void CalculateFrustrum(DirectX::XMMATRIX viewProjMatrix);
 
-	bool IntersectsCube(DirectX::XMVECTOR minPoint, DirectX::XMVECTOR maxPoint);
+	bool IntersectsCube(DirectX::XMFLOAT3 center, float radius);
+
+	DirectX::BoundingFrustum frustrum;
 
 private:
-	//DirectX::XMVECTOR planes[6];
-	DirectX::BoundingFrustum frustrum;
+	DirectX::XMFLOAT4 planes[6];
+
 };
 
 #endif // !FRUSTRUM_H

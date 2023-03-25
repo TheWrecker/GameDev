@@ -32,7 +32,6 @@ Scene::Scene(Presenter* parent)
 	atlas = std::make_unique<TextureAtlas>(parent);
 	model_manager = std::make_unique<ModelManager>();
 	buffer_master = std::make_unique<BufferMaster>(this);
-	aggregator = std::make_unique<Aggregator>(this);
 	world = std::make_unique<World>(this);
 	player = std::make_unique<Player>(this);
 	player->SetPosition(0.0f, 11.0f, 00.0f);
@@ -40,6 +39,7 @@ Scene::Scene(Presenter* parent)
 	//TODO: move to a unit factory?
 	physics_engine->RegisterMovementComponent(player.get());
 	physics_engine->RegisterCollisionComponent(player.get());
+	aggregator = std::make_unique<Aggregator>(this);
 }
 
 Scene::~Scene()

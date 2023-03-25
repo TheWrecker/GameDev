@@ -96,6 +96,7 @@ void BasicCamera::SetDirection(float x, float y, float z)
 		_new_direction,
 		_bottom_row};
 
+	rotation_matrix = _orientation_matrix;
 	Rotate(_orientation_matrix);
 }
 
@@ -165,6 +166,11 @@ const DirectX::XMMATRIX BasicCamera::Projection_Matrix() const
 const DirectX::XMMATRIX BasicCamera::View_Projection_Matrix() const
 {
 	return DirectX::XMLoadFloat4x4(&view_projection_matrix);
+}
+
+const DirectX::XMMATRIX BasicCamera::Rotation_Matrix() const
+{
+	return rotation_matrix;
 }
 
 void BasicCamera::UpdateViewProjectionMatrix()
