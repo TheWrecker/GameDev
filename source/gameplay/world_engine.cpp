@@ -7,10 +7,10 @@
 
 #include "defs_world.h"
 #include "../entities/player.h"
-#include "../entities/segment.h"
-#include "../entities/pillar.h"
-#include "../entities/world.h"
-#include "../visuals/scene.h"
+#include "../scene/compartments/segment.h"
+#include "../scene/compartments/pillar.h"
+#include "../scene/world.h"
+#include "../scene/scene.h"
 #include "../processors/processor_biome.h"
 
 #include "world_engine.h"
@@ -28,12 +28,6 @@ WorldEngine::WorldEngine(int targetSeed)
 		else
 			assert(false); //time since epoch is negative, what do you expect?
 	}
-
-	auto _t1 = std::chrono::high_resolution_clock::now();
-	heightmap = noise_generator->GetPerlinSet(0, 0, 0, 200, 200, 1);
-	auto _t2 = std::chrono::high_resolution_clock::now();
-	auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
-	int i = 0;
 }
 
 WorldEngine::~WorldEngine()
@@ -41,14 +35,12 @@ WorldEngine::~WorldEngine()
 	noise_generator->FreeNoiseSet(heightmap);
 }
 
-void WorldEngine::SetupWorld(Scene* scene)
+void WorldEngine::SetupStartingWorld()
 {
-	if (scene)
-	{
-		this->scene = scene;
-		world = scene->GetWorld();
-		player = scene->GetPlayer();
-	}
+	if (!scene)
+		assert(false);
+
+	world = scene->GetWorld();
 
 	float _bX, _bZ, _val;
 
@@ -86,8 +78,19 @@ void WorldEngine::SetupWorld(Scene* scene)
 	//}
 }
 
-void WorldEngine::BeginWorldLoading()
+bool WorldEngine::Initialize()
 {
+	auto _t1 = std::chrono::high_resolution_clock::now();
+	heightmap = noise_generator->GetPerlinSet(0, 0, 0, 200, 200, 1);
+	auto _t2 = std::chrono::high_resolution_clock::now();
+	auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
+	int i = 0;
+	return true;
+}
+
+void WorldEngine::BeginWorldGeneration()
+{
+	player = scene->GetPlayer();
 }
 
 void WorldEngine::WorldLoadTick()

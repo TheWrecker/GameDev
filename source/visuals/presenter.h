@@ -5,11 +5,7 @@
 	#include <d3d11_1.h>
 	#include <functional>
 
-	#include "interface_drawable.h"
 	#include "interface_service.h"
-	#include "overlay.h"
-	#include "scene.h"
-	#include "../core/service_manager.h"
 	#include "../core/supervisor.h"
 
 	enum class MultiSamplingType
@@ -18,11 +14,20 @@
 		MSAA
 	};
 
-	enum class CullMode
+	enum class RasterizerMode
 	{
-		CULL_NONE,
-		CULL_BACK,
-		CULL_FRONT
+		CULL_NONE_SOLID_CW,
+		CULL_NONE_SOLID_CCW,
+		CULL_NONE_WIREFRAME_CW,
+		CULL_NONE_WIREFRAME_CCW,
+		CULL_BACK_SOLID_CW,
+		CULL_BACK_SOLID_CCW,
+		CULL_BACK_WIREFRAME_CW,
+		CULL_BACK_WIREFRAME_CCW,
+		CULL_FRONT_SOLID_CW,
+		CULL_FRONT_SOLID_CCW,
+		CULL_FRONT_WIREFRAME_CW,
+		CULL_FRONT_WIREFRAME_CCW
 	};
 
 	enum class BlendMode
@@ -31,25 +36,28 @@
 		ENABLED
 	};
 
+	class Overlay;
 	class Aggregator;
 
-	class Presenter : public IService, public IDrawable
+	class Presenter : public IService
 	{
 	public:
 		Presenter(Supervisor* parent);
 		~Presenter();
 
-		void Draw() override;
+		bool Initialize() override;
 		void Update() override;
+		void Draw();
+		void Present();
+
 		void ToggleFullscreen();
 		bool SetMultiSampling(MultiSamplingType type, UINT count, UINT quality);
 		bool SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc);
-		bool SetRasterizerState(CullMode cullmodle, bool wireframe, bool frontCCW);
+		bool SetRasterizerState(RasterizerMode);
 		void SetBlendMode(BlendMode mode);
 
 		Supervisor* GetSupervisor();
 		Overlay* GetOverlay();
-		Scene* GetActiveScene();
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetContext();
 		unsigned int GetScreenWidth();
@@ -63,11 +71,14 @@
 
 		bool CreateSwapChain(bool isResize);
 		bool CreateViewPort();
+		void CreateRasterizerStates();
 		void CreateBlendStates();
 
-		std::unique_ptr<Scene> scene;
-		std::unique_ptr<Overlay> overlay;
 		Supervisor* supervisor;
+
+		std::unique_ptr<Overlay> overlay;
+		std::unique_ptr<Aggregator> aggregator;
+
 		bool isFullscreen;
 
 		//d3d parameters
@@ -93,8 +104,19 @@
 		D3D11_VIEWPORT view_port;
 
 		//rasterizer
-		ID3D11RasterizerState* rasterizer_state;
-		D3D11_RASTERIZER_DESC rasterizer_state_desc;
+		ID3D11RasterizerState
+			* rasterizer_state_NSCW,
+			* rasterizer_state_NSCCW,
+			* rasterizer_state_NWCW,
+			* rasterizer_state_NWCCW,
+			* rasterizer_state_BSCW,
+			* rasterizer_state_BSCCW,
+			* rasterizer_state_BWCW,
+			* rasterizer_state_BWCCW,
+			* rasterizer_state_FSCW,
+			* rasterizer_state_FSCCW,
+			* rasterizer_state_FWCW,
+			* rasterizer_state_FWCCW;
 
 		//pipeline states
 		bool depth_stencil_enabled, multisampling_enabled, blend_enabled;
@@ -110,7 +132,7 @@
 	template<typename type>
 	inline type Presenter::QueryService(const std::string& name)
 	{
-		return dynamic_cast<type>(supervisor->Services()->GetService(name));
+		return supervisor->GetService<type>(name));
 	}
 
 #endif // !PRESENTER_H

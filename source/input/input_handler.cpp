@@ -3,39 +3,48 @@
 #include "../events/begin_placement.h"
 #include "../events/finish_dig.h"
 #include "../events/event_handler.h"
-#include "../entities/camera_firstperson.h"
+#include "../scene/camera/camera_firstperson.h"
 #include "../entities/player.h"
-#include "../entities/world.h"
-#include "../visuals/scene.h"
+#include "../scene/world.h"
+#include "../scene/scene.h"
 #include "../input/keyboard.h"
 #include "../input/mouse.h"
+#include "../visuals/overlay.h"
 #include "../visuals/presenter.h"
 #include "../core/supervisor.h"
 
 #include "input_handler.h"
 
-InputHandler::InputHandler(Supervisor* supervisor)
-	:supervisor(supervisor), camera(nullptr), world(nullptr), scene(nullptr), keyboard(nullptr), mouse(nullptr), overlay(nullptr)
-	, player(nullptr), mouse_sensitivity(2.0f), rotation_speed(1.0f)
+InputHandler::InputHandler()
+	:camera(nullptr), world(nullptr), scene(nullptr), keyboard(nullptr), mouse(nullptr), overlay(nullptr),
+	player(nullptr), mouse_sensitivity(2.0f), rotation_speed(1.0f), paused(true)
 {
-	presenter = supervisor->QueryService<Presenter*>("presenter");
-	ticker = supervisor->QueryService<SystemTicker*>("ticker");
-	mouse = supervisor->QueryService<Mouse*>("mouse");
-	keyboard = supervisor->QueryService<Keyboard*>("keyboard");
-	event_handler = supervisor->QueryService<EventHandler*>("event_handler");
-	overlay = presenter->GetOverlay();
-	scene = presenter->GetActiveScene();
-	camera = scene->GetActiveCamera();
-	world = scene->GetWorld();
-	player = scene->GetPlayer();
 }
 
 InputHandler::~InputHandler()
 {
 }
 
+bool InputHandler::Initialize()
+{
+	presenter = Supervisor::QueryService<Presenter*>("presenter");
+	ticker = Supervisor::QueryService<SystemTicker*>("ticker");
+	mouse = Supervisor::QueryService<Mouse*>("mouse");
+	keyboard = Supervisor::QueryService<Keyboard*>("keyboard");
+	event_handler = Supervisor::QueryService<EventHandler*>("event_handler");
+	overlay = presenter->GetOverlay();
+	scene = Supervisor::QueryService<Scene*>("scene");
+	camera = scene->GetActiveCamera();
+	world = scene->GetWorld();
+	player = scene->GetPlayer();
+	return true;
+}
+
 void InputHandler::Update()
 {
+	if (paused)
+		return;
+
 	//TODO: assignable/dynamic keys
 	//TODO: issue events whenever possible
 
@@ -162,4 +171,14 @@ void InputHandler::Update()
 			player->FeedMovementInfo(_mov1, _mov2, _mov3);
 		}
 	}
+}
+
+void InputHandler::Resume()
+{
+	paused = false;
+}
+
+void InputHandler::Pause()
+{
+	paused = true;
 }

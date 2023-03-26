@@ -1,60 +1,40 @@
 
 #include <DirectXMath.h>
 
+#include "util_funcs.h"
 #include "../core/platform.h"
 #include "../core/supervisor.h"
-#include "util_funcs.h"
+#include "overlay.h"
 
 #include "presenter.h"
 
 Presenter::Presenter(Supervisor* parent)
 	:supervisor(parent), depth_stencil_enabled(true), multisampling_enabled(false), isFullscreen(false), blend_enabled(false)
 {
-	HRESULT result = 0;
-	UINT createDeviceFlags = 0;
-
-#if defined (debug) || defined (_DEBUG)
-	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif // DEBUG
-
-	//create directx device, context, and interfaces
-	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
-	D3D_FEATURE_LEVEL selectedFeatureLevel;
-	DXAssert(D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags,	featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION,
-		&device, &selectedFeatureLevel, &context));
-	DXAssert(device->QueryInterface(__uuidof(IDXGIDevice), 	reinterpret_cast<void**>(&graphics_interface)));
-	DXAssert(graphics_interface->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(&graphics_adapter)));
-	DXAssert(graphics_adapter->GetParent(__uuidof(IDXGIFactory),	reinterpret_cast<void**>(&graphics_factory)));
-
-#ifdef _WINDOWS
-	//disable user-side fullscreen switching
-	DXAssert(graphics_factory->MakeWindowAssociation(QueryService<Platform*>("platform")->GetWindowHandle(), DXGI_MWA_NO_ALT_ENTER));
-#endif
-
-	RetAssert(SetMultiSampling(MultiSamplingType::NONE, 1, 0));
-	RetAssert(SetRasterizerState(CullMode::CULL_NONE, false, false));
-	CreateBlendStates();
-	SetBlendMode(BlendMode::DISABLED);
-
-	scene = std::make_unique<Scene>(this);
 	overlay = std::make_unique<Overlay>(this);
-	//overlay->Show();
-
-	//show all live d3d11device objects
-	/*ID3D11Debug* _debug = nullptr;
-	device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&_debug));
-	supervisor->SetDebugQuery(_debug);*/
+	aggregator = std::make_unique<Aggregator>(this);
 }
 
 Presenter::~Presenter()
 {
+	DXRelease(rasterizer_state_NSCW);
+	DXRelease(rasterizer_state_NSCCW);
+	DXRelease(rasterizer_state_NWCW);
+	DXRelease(rasterizer_state_NWCCW);
+	DXRelease(rasterizer_state_BSCW);
+	DXRelease(rasterizer_state_BSCCW);
+	DXRelease(rasterizer_state_BWCW);
+	DXRelease(rasterizer_state_BWCCW);
+	DXRelease(rasterizer_state_FSCW);
+	DXRelease(rasterizer_state_FSCCW);
+	DXRelease(rasterizer_state_FWCW);
+	DXRelease(rasterizer_state_FWCCW);
 	DXRelease(blend_state_disabled);
 	DXRelease(blend_state_enabled);
 	DXRelease(back_buffer);
 	DXRelease(render_target_view);
 	DXRelease(depth_stencil);
 	DXRelease(depth_stencil_view);
-	DXRelease(rasterizer_state);
 	DXRelease(swapchain);
 	DXRelease(graphics_factory);
 	DXRelease(graphics_adapter);
@@ -70,14 +50,55 @@ Presenter::~Presenter()
 
 void Presenter::Draw()
 {
-	scene->Draw();
 	overlay->Draw();
+}
+
+void Presenter::Present()
+{
 	swapchain->Present(0, 0);
+}
+
+bool Presenter::Initialize()
+{
+	HRESULT result = 0;
+	UINT createDeviceFlags = 0;
+
+	#if defined (debug) || defined (_DEBUG)
+		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	#endif // DEBUG
+
+	//create directx device, context, and interfaces
+	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
+	D3D_FEATURE_LEVEL selectedFeatureLevel;
+	DXAssert(D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION,
+		&device, &selectedFeatureLevel, &context));
+	DXAssert(device->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&graphics_interface)));
+	DXAssert(graphics_interface->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(&graphics_adapter)));
+	DXAssert(graphics_adapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&graphics_factory)));
+
+#ifdef _WINDOWS
+	//disable user-side fullscreen switching
+	DXAssert(graphics_factory->MakeWindowAssociation(QueryService<Platform*>("platform")->GetWindowHandle(), DXGI_MWA_NO_ALT_ENTER));
+#endif
+
+	RetAssert(SetMultiSampling(MultiSamplingType::NONE, 1, 0));
+	CreateRasterizerStates();
+	RetAssert(SetRasterizerState(RasterizerMode::CULL_NONE_SOLID_CW));
+	CreateBlendStates();
+	SetBlendMode(BlendMode::DISABLED);
+
+	//overlay->Show();
+
+	//show all live d3d11device objects
+	/*ID3D11Debug* _debug = nullptr;
+	device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&_debug));
+	supervisor->SetDebugQuery(_debug);*/
+
+	return overlay->Initialize();
 }
 
 void Presenter::Update()
 {
-	scene->Update();
 	overlay->Update();
 }
 
@@ -270,29 +291,107 @@ bool Presenter::CreateViewPort()
 	return true;
 }
 
+void Presenter::CreateRasterizerStates()
+{
+	D3D11_RASTERIZER_DESC _rasterizer_desc = {};
+	ZeroMemory(&_rasterizer_desc, sizeof(_rasterizer_desc));
+
+	// Cull None, Solid Fill, Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_NONE;
+	_rasterizer_desc.FillMode = D3D11_FILL_SOLID;
+	_rasterizer_desc.FrontCounterClockwise = false;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_NSCW));
+
+	// Cull None, Solid Fill, Counter-Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_NONE;
+	_rasterizer_desc.FillMode = D3D11_FILL_SOLID;
+	_rasterizer_desc.FrontCounterClockwise = true;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_NSCCW));
+
+	// Cull None, Wireframe, Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_NONE;
+	_rasterizer_desc.FillMode = D3D11_FILL_WIREFRAME;
+	_rasterizer_desc.FrontCounterClockwise = false;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_NWCW));
+
+	// Cull None, Wireframe, Counter Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_NONE;
+	_rasterizer_desc.FillMode = D3D11_FILL_WIREFRAME;
+	_rasterizer_desc.FrontCounterClockwise = true;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_NWCCW));
+
+	// Cull Back, Solid Fill, Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_BACK;
+	_rasterizer_desc.FillMode = D3D11_FILL_SOLID;
+	_rasterizer_desc.FrontCounterClockwise = false;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_BSCW));
+
+	// Cull Back, Solid Fill, Counter-Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_BACK;
+	_rasterizer_desc.FillMode = D3D11_FILL_SOLID;
+	_rasterizer_desc.FrontCounterClockwise = true;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_BSCCW));
+
+	// Cull Back, Wireframe, Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_BACK;
+	_rasterizer_desc.FillMode = D3D11_FILL_WIREFRAME;
+	_rasterizer_desc.FrontCounterClockwise = false;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_BWCW));
+
+	// Cull Back, Wireframe, Counter Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_BACK;
+	_rasterizer_desc.FillMode = D3D11_FILL_WIREFRAME;
+	_rasterizer_desc.FrontCounterClockwise = true;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_BWCCW));
+
+	// Cull Front, Solid Fill, Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_FRONT;
+	_rasterizer_desc.FillMode = D3D11_FILL_SOLID;
+	_rasterizer_desc.FrontCounterClockwise = false;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_FSCW));
+
+	// Cull Front, Solid Fill, Counter-Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_FRONT;
+	_rasterizer_desc.FillMode = D3D11_FILL_SOLID;
+	_rasterizer_desc.FrontCounterClockwise = true;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_FSCCW));
+
+	// Cull Front, Wireframe, Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_FRONT;
+	_rasterizer_desc.FillMode = D3D11_FILL_WIREFRAME;
+	_rasterizer_desc.FrontCounterClockwise = false;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_FWCW));
+
+	// Cull Front, Wireframe, Counter Clockwise
+	_rasterizer_desc.CullMode = D3D11_CULL_FRONT;
+	_rasterizer_desc.FillMode = D3D11_FILL_WIREFRAME;
+	_rasterizer_desc.FrontCounterClockwise = true;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_FWCCW));
+}
+
 void Presenter::CreateBlendStates()
 {
-	D3D11_BLEND_DESC blend_desc;
+	D3D11_BLEND_DESC _blend_desc = {};
 	
 	//blend disabled
-	ZeroMemory(&blend_desc, sizeof(blend_desc));
-	blend_desc.RenderTarget[0].BlendEnable = FALSE;
-	blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	DXAssert(device->CreateBlendState(&blend_desc, &blend_state_disabled));
+	ZeroMemory(&_blend_desc, sizeof(_blend_desc));
+	_blend_desc.RenderTarget[0].BlendEnable = FALSE;
+	_blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	DXAssert(device->CreateBlendState(&_blend_desc, &blend_state_disabled));
 	
 	//blend enabled
-	ZeroMemory(&blend_desc, sizeof(blend_desc));
-	blend_desc.AlphaToCoverageEnable = FALSE;
-	blend_desc.IndependentBlendEnable = FALSE;
-	blend_desc.RenderTarget[0].BlendEnable = TRUE;
-	blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	blend_desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blend_desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
-	blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
-	blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	DXAssert(device->CreateBlendState(&blend_desc, &blend_state_enabled));
+	ZeroMemory(&_blend_desc, sizeof(_blend_desc));
+	_blend_desc.AlphaToCoverageEnable = FALSE;
+	_blend_desc.IndependentBlendEnable = FALSE;
+	_blend_desc.RenderTarget[0].BlendEnable = TRUE;
+	_blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	_blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	_blend_desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	_blend_desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+	_blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
+	_blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	_blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	DXAssert(device->CreateBlendState(&_blend_desc, &blend_state_enabled));
 }
 
 bool Presenter::SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc)
@@ -318,40 +417,43 @@ bool Presenter::SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc)
 	return true;
 }
 
-bool Presenter::SetRasterizerState(CullMode cullmodle, bool wireframe, bool frontCCW)
+bool Presenter::SetRasterizerState(RasterizerMode mode)
 {
-	//TODO: create all states and only bind them
 	assert(context);
-	DXRelease(rasterizer_state);
 
-	//fill-in rasterizer desc
-	ZeroMemory(&rasterizer_state_desc, sizeof(rasterizer_state_desc));
-
-	//culling
-	switch (cullmodle)
+	switch (mode)
 	{
-	case CullMode::CULL_NONE: rasterizer_state_desc.CullMode = D3D11_CULL_NONE;
-		break;
-	case CullMode::CULL_BACK: rasterizer_state_desc.CullMode = D3D11_CULL_BACK;
-		break;
-	case CullMode::CULL_FRONT: rasterizer_state_desc.CullMode = D3D11_CULL_FRONT;
-		break;
-	default:
-		assert(false);
+		case RasterizerMode::CULL_NONE_SOLID_CW: context->RSSetState(rasterizer_state_NSCW);
+			break;
+		case RasterizerMode::CULL_NONE_SOLID_CCW: context->RSSetState(rasterizer_state_NSCCW);
+			break;
+		case RasterizerMode::CULL_NONE_WIREFRAME_CW: context->RSSetState(rasterizer_state_NWCW);
+			break;
+		case RasterizerMode::CULL_NONE_WIREFRAME_CCW: context->RSSetState(rasterizer_state_NWCCW);
+			break;
+		case RasterizerMode::CULL_BACK_SOLID_CW: context->RSSetState(rasterizer_state_BSCW);
+			break;
+		case RasterizerMode::CULL_BACK_SOLID_CCW: context->RSSetState(rasterizer_state_BSCCW);
+			break;
+		case RasterizerMode::CULL_BACK_WIREFRAME_CW: context->RSSetState(rasterizer_state_BWCW);
+			break;
+		case RasterizerMode::CULL_BACK_WIREFRAME_CCW: context->RSSetState(rasterizer_state_BWCCW);
+			break;
+		case RasterizerMode::CULL_FRONT_SOLID_CW: context->RSSetState(rasterizer_state_FSCW);
+			break;
+		case RasterizerMode::CULL_FRONT_SOLID_CCW: context->RSSetState(rasterizer_state_FSCCW);
+			break;
+		case RasterizerMode::CULL_FRONT_WIREFRAME_CW: context->RSSetState(rasterizer_state_FWCW);
+			break;
+		case RasterizerMode::CULL_FRONT_WIREFRAME_CCW: context->RSSetState(rasterizer_state_FWCCW);
+			break;
+		default:
+		{
+			assert(false);
+			return false;
+		}
 	}
 
-	//wireframe
-	if (wireframe)
-		rasterizer_state_desc.FillMode = D3D11_FILL_WIREFRAME;
-	else
-		rasterizer_state_desc.FillMode = D3D11_FILL_SOLID;
-
-	//front winding order
-	rasterizer_state_desc.FrontCounterClockwise = frontCCW;
-
-	//create rasterizer state
-	DXAssert(device->CreateRasterizerState(&rasterizer_state_desc, &rasterizer_state));
-	context->RSSetState(rasterizer_state);
 	return true;
 }
 
@@ -386,11 +488,6 @@ Supervisor* Presenter::GetSupervisor()
 Overlay* Presenter::GetOverlay()
 {
 	return overlay.get();
-}
-
-Scene* Presenter::GetActiveScene()
-{
-	return scene.get();
 }
 
 ID3D11Device* Presenter::GetDevice()

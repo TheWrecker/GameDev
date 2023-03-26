@@ -1,11 +1,16 @@
 
+#include "../elements/shader_vertex.h"
+#include "../elements/shader_pixel.h"
+#include "../elements/input_layout.h"
+#include "../scene/assets/master_buffer.h"
 #include "../entities/player.h"
-#include "../scene.h"
+#include "../scene/scene.h"
+#include "../presenter.h"
 
 #include "highlight.h"
 
-HighlightRender::HighlightRender(Scene* scene)
-	:RenderBase(scene)
+HighlightRender::HighlightRender(Presenter* parent)
+	:RenderBase(parent)
 {
 	object_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
 
@@ -26,16 +31,28 @@ HighlightRender::~HighlightRender()
 {
 }
 
+bool HighlightRender::Initialize()
+{
+	auto _result = RenderBase::Initialize();
+
+	player = scene->GetPlayer();
+
+	if (!player)
+		return false;
+
+	return _result;
+}
+
 void HighlightRender::Render()
 {
 	DefaultConstantStruct _cb = { };
-	switch (scene->GetPlayer()->GetInteractionMode())
+	switch (player->GetInteractionMode())
 	{
 		case InteractionMode::DEFAULT: return;
 			break;
 		case InteractionMode::DIG_MODE:
 		{
-			auto _block = scene->GetPlayer()->GetInteractionBlock();
+			auto _block = player->GetInteractionBlock();
 			if (!_block)
 				return;
 			_cb = { DirectX::XMMatrixMultiplyTranspose(transformation_matrix, _block->World_Matrix()) };
@@ -44,7 +61,7 @@ void HighlightRender::Render()
 		case InteractionMode::PLACEMENT_MODE:
 		{
 			DirectX::XMFLOAT3 _temp_pos = {};
-			if (!scene->GetPlayer()->GetPlacementBlockPos(_temp_pos))
+			if (!player->GetPlacementBlockPos(_temp_pos))
 				return;
 
 			_cb = { DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(_temp_pos.x , _temp_pos.y, _temp_pos.z)) };

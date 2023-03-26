@@ -2,11 +2,10 @@
 #ifndef SYS_TICKER_H
 	#define SYS_TICKER_H
 
-	#include <cstddef>
+	#include <cstdint>
 	#include <chrono>
 
 	#include "interface_service.h"
-	#include "defs_platform.h"
 
 	class SystemTicker : public IService
 	{
@@ -18,17 +17,11 @@
 
 		float GetLastTickDuration();
 		float GetAverageTickDuration();
-		std::size_t GetTickPerSecond();
+		std::uint_fast16_t GetTickPerSecond();
 
 	private:
-		/*SysTickValue
-			start_tick,
-			previous_tick,
-			current_tick,
-			frequency_i;*/
 
 		float
-			/*frequency_d,*/
 			last_tick_duration,
 			current_tick_sum,
 			average_tick_duration;
@@ -37,7 +30,7 @@
 			current_tp,
 			prev_tp;
 
-		std::size_t
+		std::uint_fast16_t
 			tick_per_second,
 			current_tick_count;
 	};

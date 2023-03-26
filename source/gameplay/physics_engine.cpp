@@ -2,45 +2,48 @@
 #include <cmath>
 #include <DirectXMath.h>
 
-#include "../entities/attributes/move_physics.h"
-#include "../entities/attributes/collision_physics.h"
+#include "physics/move_physics.h"
+#include "physics/collision_physics.h"
 #include "../core/sys_ticker.h"
-#include "game_time.h"
 #include "../entities/entity_transformable.h"
 #include "../entities/block_solid.h"
 #include "../entities/player.h"
 #include "../entities/segment.h"
 #include "../entities/world.h"
 #include "../visuals/scene.h"
-#include "../visuals/presenter.h"
 #include "../core/supervisor.h"
 
 #include "physics_engine.h"
 
-PhysicsEngine::PhysicsEngine(Supervisor* supervisor)
-	:supervisor(supervisor), game_time(nullptr), scene(nullptr), world(nullptr), ticker(nullptr), enabled(false)
+PhysicsEngine::PhysicsEngine()
+	:executor(nullptr), scene(nullptr), world(nullptr), ticker(nullptr), enabled(false)
 {
 }
 
 PhysicsEngine::~PhysicsEngine()
 {
-	auto _game_time = supervisor->QueryService<GameTime*>("game_time");
-	if (_game_time)
-		_game_time->RemoveFunction(update_task, true);
+	if (executor)
+		executor->RemovePeriodicTask(update_task, true);
 
 	//we are not the owner of physics components, dont delete them here
 }
 
 void PhysicsEngine::Start()
 {
-	ticker = supervisor->QueryService<SystemTicker*>("ticker");
-	game_time = supervisor->QueryService<GameTime*>("game_time");
-	scene = supervisor->QueryService<Presenter*>("presenter")->GetActiveScene();
-	world = scene->GetWorld();
+	//TODO: change the physics system to time ocnsumption approach
 	player = scene->GetPlayer();
 	//100 global physics engine ticks per second
-	update_task = game_time->RegisterFunction(std::bind(&PhysicsEngine::UpdateAllSystems, this), 10, true);
+	update_task = executor->RegisterPeriodicTask(std::bind(&PhysicsEngine::UpdateAllSystems, this), 10, true);
 	enabled = true;
+}
+
+bool PhysicsEngine::Initialize()
+{
+	ticker = Supervisor::QueryService<SystemTicker*>("ticker");
+	executor = Supervisor::QueryService<Executor*>("executor");
+	scene = Supervisor::QueryService<Scene*>("scene");
+	world = scene->GetWorld();
+	return true;
 }
 
 void PhysicsEngine::Update()
@@ -80,7 +83,8 @@ void PhysicsEngine::RemoveCollisionComponent(CollisionPhysics* target)
 
 void PhysicsEngine::UpdateAllSystems()
 {
-	//TODO: check if global physics are enabled?
+	//TODO: multi-threading?
+
 	if (!enabled)
 	{
 		ProcessPlayerNoPhysics();

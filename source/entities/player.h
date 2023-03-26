@@ -5,8 +5,8 @@
 	#include <memory>
 	
 	#include "entity_transformable.h"
-	#include "attributes/move_physics.h"
-	#include "attributes/collision_physics.h"
+	#include "../gameplay/physics/move_physics.h"
+	#include "../gameplay/physics/collision_physics.h"
 	#include "block_solid.h"
 
 	class BasicCamera;

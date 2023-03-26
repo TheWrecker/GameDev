@@ -1,19 +1,31 @@
 
-#include "../core/sys_ticker.h"
+#include <cassert>
 
-#include "game_time.h"
+#include "sys_ticker.h"
+#include "supervisor.h"
 
-GameTime::GameTime(SystemTicker* ticker)
-    :ticker(ticker), speed(1.0f), game_time(0.0f), real_time(0.0f), paused(false), realtime_container(), gametime_container(), diff(0.0f)
+#include "executor.h"
+
+Executor::Executor()
+    :ticker(ticker), speed(1.0f), game_time(0.0f), real_time(0.0f), paused(false), realtime_container(),
+    gametime_container(), diff(0.0f)
 {
 }
 
-GameTime::~GameTime()
+Executor::~Executor()
 {
 }
 
-void GameTime::Update()
+bool Executor::Initialize()
 {
+    ticker = Supervisor::QueryService<SystemTicker*>("ticker");
+    return (ticker != nullptr);
+}
+
+void Executor::Update()
+{
+    assert(ticker);
+
     diff = ticker->GetLastTickDuration();
     auto _ms = diff * 1000.0f;
 
@@ -22,7 +34,6 @@ void GameTime::Update()
         game_time += diff * speed;
         for (auto& _element : gametime_container)
         {
-
             _element.current += _ms * speed;
             if (_element.current > _element.call_limit)
             {
@@ -45,22 +56,22 @@ void GameTime::Update()
     }
 }
 
-void GameTime::SetGameSpeed(float value)
+void Executor::SetGameSpeed(float value)
 {
     speed = fmax(0.1f, fmin(value, 10.0f));
 }
 
-void GameTime::Pause()
+void Executor::Pause()
 {
     paused = true;
 }
 
-void GameTime::Resume()
+void Executor::Resume()
 {
     paused = false;
 }
 
-PeriodicTask GameTime::RegisterFunction(Callback func, float interval, bool realTime)
+PeriodicTask Executor::RegisterPeriodicTask(Callback func, float interval, bool realTime)
 {
     if (realTime)
     {
@@ -74,7 +85,7 @@ PeriodicTask GameTime::RegisterFunction(Callback func, float interval, bool real
     }
 }
 
-void GameTime::RemoveFunction(PeriodicTask target, bool realTime)
+void Executor::RemovePeriodicTask(PeriodicTask target, bool realTime)
 {
     if (realTime)
         realtime_container.erase(target);
@@ -82,17 +93,17 @@ void GameTime::RemoveFunction(PeriodicTask target, bool realTime)
         realtime_container.erase(target);
 }
 
-float GameTime::GetGameSpeed()
+float Executor::GetGameSpeed()
 {
     return speed;
 }
 
-float GameTime::GetGameTime()
+float Executor::GetGameTime()
 {
     return game_time;
 }
 
-float GameTime::GetRealTime()
+float Executor::GetRealTime()
 {
     return real_time;
 }

@@ -7,11 +7,12 @@
 	#include "render_base.h"
 
 	class RenderTarget;
+	class Presenter;
 
 	class RenderPass : public RenderBase
 	{
 	public:
-		RenderPass(Scene* scene, const std::wstring& pixelShader);
+		RenderPass(Presenter* parent, const std::wstring& pixelShader);
 		~RenderPass();
 
 		void BindAsRenderTarget();

@@ -1,11 +1,15 @@
 
-#include "../entities/camera_basic.h"
-#include "../scene.h"
+#include "../elements/shader_vertex.h"
+#include "../elements/shader_pixel.h"
+#include "../elements/input_layout.h"
+#include "../scene/assets/master_buffer.h"
+#include "../scene/camera/camera_basic.h"
+#include "../scene/scene.h"
 
 #include "sky.h"
 
-SkyRender::SkyRender(Scene* scene)
-	:RenderBase(scene)
+SkyRender::SkyRender(Presenter* parent)
+	:RenderBase(parent)
 {
 	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/sky_v.hlsl");
 	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/sky_p.hlsl");
@@ -18,7 +22,6 @@ SkyRender::SkyRender(Scene* scene)
 
 	per_frame_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
 	scale_matrix = DirectX::XMMatrixScaling(500.0f, 500.0f, 500.0f);
-	camera = scene->GetActiveCamera();
 }
 
 SkyRender::~SkyRender()

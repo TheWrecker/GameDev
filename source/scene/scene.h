@@ -5,7 +5,7 @@
 	#include <d3d11.h>
 	#include <memory>
 
-	#include "interface_drawable.h"
+	#include "interface_service.h"
 
 	class Sun;
 	class BasicCamera;
@@ -33,20 +33,18 @@
 		FIRST_PERSON
 	};
 
-	class Scene : public IDrawable
+	class Scene : public IService
 	{
 	public:
 		Scene(Presenter* parent);
 		~Scene();
 
-		void SwitchMode(SceneMode mode);
-		void Draw() override;
+		bool Initialize() override;
 		void Update() override;
-		void SwitchCameraType(CameraType type);
 
-		ID3D11Device* GetDevice();
-		ID3D11DeviceContext* GetContext();
-		Aggregator* GetAggregator();
+		void SwitchCameraType(CameraType type);
+		void SwitchMode(SceneMode mode);
+
 		Presenter* GetPresenter();
 		BasicCamera* GetActiveCamera();
 		Player* GetPlayer();

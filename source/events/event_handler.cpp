@@ -1,7 +1,7 @@
 
 #include "event_handler.h"
 
-EventHandler::EventHandler(Supervisor* supervisor)
+EventHandler::EventHandler()
 {
 }
 

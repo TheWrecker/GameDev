@@ -2,27 +2,37 @@
 #ifndef PLATFORM_H
 	#define PLATFORM_H
 
-	#include <memory>
+	#ifdef _WINDOWS
 
-	#include "interface_service.h"
-	#include "defs_platform.h"
+		#include "defs_platform.h"
 
-	#include SysPlatformInitializerHeader
+		#include "interface_service.h"
 
-	class Platform : public IService
-	{
-	public:
+		class Platform : public IService
+		{
+		public:
 
-		Platform(InstanceHandle handle);
-		~Platform();
+			Platform(InstanceHandle handle);
+			~Platform();
 
-		SysWindowHandle GetWindowHandle();
-		bool ProcessPlatformMessages();
+			//TODO: add more parameters
+			void SetWindowsParameters(int width = 800, int height = 600);
+			bool Initialize() override;
+			bool ProcessPlatformMessages();
 
-	private:
+			HWND GetWindowHandle();
+			int GetWindowHeight();
+			int GetWindowWidth();
 
-		std::unique_ptr<PlatformImpl> impl;
+		private:
+			HINSTANCE instance_handle;
+			HWND window_handle;
+			WNDCLASSEX window_class;
+			int width, height;
+		};
 
-	};
+	#endif // _WINDOWS
+
+	//TODO: Add other platforms
 
 #endif // !PLATFORM_H

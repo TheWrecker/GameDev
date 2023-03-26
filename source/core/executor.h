@@ -1,8 +1,8 @@
 
-#ifndef GAME_TIME_H
-	#define GAME_TIME_H
+#ifndef EXECUTOR_H
+	#define EXECUTOR_H
 
-#include <chrono>
+	#include <chrono>
 	#include <functional>
 	#include <list>
 
@@ -27,27 +27,26 @@
 
 	typedef std::list<PeriodicTaskInfo>::const_iterator PeriodicTask;
 
-	class GameTime : public IService
+	class Executor : public IService
 	{
 	public:
+		Executor();
+		~Executor();
 
-		GameTime(SystemTicker* ticker);
-		~GameTime();
-
+		bool Initialize() override;
 		void Update() override;
 		void SetGameSpeed(float value);
 		void Pause();
 		void Resume();
 
-		PeriodicTask RegisterFunction(Callback func, float interval, bool realTime = false);
-		void RemoveFunction(PeriodicTask target, bool realTime = false);
+		PeriodicTask RegisterPeriodicTask(Callback func, float interval, bool realTime = false);
+		void RemovePeriodicTask(PeriodicTask target, bool realTime = false);
 
 		float GetGameSpeed();
 		float GetGameTime();
 		float GetRealTime();
 
 	private:
-
 		std::list<PeriodicTaskInfo>
 			realtime_container,
 			gametime_container;
@@ -61,6 +60,4 @@
 		bool paused;
 	};
 
-#endif // !GAME_TIME_H
-
-
+#endif // !EXECUTOR_H

@@ -22,8 +22,9 @@
 		WorldEngine(int seed = 0);
 		~WorldEngine();
 
-		void SetupWorld(Scene* scene);
-		void BeginWorldLoading();
+		bool Initialize() override;
+		void SetupStartingWorld();
+		void BeginWorldGeneration();
 		void WorldLoadTick();
 
 		//std::unique_ptr<FastNoise::Perlin> noise_generator;

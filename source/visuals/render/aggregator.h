@@ -5,8 +5,6 @@
 	#include <d3d11.h>
 	#include <memory>
 
-	#include "render_base.h"
-
 	class HUDRender;
 	class HighlightRender;
 	class SolidBlockRender;
@@ -14,15 +12,20 @@
 	class SunMoon;
 	class SkyRender;
 	class RenderPass;
-	class Scene;
+	class StateMaster;
+	class ModelManager;
+	class TextureManager;
+	class BufferMaster;
 	class Presenter;
+	class Scene;
 
 	class Aggregator
 	{
 	public:
-		Aggregator(Scene* scene);
+		Aggregator(Presenter* parent);
 		~Aggregator();
 
+		bool Initialize();
 		void AggregateAllRenders();
 
 	private:

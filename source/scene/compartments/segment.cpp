@@ -123,6 +123,16 @@ void Segment::RebuildBuffers()
     SolidBlockProcessor::Rebuild(this);
 }
 
+DirectX::CXMMATRIX Segment::World_Matrix()
+{
+    return DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+}
+
+DirectX::XMFLOAT3 Segment::Position()
+{
+    return position;
+}
+
 SegmentIndices Segment::GetArrayIndices(unsigned int value)
 {
     SegmentIndices _indices = {};

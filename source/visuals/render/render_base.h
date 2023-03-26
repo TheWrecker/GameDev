@@ -5,27 +5,25 @@
 	#include <d3d11.h>
 	#include <memory>
 
-	#include "defs_pipeline.h"
-	#include "../elements/shader_pixel.h"
-	#include "../elements/shader_vertex.h"
-	#include "../entities/camera_basic.h"
-	#include "../elements/input_layout.h"
-	#include "../elements/buffer_index.h"
-	#include "../elements/buffer_vertex.h"
-	#include "../elements/buffer_constant.h"
-	#include "../elements/manager_model.h"
-	#include "../elements/manager_texture.h"
-	#include "../elements/master_state.h"
-	#include "../elements/master_buffer.h"
-
+	class PixelShader;
+	class VertexShader;
+	class IndexBuffer;
+	class InputLayout;
+	class BufferMaster;
+	class TextureManager;
+	class ModelManager;
+	class StateMaster;
+	class BasicCamera;
 	class Scene;
+	class Presenter;
 
 	class RenderBase
 	{
 	public:
-		RenderBase(Scene* scene);
+		RenderBase(Presenter* parent);
 		virtual ~RenderBase();
 
+		virtual bool Initialize();
 		virtual void Render() = 0;
 		virtual void Update();
 

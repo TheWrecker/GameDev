@@ -1,26 +1,38 @@
 
 #include <DirectXMath.h>
 
-#include "../visuals/utils/ray.h"
-#include "../entities/camera_basic.h"
-#include "../entities/segment.h"
-#include "../entities/pillar.h"
+#include "../utils/ray.h"
 #include "../entities/player.h"
-#include "../entities/world.h"
-#include "../scene.h"
+#include "../scene/camera/camera_basic.h"
+#include "../scene/compartments/segment.h"
+#include "../scene/compartments/pillar.h"
+#include "../scene/world.h"
+#include "../scene/scene.h"
+#include "../presenter.h"
 
 #include "vision_perimeter.h"
 
-VisionPerimeter::VisionPerimeter(Scene* scene)
-	:scene(scene), range(50.0f)
+VisionPerimeter::VisionPerimeter(Presenter* parent)
+	:presenter(parent), scene(nullptr), camera(nullptr), player(nullptr), world(nullptr), range(50.0f)
 {
-	player = scene->GetPlayer();
-	world = scene->GetWorld();
-	camera = scene->GetActiveCamera();
 }
 
 VisionPerimeter::~VisionPerimeter()
 {
+}
+
+bool VisionPerimeter::Initialize()
+{
+	scene = presenter->QueryService<Scene*>("scene");
+
+	if (!scene)
+		return false;
+
+	player = scene->GetPlayer();
+	world = scene->GetWorld();
+	camera = scene->GetActiveCamera();
+
+	return player && world && camera;
 }
 
 void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
@@ -35,7 +47,7 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 	frustrum.CalculateFrustrum(camera->View_Matrix(), _proj);
 
 	//filter all near pillars
-	//TODO: render range idfferent than world near range? less?
+	//TODO: render range differs from world near range? make it lesser?
 	for (auto& _pillar : world->near_pillars)
 	{
 		if (frustrum.IntersectsPillar(_pillar->x, _pillar->z))

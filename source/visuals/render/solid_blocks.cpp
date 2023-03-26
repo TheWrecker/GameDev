@@ -1,16 +1,18 @@
 
-#include "../entities/segment.h"
-#include "../entities/pillar.h"
-#include "../entities/world.h"
-#include "../scene.h"
+#include "../elements/shader_vertex.h"
+#include "../elements/shader_pixel.h"
+#include "../elements/input_layout.h"
+#include "../scene/assets/master_buffer.h"
+#include "../scene/compartments/segment.h"
+#include "../scene/compartments/pillar.h"
+#include "../scene/world.h"
+#include "../scene/scene.h"
 #include "vision_perimeter.h"
 
 #include "solid_blocks.h"
 
-//TODO: near player container for rendering pillars?
-
-SolidBlockRender::SolidBlockRender(Scene* scene)
-	:RenderBase(scene)
+SolidBlockRender::SolidBlockRender(Presenter* parent)
+	:RenderBase(parent)
 {
 	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/solid_blocks_v.hlsl");
 	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/solid_blocks_p.hlsl");
@@ -24,11 +26,23 @@ SolidBlockRender::SolidBlockRender(Scene* scene)
 		.Build();
 
 	per_object_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
-	perimeter = std::make_unique<VisionPerimeter>(scene);
 }
 
 SolidBlockRender::~SolidBlockRender()
 {
+}
+
+bool SolidBlockRender::Initialize()
+{
+	bool _result = RenderBase::Initialize();;
+
+	perimeter = std::make_unique<VisionPerimeter>(scene);
+	if (!perimeter.get())
+		return false;
+
+	render_segments.reserve(500);
+
+	return _result;
 }
 
 void SolidBlockRender::Update()
@@ -42,22 +56,6 @@ void SolidBlockRender::Render()
 	vertex_shader->Apply();
 	pixel_shader->Apply();
 	input_layout->Bind();
-
-	/*for (auto& _pillar : scene->GetWorld()->pillars)
-	{
-		for (auto& _segment : _pillar.second->segments)
-		{
-			if (_segment.second->IsEmpty())
-				continue;
-
-			DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_segment.second->World_Matrix()) };
-			per_object_buffer->Update(_cb);
-			per_object_buffer->Bind(BindStage::VERTEX, 1);
-			_segment.second->GetVertexBuffer()->Bind(1);
-			_segment.second->GetIndexBuffer()->Bind();
-			context->DrawIndexed(_segment.second->GetIndexBuffer()->GetIndexCount(), 0, 0);
-		}
-	}*/
 
 	for (auto _segment : render_segments)
 	{

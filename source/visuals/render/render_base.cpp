@@ -1,23 +1,34 @@
 
-#include "../scene.h"
+#include "../scene/scene.h"
 #include "../presenter.h"
 
 #include "render_base.h"
 
-RenderBase::RenderBase(Scene* scene)
-	:scene(scene), presenter(scene->GetPresenter())
+RenderBase::RenderBase(Presenter* parent)
+	:scene(nullptr), presenter(parent)
 {
 	device = presenter->GetDevice();
 	context = presenter->GetContext();
+}
+
+RenderBase::~RenderBase()
+{
+}
+
+bool RenderBase::Initialize()
+{
+	scene = presenter->QueryService<Scene*>("scene");
+
+	if (!scene)
+		return false;
+
 	camera = scene->GetActiveCamera();
 	state_master = scene->GetStateMaster();
 	model_manager = scene->GetModelManager();
 	texture_manager = scene->GetTextureManager();
 	buffer_master = scene->GetBufferMaster();
-	}
 
-RenderBase::~RenderBase()
-{
+	return true;
 }
 
 void RenderBase::Update()

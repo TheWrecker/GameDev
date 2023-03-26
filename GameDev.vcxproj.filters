@@ -8,9 +8,6 @@
     <Filter Include="source\visuals">
       <UniqueIdentifier>{b23d41c1-587f-4066-a497-1d7978646748}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\headers">
-      <UniqueIdentifier>{ad10d727-b074-4dab-8a98-68c846dc50fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="source\core">
       <UniqueIdentifier>{6b2d92d6-4b79-4bee-ab9d-6e2fb0a00681}</UniqueIdentifier>
     </Filter>
@@ -26,9 +23,6 @@
     <Filter Include="source\entities">
       <UniqueIdentifier>{3f0f0fd3-2b4c-4334-83be-c2e2fd3296bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\visuals\render">
-      <UniqueIdentifier>{158767ba-4fc9-4bfd-a8d0-af7624ba3c1e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="source\visuals\shaders">
       <UniqueIdentifier>{a83aea85-130b-415b-88bc-4c80ca131d35}</UniqueIdentifier>
     </Filter>
@@ -41,23 +35,41 @@
     <Filter Include="source\gameplay">
       <UniqueIdentifier>{ecd08d53-8a3a-48f9-96ff-56136b3c9d25}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\visuals\utils">
-      <UniqueIdentifier>{aaa33365-8e38-4f20-ad89-3fede9c3c78a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="source\events">
       <UniqueIdentifier>{10b1f5d6-cde5-4ef3-87d9-ac19b62ac912}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\helpers">
-      <UniqueIdentifier>{4e0daf65-f98a-4de8-8316-de0e6e8a05ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\entities\attributes">
-      <UniqueIdentifier>{021a2263-0c77-4184-8119-674602981635}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\external\FastNoiseLite">
-      <UniqueIdentifier>{d924e59b-50f4-4fa0-bc9e-529c5d789999}</UniqueIdentifier>
-    </Filter>
     <Filter Include="source\external\FastNoiseSIMD">
       <UniqueIdentifier>{b4a63701-bcaf-4518-873f-b5a378bc0141}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\defs">
+      <UniqueIdentifier>{c9720c64-6611-4c8a-9ac3-6ca27663bd2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\gameplay\physics">
+      <UniqueIdentifier>{45cae3c6-563a-4355-87d3-470aa7e9ee9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\scene">
+      <UniqueIdentifier>{4628fcdc-1928-4201-a652-4a0f56e68cc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\scene\camera">
+      <UniqueIdentifier>{4185d95c-b187-4727-8397-f4297f7b3f5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\scene\compartments">
+      <UniqueIdentifier>{4de647c7-8b54-4825-a725-0bb3c82f3fa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\scene\elements">
+      <UniqueIdentifier>{bcf3d253-499f-47ca-bebc-b8e963a07da6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\gameplay\items">
+      <UniqueIdentifier>{5636e477-5e14-43bd-91f9-c84de284357f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\utils">
+      <UniqueIdentifier>{120f1ab5-6d99-4a5a-aeb7-bfe07add5f9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\scene\assets">
+      <UniqueIdentifier>{28857a45-5069-4393-9abc-ed8204733995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\visuals\render">
+      <UniqueIdentifier>{158767ba-4fc9-4bfd-a8d0-af7624ba3c1e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,13 +82,7 @@
     <ClCompile Include="source\core\platform.cpp">
       <Filter>source\core</Filter>
     </ClCompile>
-    <ClCompile Include="source\core\sys_win_platform.cpp">
-      <Filter>source\core</Filter>
-    </ClCompile>
     <ClCompile Include="source\core\sys_ticker.cpp">
-      <Filter>source\core</Filter>
-    </ClCompile>
-    <ClCompile Include="source\core\sys_win_profiler.cpp">
       <Filter>source\core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\sys_profiler.cpp">
@@ -86,9 +92,6 @@
       <Filter>source\core</Filter>
     </ClCompile>
     <ClCompile Include="source\visuals\presenter.cpp">
-      <Filter>source\visuals</Filter>
-    </ClCompile>
-    <ClCompile Include="source\visuals\scene.cpp">
       <Filter>source\visuals</Filter>
     </ClCompile>
     <ClCompile Include="source\visuals\overlay.cpp">
@@ -127,12 +130,6 @@
     <ClCompile Include="source\entities\entity_transformable.cpp">
       <Filter>source\entities</Filter>
     </ClCompile>
-    <ClCompile Include="source\entities\camera_basic.cpp">
-      <Filter>source\entities</Filter>
-    </ClCompile>
-    <ClCompile Include="source\entities\camera_firstperson.cpp">
-      <Filter>source\entities</Filter>
-    </ClCompile>
     <ClCompile Include="source\visuals\render\render_dev.cpp">
       <Filter>source\visuals\render</Filter>
     </ClCompile>
@@ -166,20 +163,8 @@
     <ClCompile Include="source\visuals\elements\sampler_texture.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
-    <ClCompile Include="source\visuals\elements\master_state.cpp">
-      <Filter>source\visuals\elements</Filter>
-    </ClCompile>
     <ClCompile Include="source\visuals\render\render_base.cpp">
       <Filter>source\visuals\render</Filter>
-    </ClCompile>
-    <ClCompile Include="source\visuals\elements\manager_model.cpp">
-      <Filter>source\visuals\elements</Filter>
-    </ClCompile>
-    <ClCompile Include="source\visuals\elements\manager_texture.cpp">
-      <Filter>source\visuals\elements</Filter>
-    </ClCompile>
-    <ClCompile Include="source\visuals\elements\master_buffer.cpp">
-      <Filter>source\visuals\elements</Filter>
     </ClCompile>
     <ClCompile Include="source\visuals\render\aggregator.cpp">
       <Filter>source\visuals\render</Filter>
@@ -196,26 +181,14 @@
     <ClCompile Include="source\visuals\render\solid_blocks.cpp">
       <Filter>source\visuals\render</Filter>
     </ClCompile>
-    <ClCompile Include="source\entities\sun.cpp">
-      <Filter>source\entities</Filter>
-    </ClCompile>
     <ClCompile Include="source\visuals\render\sun_moon.cpp">
       <Filter>source\visuals\render</Filter>
     </ClCompile>
     <ClCompile Include="source\entities\block_solid.cpp">
       <Filter>source\entities</Filter>
     </ClCompile>
-    <ClCompile Include="source\entities\segment.cpp">
-      <Filter>source\entities</Filter>
-    </ClCompile>
     <ClCompile Include="source\processors\processor_solid_block.cpp">
       <Filter>source\processors</Filter>
-    </ClCompile>
-    <ClCompile Include="source\visuals\elements\texture_atlas.cpp">
-      <Filter>source\visuals\elements</Filter>
-    </ClCompile>
-    <ClCompile Include="source\entities\world.cpp">
-      <Filter>source\entities</Filter>
     </ClCompile>
     <ClCompile Include="source\visuals\render\hud.cpp">
       <Filter>source\visuals\render</Filter>
@@ -225,9 +198,6 @@
     </ClCompile>
     <ClCompile Include="source\input\input_handler.cpp">
       <Filter>source\input</Filter>
-    </ClCompile>
-    <ClCompile Include="source\visuals\utils\ray.cpp">
-      <Filter>source\visuals\utils</Filter>
     </ClCompile>
     <ClCompile Include="source\events\event_handler.cpp">
       <Filter>source\events</Filter>
@@ -241,41 +211,17 @@
     <ClCompile Include="source\visuals\render\highlight.cpp">
       <Filter>source\visuals\render</Filter>
     </ClCompile>
-    <ClCompile Include="source\gameplay\item_stack.cpp">
-      <Filter>source\gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gameplay\item_container.cpp">
-      <Filter>source\gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="source\events\begin_placement.cpp">
       <Filter>source\events</Filter>
     </ClCompile>
-    <ClCompile Include="source\entities\attributes\move_physics.cpp">
-      <Filter>source\entities\attributes</Filter>
-    </ClCompile>
     <ClCompile Include="source\gameplay\physics_engine.cpp">
       <Filter>source\gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gameplay\game_time.cpp">
-      <Filter>source\gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="source\entities\attributes\collision_physics.cpp">
-      <Filter>source\entities\attributes</Filter>
-    </ClCompile>
-    <ClCompile Include="source\external\FastNoiseLite\FastNoise.cpp">
-      <Filter>source\external\FastNoiseLite</Filter>
     </ClCompile>
     <ClCompile Include="source\gameplay\world_engine.cpp">
       <Filter>source\gameplay</Filter>
     </ClCompile>
     <ClCompile Include="source\processors\processor_biome.cpp">
       <Filter>source\processors</Filter>
-    </ClCompile>
-    <ClCompile Include="source\entities\pillar.cpp">
-      <Filter>source\entities</Filter>
-    </ClCompile>
-    <ClCompile Include="source\visuals\utils\frustrum.cpp">
-      <Filter>source\visuals\utils</Filter>
     </ClCompile>
     <ClCompile Include="source\visuals\render\vision_perimeter.cpp">
       <Filter>source\visuals\render</Filter>
@@ -301,17 +247,65 @@
     <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_sse41.cpp">
       <Filter>source\external\FastNoiseSIMD</Filter>
     </ClCompile>
+    <ClCompile Include="source\core\executor.cpp">
+      <Filter>source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameplay\physics\collision_physics.cpp">
+      <Filter>source\gameplay\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameplay\physics\move_physics.cpp">
+      <Filter>source\gameplay\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\camera\camera_basic.cpp">
+      <Filter>source\scene\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\camera\camera_firstperson.cpp">
+      <Filter>source\scene\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\scene.cpp">
+      <Filter>source\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\world.cpp">
+      <Filter>source\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\compartments\pillar.cpp">
+      <Filter>source\scene\compartments</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\compartments\segment.cpp">
+      <Filter>source\scene\compartments</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\elements\sun.cpp">
+      <Filter>source\scene\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameplay\items\item_container.cpp">
+      <Filter>source\gameplay\items</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameplay\items\item_stack.cpp">
+      <Filter>source\gameplay\items</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\frustrum.cpp">
+      <Filter>source\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\ray.cpp">
+      <Filter>source\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\assets\manager_model.cpp">
+      <Filter>source\scene\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\assets\manager_texture.cpp">
+      <Filter>source\scene\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\assets\master_buffer.cpp">
+      <Filter>source\scene\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\assets\master_state.cpp">
+      <Filter>source\scene\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\assets\texture_atlas.cpp">
+      <Filter>source\scene\assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\headers\defs_platform.h">
-      <Filter>source\headers</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\interface_sys_platform.h">
-      <Filter>source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\interface_sys_profiler.h">
-      <Filter>source\core</Filter>
-    </ClInclude>
     <ClInclude Include="source\core\platform.h">
       <Filter>source\core</Filter>
     </ClInclude>
@@ -327,22 +321,7 @@
     <ClInclude Include="source\core\sys_ticker.h">
       <Filter>source\core</Filter>
     </ClInclude>
-    <ClInclude Include="source\core\sys_win_platform.h">
-      <Filter>source\core</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\sys_win_profiler.h">
-      <Filter>source\core</Filter>
-    </ClInclude>
     <ClInclude Include="source\visuals\presenter.h">
-      <Filter>source\visuals</Filter>
-    </ClInclude>
-    <ClInclude Include="source\headers\interface_service.h">
-      <Filter>source\headers</Filter>
-    </ClInclude>
-    <ClInclude Include="source\headers\util_funcs.h">
-      <Filter>source\headers</Filter>
-    </ClInclude>
-    <ClInclude Include="source\visuals\scene.h">
       <Filter>source\visuals</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\overlay.h">
@@ -384,15 +363,6 @@
     <ClInclude Include="source\entities\entity_transformable.h">
       <Filter>source\entities</Filter>
     </ClInclude>
-    <ClInclude Include="source\entities\camera_basic.h">
-      <Filter>source\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="source\entities\camera_firstperson.h">
-      <Filter>source\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="source\headers\interface_drawable.h">
-      <Filter>source\headers</Filter>
-    </ClInclude>
     <ClInclude Include="source\visuals\render\render_dev.h">
       <Filter>source\visuals\render</Filter>
     </ClInclude>
@@ -432,29 +402,11 @@
     <ClInclude Include="source\visuals\elements\sampler_texture.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
-    <ClInclude Include="source\visuals\elements\master_state.h">
-      <Filter>source\visuals\elements</Filter>
-    </ClInclude>
     <ClInclude Include="source\visuals\render\render_base.h">
       <Filter>source\visuals\render</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\render\sky.h">
       <Filter>source\visuals\render</Filter>
-    </ClInclude>
-    <ClInclude Include="source\visuals\elements\manager_model.h">
-      <Filter>source\visuals\elements</Filter>
-    </ClInclude>
-    <ClInclude Include="source\headers\interface_manager.h">
-      <Filter>source\headers</Filter>
-    </ClInclude>
-    <ClInclude Include="source\visuals\elements\manager_texture.h">
-      <Filter>source\visuals\elements</Filter>
-    </ClInclude>
-    <ClInclude Include="source\visuals\elements\master_buffer.h">
-      <Filter>source\visuals\elements</Filter>
-    </ClInclude>
-    <ClInclude Include="source\headers\defs_pipeline.h">
-      <Filter>source\headers</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\render\aggregator.h">
       <Filter>source\visuals\render</Filter>
@@ -468,29 +420,14 @@
     <ClInclude Include="source\visuals\render\solid_blocks.h">
       <Filter>source\visuals\render</Filter>
     </ClInclude>
-    <ClInclude Include="source\entities\sun.h">
-      <Filter>source\entities</Filter>
-    </ClInclude>
     <ClInclude Include="source\visuals\render\sun_moon.h">
       <Filter>source\visuals\render</Filter>
     </ClInclude>
     <ClInclude Include="source\entities\block_solid.h">
       <Filter>source\entities</Filter>
     </ClInclude>
-    <ClInclude Include="source\entities\segment.h">
-      <Filter>source\entities</Filter>
-    </ClInclude>
     <ClInclude Include="source\processors\processor_solid_block.h">
       <Filter>source\processors</Filter>
-    </ClInclude>
-    <ClInclude Include="source\visuals\elements\texture_atlas.h">
-      <Filter>source\visuals\elements</Filter>
-    </ClInclude>
-    <ClInclude Include="source\entities\world.h">
-      <Filter>source\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="source\headers\defs_world.h">
-      <Filter>source\headers</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\render\hud.h">
       <Filter>source\visuals\render</Filter>
@@ -500,9 +437,6 @@
     </ClInclude>
     <ClInclude Include="source\input\input_handler.h">
       <Filter>source\input</Filter>
-    </ClInclude>
-    <ClInclude Include="source\visuals\utils\ray.h">
-      <Filter>source\visuals\utils</Filter>
     </ClInclude>
     <ClInclude Include="source\events\begin_dig.h">
       <Filter>source\events</Filter>
@@ -519,56 +453,20 @@
     <ClInclude Include="source\events\finish_dig.h">
       <Filter>source\events</Filter>
     </ClInclude>
-    <ClInclude Include="source\headers\interface_event.h">
-      <Filter>source\headers</Filter>
-    </ClInclude>
     <ClInclude Include="source\visuals\render\highlight.h">
       <Filter>source\visuals\render</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gameplay\item_stack.h">
-      <Filter>source\gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gameplay\item_container.h">
-      <Filter>source\gameplay</Filter>
     </ClInclude>
     <ClInclude Include="source\events\begin_placement.h">
       <Filter>source\events</Filter>
     </ClInclude>
-    <ClInclude Include="source\helpers\conversion_item_block.h">
-      <Filter>source\helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="source\headers\defs_blocks.h">
-      <Filter>source\headers</Filter>
-    </ClInclude>
-    <ClInclude Include="source\headers\defs_items.h">
-      <Filter>source\headers</Filter>
-    </ClInclude>
-    <ClInclude Include="source\entities\attributes\move_physics.h">
-      <Filter>source\entities\attributes</Filter>
-    </ClInclude>
     <ClInclude Include="source\gameplay\physics_engine.h">
       <Filter>source\gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gameplay\game_time.h">
-      <Filter>source\gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="source\entities\attributes\collision_physics.h">
-      <Filter>source\entities\attributes</Filter>
     </ClInclude>
     <ClInclude Include="source\gameplay\world_engine.h">
       <Filter>source\gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="source\external\FastNoiseLite\FastNoise.h">
-      <Filter>source\external\FastNoiseLite</Filter>
-    </ClInclude>
     <ClInclude Include="source\processors\processor_biome.h">
       <Filter>source\processors</Filter>
-    </ClInclude>
-    <ClInclude Include="source\entities\pillar.h">
-      <Filter>source\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="source\visuals\utils\frustrum.h">
-      <Filter>source\visuals\utils</Filter>
     </ClInclude>
     <ClInclude Include="source\visuals\render\vision_perimeter.h">
       <Filter>source\visuals\render</Filter>
@@ -578,6 +476,93 @@
     </ClInclude>
     <ClInclude Include="source\external\FastNoiseSIMD\FastNoiseSIMD_internal.h">
       <Filter>source\external\FastNoiseSIMD</Filter>
+    </ClInclude>
+    <ClInclude Include="source\defs\defs_blocks.h">
+      <Filter>source\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\defs\defs_items.h">
+      <Filter>source\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\defs\defs_pipeline.h">
+      <Filter>source\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\defs\defs_world.h">
+      <Filter>source\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\defs\defs_platform.h">
+      <Filter>source\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\defs\interface_event.h">
+      <Filter>source\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\defs\interface_manager.h">
+      <Filter>source\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\defs\interface_service.h">
+      <Filter>source\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\defs\util_funcs.h">
+      <Filter>source\defs</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\executor.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameplay\physics\collision_physics.h">
+      <Filter>source\gameplay\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameplay\physics\move_physics.h">
+      <Filter>source\gameplay\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\camera\camera_basic.h">
+      <Filter>source\scene\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\camera\camera_firstperson.h">
+      <Filter>source\scene\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\scene.h">
+      <Filter>source\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\world.h">
+      <Filter>source\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\compartments\pillar.h">
+      <Filter>source\scene\compartments</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\compartments\segment.h">
+      <Filter>source\scene\compartments</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\elements\sun.h">
+      <Filter>source\scene\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameplay\items\item_container.h">
+      <Filter>source\gameplay\items</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameplay\items\item_stack.h">
+      <Filter>source\gameplay\items</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\conversion_item_block.h">
+      <Filter>source\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\frustrum.h">
+      <Filter>source\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\ray.h">
+      <Filter>source\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\assets\manager_model.h">
+      <Filter>source\scene\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\assets\manager_texture.h">
+      <Filter>source\scene\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\assets\master_buffer.h">
+      <Filter>source\scene\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\assets\master_state.h">
+      <Filter>source\scene\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\assets\texture_atlas.h">
+      <Filter>source\scene\assets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

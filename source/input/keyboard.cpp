@@ -1,8 +1,4 @@
 
-#ifdef _WINDOWS
-#include <Windows.h>
-#endif // _WINDOWS
-
 #include "keyboard.h"
 
 Keyboard::Keyboard()

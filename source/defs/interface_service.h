@@ -6,6 +6,7 @@
 	{
 	public:
 		virtual void Update() {}
+		virtual bool Initialize() { return true; }
 		virtual ~IService() {}
 	};
 

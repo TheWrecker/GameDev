@@ -16,17 +16,19 @@
 	class Presenter;
 	class SystemTicker;
 
-	class Overlay : public IDrawable
+	class Overlay
 	{
 	public:
 		Overlay(Presenter* parent);
 		~Overlay();
 
+		bool Initialize();
+		void Draw();
+		void Update();
+
 		void Show();
 		void Hide();
 		void ToggleShow();
-		void Draw() override;
-		void Update() override;
 
 	private:
 		Player* player;

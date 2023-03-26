@@ -1,14 +1,17 @@
 
 #include "defs_pipeline.h"
+#include "../elements/shader_vertex.h"
+#include "../elements/shader_pixel.h"
+#include "../scene/assets/master_buffer.h"
+#include "../elements/input_layout.h"
 #include "../elements/render_target.h"
-#include "../scene.h"
 
 #include "render_pass.h"
 
-RenderPass::RenderPass(Scene* scene, const std::wstring& pixelShader)
-	:RenderBase(scene)
+RenderPass::RenderPass(Presenter* parent, const std::wstring& pixelShader)
+	:RenderBase(parent)
 {
-	render_target = std::make_unique<RenderTarget>(scene->GetPresenter());
+	render_target = std::make_unique<RenderTarget>(parent);
 	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/pass_v.hlsl");
 	pixel_shader = std::make_unique<PixelShader>(presenter, pixelShader);
 

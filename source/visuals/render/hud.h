@@ -4,12 +4,12 @@
 
 	#include "render_base.h"
 
-	class BasicCamera;
+	class Presenter;
 
 	class HUDRender : public RenderBase
 	{
 	public:
-		HUDRender(Scene* scene);
+		HUDRender(Presenter* parent);
 		~HUDRender();
 
 		void Render() override;

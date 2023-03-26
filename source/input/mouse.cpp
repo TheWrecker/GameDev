@@ -1,20 +1,32 @@
 
-#ifdef _WINDOWS
-#include <Windows.h>
-#endif // _WINDOWS
+#include <cassert>
 
+#include "defs_platform.h"
+#include "../core/platform.h"
+#include "../core/supervisor.h"
 #include "mouse.h"
 
-Mouse::Mouse(SysWindowHandle handle)
+Mouse::Mouse()
 {
 	mouse = std::make_unique<DirectX::Mouse>();
-	mouse->SetWindow(handle);
 	mouse_buttons = std::make_unique<DirectX::Mouse::ButtonStateTracker>();
 	state = mouse->GetState();
 }
 
 Mouse::~Mouse()
 {
+}
+
+bool Mouse::Initialize()
+{
+	auto _handle = Supervisor::QueryService<Platform*>("platform")->GetWindowHandle();
+	if (!_handle)
+	{
+		assert(false);
+		return false;
+	}
+	mouse->SetWindow(_handle);
+	return true;
 }
 
 void Mouse::Update()

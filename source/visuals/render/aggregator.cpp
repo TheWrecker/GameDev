@@ -1,6 +1,6 @@
 
 #include "../elements/render_target.h"
-#include "../elements/texture_atlas.h"
+#include "../scene/assets/texture_atlas.h"
 #include "hud.h"
 #include "highlight.h"
 #include "solid_blocks.h"
@@ -8,46 +8,40 @@
 #include "sun_moon.h"
 #include "sky.h"
 #include "render_pass.h"
-#include "../scene.h"
+#include "../scene/scene.h"
 #include "../presenter.h"
 
 #include "aggregator.h"
 
 static const ::DirectX::XMVECTORF32 RENDER_TARGET_DEFAULT_COLOR = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-Aggregator::Aggregator(Scene* scene)
-	:scene(scene)
+Aggregator::Aggregator(Presenter* parent)
+	:presenter(parent)
 {
-	presenter = scene->GetPresenter();
 	device = presenter->device;
 	context = presenter->context;
-	state_master = scene->GetStateMaster();
-	model_manager = scene->GetModelManager();
-	texture_manager = scene->GetTextureManager();
-	buffer_master = scene->GetBufferMaster();
-
 	//TODO: move to scene change
 
 	//Sky 
-	render_sky = std::make_unique<SkyRender>(scene);
+	render_sky = std::make_unique<SkyRender>(parent);
 
 	//Dev Render
-	render_dev = std::make_unique<DevRender>(scene);
+	render_dev = std::make_unique<DevRender>(parent);
 
 	//render pass
-	render_pass = std::make_unique<RenderPass>(scene, L"source/visuals/shaders/pass_p.hlsl");
+	render_pass = std::make_unique<RenderPass>(parent, L"source/visuals/shaders/pass_p.hlsl");
 
 	//Sun and Moon
-	render_sun_moon = std::make_unique<SunMoon>(scene);
+	render_sun_moon = std::make_unique<SunMoon>(parent);
 
 	//solid blocks
-	render_solid_blocks = std::make_unique<SolidBlockRender>(scene);
+	render_solid_blocks = std::make_unique<SolidBlockRender>(parent);
 
 	//block highlight
-	render_highlight = std::make_unique<HighlightRender>(scene);
+	render_highlight = std::make_unique<HighlightRender>(parent);
 
 	//hud
-	render_hud = std::make_unique<HUDRender>(scene);
+	render_hud = std::make_unique<HUDRender>(parent);
 
 	//setup all render parameters
 	//bind default objects
@@ -79,6 +73,21 @@ Aggregator::Aggregator(Scene* scene)
 
 Aggregator::~Aggregator()
 {
+}
+
+bool Aggregator::Initialize()
+{
+	scene = presenter->QueryService<Scene*>("scene");
+
+	if (!scene)
+		return false;
+
+	state_master = scene->GetStateMaster();
+	model_manager = scene->GetModelManager();
+	texture_manager = scene->GetTextureManager();
+	buffer_master = scene->GetBufferMaster();
+
+	return true;
 }
 
 void Aggregator::AggregateAllRenders()

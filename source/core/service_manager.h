@@ -6,7 +6,7 @@
 	#include <memory>
 	#include <string>
 
-	#include "interface_service.h"
+	class IService;
 
 	class ServiceManager
 	{
@@ -18,14 +18,13 @@
 		~ServiceManager();
 
 		void AdoptService(std::string name, IService* target);
+
 		template <typename type>
 		type QueryService(const std::string& name);
+
 		ServiceContainer& Services();
 
 	private:
-		friend class Supervisor;
-		friend class Presenter;
-
 		IService* GetService(const std::string& name);
 
 		ServiceContainer container;
@@ -34,7 +33,11 @@
 	template<typename type>
 	inline type ServiceManager::QueryService(const std::string& name)
 	{
-		return dynamic_cast<type>(GetService(name));
+		#ifdef _DEBUG
+			return dynamic_cast<type>(GetService(name));
+		#else
+			return static_cast<type>(GetService(name));
+		#endif
 	}
 
 #endif // !SERVICE_MANAGER_H

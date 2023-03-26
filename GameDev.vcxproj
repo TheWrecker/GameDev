@@ -93,7 +93,7 @@
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\defs</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,7 +110,7 @@
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\defs</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -124,7 +124,7 @@
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\defs</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -141,7 +141,7 @@
       <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)source\headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\defs</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,31 +149,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\core\executor.cpp" />
     <ClCompile Include="source\core\service_manager.cpp" />
     <ClCompile Include="source\core\platform.cpp" />
     <ClCompile Include="source\core\supervisor.cpp" />
     <ClCompile Include="source\core\sys_profiler.cpp" />
-    <ClCompile Include="source\core\sys_win_profiler.cpp" />
     <ClCompile Include="source\core\sys_ticker.cpp" />
-    <ClCompile Include="source\core\sys_win_platform.cpp" />
-    <ClCompile Include="source\entities\attributes\collision_physics.cpp" />
-    <ClCompile Include="source\entities\attributes\move_physics.cpp" />
     <ClCompile Include="source\entities\block_solid.cpp" />
-    <ClCompile Include="source\entities\camera_firstperson.cpp" />
     <ClCompile Include="source\entities\entity_basic.cpp" />
-    <ClCompile Include="source\entities\camera_basic.cpp" />
     <ClCompile Include="source\entities\entity_transformable.cpp" />
-    <ClCompile Include="source\entities\pillar.cpp" />
     <ClCompile Include="source\entities\player.cpp" />
-    <ClCompile Include="source\entities\segment.cpp" />
-    <ClCompile Include="source\entities\sun.cpp" />
-    <ClCompile Include="source\entities\world.cpp" />
     <ClCompile Include="Source\entry.cpp" />
     <ClCompile Include="source\events\begin_placement.cpp" />
     <ClCompile Include="source\events\block_digged.cpp" />
     <ClCompile Include="source\events\event_handler.cpp" />
     <ClCompile Include="source\events\finish_dig.cpp" />
-    <ClCompile Include="source\external\FastNoiseLite\FastNoise.cpp" />
     <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD.cpp" />
     <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_avx2.cpp">
       <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
@@ -193,9 +183,10 @@
     <ClCompile Include="source\external\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_tables.cpp" />
     <ClCompile Include="source\external\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="source\gameplay\game_time.cpp" />
-    <ClCompile Include="source\gameplay\item_container.cpp" />
-    <ClCompile Include="source\gameplay\item_stack.cpp" />
+    <ClCompile Include="source\gameplay\items\item_container.cpp" />
+    <ClCompile Include="source\gameplay\items\item_stack.cpp" />
+    <ClCompile Include="source\gameplay\physics\collision_physics.cpp" />
+    <ClCompile Include="source\gameplay\physics\move_physics.cpp" />
     <ClCompile Include="source\gameplay\physics_engine.cpp" />
     <ClCompile Include="source\gameplay\world_engine.cpp" />
     <ClCompile Include="source\input\input_handler.cpp" />
@@ -203,12 +194,22 @@
     <ClCompile Include="source\input\mouse.cpp" />
     <ClCompile Include="source\processors\processor_biome.cpp" />
     <ClCompile Include="source\processors\processor_solid_block.cpp" />
+    <ClCompile Include="source\scene\assets\manager_model.cpp" />
+    <ClCompile Include="source\scene\assets\manager_texture.cpp" />
+    <ClCompile Include="source\scene\assets\master_buffer.cpp" />
+    <ClCompile Include="source\scene\assets\master_state.cpp" />
+    <ClCompile Include="source\scene\assets\texture_atlas.cpp" />
+    <ClCompile Include="source\scene\camera\camera_basic.cpp" />
+    <ClCompile Include="source\scene\camera\camera_firstperson.cpp" />
+    <ClCompile Include="source\scene\compartments\pillar.cpp" />
+    <ClCompile Include="source\scene\compartments\segment.cpp" />
+    <ClCompile Include="source\scene\elements\sun.cpp" />
+    <ClCompile Include="source\scene\scene.cpp" />
+    <ClCompile Include="source\scene\world.cpp" />
+    <ClCompile Include="source\utils\frustrum.cpp" />
+    <ClCompile Include="source\utils\ray.cpp" />
     <ClCompile Include="source\visuals\elements\buffer_index.cpp" />
     <ClCompile Include="source\visuals\elements\input_layout.cpp" />
-    <ClCompile Include="source\visuals\elements\manager_model.cpp" />
-    <ClCompile Include="source\visuals\elements\master_buffer.cpp" />
-    <ClCompile Include="source\visuals\elements\master_state.cpp" />
-    <ClCompile Include="source\visuals\elements\manager_texture.cpp" />
     <ClCompile Include="source\visuals\elements\render_target.cpp" />
     <ClCompile Include="source\visuals\elements\sampler_texture.cpp" />
     <ClCompile Include="source\visuals\elements\shader_interface.cpp" />
@@ -218,7 +219,6 @@
     <ClCompile Include="source\visuals\elements\shader_pixel.cpp" />
     <ClCompile Include="source\visuals\elements\texture.cpp" />
     <ClCompile Include="source\visuals\elements\shader_vertex.cpp" />
-    <ClCompile Include="source\visuals\elements\texture_atlas.cpp" />
     <ClCompile Include="source\visuals\overlay.cpp" />
     <ClCompile Include="source\visuals\presenter.cpp" />
     <ClCompile Include="source\visuals\render\aggregator.cpp" />
@@ -231,39 +231,33 @@
     <ClCompile Include="source\visuals\render\sky.cpp" />
     <ClCompile Include="source\visuals\render\sun_moon.cpp" />
     <ClCompile Include="source\visuals\render\vision_perimeter.cpp" />
-    <ClCompile Include="source\visuals\scene.cpp" />
-    <ClCompile Include="source\visuals\utils\frustrum.cpp" />
-    <ClCompile Include="source\visuals\utils\ray.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\core\interface_sys_platform.h" />
-    <ClInclude Include="source\core\interface_sys_profiler.h" />
+    <ClInclude Include="source\core\executor.h" />
     <ClInclude Include="source\core\platform.h" />
     <ClInclude Include="source\core\service_manager.h" />
     <ClInclude Include="source\core\supervisor.h" />
     <ClInclude Include="source\core\sys_profiler.h" />
     <ClInclude Include="source\core\sys_ticker.h" />
-    <ClInclude Include="source\core\sys_win_platform.h" />
-    <ClInclude Include="source\core\sys_win_profiler.h" />
-    <ClInclude Include="source\entities\attributes\collision_physics.h" />
-    <ClInclude Include="source\entities\attributes\move_physics.h" />
+    <ClInclude Include="source\defs\defs_blocks.h" />
+    <ClInclude Include="source\defs\defs_items.h" />
+    <ClInclude Include="source\defs\defs_pipeline.h" />
+    <ClInclude Include="source\defs\defs_world.h" />
+    <ClInclude Include="source\defs\defs_platform.h" />
+    <ClInclude Include="source\defs\interface_event.h" />
+    <ClInclude Include="source\defs\interface_manager.h" />
+    <ClInclude Include="source\defs\interface_service.h" />
+    <ClInclude Include="source\defs\util_funcs.h" />
     <ClInclude Include="source\entities\block_solid.h" />
-    <ClInclude Include="source\entities\camera_firstperson.h" />
     <ClInclude Include="source\entities\entity_basic.h" />
-    <ClInclude Include="source\entities\camera_basic.h" />
     <ClInclude Include="source\entities\entity_transformable.h" />
-    <ClInclude Include="source\entities\pillar.h" />
     <ClInclude Include="source\entities\player.h" />
-    <ClInclude Include="source\entities\segment.h" />
-    <ClInclude Include="source\entities\sun.h" />
-    <ClInclude Include="source\entities\world.h" />
     <ClInclude Include="source\events\begin_dig.h" />
     <ClInclude Include="source\events\begin_placement.h" />
     <ClInclude Include="source\events\block_digged.h" />
     <ClInclude Include="source\events\cancel_dig.h" />
     <ClInclude Include="source\events\event_handler.h" />
     <ClInclude Include="source\events\finish_dig.h" />
-    <ClInclude Include="source\external\FastNoiseLite\FastNoise.h" />
     <ClInclude Include="source\external\FastNoiseSIMD\FastNoiseSIMD.h" />
     <ClInclude Include="source\external\FastNoiseSIMD\FastNoiseSIMD_internal.h" />
     <ClInclude Include="source\external\ImGui\imconfig.h" />
@@ -274,35 +268,36 @@
     <ClInclude Include="source\external\ImGui\imstb_rectpack.h" />
     <ClInclude Include="source\external\ImGui\imstb_textedit.h" />
     <ClInclude Include="source\external\ImGui\imstb_truetype.h" />
-    <ClInclude Include="source\gameplay\game_time.h" />
-    <ClInclude Include="source\gameplay\item_container.h" />
-    <ClInclude Include="source\gameplay\item_stack.h" />
+    <ClInclude Include="source\gameplay\items\item_container.h" />
+    <ClInclude Include="source\gameplay\items\item_stack.h" />
+    <ClInclude Include="source\gameplay\physics\collision_physics.h" />
+    <ClInclude Include="source\gameplay\physics\move_physics.h" />
     <ClInclude Include="source\gameplay\physics_engine.h" />
     <ClInclude Include="source\gameplay\world_engine.h" />
-    <ClInclude Include="source\headers\defs_blocks.h" />
-    <ClInclude Include="source\headers\defs_items.h" />
-    <ClInclude Include="source\headers\defs_world.h" />
-    <ClInclude Include="source\headers\interface_drawable.h" />
-    <ClInclude Include="source\headers\interface_event.h" />
-    <ClInclude Include="source\headers\interface_manager.h" />
-    <ClInclude Include="source\headers\interface_service.h" />
-    <ClInclude Include="source\headers\defs_pipeline.h" />
-    <ClInclude Include="source\headers\defs_platform.h" />
-    <ClInclude Include="source\headers\util_funcs.h" />
-    <ClInclude Include="source\helpers\conversion_item_block.h" />
     <ClInclude Include="source\input\input_handler.h" />
     <ClInclude Include="source\input\keyboard.h" />
     <ClInclude Include="source\input\mouse.h" />
     <ClInclude Include="source\processors\processor_biome.h" />
     <ClInclude Include="source\processors\processor_solid_block.h" />
+    <ClInclude Include="source\scene\assets\manager_model.h" />
+    <ClInclude Include="source\scene\assets\manager_texture.h" />
+    <ClInclude Include="source\scene\assets\master_buffer.h" />
+    <ClInclude Include="source\scene\assets\master_state.h" />
+    <ClInclude Include="source\scene\assets\texture_atlas.h" />
+    <ClInclude Include="source\scene\camera\camera_basic.h" />
+    <ClInclude Include="source\scene\camera\camera_firstperson.h" />
+    <ClInclude Include="source\scene\compartments\pillar.h" />
+    <ClInclude Include="source\scene\compartments\segment.h" />
+    <ClInclude Include="source\scene\elements\sun.h" />
+    <ClInclude Include="source\scene\scene.h" />
+    <ClInclude Include="source\scene\world.h" />
+    <ClInclude Include="source\utils\conversion_item_block.h" />
+    <ClInclude Include="source\utils\frustrum.h" />
+    <ClInclude Include="source\utils\ray.h" />
     <ClInclude Include="source\visuals\elements\buffer_constant.h" />
     <ClInclude Include="source\visuals\elements\buffer_index.h" />
     <ClInclude Include="source\visuals\elements\buffer_vertex.h" />
     <ClInclude Include="source\visuals\elements\input_layout.h" />
-    <ClInclude Include="source\visuals\elements\master_buffer.h" />
-    <ClInclude Include="source\visuals\elements\manager_model.h" />
-    <ClInclude Include="source\visuals\elements\master_state.h" />
-    <ClInclude Include="source\visuals\elements\manager_texture.h" />
     <ClInclude Include="source\visuals\elements\render_target.h" />
     <ClInclude Include="source\visuals\elements\sampler_texture.h" />
     <ClInclude Include="source\visuals\elements\shader_interface.h" />
@@ -312,7 +307,6 @@
     <ClInclude Include="source\visuals\elements\shader_pixel.h" />
     <ClInclude Include="source\visuals\elements\texture.h" />
     <ClInclude Include="source\visuals\elements\shader_vertex.h" />
-    <ClInclude Include="source\visuals\elements\texture_atlas.h" />
     <ClInclude Include="source\visuals\overlay.h" />
     <ClInclude Include="source\visuals\presenter.h" />
     <ClInclude Include="source\visuals\render\aggregator.h" />
@@ -325,9 +319,6 @@
     <ClInclude Include="source\visuals\render\render_dev.h" />
     <ClInclude Include="source\visuals\render\sun_moon.h" />
     <ClInclude Include="source\visuals\render\vision_perimeter.h" />
-    <ClInclude Include="source\visuals\scene.h" />
-    <ClInclude Include="source\visuals\utils\frustrum.h" />
-    <ClInclude Include="source\visuals\utils\ray.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="source\visuals\shaders\dev_p.hlsl">

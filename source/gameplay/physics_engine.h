@@ -6,25 +6,25 @@
 	#include <list>
 
 	#include "interface_service.h"
-	#include "game_time.h"
+	#include "../core/executor.h"
 
 	class Player;
 	class Scene;
 	class World;
 	class MovePhysics;
 	class CollisionPhysics;
-	class GameTime;
 	class SystemTicker;
 	class Supervisor;
 
 	class PhysicsEngine : public IService
 	{
 	public:
-		PhysicsEngine(Supervisor* supervisor);
+		PhysicsEngine();
 		~PhysicsEngine();
 
-		void Start();
+		bool Initialize() override;
 		void Update() override;
+		void Start();
 
 		void RegisterMovementComponent(MovePhysics* target);
 		void RemoveMovementComponent(MovePhysics* target);
@@ -37,15 +37,14 @@
 		void UpdateAllSystems();
 		void ProcessPlayerNoPhysics();
 
-		Supervisor* supervisor;
 		SystemTicker* ticker;
-		GameTime* game_time;
-		PeriodicTask update_task;
+		Executor* executor;
 		World* world;
 		Scene* scene;
 		Player* player;
 
 		bool enabled;
+		PeriodicTask update_task;
 
 		std::list<MovePhysics*> movements;
 		std::list<CollisionPhysics*> collisions;

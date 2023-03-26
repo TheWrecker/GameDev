@@ -1,30 +1,26 @@
 
-#include <random>
 
-#include "../external/FastNoiseLite/FastNoise.h"
-#include "../entities/segment.h"
-#include "../entities/pillar.h"
-#include "../entities/world.h"
+#include "defs_blocks.h"
+#include "../scene/compartments/segment.h"
+#include "../scene/compartments/pillar.h"
+#include "../scene/world.h"
 
 #include "processor_biome.h"
 
-bool BiomeProcessor::configured = false;
-float BiomeProcessor::height_amplitude = 0.0f;
-float BiomeProcessor::generation_floor_height = 0.0f;
+float BiomeProcessor::height_amplitude = 20.0f;
+float BiomeProcessor::generation_floor_height = -40.0f;
 
 //TODO: add randomness to sublayers
 
-void BiomeProcessor::Setup(float heightAmp, float floor)
+bool BiomeProcessor::Setup(float heightAmp, float floor)
 {
 	height_amplitude = heightAmp;
 	generation_floor_height = floor;
-	configured = true;
+	return true;
 }
 
 void BiomeProcessor::ProcessBiome(World* world, float x, float y, float z)
 {
-	if (!configured)
-		Setup();
 
 	y *= height_amplitude;
 	SolidBlockType _type = SolidBlockType::TEST;

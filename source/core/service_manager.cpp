@@ -1,5 +1,6 @@
 
-#include "service_manager.h"
+#include <cassert>
+
 #include "service_manager.h"
 
 ServiceManager::ServiceManager()
@@ -13,6 +14,12 @@ ServiceManager::~ServiceManager()
 
 void ServiceManager::AdoptService(std::string name, IService* target)
 {
+	if (!target)
+	{
+		//atmepting to push nullptr as a service
+		assert(false);
+		return;
+	}
 	container.push_back(ServicePair(name, std::move(std::unique_ptr<IService>(target))));
 }
 
@@ -28,5 +35,8 @@ IService* ServiceManager::GetService(const std::string& name)
 		if (service.first == name)
 			return service.second.get();
 	}
+
+	//no such service exists
+	assert(false);
 	return nullptr;
 }

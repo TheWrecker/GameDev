@@ -2,14 +2,15 @@
 #ifndef SKY_H
 	#define SKY_H
 
-	#include "render_base.h"
+	#include <DirectXMath.h>
 
-	class BasicCamera;
+	#include "../elements/buffer_constant.h"
+	#include "render_base.h"
 
 	class SkyRender : public RenderBase
 	{
 	public:
-		SkyRender(Scene* scene);
+		SkyRender(Presenter* parent);
 		~SkyRender();
 
 		void Render() override;
@@ -17,7 +18,6 @@
 	private:
 		DirectX::XMMATRIX scale_matrix;
 
-		BasicCamera* camera;
 		std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> per_frame_buffer;
 	};
 

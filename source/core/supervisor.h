@@ -2,12 +2,13 @@
 #ifndef SUPERVISOR_H
 	#define SUPERVISOR_H
 
-	#include <d3d11.h>
+	#include <cassert>
 	#include <memory>
 	#include <string>
 
 	#include "defs_platform.h"
-	#include "service_manager.h"
+
+	class ServiceManager;
 
 	class Supervisor
 	{
@@ -15,24 +16,34 @@
 		Supervisor(InstanceHandle instance);
 		~Supervisor();
 
+		bool InitializeAllSystems();
 		void PassControl();
 
-		void SetDebugQuery(ID3D11Debug* target);
-		ID3D11Debug* GetDebugQuery();
 		ServiceManager* Services();
 
 		template <typename type>
-		type QueryService(const std::string& name);
+		type GetService(const std::string& name);
+
+		template <typename type>
+		static type QueryService(const std::string& name);
 
 	private:
 		std::unique_ptr<ServiceManager> services;
-		ID3D11Debug* d3d11_debug = nullptr;
+
+		static Supervisor* last_instance;
 	};
 
 	template<typename type>
-	inline type Supervisor::QueryService(const std::string& name)
+	inline type Supervisor::GetService(const std::string& name)
 	{
-		return dynamic_cast<type>(services.get()->GetService(name));
+		return services->QueryService<type>(name);
+	}
+
+	template<typename type>
+	inline static type Supervisor::QueryService(const std::string& name)
+	{
+		assert(last_instance);
+		return last_instance->services->QueryService<type>(name);
 	}
 
 #endif // !SUPERVISOR_H

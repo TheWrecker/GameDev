@@ -4,6 +4,7 @@
 
 	#include <array>
 	#include <memory>
+	#include <DirectXMath.h>
 
 	#include "defs_pipeline.h"
 	#include "defs_world.h"
@@ -20,7 +21,7 @@
 		unsigned int x, y, z;
 	};
 
-	class Segment : public BasicEntity
+	class Segment
 	{
 	public:
 		Segment(Scene* scene, SolidBlockType type = SolidBlockType::TEST, bool fill = false, float x = 0.0f, float y = 0.0f, float z = 0.0f);
@@ -36,6 +37,8 @@
 		void RemoveBlock(unsigned int x, unsigned int y, unsigned int z);
 		void RebuildBuffers();
 
+		DirectX::CXMMATRIX World_Matrix();
+		DirectX::XMFLOAT3 Position();
 		SegmentIndices GetArrayIndices(unsigned int value);
 		VertexBuffer<SolidBlockVertex>* GetVertexBuffer();
 		IndexBuffer* GetIndexBuffer();
@@ -46,11 +49,15 @@
 		friend class World;
 
 		Scene* scene;
+
 		SolidBlockType default_type;
+		unsigned int block_count;
+		DirectX::XMFLOAT3 position;
+
 		SolidBlock* blocks[SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE];
+
 		std::unique_ptr<VertexBuffer<SolidBlockVertex>> vertex_buffer;
 		std::unique_ptr<IndexBuffer> index_buffer;
-		unsigned int block_count;
 	};
 
 #endif // !SEGMENT_H

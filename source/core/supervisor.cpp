@@ -5,17 +5,21 @@
 #include "platform.h"
 #include "sys_profiler.h"
 #include "sys_ticker.h"
-#include "../gameplay/world_engine.h"
-#include "../gameplay/game_time.h"
+#include "executor.h"
 #include "../input/mouse.h"
 #include "../input/keyboard.h"
 #include "../visuals/presenter.h"
+#include "../scene/scene.h"
+#include "../gameplay/physics_engine.h"
+#include "../gameplay/world_engine.h"
 #include "../events/event_handler.h"
 #include "../input/input_handler.h"
-#include "../gameplay/physics_engine.h"
-#include "../visuals/scene.h"
+#include "../processors/processor_solid_block.h"
+#include "../processors/processor_biome.h"
 
 #include "supervisor.h"
+
+Supervisor* Supervisor::last_instance = nullptr;
 
 Supervisor::Supervisor(InstanceHandle instance)
 {
@@ -23,6 +27,9 @@ Supervisor::Supervisor(InstanceHandle instance)
 
 	ImGui::CreateContext();
 
+	//TODO: change/improve service order in the vector?
+
+	//create all services and add them to service manager
 	IService* _platform = new Platform(instance);
 	services->AdoptService("platform", _platform);
 
@@ -32,16 +39,10 @@ Supervisor::Supervisor(InstanceHandle instance)
 	IService* _profiler = new SystemProfiler();
 	services->AdoptService("profiler", _profiler);
 
-	IService* _game_time = new GameTime(static_cast<SystemTicker*>(_ticker));
-	services->AdoptService("game_time", _game_time);
+	IService* _executor = new Executor();
+	services->AdoptService("executor", _executor);
 
-	IService* _physics_engine = new PhysicsEngine(this);
-	services->AdoptService("physics_engine", _physics_engine);
-
-	IService* _world_engine = new WorldEngine(3); //dev seed
-	services->AdoptService("world_engine", _world_engine);
-
-	IService* _mouse = new Mouse(static_cast<Platform*>(_platform)->GetWindowHandle());
+	IService* _mouse = new Mouse();
 	services->AdoptService("mouse", _mouse);
 
 	IService* _keyboard = new Keyboard();
@@ -50,11 +51,22 @@ Supervisor::Supervisor(InstanceHandle instance)
 	IService* _presenter = new Presenter(this);
 	services->AdoptService("presenter", _presenter);
 
-	IService* _event_handler = new EventHandler(this);
+	IService* _scene = new Scene(static_cast<Presenter*>(_presenter));
+	services->AdoptService("scene", _scene);
+
+	IService* _physics_engine = new PhysicsEngine();
+	services->AdoptService("physics_engine", _physics_engine);
+
+	IService* _world_engine = new WorldEngine(3); //dev seed
+	services->AdoptService("world_engine", _world_engine);
+
+	IService* _event_handler = new EventHandler();
 	services->AdoptService("event_handler", _event_handler);
 
-	IService* _input_handler = new InputHandler(this);
+	IService* _input_handler = new InputHandler();
 	services->AdoptService("input_handler", _input_handler);
+
+	last_instance = this;
 }
 
 Supervisor::~Supervisor()
@@ -66,15 +78,73 @@ ServiceManager* Supervisor::Services()
 	return services.get();
 }
 
+bool Supervisor::InitializeAllSystems()
+{
+	//TODO: add perstep checks and retries
+	bool _result = true;
+
+	//setup and start the windows infrastructure
+	QueryService<Platform*>("platform")->SetWindowsParameters();
+	_result &= QueryService<Platform*>("platform")->Initialize();
+
+	//initialize the system profiler
+	_result &= QueryService<SystemProfiler*>("profiler")->Initialize();
+
+	//initialize the executor
+	_result &= QueryService<Executor*>("executor")->Initialize();
+
+	//initialize mouse input
+	_result &= QueryService<Mouse*>("mouse")->Initialize();
+
+	//initialize the presenter and its components
+	_result &= QueryService<Presenter*>("presenter")->Initialize();
+
+	//initialize the scene and its components
+	_result &= QueryService<Scene*>("scene")->Initialize();
+
+	//initialize the physics engine
+	_result &= QueryService<PhysicsEngine*>("physics_engine")->Initialize();
+
+	//initialize the world engine
+	_result &= QueryService<WorldEngine*>("world_engine")->Initialize();
+
+	//initialize the input handler
+	_result &= QueryService<InputHandler*>("input_handler")->Initialize();
+
+	//initialize processors
+	_result &= SolidBlockProcessor::Setup();
+	_result &= BiomeProcessor::Setup();
+
+	return _result;
+}
+
 void Supervisor::PassControl()
 {
-	Platform* _platform = services->QueryService<Platform*>("platform");
-	Presenter* _presenter = services->QueryService<Presenter*>("presenter");
-	//TODO: create a gamestate manager and move there?
-	_presenter->GetActiveScene()->SwitchMode(SceneMode::DEVELOPEMENT);
+	//switch scene mode to dev mode and load assets
+	auto _scene = QueryService<Scene*>("scene");
+	_scene->SwitchMode(SceneMode::DEVELOPEMENT);
+
+	//load the world
+	QueryService<WorldEngine*>("world_engine")->SetupStartingWorld();
+
+	//start the executor
+	QueryService<Executor*>("executor")->Resume();
+
+	//start the physics engine
+	QueryService<PhysicsEngine*>("physics_engine")->Start();
+
+	//start the input handler
+	QueryService<InputHandler*>("input_handler")->Resume();
+
+	//start dynamic world generation
+	QueryService<WorldEngine*>("world_engine")->BeginWorldGeneration();
+
+	//begin the main engine loop
+	auto _platform = QueryService<Platform*>("platform");
+	auto _presenter = QueryService<Presenter*>("presenter");
 	while (!_platform->ProcessPlatformMessages())
 	{
-		//update components
+		//update all services
 		for (auto& service : services->Services())
 		{
 			service.second->Update();
@@ -84,14 +154,4 @@ void Supervisor::PassControl()
 		_presenter->Draw();
 
 	}
-}
-
-void Supervisor::SetDebugQuery(ID3D11Debug* target)
-{
-	d3d11_debug = target;
-}
-
-ID3D11Debug* Supervisor::GetDebugQuery()
-{
-	return d3d11_debug;
 }

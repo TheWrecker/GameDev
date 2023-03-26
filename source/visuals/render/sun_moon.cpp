@@ -1,12 +1,15 @@
 
-#include "../entities/camera_basic.h"
-#include "../entities/sun.h"
-#include "../scene.h"
+#include "../elements/shader_vertex.h"
+#include "../elements/shader_pixel.h"
+#include "../elements/input_layout.h"
+#include "../scene/assets/master_buffer.h"
+#include "../scene/elements/sun.h"
+#include "../scene/scene.h"
 
 #include "sun_moon.h"
 
-SunMoon::SunMoon(Scene* scene)
-	:RenderBase(scene)
+SunMoon::SunMoon(Presenter* parent)
+	:RenderBase(parent)
 {
 	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/sun_moon_v.hlsl");
 	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/sun_moon_p.hlsl");
@@ -18,21 +21,27 @@ SunMoon::SunMoon(Scene* scene)
 		.Build();
 
 	per_frame_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
-	camera = scene->GetActiveCamera();
-	sun = scene->GetSun();
 }
 
 SunMoon::~SunMoon()
 {
 }
 
+bool SunMoon::Initialize()
+{
+	bool _result = RenderBase::Initialize();
+
+	sun = scene->GetSun();
+
+	if (!sun)
+		return false;
+
+	return _result;
+}
+
 void SunMoon::Render()
 {
-	//auto _pos1 = camera->Position();
-	//auto _pos2 = sun->Position();
-	//auto _worldMatrix = DirectX::XMMatrixTranslation(_pos1.x + _pos2.x, _pos1.y + _pos2.y, _pos1.z + _pos2.z);
-	auto _worldMatrix = sun->World_Matrix();
-	DefaultConstantStruct _cb1 = { DirectX::XMMatrixTranspose(_worldMatrix) };
+	DefaultConstantStruct _cb1 = { DirectX::XMMatrixTranspose(sun->World_Matrix()) };
 	per_frame_buffer->Update(_cb1);
 	per_frame_buffer->Bind(BindStage::VERTEX, 1);
 	input_layout->Bind();

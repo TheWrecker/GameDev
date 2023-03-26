@@ -9,13 +9,15 @@
 
 	class Segment;
 	class VisionPerimeter;
+	class Presenter;
 
 	class SolidBlockRender : public RenderBase
 	{
 	public:
-		SolidBlockRender(Scene* scene);
+		SolidBlockRender(Presenter* parent);
 		~SolidBlockRender();
 
+		bool Initialize() override;
 		void Update() override;
 		void Render() override;
 

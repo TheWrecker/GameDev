@@ -1,11 +1,17 @@
 
+#include "../elements/shader_vertex.h"
+#include "../elements/shader_pixel.h"
+#include "../elements/input_layout.h"
+#include "../scene/assets/master_buffer.h"
+#include "../entities/entity_transformable.h"
+
 #include "render_dev.h"
 
-DevRender::DevRender(Scene* scene)
-	:RenderBase(scene)
+DevRender::DevRender(Presenter* parent)
+	:RenderBase(parent)
 {
 	object = std::make_unique<TransformableEntity>();
-	object->SetPosition(-5.0f, 0.0f, 0.0f);
+	object->SetPosition(0.0f, 0.0f, 0.0f);
 	object->SetScale(5.0f, 5.0f, 5.0f);
 
 	object_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);

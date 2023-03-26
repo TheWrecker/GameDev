@@ -8,16 +8,19 @@
 
 	class BasicCamera;
 	class Segment;
+	class Pillar;
 	class World;
 	class Player;
 	class Scene;
+	class Presenter;
 
 	class VisionPerimeter
 	{
 	public:
-		VisionPerimeter(Scene* scene);
+		VisionPerimeter(Presenter* parent);
 		~VisionPerimeter();
 
+		bool Initialize();
 		void CollectVisionPerimeter(std::vector<Segment*>& container);
 		void SetPerimeterRange(float value = 50.0f);
 
@@ -26,6 +29,7 @@
 		World* world;
 		Player* player;
 		Scene* scene;
+		Presenter* presenter;
 
 		float range;
 		Pillar* last_pillar;

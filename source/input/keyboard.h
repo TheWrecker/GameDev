@@ -2,12 +2,9 @@
 #ifndef KEYBOARD_H
 	#define KEYBOARD_H
 
-	#include <functional>
-
 	#include "directxtk/Keyboard.h"
 
 	#include "interface_service.h"
-	#include "defs_platform.h"
 
 	class Keyboard : public IService
 	{

@@ -2,18 +2,18 @@
 #ifndef RENDER_DEV_H
 	#define RENDER_DEV_H
 
-	#include <d3d11.h>
 	#include <memory>
 
-	#include "../entities/entity_basic.h"
+	#include "../elements/buffer_constant.h"
 	#include "render_base.h"
 
 	class TransformableEntity;
+	class Presenter;
 
 	class DevRender : public RenderBase
 	{
 	public:
-		DevRender(Scene* scene);
+		DevRender(Presenter* parent);
 		~DevRender();
 
 		void Render() override;

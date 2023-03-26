@@ -2,8 +2,6 @@
 #ifndef EVENT_HANDLER_H
 	#define EVENT_HANDLER_H
 
-	#include <functional>
-	#include <list>
 	#include <memory>
 	#include <queue>
 	#include <unordered_map>
@@ -13,12 +11,10 @@
 
 	constexpr unsigned int EVENT_PROCESS_COUNT_DEFAULT = 10000;
 
-	class Supervisor;
-
 	class EventHandler : public IService
 	{
 	public:
-		EventHandler(Supervisor* supervisor);
+		EventHandler();
 		~EventHandler();
 		void Update() override;
 

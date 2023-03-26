@@ -32,17 +32,6 @@ std::vector<std::string> InteractionModeNames = {
 Overlay::Overlay(Presenter* parent)
 	:presenter(parent), show(false)
 {
-#ifdef _WINDOWS
-	RetAssert(ImGui_ImplWin32_Init(parent->QueryService<Platform*>("platform")->GetWindowHandle()));
-#endif // _WINDOWS
-	RetAssert(ImGui_ImplDX11_Init(parent->GetDevice(), parent->GetContext()));
-	ticker = parent->QueryService<SystemTicker*>("ticker");
-	scene = parent->GetActiveScene();
-	aggregator = scene->GetAggregator();
-	sun = scene->GetSun();
-	mouse = presenter->QueryService<Mouse*>("mouse");
-	keyboard = presenter->QueryService<Keyboard*>("keyboard");
-	player = scene->GetPlayer();
 }
 
 Overlay::~Overlay()
@@ -69,7 +58,25 @@ void Overlay::ToggleShow()
 	show = !show;
 }
 
-void Overlay::Draw() 
+bool Overlay::Initialize()
+{
+	#ifdef _WINDOWS
+		RetAssert(ImGui_ImplWin32_Init(presenter->QueryService<Platform*>("platform")->GetWindowHandle()));
+	#endif // _WINDOWS
+
+	RetAssert(ImGui_ImplDX11_Init(presenter->GetDevice(), presenter->GetContext()));
+	ticker = presenter->QueryService<SystemTicker*>("ticker");
+	scene = presenter->QueryService<Scene*>("scene");
+	aggregator = scene->GetAggregator();
+	sun = scene->GetSun();
+	mouse = presenter->QueryService<Mouse*>("mouse");
+	keyboard = presenter->QueryService<Keyboard*>("keyboard");
+	player = scene->GetPlayer();
+
+	return true;
+}
+
+void Overlay::Draw()
 {
 	if (!show) return;
 

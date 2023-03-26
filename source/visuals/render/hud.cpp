@@ -1,11 +1,16 @@
 
-#include "../entities/camera_basic.h"
-#include "../scene.h"
+#include "../elements/shader_vertex.h"
+#include "../elements/shader_pixel.h"
+#include "../elements/input_layout.h"
+#include "../scene/assets/master_buffer.h"
+#include "../entities/player.h"
+#include "../scene/scene.h"
+#include "../presenter.h"
 
 #include "hud.h"
 
-HUDRender::HUDRender(Scene* scene)
-	:RenderBase(scene)
+HUDRender::HUDRender(Presenter* parent)
+	:RenderBase(parent)
 {
 	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/hud_v.hlsl");
 	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/hud_p.hlsl");
