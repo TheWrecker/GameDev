@@ -47,7 +47,7 @@ void GameTime::Update()
 
 void GameTime::SetGameSpeed(float value)
 {
-    speed = max(0.1f, min(value, 10.0f));
+    speed = fmax(0.1f, fmin(value, 10.0f));
 }
 
 void GameTime::Pause()

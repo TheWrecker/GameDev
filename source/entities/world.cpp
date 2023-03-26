@@ -1,4 +1,6 @@
 
+#include <chrono>
+
 #include "player.h"
 #include "segment.h"
 #include "pillar.h"
@@ -73,16 +75,21 @@ void World::Update()
 	auto _current_pillar = GetPillar(player->Position().x, player->Position().z, true);
 	if (_current_pillar != last_pillar)
 	{
+		auto _t1 = std::chrono::high_resolution_clock::now();
 		//it has changed, we need to reacquire all the pillars in vision perimeter range
 		near_pillars.clear();
 
-		for (int _i = -5; _i < 6; _i++)
-			for (int _j = -5; _j < 6; _j++)
+		for (int _i = -3; _i < 4; _i++)
+			for (int _j = -3; _j < 4; _j++)
 			{
 				near_pillars.push_back(GetPillar(player->Position().x + (_i * SEGMENT_LENGTH)
 					, player->Position().z + (_j * SEGMENT_LENGTH), true));
 			}
 
+		auto _t2 = std::chrono::high_resolution_clock::now();
+		auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
+		if (_ti > 2.5f)
+			int i = 0;
 		//for now brute force
 		//for (auto& _pillar : pillars)
 		//{

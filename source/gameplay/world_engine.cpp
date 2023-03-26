@@ -3,7 +3,7 @@
 #include <chrono>
 #include <unordered_map>
 
-#include "../external/FastNoiseLite/FastNoise.h"
+#include "../external/FastNoiseSIMD/FastNoiseSIMD.h"
 
 #include "defs_world.h"
 #include "../entities/player.h"
@@ -16,9 +16,9 @@
 #include "world_engine.h"
 
 WorldEngine::WorldEngine(int targetSeed)
-	:scene(nullptr), player(nullptr), world(nullptr), seed(targetSeed)
+	:scene(nullptr), player(nullptr), world(nullptr), seed(targetSeed), heightmap(nullptr)
 {
-	noise_generator = std::make_unique<FastNoise>();
+	noise_generator = FastNoiseSIMD::NewFastNoiseSIMD(seed);
 
 	if (seed == 0) //no seed passed, calculate one
 	{
@@ -28,11 +28,17 @@ WorldEngine::WorldEngine(int targetSeed)
 		else
 			assert(false); //time since epoch is negative, what do you expect?
 	}
-	noise_generator->SetSeed(seed);
+
+	auto _t1 = std::chrono::high_resolution_clock::now();
+	heightmap = noise_generator->GetPerlinSet(0, 0, 0, 200, 200, 1);
+	auto _t2 = std::chrono::high_resolution_clock::now();
+	auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
+	int i = 0;
 }
 
 WorldEngine::~WorldEngine()
 {
+	noise_generator->FreeNoiseSet(heightmap);
 }
 
 void WorldEngine::SetupWorld(Scene* scene)
@@ -52,12 +58,12 @@ void WorldEngine::SetupWorld(Scene* scene)
 		{
 			_bX = -(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f) + _x;
 			_bZ = -(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f) + _z;
-			_val = noise_generator->GetPerlin(_bX, _bZ);
+			_val = heightmap[_x * WORLD_INITIAL_DIMENSION_BLOCKS + _z];
 			BiomeProcessor::ProcessBiome(world, _bX, _val, _bZ);
 		}
 
 	//rebuild all world segments' buffers?
-	/*for (auto& _segment : world->segments)
+	/*for (auto& _segment : world->near_pillars)
 	{
 		_segment.second->RebuildBuffers();
 	}*/
@@ -70,18 +76,14 @@ void WorldEngine::SetupWorld(Scene* scene)
 		_pillar.second->biome_processed = true;
 	}
 
-	bool has_collision = false;
-	for (size_t bucket = 0; bucket < world->pillars.bucket_count(); bucket++) {
-		auto _size = world->pillars.bucket_size(bucket);
-		if (_size > 1) {
-			has_collision = true;
-			//break;
-		}
-	}
-
-	auto _tp2 = std::chrono::high_resolution_clock::now();
-	auto _ti = std::chrono::duration_cast<std::chrono::milliseconds>(_tp2 - _tp1).count();
-	int i = 0;
+	//bool has_collision = false;
+	//for (size_t bucket = 0; bucket < world->pillars.bucket_count(); bucket++) {
+	//	auto _size = world->pillars.bucket_size(bucket);
+	//	if (_size > 1) {
+	//		has_collision = true;
+	//		//break;
+	//	}
+	//}
 }
 
 void WorldEngine::BeginWorldLoading()
@@ -98,12 +100,16 @@ void WorldEngine::WorldLoadTick()
 	if (_current_pillar == last_pillar)
 		return;
 
+	auto _t1 = std::chrono::high_resolution_clock::now();
+
 	for (auto& _pillar : world->near_pillars)
 	{
 		if (_pillar->biome_processed)
 			continue;
 
-		BiomeProcessor::ProcessBiome(noise_generator.get(), world, _pillar);
+		auto _heightmap = noise_generator->GetPerlinSet(_pillar->x / SEGMENT_LENGTH, 0, _pillar->z / SEGMENT_LENGTH, 10, 1, 10);
+
+		BiomeProcessor::ProcessBiome(_heightmap, world, _pillar);
 
 		for (auto& _segment : _pillar->segments)
 		{
@@ -111,7 +117,14 @@ void WorldEngine::WorldLoadTick()
 		}
 
 		_pillar->biome_processed = true;
+
+		noise_generator->FreeNoiseSet(_heightmap);
 	}
+	auto _t2 = std::chrono::high_resolution_clock::now();
+	auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
+	if (_ti > 1.5f)
+		int i = 0;
+
 }
 
 void WorldEngine::LoadWorld(float x, float z)

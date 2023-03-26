@@ -56,6 +56,9 @@
     <Filter Include="source\external\FastNoiseLite">
       <UniqueIdentifier>{d924e59b-50f4-4fa0-bc9e-529c5d789999}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\external\FastNoiseSIMD">
+      <UniqueIdentifier>{b4a63701-bcaf-4518-873f-b5a378bc0141}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\entry.cpp">
@@ -276,6 +279,27 @@
     </ClCompile>
     <ClCompile Include="source\visuals\render\vision_perimeter.cpp">
       <Filter>source\visuals\render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD.cpp">
+      <Filter>source\external\FastNoiseSIMD</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_avx2.cpp">
+      <Filter>source\external\FastNoiseSIMD</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_avx512.cpp">
+      <Filter>source\external\FastNoiseSIMD</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_internal.cpp">
+      <Filter>source\external\FastNoiseSIMD</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_neon.cpp">
+      <Filter>source\external\FastNoiseSIMD</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_sse2.cpp">
+      <Filter>source\external\FastNoiseSIMD</Filter>
+    </ClCompile>
+    <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_sse41.cpp">
+      <Filter>source\external\FastNoiseSIMD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -548,6 +572,12 @@
     </ClInclude>
     <ClInclude Include="source\visuals\render\vision_perimeter.h">
       <Filter>source\visuals\render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\external\FastNoiseSIMD\FastNoiseSIMD.h">
+      <Filter>source\external\FastNoiseSIMD</Filter>
+    </ClInclude>
+    <ClInclude Include="source\external\FastNoiseSIMD\FastNoiseSIMD_internal.h">
+      <Filter>source\external\FastNoiseSIMD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

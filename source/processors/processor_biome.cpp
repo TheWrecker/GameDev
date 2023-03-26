@@ -68,7 +68,7 @@ void BiomeProcessor::ProcessBiome(World* world, float x, float y, float z)
 	}
 }
 
-void BiomeProcessor::ProcessBiome(FastNoise* noise, World* world, Pillar* pillar)
+void BiomeProcessor::ProcessBiome(float* heightmap, World* world, Pillar* pillar)
 {
 	float _bX, _bZ;
 	float _val = 0.0f;
@@ -77,7 +77,7 @@ void BiomeProcessor::ProcessBiome(FastNoise* noise, World* world, Pillar* pillar
 		{
 			_bX = pillar->x + (_i * SOLID_BLOCK_SIZE);
 			_bZ = pillar->z + (_j * SOLID_BLOCK_SIZE);
-			_val = noise->GetPerlin(_bX, _bZ);
+			_val = heightmap[_i * SEGMENT_DIMENSION_SIZE + _j];
 			BiomeProcessor::ProcessBiome(world, _bX, _val, _bZ);
 		}
 }
