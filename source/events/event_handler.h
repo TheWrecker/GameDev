@@ -16,7 +16,10 @@
 	public:
 		EventHandler();
 		~EventHandler();
+
 		void Update() override;
+		void Resume();
+		void Pause();
 
 		void FeedEvent(IEvent* event);
 		void RegisterCallback(EventType type, CallbackFunction func);
@@ -27,6 +30,7 @@
 		void ClearEvents();
 
 	private:
+		bool paused;
 		std::queue<std::unique_ptr<IEvent>> queue;
 		std::unordered_map < EventType, std::list<CallbackFunction*>> callbacks;
 	};

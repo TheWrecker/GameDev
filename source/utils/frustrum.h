@@ -2,27 +2,21 @@
 #ifndef FRUSTRUM_H
 	#define FRUSTRUM_H
 
-#include <DirectXMath.h>
-#include <DirectXCollision.h>
+	#include <DirectXMath.h>
 
-class Frustrum
-{
-public:
+	class Frustrum
+	{
+	public:
+		Frustrum();
+		~Frustrum();
 
-	Frustrum();
-	~Frustrum();
+		void CalculateFrustrum(DirectX::CXMMATRIX viewMatrix, DirectX::XMFLOAT4X4& projMatrix, float screenDepth = 1000.0f);
 
-	void CalculateFrustrum(DirectX::CXMMATRIX viewMatrix, DirectX::XMFLOAT4X4& projMatrix, float screenDepth = 1000.0f);
-	void CalculateFrustrum(DirectX::XMMATRIX viewProjMatrix);
+		bool IntersectsCube(DirectX::XMFLOAT3 center, float radius);
+		bool IntersectsPillar(float x, float z);
 
-	bool IntersectsCube(DirectX::XMFLOAT3 center, float radius);
-	bool IntersectsPillar(float x, float z);
-
-	DirectX::BoundingFrustum frustrum;
-
-private:
-	DirectX::XMFLOAT4 planes[6];
-
-};
+	private:
+		DirectX::XMFLOAT4 planes[6];
+	};
 
 #endif // !FRUSTRUM_H

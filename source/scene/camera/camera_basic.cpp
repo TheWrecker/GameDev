@@ -1,4 +1,6 @@
 
+#include "../entities/entity_basic.h"
+
 #include "camera_basic.h"
 
 BasicCamera::BasicCamera(float fieldOfView, float aspectRatio, float near, float far)

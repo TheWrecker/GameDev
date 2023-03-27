@@ -2,9 +2,6 @@
 #ifndef BLOCK_SOLID_H
 	#define BLOCK_SOLID_H
 
-	#include <string>
-	#include <DirectXCollision.h>
-
 	#include "defs_blocks.h"
 	#include "entity_basic.h"
 
@@ -20,8 +17,6 @@
 
 		SolidBlockType GetBlockType();
 		unsigned int GetAtlasIndex();
-
-		DirectX::BoundingBox collision_box;
 
 	private:
 		SolidBlockType type;

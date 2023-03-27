@@ -1,8 +1,9 @@
 
+#include "../entities/block_solid.h"
 #include "block_digged.h"
 #include "..\entities\player.h"
-#include "..\entities\segment.h"
-#include "..\entities\world.h"
+#include "..\scene\compartments\segment.h"
+#include "..\scene\world.h"
 #include "event_handler.h"
 
 #include "finish_dig.h"

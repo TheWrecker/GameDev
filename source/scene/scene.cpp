@@ -1,43 +1,41 @@
 
-//#include "../entities/camera_basic.h"
-//#include "../entities/camera_firstperson.h"
-//#include "../entities/player.h"
-//#include "../entities/sun.h"
-//#include "../entities/world.h"
-//#include "elements/master_state.h"
-//#include "elements/master_buffer.h"
-//#include "elements/manager_model.h"
-//#include "elements/manager_texture.h"
-//#include "elements/texture_atlas.h"
-//#include "../processors/processor_solid_block.h"
-//#include "../processors/processor_biome.h"
-//#include "presenter.h"
-//#include "render/aggregator.h"
-//#include "../gameplay/physics_engine.h"
-//#include "../gameplay/world_engine.h"
+#include "assets/master_state.h"
+#include "assets/master_buffer.h"
+#include "assets/manager_model.h"
+#include "assets/manager_texture.h"
+#include "assets/texture_atlas.h"
+#include "camera/camera_firstperson.h"
+#include "../entities/player.h"
+#include "elements/sun.h"
+#include "world.h"
+#include "../visuals/presenter.h"
+#include "../gameplay/physics_engine.h"
+#include "../gameplay/world_engine.h"
+#include "../events/event_handler.h"
 
 #include "scene.h"
 
 Scene::Scene(Presenter* parent)
-	:presenter(parent), camera_type(CameraType::FIRST_PERSON)
+	:presenter(parent)
 {
-
-	active_camera = std::make_unique<FirstPersonCamera>();
-	active_camera->SetPosition(0.0f, 20.0f, 20.0f);
-	active_camera->SetDirection(1.0f, -1.0f, 0.0f);
-	sun = std::make_unique<Sun>();
-	state_master = std::make_unique<StateMaster>(parent);
-	texture_manager = std::make_unique<TextureManager>(parent);
-	atlas = std::make_unique<TextureAtlas>(parent);
+	//assets
+	texture_manager = std::make_unique<TextureManager>();
+	atlas = std::make_unique<TextureAtlas>();
 	model_manager = std::make_unique<ModelManager>();
-	buffer_master = std::make_unique<BufferMaster>(this);
+	buffer_master = std::make_unique<BufferMaster>();
+	state_master = std::make_unique<StateMaster>();
+
+	//camera
+	active_camera = std::make_unique<FirstPersonCamera>();
+
+	//world
 	world = std::make_unique<World>(this);
+
+	//elements
+	sun = std::make_unique<Sun>();
+
+	//entities
 	player = std::make_unique<Player>(this);
-	player->SetPosition(0.0f, 11.0f, 00.0f);
-	active_camera->HookToEntity(player.get());
-	//TODO: move to a unit factory?
-	physics_engine->RegisterMovementComponent(player.get());
-	physics_engine->RegisterCollisionComponent(player.get());
 }
 
 Scene::~Scene()
@@ -50,10 +48,32 @@ void Scene::SwitchMode(SceneMode mode)
 	{
 		case SceneMode::DEVELOPEMENT:
 		{
-			/*
-			world->SetupDevelopementWorld();
-			world_engine->SetupWorld(this);
-			physics_engine->Start();*/
+			//load dev assets
+			/*texture_manager->LoadBaseTextures();
+			atlas->LoadBaseTextures();
+			atlas->ReconstructTextureArray();
+			model_manager->LoadBaseModels();
+			buffer_master->RebuildDefaults();*/
+
+			//setup scene elements
+			//switch camera type
+			// feed eye height to camera
+			active_camera->SetPosition(0.0f, 20.0f, 20.0f);
+			active_camera->SetDirection(1.0f, -1.0f, 0.0f);
+			player->SetPosition(0.0f, 20.0f, 20.0f);
+			active_camera->HookToEntity(player.get());
+			//TODO: move to unit factory?
+			physics_engine->RegisterMovementComponent(player.get());
+			physics_engine->RegisterCollisionComponent(player.get());
+
+			//generate the initial world
+			world_engine->SetupStartingWorld();
+			
+			//signal the start to the system engines
+			physics_engine->Start();
+			world_engine->BeginWorldGeneration();
+			Supervisor::QueryService<EventHandler*>("event_handler")->Resume();
+
 			break;
 		}
 		default:
@@ -63,52 +83,86 @@ void Scene::SwitchMode(SceneMode mode)
 
 bool Scene::Initialize()
 {
-	physics_engine = presenter->QueryService<PhysicsEngine*>("physics_engine");
-	world_engine = presenter->QueryService<WorldEngine*>("world_engine");
-	return true;
+	physics_engine = Supervisor::QueryService<PhysicsEngine*>("physics_engine");
+	world_engine = Supervisor::QueryService<WorldEngine*>("world_engine");
+
+	if (!physics_engine || !world_engine)
+		return false;
+
+	bool _result = true;
+
+	//initialize scene assets
+	_result &= texture_manager->Initialize();
+	_result &= atlas->Initialize();
+	_result &= buffer_master->Initialize();
+	_result &= state_master->Initialize();
+
+	texture_manager->LoadBaseTextures();
+	atlas->LoadBaseTextures();
+	atlas->ReconstructTextureArray();
+	model_manager->LoadBaseModels();
+	buffer_master->RebuildDefaults();
+
+	//_result &= model_manager->Initialize(); doesn't need initialization for now 
+
+	//initialize the world
+
+	//initialize world elements
+
+	return _result;
 }
 
 void Scene::Update()
 {
-	//player->Update();
-	//active_camera->Update();
-	//world->Update();
-	//world_engine->WorldLoadTick();
+	player->Update();
+	active_camera->Update();
+	world->Update();
+	world_engine->WorldLoadTick();
 }
 
 void Scene::SwitchCameraType(CameraType type)
 {
-	//if (type == camera_type)
-	//	return;
-	//std::unique_ptr<BasicCamera> _temp;
-	//switch (type)
-	//{
-	//case CameraType::STATIC: 
-	//{
-	//	_temp = std::make_unique<BasicCamera>();
-	//	_temp->SetProperties(active_camera->fov, active_camera->aspect_ratio, active_camera->near_plane, active_camera->far_plane);
-	//	_temp->SetPosition(active_camera->position.x, active_camera->position.y, active_camera->position.z);
-	//	_temp->SetDirection(active_camera->direction.x, active_camera->direction.y, active_camera->direction.z);
-	//	break;
-	//}
-	//case CameraType::FIRST_PERSON:
-	//{
-	//	_temp = std::make_unique<FirstPersonCamera>();
-	//	_temp->SetProperties(active_camera->fov, active_camera->aspect_ratio, active_camera->near_plane, active_camera->far_plane);
-	//	_temp->SetPosition(active_camera->position.x, active_camera->position.y, active_camera->position.z);
-	//	_temp->SetDirection(active_camera->direction.x, active_camera->direction.y, active_camera->direction.z);
-	//	break;
-	//}
-	//default:
-	//	assert(false);
-	//	break;
-	//}
-	//active_camera.swap(_temp);
+	if (type == camera_type)
+		return;
+	std::unique_ptr<BasicCamera> _temp;
+	switch (type)
+	{
+	case CameraType::STATIC: 
+	{
+		_temp = std::make_unique<BasicCamera>();
+		_temp->SetProperties(active_camera->fov, active_camera->aspect_ratio, active_camera->near_plane, active_camera->far_plane);
+		_temp->SetPosition(active_camera->position.x, active_camera->position.y, active_camera->position.z);
+		_temp->SetDirection(active_camera->direction.x, active_camera->direction.y, active_camera->direction.z);
+		break;
+	}
+	case CameraType::FIRST_PERSON:
+	{
+		_temp = std::make_unique<FirstPersonCamera>();
+		_temp->SetProperties(active_camera->fov, active_camera->aspect_ratio, active_camera->near_plane, active_camera->far_plane);
+		_temp->SetPosition(active_camera->position.x, active_camera->position.y, active_camera->position.z);
+		_temp->SetDirection(active_camera->direction.x, active_camera->direction.y, active_camera->direction.z);
+		break;
+	}
+	default:
+		assert(false);
+		break;
+	}
+	active_camera.swap(_temp);
 }
 
 Presenter* Scene::GetPresenter()
 {
 	return presenter;
+}
+
+ID3D11Device* Scene::GetDevice()
+{
+	return presenter->GetDevice();
+}
+
+ID3D11DeviceContext* Scene::GetContext()
+{
+	return presenter->GetContext();
 }
 
 BasicCamera* Scene::GetActiveCamera()

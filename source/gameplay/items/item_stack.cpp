@@ -3,6 +3,8 @@
 
 #include "item_stack.h"
 
+//TODO: move to a separate header? (in utils?)
+
 std::vector<std::string> itemNames = {
     "Undefined",
     "Test Block",

@@ -15,10 +15,11 @@ VertexShader::VertexShader(Presenter* presenter, const std::wstring& file)
 
 	UINT _shaderFlags = 0;
 	ID3DBlob* _errorMessages = nullptr;
-#if defined( DEBUG ) || defined( _DEBUG )
-	_shaderFlags |= D3DCOMPILE_DEBUG;
-	_shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
+
+	#if defined( DEBUG ) || defined( _DEBUG )
+		_shaderFlags |= D3DCOMPILE_DEBUG;
+		_shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+	#endif
 
 	DXAssert(D3DCompileFromFile(file.c_str(), nullptr, nullptr, "main", "vs_5_0", _shaderFlags, 0, &blob, &_errorMessages));
 	byte_code = blob->GetBufferPointer();

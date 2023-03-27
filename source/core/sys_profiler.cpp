@@ -106,7 +106,8 @@ void SystemProfiler::QueryRAMStats(uint64_t& physicalUsed, uint64_t& virtualUsed
 		MEMORYSTATUSEX _memInfo = {};
 		_memInfo.dwLength = sizeof(MEMORYSTATUSEX);
 		GlobalMemoryStatusEx(&_memInfo);
-		ram_load = (std::uint8_t)(_memInfo.ullTotalPhys - _memInfo.ullAvailPhys) * 100 / (_memInfo.ullTotalPhys);
+		auto _ram_load = (_memInfo.ullTotalPhys - _memInfo.ullAvailPhys) * 100 / (_memInfo.ullTotalPhys);
+		ram_load = (std::uint8_t)_ram_load;
 		physical_memory_available = _memInfo.ullAvailPhys;
 
 	#endif // _WINDOWS

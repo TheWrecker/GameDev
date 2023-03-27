@@ -1,4 +1,6 @@
 
+#include "../entities/entity_basic.h"
+
 #include "camera_firstperson.h"
 
 FirstPersonCamera::FirstPersonCamera()

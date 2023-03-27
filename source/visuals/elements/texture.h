@@ -10,7 +10,7 @@
 	class Texture
 	{
 	public:
-		Texture(Presenter* presenter, const std::wstring& file);
+		Texture(ID3D11Device* device, const std::wstring& file);
 		~Texture();
 
 		const ID3D11Texture2D* GetTexture() const;
@@ -18,6 +18,7 @@
 		const D3D11_TEXTURE2D_DESC& GetDesc() const;
 
 	private:
+		ID3D11Device* device;
 		ID3D11Texture2D* texture;
 		D3D11_TEXTURE2D_DESC desc;
 		ID3D11ShaderResourceView* shader_view;

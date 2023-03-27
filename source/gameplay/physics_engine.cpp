@@ -8,9 +8,9 @@
 #include "../entities/entity_transformable.h"
 #include "../entities/block_solid.h"
 #include "../entities/player.h"
-#include "../entities/segment.h"
-#include "../entities/world.h"
-#include "../visuals/scene.h"
+#include "../scene/compartments/segment.h"
+#include "../scene/world.h"
+#include "../scene/scene.h"
 #include "../core/supervisor.h"
 
 #include "physics_engine.h"
@@ -22,7 +22,7 @@ PhysicsEngine::PhysicsEngine()
 
 PhysicsEngine::~PhysicsEngine()
 {
-	if (executor)
+	if (Supervisor::GetLastInstance()->IsExecutorAvailable())
 		executor->RemovePeriodicTask(update_task, true);
 
 	//we are not the owner of physics components, dont delete them here
@@ -30,7 +30,7 @@ PhysicsEngine::~PhysicsEngine()
 
 void PhysicsEngine::Start()
 {
-	//TODO: change the physics system to time ocnsumption approach
+	//TODO: change the physics system to time consumption approach
 	player = scene->GetPlayer();
 	//100 global physics engine ticks per second
 	update_task = executor->RegisterPeriodicTask(std::bind(&PhysicsEngine::UpdateAllSystems, this), 10, true);
@@ -43,13 +43,13 @@ bool PhysicsEngine::Initialize()
 	executor = Supervisor::QueryService<Executor*>("executor");
 	scene = Supervisor::QueryService<Scene*>("scene");
 	world = scene->GetWorld();
-	return true;
+	return (ticker && executor && scene && world);
 }
 
 void PhysicsEngine::Update()
 {
 	//service specific updates, nothing for now
-	// physics components get updated each 10ms via UpdateAllSystems(), registered at GameTime
+	//physics components get updated each 10ms by UpdateAllSystems(), registered in the executor via Start()
 	//UpdateAllSystems();
 }
 
@@ -87,6 +87,7 @@ void PhysicsEngine::UpdateAllSystems()
 
 	if (!enabled)
 	{
+		//free flying mode
 		ProcessPlayerNoPhysics();
 		return;
 	}

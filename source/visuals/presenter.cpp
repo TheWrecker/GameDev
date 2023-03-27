@@ -4,6 +4,7 @@
 #include "util_funcs.h"
 #include "../core/platform.h"
 #include "../core/supervisor.h"
+#include "render/aggregator.h"
 #include "overlay.h"
 
 #include "presenter.h"
@@ -11,8 +12,21 @@
 Presenter::Presenter(Supervisor* parent)
 	:supervisor(parent), depth_stencil_enabled(true), multisampling_enabled(false), isFullscreen(false), blend_enabled(false)
 {
-	overlay = std::make_unique<Overlay>(this);
-	aggregator = std::make_unique<Aggregator>(this);
+	HRESULT result = 0;
+	UINT createDeviceFlags = 0;
+
+#if defined (debug) || defined (_DEBUG)
+	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif // DEBUG
+
+	//create directx device, context, and interfaces
+	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
+	D3D_FEATURE_LEVEL selectedFeatureLevel;
+	DXAssert(D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION,
+		&device, &selectedFeatureLevel, &context));
+	DXAssert(device->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&graphics_interface)));
+	DXAssert(graphics_interface->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(&graphics_adapter)));
+	DXAssert(graphics_adapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&graphics_factory)));
 }
 
 Presenter::~Presenter()
@@ -50,6 +64,7 @@ Presenter::~Presenter()
 
 void Presenter::Draw()
 {
+	aggregator->AggregateAllRenders();
 	overlay->Draw();
 }
 
@@ -60,22 +75,6 @@ void Presenter::Present()
 
 bool Presenter::Initialize()
 {
-	HRESULT result = 0;
-	UINT createDeviceFlags = 0;
-
-	#if defined (debug) || defined (_DEBUG)
-		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-	#endif // DEBUG
-
-	//create directx device, context, and interfaces
-	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
-	D3D_FEATURE_LEVEL selectedFeatureLevel;
-	DXAssert(D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION,
-		&device, &selectedFeatureLevel, &context));
-	DXAssert(device->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&graphics_interface)));
-	DXAssert(graphics_interface->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(&graphics_adapter)));
-	DXAssert(graphics_adapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&graphics_factory)));
-
 #ifdef _WINDOWS
 	//disable user-side fullscreen switching
 	DXAssert(graphics_factory->MakeWindowAssociation(QueryService<Platform*>("platform")->GetWindowHandle(), DXGI_MWA_NO_ALT_ENTER));
@@ -87,14 +86,15 @@ bool Presenter::Initialize()
 	CreateBlendStates();
 	SetBlendMode(BlendMode::DISABLED);
 
-	//overlay->Show();
+	overlay = std::make_unique<Overlay>(this);
+	aggregator = std::make_unique<Aggregator>(this);
 
 	//show all live d3d11device objects
 	/*ID3D11Debug* _debug = nullptr;
 	device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&_debug));
 	supervisor->SetDebugQuery(_debug);*/
 
-	return overlay->Initialize();
+	return overlay->Initialize() && aggregator->Initialize();
 }
 
 void Presenter::Update()
@@ -488,6 +488,11 @@ Supervisor* Presenter::GetSupervisor()
 Overlay* Presenter::GetOverlay()
 {
 	return overlay.get();
+}
+
+Aggregator* Presenter::GetAggregator()
+{
+	return aggregator.get();
 }
 
 ID3D11Device* Presenter::GetDevice()

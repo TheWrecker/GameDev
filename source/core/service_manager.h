@@ -6,7 +6,7 @@
 	#include <memory>
 	#include <string>
 
-	class IService;
+	#include "interface_service.h"
 
 	class ServiceManager
 	{

@@ -3,13 +3,12 @@
 	#define MASTER_BUFFER_H
 
 	#include <d3d11.h>
-	#include <DirectXMath.h>
 	#include <vector>
 
 	#include "defs_pipeline.h"
-	#include "buffer_constant.h"
-	#include "buffer_index.h"
-	#include "buffer_vertex.h"
+	#include "../visuals/elements/buffer_constant.h"
+	#include "../visuals/elements/buffer_index.h"
+	#include "../visuals/elements/buffer_vertex.h"
 
 	class Model;
 	class BasicCamera;
@@ -18,8 +17,10 @@
 	class BufferMaster
 	{
 	public:
-		BufferMaster(Scene* presenter);
+		BufferMaster();
 		~BufferMaster();
+
+		bool Initialize();
 		void RebuildDefaults();
 
 		void UpdateDefaultConstant(DefaultConstants target);

@@ -8,14 +8,14 @@
 #include "util_funcs.h"
 #include "../input/keyboard.h"
 #include "../input/mouse.h"
-#include "../gameplay/item_container.h"
+#include "../gameplay/items/item_container.h"
 #include "../entities/player.h"
-#include "../entities/sun.h"
-#include "../entities/segment.h"
-#include "../entities/world.h"
+#include "../scene/elements/sun.h"
+#include "../scene/compartments/segment.h"
+#include "../scene/world.h"
+#include "../scene/scene.h"
 #include "render/render_dev.h"
 #include "render/aggregator.h"
-#include "scene.h"
 #include "../core/platform.h"
 #include "../core/sys_ticker.h"
 #include "presenter.h"
@@ -65,15 +65,24 @@ bool Overlay::Initialize()
 	#endif // _WINDOWS
 
 	RetAssert(ImGui_ImplDX11_Init(presenter->GetDevice(), presenter->GetContext()));
+
 	ticker = presenter->QueryService<SystemTicker*>("ticker");
-	scene = presenter->QueryService<Scene*>("scene");
-	aggregator = scene->GetAggregator();
-	sun = scene->GetSun();
 	mouse = presenter->QueryService<Mouse*>("mouse");
 	keyboard = presenter->QueryService<Keyboard*>("keyboard");
+
+	if (!ticker || !mouse || !keyboard)
+		return false;
+
+	aggregator = presenter->GetAggregator();
+	scene = presenter->QueryService<Scene*>("scene");
+
+	if (!aggregator || !scene)
+		return false;
+
+	sun = scene->GetSun();
 	player = scene->GetPlayer();
 
-	return true;
+	return sun && player;
 }
 
 void Overlay::Draw()

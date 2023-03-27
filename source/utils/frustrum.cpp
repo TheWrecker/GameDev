@@ -88,11 +88,6 @@ void Frustrum::CalculateFrustrum(DirectX::CXMMATRIX viewMatrix, DirectX::XMFLOAT
 	XMStoreFloat4(&planes[5], _v);
 }
 
-void Frustrum::CalculateFrustrum(DirectX::XMMATRIX viewProjMatrix)
-{
-    DirectX::BoundingFrustum::CreateFromMatrix(frustrum, viewProjMatrix);
-}
-
 bool Frustrum::IntersectsCube(DirectX::XMFLOAT3 center, float radius)
 {
 	using namespace DirectX;

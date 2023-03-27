@@ -1,11 +1,11 @@
 
-#include "../gameplay/item_container.h"
-#include "../visuals/utils/ray.h"
-#include "camera_basic.h"
+#include "../gameplay/items/item_container.h"
+#include "../utils/ray.h"
 #include "block_solid.h"
-#include "segment.h"
-#include "world.h"
-#include "../visuals/scene.h"
+#include "../scene/compartments/segment.h"
+#include "../scene/world.h"
+#include "../scene/camera/camera_basic.h"
+#include "../scene/scene.h"
 
 #include "player.h"
 
@@ -25,12 +25,10 @@ Player::~Player()
 
 void Player::Update()
 {
-
 	//SetPosition(camera->Position());
     
 	//TODO: rotate based on 2D camera direction only? rotate head only?
 	SetRotation(camera->Direction().x, camera->Direction().y, camera->Direction().z);
-
 }
 
 void Player::SetInteractionMode(InteractionMode mode)

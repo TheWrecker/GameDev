@@ -7,14 +7,15 @@
 	#include <vector>
 	#include <unordered_map>
 
-	class Presenter;
-
 	class TextureAtlas
 	{
 	public:
-		TextureAtlas(Presenter* presenter);
+		TextureAtlas();
 		~TextureAtlas();
 
+		bool Initialize();
+		//TODO: take a list/parameter/file as argument?
+		void LoadBaseTextures();
 		void ReconstructTextureArray();
 		void Clear();
 
@@ -34,13 +35,15 @@
 	private:
 		ID3D11Device* device;
 		ID3D11DeviceContext* context;
-		Presenter* presenter;
+
 		ID3D11Texture2D* texture_array;
 		D3D11_TEXTURE2D_DESC base_desc;
 		ID3D11ShaderResourceView* shader_view;
+
 		std::vector<ID3D11Texture2D*> textures;
 		std::vector<D3D11_TEXTURE2D_DESC*> descs;
 		std::vector<ID3D11ShaderResourceView*> views;
+
 		std::size_t slice_count;
 		std::unordered_map<std::string, unsigned int> names;
 	};

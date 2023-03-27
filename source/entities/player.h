@@ -7,8 +7,8 @@
 	#include "entity_transformable.h"
 	#include "../gameplay/physics/move_physics.h"
 	#include "../gameplay/physics/collision_physics.h"
-	#include "block_solid.h"
 
+	class SolidBlock;
 	class BasicCamera;
 	class World;
 	class Scene;

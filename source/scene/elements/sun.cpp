@@ -29,7 +29,7 @@ void Sun::SetScale(float value)
     scale_matrix = DirectX::XMMatrixScaling(scale, scale, scale);
 }
 
-DirectX::CXMMATRIX Sun::GetLightInfo()
+DirectX::XMMATRIX Sun::GetLightInfo()
 {
     DirectX::XMMATRIX _temp = {};
     _temp.r[0] = DirectX::XMLoadFloat4(&light_info.direction);
@@ -39,7 +39,7 @@ DirectX::CXMMATRIX Sun::GetLightInfo()
     return _temp;
 }
 
-DirectX::CXMMATRIX Sun::World_Matrix()
+DirectX::XMMATRIX Sun::World_Matrix()
 {
     return DirectX::XMMatrixMultiply(scale_matrix, translation_matrix);
 }

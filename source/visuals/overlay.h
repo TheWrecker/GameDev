@@ -4,7 +4,6 @@
 
 	#include <d3d11.h>
 
-	#include "interface_drawable.h"
 	#include"defs_platform.h"
 
 	class Player;
@@ -39,6 +38,7 @@
 		SystemTicker* ticker;
 		Keyboard* keyboard;
 		Mouse* mouse;
+
 		bool show;
 	};
 

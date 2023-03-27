@@ -1,4 +1,8 @@
 
+#include "../elements/shader_vertex.h"
+#include "../elements/shader_pixel.h"
+#include "../elements/buffer_index.h"
+#include "../elements/input_layout.h"
 #include "../scene/scene.h"
 #include "../presenter.h"
 

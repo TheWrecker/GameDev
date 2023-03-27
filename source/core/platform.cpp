@@ -138,8 +138,8 @@ int Platform::GetWindowWidth()
 
 void Platform::SetWindowsParameters(int width, int height)
 {
-	width = abs(width);
-	height = abs(height);
+	this->width = abs(width);
+	this->height = abs(height);
 
 	#ifdef _WINDOWS
 

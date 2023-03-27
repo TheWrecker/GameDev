@@ -1,5 +1,4 @@
 
-
 #include "defs_blocks.h"
 #include "../scene/compartments/segment.h"
 #include "../scene/compartments/pillar.h"
@@ -21,7 +20,6 @@ bool BiomeProcessor::Setup(float heightAmp, float floor)
 
 void BiomeProcessor::ProcessBiome(World* world, float x, float y, float z)
 {
-
 	y *= height_amplitude;
 	SolidBlockType _type = SolidBlockType::TEST;
 	if (y > 0.0f)

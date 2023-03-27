@@ -5,16 +5,13 @@
 	#include <memory>
 	#include <vector>
 
-	#include "../external/FastNoiseSIMD/FastNoiseSIMD.h"
-
 	#include <interface_service.h>
-	#include "defs_world.h"
 
 	class Player;
 	class Pillar;
-	class Segment;
 	class World;
 	class Scene;
+	class FastNoiseSIMD;
 
 	class WorldEngine : public IService
 	{
@@ -27,24 +24,18 @@
 		void BeginWorldGeneration();
 		void WorldLoadTick();
 
-		//std::unique_ptr<FastNoise::Perlin> noise_generator;
-
 	private:
-
-
 		void LoadWorld(float x, float z);
 
 		Scene* scene;
 		World* world;
 		Player* player;
+
 		Pillar* last_pillar;
 		int seed;
 
-		FastNoiseSIMD* noise_generator;
+		std::unique_ptr<FastNoiseSIMD> noise_generator;
 		float* heightmap;
-
-		std::vector<BiomeInfo> biomes;
 	};
 
 #endif // !WORLD_ENGINE_H
-

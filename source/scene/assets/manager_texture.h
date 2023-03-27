@@ -5,24 +5,30 @@
 	#include <d3d11.h>
 
 	#include "defs_pipeline.h"
-	#include "texture.h"
+	#include "../visuals/elements/texture.h"
 	#include "interface_manager.h"
 
-	class Presenter;
+	class Texture;
 
 	class TextureManager : public IManager<Texture>
 	{
 	public:
-		TextureManager(Presenter* presenter);
+		TextureManager();
 		~TextureManager();
 
-		void Load(const std::wstring& file, const std::string& name = "");
+		bool Initialize();
+		void LoadBaseTextures();
 		void BindDefaultTextures();
+
+		void Load(const std::wstring& file, const std::string& name = "");
+
 		ID3D11ShaderResourceView* GetShaderView(const std::string& name);
 		unsigned int GetDefaultTextureIndex(DefaultTextures target);
+		//TODO: Load from file/list?
 
 	private:
-		Presenter* presenter;
+		ID3D11Device* device;
+		ID3D11DeviceContext* context;
 	};
 
 #endif // !MANAGER_TEXTURE_H

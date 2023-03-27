@@ -1,15 +1,11 @@
 
 #include "util_funcs.h"
+#include "../visuals/elements/model.h"
 
 #include "manager_model.h"
 
 ModelManager::ModelManager()
 {
-    //load essential models
-    Load(L"assets/models/quad.obj", true, "quad"); //quad
-    Load(L"assets/models/fullscreen_quad.obj", true, "fullscreen_quad"); //fullscreen render quad
-    Load(L"assets/models/block.obj", true, "block"); //block
-    Load(L"assets/models/sphere.obj", true, "sphere"); //sphere
 }
 
 ModelManager::~ModelManager()
@@ -37,4 +33,13 @@ void ModelManager::Load(const std::wstring& file, bool flipUV, const std::string
         assert(_model);
         container.insert(std::pair(_name, _model));
     }
+}
+
+void ModelManager::LoadBaseModels()
+{
+    //load essential models
+    Load(L"assets/models/quad.obj", true, "quad"); //quad
+    Load(L"assets/models/fullscreen_quad.obj", true, "fullscreen_quad"); //fullscreen render quad
+    Load(L"assets/models/block.obj", true, "block"); //block
+    Load(L"assets/models/sphere.obj", true, "sphere"); //sphere
 }

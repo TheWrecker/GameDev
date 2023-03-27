@@ -8,7 +8,8 @@ constexpr float MAX_FALL_SPEED = 300.0f;
 
 MovePhysics::MovePhysics(float maxSpeed, float speedGain, float frictionRate, float gravityRate, float gravityAccel)
     :max_speed(maxSpeed), speed_gain(speedGain),friction_rate(frictionRate), front_speed(0.0f), side_speed(0.0f),
-    vertical_speed(0.0f), gravity_rate(gravityRate), gravity_acceleration(gravityAccel), front(0.0f), side(0.0f), falling(false)
+    vertical_speed(0.0f), gravity_rate(gravityRate), gravity_acceleration(gravityAccel), front(0.0f), side(0.0f),
+    vertical(0.0f), falling(false)
 {
 }
 

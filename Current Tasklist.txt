@@ -5,3 +5,13 @@ Physics Engine:
  - try to replace last tick duration?
  - apply gamespeed and gamestate to movements,etc but in realtime ticks since we don't want physics to get clunky at low game speeds
  - prevent infinite jumps
+
+
+ Entire Engine:
+  - specify integer types, choose fastest ones possible
+  - reduce memory consumption by world compartments and entities
+  - replace asserts in initializers with dynamic checks (but not in hot paths)
+
+  Executor
+   - move periodic task defs to a header?
+   - add dispatch/async capability? threadpool?

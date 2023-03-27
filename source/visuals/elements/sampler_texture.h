@@ -3,12 +3,11 @@
 	#define SAMPLER_TEXTURE_H
 
 	#include <d3d11.h>
-	#include <optional>
 
 	class TextureSampler
 	{
 	public:
-		TextureSampler(ID3D11Device* device, ID3D11DeviceContext* context, std::optional<D3D11_SAMPLER_DESC> desc);
+		TextureSampler(ID3D11Device* device, ID3D11DeviceContext* context, D3D11_SAMPLER_DESC& desc);
 		~TextureSampler();
 
 		void Build();

@@ -4,6 +4,7 @@
 
 	#include <d3d11_1.h>
 	#include <functional>
+	#include <string>
 
 	#include "interface_service.h"
 	#include "../core/supervisor.h"
@@ -58,6 +59,7 @@
 
 		Supervisor* GetSupervisor();
 		Overlay* GetOverlay();
+		Aggregator* GetAggregator();
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetContext();
 		unsigned int GetScreenWidth();
@@ -132,7 +134,7 @@
 	template<typename type>
 	inline type Presenter::QueryService(const std::string& name)
 	{
-		return supervisor->GetService<type>(name));
+		return supervisor->GetService<type>(name);
 	}
 
 #endif // !PRESENTER_H

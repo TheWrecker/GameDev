@@ -1,6 +1,9 @@
 
-#include "../elements/render_target.h"
+#include "../scene/assets/master_state.h"
+#include "../scene/assets/manager_texture.h"
 #include "../scene/assets/texture_atlas.h"
+#include "../scene/assets/master_buffer.h"
+#include "../elements/render_target.h"
 #include "hud.h"
 #include "highlight.h"
 #include "solid_blocks.h"
@@ -42,6 +45,33 @@ Aggregator::Aggregator(Presenter* parent)
 
 	//hud
 	render_hud = std::make_unique<HUDRender>(parent);
+}
+
+Aggregator::~Aggregator()
+{
+}
+
+bool Aggregator::Initialize()
+{
+	scene = presenter->QueryService<Scene*>("scene");
+
+	if (!scene)
+		return false;
+
+	state_master = scene->GetStateMaster();
+	model_manager = scene->GetModelManager();
+	texture_manager = scene->GetTextureManager();
+	buffer_master = scene->GetBufferMaster();
+
+	bool _result = true;
+	//initialize renderers
+	_result &= render_pass->Initialize();
+	_result &= render_sky->Initialize();
+	_result &= render_dev->Initialize();
+	_result &= render_highlight->Initialize();
+	_result &= render_sun_moon->Initialize();
+	_result &= render_solid_blocks->Initialize();
+	_result &= render_hud->Initialize();
 
 	//setup all render parameters
 	//bind default objects
@@ -67,27 +97,10 @@ Aggregator::Aggregator(Presenter* parent)
 
 	//setup states
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	presenter->SetRasterizerState(CullMode::CULL_BACK, false, false);
+	presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
 	presenter->SetBlendMode(BlendMode::DISABLED);
-}
 
-Aggregator::~Aggregator()
-{
-}
-
-bool Aggregator::Initialize()
-{
-	scene = presenter->QueryService<Scene*>("scene");
-
-	if (!scene)
-		return false;
-
-	state_master = scene->GetStateMaster();
-	model_manager = scene->GetModelManager();
-	texture_manager = scene->GetTextureManager();
-	buffer_master = scene->GetBufferMaster();
-
-	return true;
+	return _result;
 }
 
 void Aggregator::AggregateAllRenders()
@@ -112,10 +125,10 @@ void Aggregator::AggregateAllRenders()
 	//render_pass->BindAsRenderTarget();
 
 	//render sky
-	presenter->SetRasterizerState(CullMode::CULL_FRONT, false, false);
+	presenter->SetRasterizerState(RasterizerMode::CULL_FRONT_SOLID_CW);
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
 	render_sky->Render();
-	presenter->SetRasterizerState(CullMode::CULL_BACK, false, false);
+	presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
 
 	//render sun or moon
 	//TODO: dynamic time of day

@@ -22,6 +22,7 @@
 Supervisor* Supervisor::last_instance = nullptr;
 
 Supervisor::Supervisor(InstanceHandle instance)
+	:executor_available(false)
 {
 	services = std::make_unique<ServiceManager>();
 
@@ -39,7 +40,7 @@ Supervisor::Supervisor(InstanceHandle instance)
 	IService* _profiler = new SystemProfiler();
 	services->AdoptService("profiler", _profiler);
 
-	IService* _executor = new Executor();
+	IService* _executor = new Executor(this);
 	services->AdoptService("executor", _executor);
 
 	IService* _mouse = new Mouse();
@@ -78,6 +79,21 @@ ServiceManager* Supervisor::Services()
 	return services.get();
 }
 
+bool Supervisor::IsExecutorAvailable()
+{
+	return executor_available;
+}
+
+Supervisor* Supervisor::GetLastInstance()
+{
+	return last_instance;
+}
+
+void Supervisor::ExecutorDestroyed()
+{
+	executor_available = false;
+}
+
 bool Supervisor::InitializeAllSystems()
 {
 	//TODO: add perstep checks and retries
@@ -92,15 +108,16 @@ bool Supervisor::InitializeAllSystems()
 
 	//initialize the executor
 	_result &= QueryService<Executor*>("executor")->Initialize();
+	executor_available = true;
 
 	//initialize mouse input
 	_result &= QueryService<Mouse*>("mouse")->Initialize();
 
-	//initialize the presenter and its components
-	_result &= QueryService<Presenter*>("presenter")->Initialize();
-
 	//initialize the scene and its components
 	_result &= QueryService<Scene*>("scene")->Initialize();
+
+	//initialize the presenter and its components
+	_result &= QueryService<Presenter*>("presenter")->Initialize();
 
 	//initialize the physics engine
 	_result &= QueryService<PhysicsEngine*>("physics_engine")->Initialize();
@@ -124,20 +141,11 @@ void Supervisor::PassControl()
 	auto _scene = QueryService<Scene*>("scene");
 	_scene->SwitchMode(SceneMode::DEVELOPEMENT);
 
-	//load the world
-	QueryService<WorldEngine*>("world_engine")->SetupStartingWorld();
-
 	//start the executor
 	QueryService<Executor*>("executor")->Resume();
 
-	//start the physics engine
-	QueryService<PhysicsEngine*>("physics_engine")->Start();
-
 	//start the input handler
 	QueryService<InputHandler*>("input_handler")->Resume();
-
-	//start dynamic world generation
-	QueryService<WorldEngine*>("world_engine")->BeginWorldGeneration();
 
 	//begin the main engine loop
 	auto _platform = QueryService<Platform*>("platform");
@@ -152,6 +160,6 @@ void Supervisor::PassControl()
 
 		//render
 		_presenter->Draw();
-
+		_presenter->Present();
 	}
 }

@@ -3,6 +3,7 @@
 #include "../elements/shader_pixel.h"
 #include "../elements/input_layout.h"
 #include "../scene/assets/master_buffer.h"
+#include "../entities/block_solid.h"
 #include "../entities/player.h"
 #include "../scene/scene.h"
 #include "../presenter.h"

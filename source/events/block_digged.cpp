@@ -1,9 +1,7 @@
 
-#include "..\helpers\conversion_item_block.h"
-#include "..\gameplay\item_container.h"
+#include "..\utils\conversion_item_block.h"
+#include "..\gameplay\items\item_container.h"
 #include "..\entities\player.h"
-#include "..\entities\segment.h"
-#include "..\entities\world.h"
 
 #include "block_digged.h"
 

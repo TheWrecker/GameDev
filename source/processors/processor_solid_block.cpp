@@ -1,6 +1,8 @@
 
 #include <DirectXMath.h>
 
+#include "../visuals/elements/buffer_index.h"
+#include "../visuals/elements/buffer_vertex.h"
 #include "../scene/assets/texture_atlas.h"
 #include "../entities/block_solid.h"
 #include "../scene/compartments/segment.h"
@@ -319,17 +321,10 @@ void SolidBlockProcessor::AddFaceVertices(Segment* target, Face& face)
 
 bool SolidBlockProcessor::Setup()
 {
-
 	texture_atlas = Supervisor::QueryService<Scene*>("scene")->GetTextureAtlas();
 	world = Supervisor::QueryService<Scene*>("scene")->GetWorld();
 
-	if (!world || !texture_atlas)
-	{
-		assert(false);
-		return false;
-	}
-
-	return true;
+	return texture_atlas && world;
 }
 
 void SolidBlockProcessor::Rebuild(Segment* target)

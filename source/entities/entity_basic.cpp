@@ -57,4 +57,3 @@ void BasicEntity::UpdateWorldMatrix()
 {
 	world_matrix = translation_matrix;
 }
-

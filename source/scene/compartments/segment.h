@@ -2,16 +2,13 @@
 #ifndef SEGMENT_H
 	#define SEGMENT_H
 
-	#include <array>
 	#include <memory>
 	#include <DirectXMath.h>
 
 	#include "defs_pipeline.h"
 	#include "defs_world.h"
 	#include "../visuals/elements/buffer_vertex.h"
-	#include "../visuals/elements/buffer_index.h"
-	#include "block_solid.h"
-	#include "entity_basic.h"
+	#include "../entities/block_solid.h"
 
 	class IndexBuffer;
 	class Scene;
@@ -37,24 +34,22 @@
 		void RemoveBlock(unsigned int x, unsigned int y, unsigned int z);
 		void RebuildBuffers();
 
-		DirectX::CXMMATRIX World_Matrix();
+		DirectX::XMMATRIX World_Matrix();
 		DirectX::XMFLOAT3 Position();
 		SegmentIndices GetArrayIndices(unsigned int value);
 		VertexBuffer<SolidBlockVertex>* GetVertexBuffer();
 		IndexBuffer* GetIndexBuffer();
 		bool IsEmpty();
 
+		SolidBlock* blocks[SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE];
+
 	private:
 		friend class SolidBlockProcessor;
-		friend class World;
-
 		Scene* scene;
 
 		SolidBlockType default_type;
 		unsigned int block_count;
 		DirectX::XMFLOAT3 position;
-
-		SolidBlock* blocks[SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE];
 
 		std::unique_ptr<VertexBuffer<SolidBlockVertex>> vertex_buffer;
 		std::unique_ptr<IndexBuffer> index_buffer;

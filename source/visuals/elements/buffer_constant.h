@@ -12,9 +12,10 @@
 	class ConstantBuffer
 	{
 	public:
-		ConstantBuffer(ID3D11Device* device, ID3D11DeviceContext* context);
+		ConstantBuffer(ID3D11Device* device = nullptr, ID3D11DeviceContext* context = nullptr);
 		~ConstantBuffer();
 
+		void Initialize(ID3D11Device* device, ID3D11DeviceContext* context);
 		void Update(type& info);
 		void Bind(BindStage stage, unsigned int slot);
 
@@ -36,8 +37,12 @@
 		desc.Usage = D3D11_USAGE_DYNAMIC;
 		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		DXAssert(device->CreateBuffer(&desc, 0, &buffer));
-		ZeroMemory(&subresource, sizeof(subresource));
+
+		if (device && context)
+		{
+			DXAssert(device->CreateBuffer(&desc, 0, &buffer));
+			ZeroMemory(&subresource, sizeof(subresource));
+		}
 	}
 
 	template<typename type>
@@ -47,8 +52,22 @@
 	}
 
 	template<typename type>
+	inline void ConstantBuffer<type>::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
+	{
+		if (device && context)
+		{
+			this->device = device;
+			this->context = context;
+			DXAssert(device->CreateBuffer(&desc, 0, &buffer));
+			ZeroMemory(&subresource, sizeof(subresource));
+		}
+	}
+
+	template<typename type>
 	inline void ConstantBuffer<type>::Update(type& info)
 	{
+		assert(device && context);
+
 		data = info;
 		ZeroMemory(&subresource, sizeof(subresource));
 		context->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subresource);

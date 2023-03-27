@@ -1,10 +1,10 @@
 
 #include <chrono>
 
-#include "player.h"
-#include "segment.h"
-#include "pillar.h"
-#include "../visuals/scene.h"
+#include "../entities/player.h"
+#include "compartments/segment.h"
+#include "compartments/pillar.h"
+#include "scene.h"
 #include "../processors/processor_biome.h"
 
 #include "world.h"
@@ -12,7 +12,6 @@
 World::World(Scene* scene)
 	:scene(scene), last_pillar(nullptr)
 {
-	
 }
 
 World::~World()

@@ -46,6 +46,8 @@
 		void SwitchMode(SceneMode mode);
 
 		Presenter* GetPresenter();
+		ID3D11Device* GetDevice();
+		ID3D11DeviceContext* GetContext();
 		BasicCamera* GetActiveCamera();
 		Player* GetPlayer();
 		Sun* GetSun();
@@ -58,6 +60,7 @@
 
 	private:
 		Presenter* presenter;
+		Aggregator* aggregator;
 		CameraType camera_type;
 		PhysicsEngine* physics_engine;
 		WorldEngine* world_engine;
@@ -71,7 +74,6 @@
 		std::unique_ptr<TextureManager> texture_manager;
 		std::unique_ptr<TextureAtlas> atlas;
 		std::unique_ptr<ModelManager> model_manager;
-		std::unique_ptr<Aggregator> aggregator;
 	};
 
 #endif // !SCENE_H

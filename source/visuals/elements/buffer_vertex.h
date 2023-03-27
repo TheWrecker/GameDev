@@ -11,8 +11,9 @@
 	class VertexBuffer
 	{
 	public:
-		VertexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, std::size_t reserve = 0);
+		VertexBuffer(ID3D11Device* device = nullptr, ID3D11DeviceContext* context = nullptr, std::size_t reserve = 2000);
 		~VertexBuffer();
+		void Initialize(ID3D11Device* device, ID3D11DeviceContext* context);
 
 		void AddVertex(type vertex);
 		void Clear();
@@ -57,6 +58,16 @@
 	}
 
 	template<typename type>
+	inline void VertexBuffer<type>::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
+	{
+		if (device && context)
+		{
+			this->device = device;
+			this->context = context;
+		}
+	}
+
+	template<typename type>
 	inline void VertexBuffer<type>::AddVertex(type vertex)
 	{
 		vertices.push_back(vertex);
@@ -79,6 +90,8 @@
 	{
 		if (is_built)
 			DXRelease(buffer);
+
+		assert(device && context);
 
 		if (vertices.size() > 0)
 		{

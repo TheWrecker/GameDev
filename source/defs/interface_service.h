@@ -5,9 +5,14 @@
 	class IService
 	{
 	public:
-		virtual void Update() {}
-		virtual bool Initialize() { return true; }
 		virtual ~IService() {}
+
+		virtual void Update() {}
+
+		virtual bool Initialize()
+		{ 
+			return true;
+		}
 	};
 
 #endif // !ISERVICE_H

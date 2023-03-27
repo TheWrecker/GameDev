@@ -1,15 +1,29 @@
 
-#include "sampler_texture.h"
-#include "../presenter.h"
+#include "../visuals/elements/sampler_texture.h"
+#include "../visuals/presenter.h"
+#include "../core/supervisor.h"
 
 #include "master_state.h"
 
-StateMaster::StateMaster(Presenter* parent)
-	:presenter(parent), texture_samplers()
+StateMaster::StateMaster()
+	:presenter(nullptr), device(nullptr), context(nullptr), texture_samplers()
 {
-	device = presenter->GetDevice();
-	context = presenter->GetContext();
 	texture_samplers.resize(GetSamplerSlot(DefaultSampler::END_PADDING));
+}
+
+StateMaster::~StateMaster()
+{
+	for (auto item : texture_samplers)
+		delete item;
+}
+
+bool StateMaster::Initialize()
+{
+	device = Supervisor::QueryService<Presenter*>("presenter")->GetDevice();
+	context = Supervisor::QueryService<Presenter*>("presenter")->GetContext();
+
+	if (!device || !context)
+		return false;
 
 	D3D11_SAMPLER_DESC desc = {};
 	//POINT
@@ -47,12 +61,8 @@ StateMaster::StateMaster(Presenter* parent)
 	desc.MaxLOD = D3D11_FLOAT32_MAX;
 	auto sampler2 = new TextureSampler(device, context, desc);
 	texture_samplers[GetSamplerSlot(DefaultSampler::BILINEAR)] = sampler2;
-}
 
-StateMaster::~StateMaster()
-{
-	for (auto item : texture_samplers)
-		delete item;
+	return true;
 }
 
 void StateMaster::BindDefaultTextureSampler(DefaultSampler what)

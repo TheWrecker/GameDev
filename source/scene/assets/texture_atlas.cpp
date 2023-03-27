@@ -4,41 +4,20 @@
 
 #include "defs_pipeline.h"
 #include "util_funcs.h"
-#include "../presenter.h"
+#include "../visuals/presenter.h"
+#include "../core/supervisor.h"
 
 #include "texture_atlas.h"
 
 constexpr unsigned int ATLAS_RESERVE_COUNT = 64;
 
-TextureAtlas::TextureAtlas(Presenter* presenter)
-    :presenter(presenter), texture_array(), base_desc(), shader_view(), textures(), descs(), views(), slice_count(0)
+TextureAtlas::TextureAtlas()
+    :texture_array(), base_desc(), shader_view(), textures(), descs(), views(), slice_count(0),
+	device(nullptr), context(nullptr)
 {
-	device = presenter->GetDevice();
-	context = presenter->GetContext();
-
 	textures.reserve(ATLAS_RESERVE_COUNT);
 	descs.reserve(ATLAS_RESERVE_COUNT);
 	views.reserve(ATLAS_RESERVE_COUNT);
-	LoadTexture(L"assets/textures/atlas/test.png", "test"); //test checkers = 0
-
-	base_desc.Width = descs[0]->Width;
-	base_desc.Height = descs[0]->Height;
-	base_desc.MipLevels = descs[0]->MipLevels;
-	base_desc.Usage = D3D11_USAGE_DEFAULT;
-	base_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	base_desc.Format = descs[0]->Format;
-	base_desc.SampleDesc.Count = 1;
-	base_desc.SampleDesc.Quality = 0;
-	base_desc.ArraySize = 0;
-
-	//TODO: move to scene? dynamic lookup? list? config file?
-	LoadTexture(L"assets/textures/atlas/dirt.png", "dirt"); //dirt = 1
-	LoadTexture(L"assets/textures/atlas/grass.png", "grass"); //grass = 2
-	LoadTexture(L"assets/textures/atlas/grass2.png", "grass2"); //grass all sides = 3
-	LoadTexture(L"assets/textures/atlas/stone.png", "stone"); //stone = 4
-	LoadTexture(L"assets/textures/atlas/sand.png", "sand"); //sand = 5
-
-	ReconstructTextureArray();
 }
 
 TextureAtlas::~TextureAtlas()
@@ -55,6 +34,39 @@ TextureAtlas::~TextureAtlas()
 
 	for (auto& _item : views)
 		DXRelease(_item);
+}
+
+bool TextureAtlas::Initialize()
+{
+	device = Supervisor::QueryService<Presenter*>("presenter")->GetDevice();
+	context = Supervisor::QueryService<Presenter*>("presenter")->GetContext();
+
+	if (!device || !context)
+		return false;
+
+	LoadTexture(L"assets/textures/atlas/test.png", "test"); //test checkers = 0
+
+	ZeroMemory(&base_desc, sizeof(base_desc));
+	base_desc.Width = descs[0]->Width;
+	base_desc.Height = descs[0]->Height;
+	base_desc.MipLevels = descs[0]->MipLevels;
+	base_desc.Usage = D3D11_USAGE_DEFAULT;
+	base_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	base_desc.Format = descs[0]->Format;
+	base_desc.SampleDesc.Count = 1;
+	base_desc.SampleDesc.Quality = 0;
+	base_desc.ArraySize = 0;
+
+	return true;
+}
+
+void TextureAtlas::LoadBaseTextures()
+{
+	LoadTexture(L"assets/textures/atlas/dirt.png", "dirt"); //dirt = 1
+	LoadTexture(L"assets/textures/atlas/grass.png", "grass"); //grass = 2
+	LoadTexture(L"assets/textures/atlas/grass2.png", "grass2"); //grass all sides = 3
+	LoadTexture(L"assets/textures/atlas/stone.png", "stone"); //stone = 4
+	LoadTexture(L"assets/textures/atlas/sand.png", "sand"); //sand = 5
 }
 
 void TextureAtlas::ReconstructTextureArray()

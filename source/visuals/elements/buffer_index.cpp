@@ -20,6 +20,15 @@ IndexBuffer::~IndexBuffer()
 		DXRelease(buffer);
 }
 
+void IndexBuffer::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
+{
+	if (device && context)
+	{
+		this->device = device;
+		this->context = context;
+	}
+}
+
 void IndexBuffer::AddIndex(unsigned int index)
 {
 	indices.push_back(index);
@@ -39,6 +48,8 @@ void IndexBuffer::Build()
 {
 	if(is_built)
 		DXRelease(buffer);
+
+	assert(device && context);
 
 	if (indices.size() > 0)
 	{

@@ -12,14 +12,14 @@
 #include "../scene/world.h"
 #include "../scene/scene.h"
 #include "../processors/processor_biome.h"
+#include "../scene/scene.h"
+#include "../core/supervisor.h"
 
 #include "world_engine.h"
 
 WorldEngine::WorldEngine(int targetSeed)
 	:scene(nullptr), player(nullptr), world(nullptr), seed(targetSeed), heightmap(nullptr)
 {
-	noise_generator = FastNoiseSIMD::NewFastNoiseSIMD(seed);
-
 	if (seed == 0) //no seed passed, calculate one
 	{
 		auto _time = std::chrono::system_clock::now().time_since_epoch().count();
@@ -28,6 +28,7 @@ WorldEngine::WorldEngine(int targetSeed)
 		else
 			assert(false); //time since epoch is negative, what do you expect?
 	}
+	noise_generator = std::unique_ptr<FastNoiseSIMD>(FastNoiseSIMD::NewFastNoiseSIMD(seed));
 }
 
 WorldEngine::~WorldEngine()
@@ -80,6 +81,9 @@ void WorldEngine::SetupStartingWorld()
 
 bool WorldEngine::Initialize()
 {
+	scene = Supervisor::QueryService<Scene*>("scene");
+	world = scene->GetWorld();
+	player = scene->GetPlayer();
 	auto _t1 = std::chrono::high_resolution_clock::now();
 	heightmap = noise_generator->GetPerlinSet(0, 0, 0, 200, 200, 1);
 	auto _t2 = std::chrono::high_resolution_clock::now();
@@ -110,7 +114,7 @@ void WorldEngine::WorldLoadTick()
 		if (_pillar->biome_processed)
 			continue;
 
-		auto _heightmap = noise_generator->GetPerlinSet(_pillar->x / SEGMENT_LENGTH, 0, _pillar->z / SEGMENT_LENGTH, 10, 1, 10);
+		auto _heightmap = noise_generator->GetPerlinSet((int)(_pillar->x / SEGMENT_LENGTH), 0, (int)(_pillar->z / SEGMENT_LENGTH), 10, 1, 10);
 
 		BiomeProcessor::ProcessBiome(_heightmap, world, _pillar);
 

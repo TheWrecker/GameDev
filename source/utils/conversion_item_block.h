@@ -5,6 +5,8 @@
 	#include "defs_items.h"
 	#include "defs_blocks.h"
 
+	//TODO: bench against std::unordered_map for performance, when types reach higher numbers
+
 	inline SolidBlockType ItemTypeToBlockType(ItemType type)
 	{
 		switch (type)

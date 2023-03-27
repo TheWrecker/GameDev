@@ -1,21 +1,28 @@
 
-#include "mesh.h"
-#include "model.h"
+#include "../visuals/elements/mesh.h"
+#include "../visuals/elements/model.h"
 #include "manager_model.h"
-#include "../entities/sun.h"
-#include "../entities/camera_basic.h"
+#include "../scene/elements/sun.h"
+#include "../scene/camera/camera_basic.h"
 #include "../scene.h"
-#include "../presenter.h"
+#include "../visuals/presenter.h"
+#include "../core/supervisor.h"
 
 #include "master_buffer.h"
 
-BufferMaster::BufferMaster(Scene* scene)
-	:scene(scene), default_constant_buffers(), default_index_buffers(), default_vertex_buffers(), normal_vertex_buffers()
+BufferMaster::BufferMaster()
+	:scene(nullptr), default_constant_buffers(), default_index_buffers(), default_vertex_buffers(), normal_vertex_buffers()
 {
-	device = scene->GetPresenter()->GetDevice();
-	context = scene->GetPresenter()->GetContext();
+}
+
+bool BufferMaster::Initialize()
+{
+	device = Supervisor::QueryService<Presenter*>("presenter")->GetDevice();
+	context = Supervisor::QueryService<Presenter*>("presenter")->GetContext();
+	scene = Supervisor::QueryService<Scene*>("scene");
 	camera = scene->GetActiveCamera();
-	RebuildDefaults();
+
+	return device && context && scene && camera;
 }
 
 void BufferMaster::RebuildDefaults()

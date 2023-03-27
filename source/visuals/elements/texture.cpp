@@ -7,17 +7,18 @@
 
 #include "texture.h"
 
-Texture::Texture(Presenter* presenter, const std::wstring& file)
-	:texture(), shader_view(), desc()
+Texture::Texture(ID3D11Device* device, const std::wstring& file)
+	:texture(), shader_view(), desc(), device(device)
 {
+	//TODO: postpone loading? / separate creation from loading?
 	auto extension = file.substr(file.size() - 3, 3);
 	if (extension == L"dds")
 	{
-		DXAssert(DirectX::CreateDDSTextureFromFile(presenter->GetDevice(), file.c_str(), (ID3D11Resource**)&texture, &shader_view));
+		DXAssert(DirectX::CreateDDSTextureFromFile(device, file.c_str(), (ID3D11Resource**)&texture, &shader_view));
 	}
 	else
 	{
-		DXAssert(DirectX::CreateWICTextureFromFile(presenter->GetDevice(), file.c_str(), (ID3D11Resource**)&texture, &shader_view));
+		DXAssert(DirectX::CreateWICTextureFromFile(device, file.c_str(), (ID3D11Resource**)&texture, &shader_view));
 	}
 	texture->GetDesc(&desc);
 }

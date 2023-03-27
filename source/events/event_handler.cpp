@@ -2,6 +2,7 @@
 #include "event_handler.h"
 
 EventHandler::EventHandler()
+	:paused(true)
 {
 }
 
@@ -11,7 +12,19 @@ EventHandler::~EventHandler()
 
 void EventHandler::Update()
 {
-	ProcessEvents();
+	//TODO: maybe move to main loop?
+	if (!paused)
+		ProcessEvents();
+}
+
+void EventHandler::Resume()
+{
+	paused = false;
+}
+
+void EventHandler::Pause()
+{
+	paused = true;
 }
 
 void EventHandler::FeedEvent(IEvent* event)
@@ -68,5 +81,4 @@ void EventHandler::ClearEvents()
 {
 	while (!queue.empty())
 		queue.pop();
-
 }

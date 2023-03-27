@@ -27,10 +27,12 @@
 
 	typedef std::list<PeriodicTaskInfo>::const_iterator PeriodicTask;
 
+	class Supervisor;
+
 	class Executor : public IService
 	{
 	public:
-		Executor();
+		Executor(Supervisor* parent);
 		~Executor();
 
 		bool Initialize() override;
@@ -47,6 +49,8 @@
 		float GetRealTime();
 
 	private:
+		Supervisor* supervisor;
+
 		std::list<PeriodicTaskInfo>
 			realtime_container,
 			gametime_container;

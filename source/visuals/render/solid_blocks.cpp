@@ -36,11 +36,12 @@ bool SolidBlockRender::Initialize()
 {
 	bool _result = RenderBase::Initialize();;
 
-	perimeter = std::make_unique<VisionPerimeter>(scene);
+	perimeter = std::make_unique<VisionPerimeter>(presenter);
 	if (!perimeter.get())
 		return false;
 
 	render_segments.reserve(500);
+	_result &= perimeter->Initialize();
 
 	return _result;
 }

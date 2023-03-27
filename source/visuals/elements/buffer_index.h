@@ -8,9 +8,10 @@
 	class IndexBuffer
 	{
 	public:
-		IndexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, std::size_t reserve = 0);
+		IndexBuffer(ID3D11Device* device = nullptr, ID3D11DeviceContext* context = nullptr, std::size_t reserve = 2000);
 		~IndexBuffer();
 
+		void Initialize(ID3D11Device* device, ID3D11DeviceContext* context);
 		void AddIndex(unsigned int index);
 		void Clear();
 		void Build();

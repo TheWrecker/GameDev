@@ -6,6 +6,7 @@
     #include <unordered_map>
 
     #include "defs_world.h"
+    #include "defs_blocks.h"
 
     class SolidBlock;
     class Segment;
@@ -85,7 +86,7 @@
 
         std::unordered_map<PillarIndex, Pillar*, std::hash<PillarIndex>> pillars;
         std::vector<Pillar*> near_pillars;
-        Pillar* last_pillar;
+        Pillar* last_pillar; //TODO: move to world engine?
 
     private:
 	    Scene* scene;

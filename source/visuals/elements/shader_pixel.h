@@ -3,6 +3,7 @@
 	#define SHADER_PIXEL_H
 
 	#include <d3d11.h>
+	#include <string>
 
 	#include "shader_interface.h"
 

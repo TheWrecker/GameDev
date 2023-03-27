@@ -13,8 +13,8 @@
 		void SetPosition(float x, float y, float z);
 		void SetScale(float value);
 
-		DirectX::CXMMATRIX GetLightInfo();
-		DirectX::CXMMATRIX World_Matrix();
+		DirectX::XMMATRIX GetLightInfo();
+		DirectX::XMMATRIX World_Matrix();
 
 	private:
 		friend class Overlay;

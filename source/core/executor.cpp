@@ -6,19 +6,20 @@
 
 #include "executor.h"
 
-Executor::Executor()
+Executor::Executor(Supervisor* parent)
     :ticker(ticker), speed(1.0f), game_time(0.0f), real_time(0.0f), paused(false), realtime_container(),
-    gametime_container(), diff(0.0f)
+    gametime_container(), diff(0.0f), supervisor(parent)
 {
 }
 
 Executor::~Executor()
 {
+    supervisor->ExecutorDestroyed();
 }
 
 bool Executor::Initialize()
 {
-    ticker = Supervisor::QueryService<SystemTicker*>("ticker");
+    ticker = supervisor->QueryService<SystemTicker*>("ticker");
     return (ticker != nullptr);
 }
 

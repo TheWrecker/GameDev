@@ -1,20 +1,24 @@
 
-#pragma once
+#ifndef SHADER_VERTEX_H
+	#define SHADER_VERTEX_H
 
-#include <d3d11.h>
+	#include <d3d11.h>
+	#include <string>
 
-#include "shader_interface.h"
+	#include "shader_interface.h"
 
-class Presenter;
+	class Presenter;
 
-class VertexShader : public IShader
-{
-public:
-	VertexShader(Presenter* presenter, const std::wstring& file);
-	~VertexShader();
+	class VertexShader : public IShader
+	{
+	public:
+		VertexShader(Presenter* presenter, const std::wstring& file);
+		~VertexShader();
 
-	void Apply() override;
+		void Apply() override;
 
-private:
-	ID3D11VertexShader* shader;
-};
+	private:
+		ID3D11VertexShader* shader;
+	};
+
+#endif // !SHADER_VERTEX_H

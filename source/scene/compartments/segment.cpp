@@ -1,13 +1,16 @@
 
+#include "../visuals/elements/buffer_index.h"
 #include "../processors/processor_solid_block.h"
-#include "../visuals/scene.h"
+#include "../scene/scene.h"
 #include "../visuals/presenter.h"
+#include "../core/supervisor.h"
 
 #include "segment.h"
 
 Segment::Segment(Scene* scene, SolidBlockType type, bool fill, float x, float y, float z)
-    :BasicEntity(x, y, z), default_type(type), blocks(), scene(scene), block_count(0)
+    :default_type(type), blocks(), scene(scene), block_count(0)
 {
+    position = { x, y, z };
     vertex_buffer = std::make_unique<VertexBuffer<SolidBlockVertex>>(scene->GetDevice(), scene->GetContext());
     index_buffer = std::make_unique<IndexBuffer>(scene->GetDevice(), scene->GetContext());
 
@@ -51,7 +54,7 @@ void Segment::SetType(SolidBlockType type)
 
 void Segment::Move(float x, float y, float z)
 {
-    SetPosition(x, y, z);
+    position = { x, y, z };
     //RebuildBuffers();
     for (unsigned int x = 0; x < SEGMENT_DIMENSION_SIZE; x++)
         for (unsigned int y = 0; y < SEGMENT_DIMENSION_SIZE; y++)
@@ -123,7 +126,7 @@ void Segment::RebuildBuffers()
     SolidBlockProcessor::Rebuild(this);
 }
 
-DirectX::CXMMATRIX Segment::World_Matrix()
+DirectX::XMMATRIX Segment::World_Matrix()
 {
     return DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 }

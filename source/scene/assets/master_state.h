@@ -13,8 +13,10 @@
 	class StateMaster
 	{
 	public:
-		StateMaster(Presenter* parent);
+		StateMaster();
 		~StateMaster();
+
+		bool Initialize();
 
 		void BindDefaultTextureSampler(DefaultSampler what);
 		void UnbindDefaultTextureSampler(DefaultSampler what);

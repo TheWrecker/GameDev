@@ -2,7 +2,6 @@
 #ifndef PHYSICS_ENGINE
 	#define PHYSICS_ENGINE
 
-	#include <chrono>
 	#include <list>
 
 	#include "interface_service.h"
@@ -49,6 +48,5 @@
 		std::list<MovePhysics*> movements;
 		std::list<CollisionPhysics*> collisions;
 	};
-
 
 #endif // !PHYSICS_ENGINE

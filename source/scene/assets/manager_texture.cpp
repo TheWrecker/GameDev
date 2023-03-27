@@ -1,13 +1,32 @@
 
 #include "util_funcs.h"
-#include "../presenter.h"
+#include "../visuals/elements/texture.h"
+#include "../visuals/presenter.h"
+#include "../core/supervisor.h"
 
 #include "manager_texture.h"
 
-TextureManager::TextureManager(Presenter* presenter)
-    :presenter(presenter)
+TextureManager::TextureManager()
 {
-    //TODO: Load from file/list?
+}
+
+TextureManager::~TextureManager()
+{
+}
+
+bool TextureManager::Initialize()
+{
+    device = Supervisor::QueryService<Presenter*>("presenter")->GetDevice();
+    context = Supervisor::QueryService<Presenter*>("presenter")->GetContext();
+
+    if (!device || !context)
+        return false;
+
+    return true;
+}
+
+void TextureManager::LoadBaseTextures()
+{
     //load essential textures
     Load(L"assets/textures/earth.dds", "earth"); //earth
     Load(L"assets/textures/test.dds", "test_checkers"); //test checkers
@@ -15,10 +34,6 @@ TextureManager::TextureManager(Presenter* presenter)
     Load(L"assets/textures/sun.dds", "sun"); //sun
     Load(L"assets/textures/crosshair1.png", "crosshair1"); //crosshair 1
     Load(L"assets/textures/highlight.png", "highlight"); //block highlight
-}
-
-TextureManager::~TextureManager()
-{
 }
 
 void TextureManager::Load(const std::wstring& file, const std::string& name)
@@ -38,7 +53,7 @@ void TextureManager::Load(const std::wstring& file, const std::string& name)
     }
     else
     {
-        auto _texture = new Texture(presenter, file);
+        auto _texture = new Texture(device, file);
         assert(_texture);
         container.insert(std::pair(_name, _texture));
     }
@@ -47,17 +62,17 @@ void TextureManager::Load(const std::wstring& file, const std::string& name)
 void TextureManager::BindDefaultTextures()
 {
     auto _shader_view = GetShaderView("earth");
-    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::EARTH), 1, &_shader_view);
+    context->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::EARTH), 1, &_shader_view);
     _shader_view = GetShaderView("sun");
-    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::SUN), 1, &_shader_view);
+    context->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::SUN), 1, &_shader_view);
     _shader_view = GetShaderView("test_checkers");
-    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::TEST_CHECKERS), 1, &_shader_view);
+    context->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::TEST_CHECKERS), 1, &_shader_view);
     _shader_view = GetShaderView("sky1");
-    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::SKY_1), 1, &_shader_view);
+    context->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::SKY_1), 1, &_shader_view);
     _shader_view = GetShaderView("crosshair1");
-    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::CROSSHAIR_1), 1, &_shader_view);
+    context->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::CROSSHAIR_1), 1, &_shader_view);
     _shader_view = GetShaderView("highlight");
-    presenter->GetContext()->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::HIGHLIGHT), 1, &_shader_view);
+    context->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::HIGHLIGHT), 1, &_shader_view);
 }
 
 ID3D11ShaderResourceView* TextureManager::GetShaderView(const std::string& name)

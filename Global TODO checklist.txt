@@ -6,3 +6,7 @@
 - rebuild buffers at most once perframe, using a need_rebuild flag/.... (we are now calling rebuild() eachtime  arbitrarily)
 
 - mechanism to update invalid pointers to scene elements after object construction
+
+- update mechanisms for pointers when they are changed (e.g. camera change resonates to player.camera)
+
+- fix all direction level indicator in file paths and include paths (/ vs \)

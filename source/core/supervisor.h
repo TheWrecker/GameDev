@@ -7,10 +7,10 @@
 	#include <string>
 
 	#include "defs_platform.h"
+	#include "interface_service.h"
+	#include "service_manager.h"
 
-	class ServiceManager;
-
-	class Supervisor
+	class Supervisor : public IService
 	{
 	public:
 		Supervisor(InstanceHandle instance);
@@ -18,8 +18,12 @@
 
 		bool InitializeAllSystems();
 		void PassControl();
+		void ExecutorDestroyed();
 
 		ServiceManager* Services();
+		bool IsExecutorAvailable();
+
+		static Supervisor* GetLastInstance();
 
 		template <typename type>
 		type GetService(const std::string& name);
@@ -29,6 +33,7 @@
 
 	private:
 		std::unique_ptr<ServiceManager> services;
+		bool executor_available;
 
 		static Supervisor* last_instance;
 	};

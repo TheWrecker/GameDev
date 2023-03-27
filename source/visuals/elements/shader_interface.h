@@ -2,7 +2,6 @@
 #ifndef SHADER_INTERFACE_H
 	#define SHADER_INTERFACE_H
 
-	#include <string>
 	#include <d3d11.h>
 
 	class IShader

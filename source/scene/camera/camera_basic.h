@@ -2,12 +2,14 @@
 #ifndef CAMERA_BASIC_H
 	#define CAMERA_BASIC_H
 
-	#include "entity_transformable.h"
+	#include <DirectXMath.h>
+
+	class BasicEntity;
 
 	class BasicCamera
 	{
 	public:
-		BasicCamera(float fieldOfView = 90.0f, float aspectRatio = 4.0f/3.0f, float near = 0.001f, float far = 1000.0f);
+		BasicCamera(float fieldOfView = 90.0f, float aspectRatio = 4.0f/3.0f, float nearZ = 0.001f, float farZ = 1000.0f);
 		~BasicCamera();
 
 		virtual void FeedRotation(float rotX, float rotY);
@@ -18,7 +20,7 @@
 		virtual void Update();
 		void HookToEntity(BasicEntity* target);
 
-		void SetProperties(float fieldOfView, float aspectRatio, float near, float far);
+		void SetProperties(float fieldOfView, float aspectRatio, float nearZ, float farZ);
 		void SetPosition(float x, float y, float z);
 		void SetDirection(float x, float y, float z);
 		void Rotate(DirectX::CXMMATRIX matrix);
@@ -32,7 +34,7 @@
 		const DirectX::XMMATRIX View_Matrix() const;
 		const DirectX::XMMATRIX Projection_Matrix() const;
 		const DirectX::XMMATRIX View_Projection_Matrix() const;
-		const DirectX::XMMATRIX Rotation_Matrix() const;
+		const DirectX::XMMATRIX Rotation_Matrix() const; //TODO:CXMMATRIX?
 
 	protected:
 		friend class Scene;
