@@ -268,7 +268,7 @@
     <ClCompile Include="source\scene\world.cpp">
       <Filter>source\scene</Filter>
     </ClCompile>
-    <ClCompile Include="source\scene\compartments\pillar.cpp">
+    <ClCompile Include="source\scene\compartments\sector.cpp">
       <Filter>source\scene\compartments</Filter>
     </ClCompile>
     <ClCompile Include="source\scene\compartments\segment.cpp">
@@ -525,9 +525,6 @@
     <ClInclude Include="source\scene\world.h">
       <Filter>source\scene</Filter>
     </ClInclude>
-    <ClInclude Include="source\scene\compartments\pillar.h">
-      <Filter>source\scene\compartments</Filter>
-    </ClInclude>
     <ClInclude Include="source\scene\compartments\segment.h">
       <Filter>source\scene\compartments</Filter>
     </ClInclude>
@@ -563,6 +560,9 @@
     </ClInclude>
     <ClInclude Include="source\scene\assets\texture_atlas.h">
       <Filter>source\scene\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\compartments\sector.h">
+      <Filter>source\scene\compartments</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@
 
 #include "segment.h"
 
-Segment::Segment(Scene* scene, SolidBlockType type, bool fill, float x, float y, float z)
+Segment::Segment(Scene* scene, BlockType type, bool fill, float x, float y, float z)
     :default_type(type), blocks(), scene(scene), block_count(0)
 {
     position = { x, y, z };
@@ -20,7 +20,7 @@ Segment::Segment(Scene* scene, SolidBlockType type, bool fill, float x, float y,
         {
             for (unsigned int k = 0; k < SEGMENT_DIMENSION_SIZE; k++)
             {
-                blocks[i][j][k] = nullptr;
+                blocks[i][j][k] = BlockType::EMPTY;
             }
         }
     }
@@ -34,20 +34,10 @@ Segment::Segment(Scene* scene, SolidBlockType type, bool fill, float x, float y,
 
 Segment::~Segment()
 {
-    for (unsigned int i = 0; i < SEGMENT_DIMENSION_SIZE; i++)
-    {
-        for (unsigned int j = 0; j < SEGMENT_DIMENSION_SIZE; j++)
-        {
-            for (unsigned int k = 0; k < SEGMENT_DIMENSION_SIZE; k++)
-            {
-                if (blocks[i][j][k])
-                    delete blocks[i][j][k];
-            }
-        }
-    }
+
 }
 
-void Segment::SetType(SolidBlockType type)
+void Segment::SetType(BlockType type)
 {
     default_type = type;
 }
@@ -56,45 +46,9 @@ void Segment::Move(float x, float y, float z)
 {
     position = { x, y, z };
     //RebuildBuffers();
-    for (unsigned int x = 0; x < SEGMENT_DIMENSION_SIZE; x++)
-        for (unsigned int y = 0; y < SEGMENT_DIMENSION_SIZE; y++)
-            for (unsigned int z = 0; z < SEGMENT_DIMENSION_SIZE; z++)
-            {
-                if (blocks[x][y][z])
-                    blocks[x][y][z]->SetPosition(position.x + (x * SOLID_BLOCK_SIZE), position.y + (y * SOLID_BLOCK_SIZE), position.z + (z * SOLID_BLOCK_SIZE));
-            }
 }
 
-void Segment::AddBlock(SolidBlock* target, unsigned int x, unsigned int y, unsigned int z)
-{
-    assert(target);
-    if (blocks[x][y][z])
-        delete blocks[x][y][z];
-    blocks[x][y][z] = target;
-    target->SetPosition(position.x + (x * SOLID_BLOCK_SIZE), position.y + (y * SOLID_BLOCK_SIZE), position.z + (z * SOLID_BLOCK_SIZE));
-    block_count++;
-    //TODO: should rebuild buffers?
-    //RebuildBuffers();
-}
-
-void Segment::AddBlock(SolidBlock* target)
-{
-    AddBlock(target, 0, 0, 0);
-}
-
-void Segment::AddBlock(SolidBlockType type, unsigned int x, unsigned int y, unsigned int z)
-{
-    SolidBlock* _block = new SolidBlock(type);
-    AddBlock(_block, x, y, z);
-}
-
-void Segment::AddBlock(unsigned int x, unsigned int y, unsigned int z)
-{
-    SolidBlock* _block = new SolidBlock(default_type);
-    AddBlock(_block, x, y, z);
-}
-
-void Segment::Fill(SolidBlockType type)
+void Segment::Fill(BlockType type)
 {
     SetType(type);
     for (unsigned int i = 0; i < SEGMENT_DIMENSION_SIZE; i++)
@@ -103,22 +57,28 @@ void Segment::Fill(SolidBlockType type)
         {
             for (unsigned int k = 0; k < SEGMENT_DIMENSION_SIZE; k++)
             {
-                if (blocks[i][j][k])
-                    delete blocks[i][j][k];
-                AddBlock(i, j, k);
+                blocks[i][j][k] = type;
             }
         }
     }
+    block_count = SEGMENT_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE;
+}
+
+void Segment::SetBlock(unsigned int x, unsigned int y, unsigned int z, BlockType type)
+{
+    if (blocks[x][y][z] == BlockType::EMPTY)
+        block_count++;
+
+    blocks[x][y][z] = type;
 }
 
 void Segment::RemoveBlock(unsigned int x, unsigned int y, unsigned int z)
 {
-    if (blocks[x][y][z])
-    {
-        delete blocks[x][y][z];
-        blocks[x][y][z] = nullptr;
-        block_count--;
-    }
+    if (blocks[x][y][z] == BlockType::EMPTY)
+        return;
+
+    blocks[x][y][z] = BlockType::EMPTY;
+    block_count--;
 }
 
 void Segment::RebuildBuffers()
@@ -134,16 +94,6 @@ DirectX::XMMATRIX Segment::World_Matrix()
 DirectX::XMFLOAT3 Segment::Position()
 {
     return position;
-}
-
-SegmentIndices Segment::GetArrayIndices(unsigned int value)
-{
-    SegmentIndices _indices = {};
-    _indices.x = value / (SEGMENT_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE);
-    unsigned int _temp = value - (_indices.x * SEGMENT_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE);
-    _indices.y = _temp / SEGMENT_DIMENSION_SIZE;
-    _indices.z = _temp - (_indices.y * SEGMENT_DIMENSION_SIZE);
-    return _indices;
 }
 
 VertexBuffer<SolidBlockVertex>* Segment::GetVertexBuffer()

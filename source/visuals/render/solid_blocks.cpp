@@ -4,7 +4,6 @@
 #include "../elements/input_layout.h"
 #include "../scene/assets/master_buffer.h"
 #include "../scene/compartments/segment.h"
-#include "../scene/compartments/pillar.h"
 #include "../scene/world.h"
 #include "../scene/scene.h"
 #include "vision_perimeter.h"

@@ -201,7 +201,7 @@
     <ClCompile Include="source\scene\assets\texture_atlas.cpp" />
     <ClCompile Include="source\scene\camera\camera_basic.cpp" />
     <ClCompile Include="source\scene\camera\camera_firstperson.cpp" />
-    <ClCompile Include="source\scene\compartments\pillar.cpp" />
+    <ClCompile Include="source\scene\compartments\sector.cpp" />
     <ClCompile Include="source\scene\compartments\segment.cpp" />
     <ClCompile Include="source\scene\elements\sun.cpp" />
     <ClCompile Include="source\scene\scene.cpp" />
@@ -286,7 +286,7 @@
     <ClInclude Include="source\scene\assets\texture_atlas.h" />
     <ClInclude Include="source\scene\camera\camera_basic.h" />
     <ClInclude Include="source\scene\camera\camera_firstperson.h" />
-    <ClInclude Include="source\scene\compartments\pillar.h" />
+    <ClInclude Include="source\scene\compartments\sector.h" />
     <ClInclude Include="source\scene\compartments\segment.h" />
     <ClInclude Include="source\scene\elements\sun.h" />
     <ClInclude Include="source\scene\scene.h" />

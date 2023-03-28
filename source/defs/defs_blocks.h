@@ -12,9 +12,9 @@
 		BACK
 	};
 
-	enum class SolidBlockType
+	enum class BlockType
 	{
-		UNDEFINED = 0,
+		EMPTY= 0,
 		TEST = 1,
 		DIRT = 2,
 		GRASS_ON_DIRT = 3,

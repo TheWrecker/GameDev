@@ -53,10 +53,11 @@ void HighlightRender::Render()
 			break;
 		case InteractionMode::DIG_MODE:
 		{
-			auto _block = player->GetInteractionBlock();
-			if (!_block)
+			DirectX::XMFLOAT3 _temp_pos = {};
+			if (!player->GetInteractionBlockPos(_temp_pos))
 				return;
-			_cb = { DirectX::XMMatrixMultiplyTranspose(transformation_matrix, _block->World_Matrix()) };
+			_cb = { DirectX::XMMatrixMultiplyTranspose(transformation_matrix,
+				DirectX::XMMatrixTranslation(_temp_pos.x , _temp_pos.y, _temp_pos.z)) };
 			break;
 		}
 		case InteractionMode::PLACEMENT_MODE:

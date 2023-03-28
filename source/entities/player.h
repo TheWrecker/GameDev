@@ -31,7 +31,7 @@
 		void SetInteractionMode(InteractionMode mode);
 		void SetActiveInventorySlot(unsigned int slot);
 
-		SolidBlock* GetInteractionBlock();
+		bool GetInteractionBlockPos(DirectX::XMFLOAT3& pos);
 		bool GetPlacementBlockPos(DirectX::XMFLOAT3& pos);
 
 		World* GetWorld();

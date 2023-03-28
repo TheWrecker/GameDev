@@ -58,9 +58,8 @@ void Scene::SwitchMode(SceneMode mode)
 			//setup scene elements
 			//switch camera type
 			// feed eye height to camera
-			active_camera->SetPosition(0.0f, 20.0f, 20.0f);
 			active_camera->SetDirection(1.0f, -1.0f, 0.0f);
-			player->SetPosition(0.0f, 20.0f, 20.0f);
+			player->SetPosition(20.0f, 20.0f, 20.0f);
 			active_camera->HookToEntity(player.get());
 			//TODO: move to unit factory?
 			physics_engine->RegisterMovementComponent(player.get());
@@ -68,6 +67,7 @@ void Scene::SwitchMode(SceneMode mode)
 
 			//generate the initial world
 			world_engine->SetupStartingWorld();
+			//world->SetupDevelopementWorld();
 			
 			//signal the start to the system engines
 			physics_engine->Start();

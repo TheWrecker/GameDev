@@ -103,8 +103,8 @@ void PhysicsEngine::UpdateAllSystems()
 	DirectX::XMVECTOR _xz_direction, _right_vector, _front_move, _side_move, _coll;
 	DirectX::XMFLOAT3 _rotation, _temp_pos;
 
-	SolidBlock *_block1, *_block2, *_block3;
-	_block1 = _block2 = _block3 = nullptr;
+	BlockType _block1, _block2, _block3;
+	_block1 = _block2 = _block3 = BlockType::EMPTY;
 	TransformableEntity* _entity = nullptr;
 	CollisionPhysics* _collision = nullptr;
 	
@@ -134,12 +134,12 @@ void PhysicsEngine::UpdateAllSystems()
 
 			_block1 = world->GetBlock(_temp_pos.x, _temp_pos.y - (_collision->half_height + 0.1f) , _temp_pos.z);
 			//is there a block directly below us?
-			if (_block1)
+			if (_block1 != BlockType::EMPTY)
 			{
 				//there is, so stop falling
 				_component->falling = false;
 				_component->vertical_speed = fmax(0.0f, _component->vertical_speed);
-				_temp_pos.y = _block1->Position().y + SOLID_BLOCK_SIZE + _collision->half_height;
+				//_temp_pos.y = floorf(_temp_pos.y) + SOLID_BLOCK_SIZE + _collision->half_height;
 			}
 			else
 			{
@@ -153,11 +153,11 @@ void PhysicsEngine::UpdateAllSystems()
 				//we are going upwards, check above us
 				_block1 = world->GetBlock(_temp_pos.x, _temp_pos.y + _collision->half_height, _temp_pos.z);
 				//is there a block directly above us?
- 				if (_block1)
+ 				if (_block1 != BlockType::EMPTY)
 				{
 					//there is, so stop going upwards
 					_component->vertical_speed = 0.0f;
-					_temp_pos.y = _block1->Position().y - _collision->half_height;
+					_temp_pos.y = floorf(_temp_pos.y) - _collision->half_height;
 				}
 				else
 				{
@@ -183,7 +183,7 @@ void PhysicsEngine::UpdateAllSystems()
 			_block1 = world->GetBlock(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
 			_block2 = world->GetBlock(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z);
 			_block3 = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
-			if (_block1 || _block2 || _block3)
+			if ((_block1 != BlockType::EMPTY) || (_block2 != BlockType::EMPTY) || (_block3 != BlockType::EMPTY))
 			{
 				_component->front_speed = 0.0f;
 			}
@@ -193,7 +193,7 @@ void PhysicsEngine::UpdateAllSystems()
 				_block1 = world->GetBlock(_temp_pos.x + XMVectorGetX(_front_move) + XMVectorGetX(_coll),
 					_temp_pos.y,
 					_temp_pos.z + XMVectorGetZ(_front_move) + +XMVectorGetZ(_coll));
-				if (_block1)
+				if (_block1 != BlockType::EMPTY)
 				{
 					//we do, so stop frontal movement and stand aside the block
 					_component->front_speed = 0.0f;
@@ -222,7 +222,7 @@ void PhysicsEngine::UpdateAllSystems()
 			_block1 = world->GetBlock(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
 			_block2 = world->GetBlock(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z);
 			_block3 = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
-			if (_block1 || _block2 || _block3)
+			if ((_block1 != BlockType::EMPTY) || (_block2 != BlockType::EMPTY) || (_block3 != BlockType::EMPTY))
 			{
 				_component->side_speed = 0.0f;
 			}
@@ -232,7 +232,7 @@ void PhysicsEngine::UpdateAllSystems()
 				_block1 = world->GetBlock(_temp_pos.x + XMVectorGetX(_front_move) + XMVectorGetX(_coll),
 					_temp_pos.y,
 					_temp_pos.z + XMVectorGetZ(_front_move) + +XMVectorGetZ(_coll));
-				if (_block1)
+				if (_block1 != BlockType::EMPTY)
 				{
 					//we do, so stop frontal movement and stand aside the block
 					_component->side_speed = 0.0f;
@@ -253,14 +253,14 @@ void PhysicsEngine::UpdateAllSystems()
 			//anti-stuck temporary measurement
 			_block1 = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z);
 			//are we inside a block?
-			if (_block1)
-			{
-				//well we are but we shouldn't be
-				//for now only step back once, later maybe loop untill we are 100% outside blocks
-				_temp_pos.x -= _rotation.x;
-				_temp_pos.z -= _rotation.z;
-				_temp_pos.y += 1.0f;
-			}
+			//if (_block1 != BlockType::EMPTY)
+			//{
+			//	//well we are but we shouldn't be
+			//	//for now only step back once, later maybe loop untill we are 100% outside blocks
+			//	_temp_pos.x -= _rotation.x;
+			//	_temp_pos.z -= _rotation.z;
+			//	_temp_pos.y += 1.0f;
+			//}
 
 			_entity->SetPosition(_temp_pos);
 		}

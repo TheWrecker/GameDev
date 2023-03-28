@@ -8,18 +8,18 @@
 	class SolidBlock : public BasicEntity
 	{
 	public:
-		SolidBlock(SolidBlockType type = SolidBlockType::TEST, float x = 0.0f, float y = 0.0f, float z = 0.0f);
+		SolidBlock(BlockType type = BlockType::TEST, float x = 0.0f, float y = 0.0f, float z = 0.0f);
 		~SolidBlock();
 
-		void SetType(SolidBlockType what);
+		void SetType(BlockType what);
 		void SetPosition(float x, float y, float z) override;
 		void SetPosition(DirectX::XMFLOAT3 pos) override;
 
-		SolidBlockType GetBlockType();
+		BlockType GetBlockType();
 		unsigned int GetAtlasIndex();
 
 	private:
-		SolidBlockType type;
+		BlockType type;
 	};
 
 #endif // !BLOCK_SOLID_H

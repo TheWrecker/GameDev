@@ -12,13 +12,13 @@
 	class BlockDiggedEvent : public IEvent
 	{
 	public:
-		BlockDiggedEvent(EventHandler* handler, Player* player, SolidBlockType type, DirectX::XMFLOAT3 position);
+		BlockDiggedEvent(EventHandler* handler, Player* player, BlockType type, DirectX::XMFLOAT3 position);
 
 		void Fire() override;
 
 	private:
 		Player* player;
-		SolidBlockType type;
+		BlockType type;
 		DirectX::XMFLOAT3 position;
 	};
 

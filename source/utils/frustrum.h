@@ -13,7 +13,7 @@
 		void CalculateFrustrum(DirectX::CXMMATRIX viewMatrix, DirectX::XMFLOAT4X4& projMatrix, float screenDepth = 1000.0f);
 
 		bool IntersectsCube(DirectX::XMFLOAT3 center, float radius);
-		bool IntersectsPillar(float x, float z);
+		bool IntersectsSector(float x, float z);
 
 	private:
 		DirectX::XMFLOAT4 planes[6];

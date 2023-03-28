@@ -8,7 +8,7 @@
 	#include <interface_service.h>
 
 	class Player;
-	class Pillar;
+	class Sector;
 	class World;
 	class Scene;
 	class FastNoiseSIMD;
@@ -24,6 +24,10 @@
 		void BeginWorldGeneration();
 		void WorldLoadTick();
 
+		void SetVicinityRange(unsigned int value);
+
+		std::vector<Sector*> near_sectors;
+
 	private:
 		void LoadWorld(float x, float z);
 
@@ -31,8 +35,9 @@
 		World* world;
 		Player* player;
 
-		Pillar* last_pillar;
+		Sector* last_sector;
 		int seed;
+		int range;
 
 		std::unique_ptr<FastNoiseSIMD> noise_generator;
 		float* heightmap;

@@ -20,7 +20,7 @@ void BeginPlacementEvent::Fire()
 
 	auto _type = ItemTypeToBlockType(_item->GetType());
 
-	if (_type == SolidBlockType::UNDEFINED)
+	if (_type == BlockType::EMPTY)
 		return;
 
 	auto _block = player->GetWorld()->CreateBlock(_type, position.x, position.y, position.z, true);

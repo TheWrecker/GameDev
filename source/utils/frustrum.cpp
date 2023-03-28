@@ -92,41 +92,51 @@ bool Frustrum::IntersectsCube(DirectX::XMFLOAT3 center, float radius)
 {
 	using namespace DirectX;
 
-	XMVECTOR _plane, _result;
+	XMVECTOR _plane, _result, _p1, _p2, _p3, _p4, _p5, _p6, _p7, _p8;
+
+	_p1 = { (center.x - radius), (center.y - radius), (center.z - radius), 0.0f };
+	_p2 = { (center.x + radius), (center.y - radius), (center.z - radius), 0.0f };
+	_p3 = { (center.x - radius), (center.y + radius), (center.z - radius), 0.0f };
+	_p4 = { (center.x + radius), (center.y + radius), (center.z - radius), 0.0f };
+	_p5 = { (center.x - radius), (center.y - radius), (center.z + radius), 0.0f };
+	_p6 = { (center.x + radius), (center.y - radius), (center.z + radius), 0.0f };
+	_p7 = { (center.x - radius), (center.y + radius), (center.z + radius), 0.0f };
+	_p8 = { (center.x + radius), (center.y + radius), (center.z + radius), 0.0f };
+
 	// Check if any one point of the cube is in the view frustum.
 	for (unsigned int _i = 0; _i < 6; _i++)
 	{
 		_plane = XMLoadFloat4(&planes[_i]);
 
-		_result = XMPlaneDotCoord(_plane, XMVECTOR{ (center.x - radius), (center.y - radius), (center.z - radius), 0.0f });
+		_result = XMPlaneDotCoord(_plane, _p1);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 
-		_result = XMPlaneDotCoord(_plane, XMVECTOR{ (center.x + radius), (center.y - radius), (center.z - radius), 0.0f });
+		_result = XMPlaneDotCoord(_plane, _p2);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 
-		_result = XMPlaneDotCoord(_plane, XMVECTOR{ (center.x - radius), (center.y + radius), (center.z - radius), 0.0f });
+		_result = XMPlaneDotCoord(_plane, _p3);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 
-		_result = XMPlaneDotCoord(_plane, XMVECTOR{ (center.x + radius), (center.y + radius), (center.z - radius), 0.0f });
+		_result = XMPlaneDotCoord(_plane, _p4);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 
-		_result = XMPlaneDotCoord(_plane, XMVECTOR{ (center.x - radius), (center.y - radius), (center.z + radius), 0.0f });
+		_result = XMPlaneDotCoord(_plane, _p5);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 
-		_result = XMPlaneDotCoord(_plane, XMVECTOR{ (center.x + radius), (center.y - radius), (center.z + radius), 0.0f });
+		_result = XMPlaneDotCoord(_plane, _p6);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 
-		_result = XMPlaneDotCoord(_plane, XMVECTOR{ (center.x - radius), (center.y + radius), (center.z + radius), 0.0f });
+		_result = XMPlaneDotCoord(_plane, _p7);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 
-		_result = XMPlaneDotCoord(_plane, XMVECTOR{ (center.x + radius), (center.y + radius), (center.z + radius), 0.0f });
+		_result = XMPlaneDotCoord(_plane, _p8);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 
@@ -134,37 +144,59 @@ bool Frustrum::IntersectsCube(DirectX::XMFLOAT3 center, float radius)
 	}
 
 	return true;
-
 }
 
-bool Frustrum::IntersectsPillar(float x, float z)
+bool Frustrum::IntersectsSector(float x, float z)
 {
 	using namespace DirectX;
 
-	XMVECTOR _plane, _result, _pos1, _pos2, _pos3, _pos4;
-	_pos1 = { x - SOLID_BLOCK_SIZE				   , 0.0f, z - SOLID_BLOCK_SIZE					, 0.0f };
-	_pos2 = { x + SEGMENT_LENGTH + SOLID_BLOCK_SIZE, 0.0f, z - SOLID_BLOCK_SIZE					, 0.0f };
-	_pos3 = { x - SOLID_BLOCK_SIZE                 , 0.0f, z + SEGMENT_LENGTH + SOLID_BLOCK_SIZE, 0.0f };
-	_pos4 = { x + SEGMENT_LENGTH + SOLID_BLOCK_SIZE, 0.0f, z + SEGMENT_LENGTH + SOLID_BLOCK_SIZE, 0.0f };
-	// Check if any one point of the cube is in the view frustum.
+	float y = 0.0f; //TODO: make sectors's Y pos start at -maxheight amplitude?
 
-	for (unsigned int _i = 0; _i < 4; _i++)
+	XMVECTOR _plane, _result, _p1, _p2, _p3, _p4, _p5, _p6, _p7, _p8;
+
+	_p1 = { (x - SECTOR_WIDTH), (y - SECTOR_HEIGHT), (z - SECTOR_WIDTH), 0.0f };
+	_p2 = { (x + SECTOR_WIDTH), (y - SECTOR_HEIGHT), (z - SECTOR_WIDTH), 0.0f };
+	_p3 = { (x - SECTOR_WIDTH), (y + SECTOR_HEIGHT), (z - SECTOR_WIDTH), 0.0f };
+	_p4 = { (x + SECTOR_WIDTH), (y + SECTOR_HEIGHT), (z - SECTOR_WIDTH), 0.0f };
+	_p5 = { (x - SECTOR_WIDTH), (y - SECTOR_HEIGHT), (z + SECTOR_WIDTH), 0.0f };
+	_p6 = { (x + SECTOR_WIDTH), (y - SECTOR_HEIGHT), (z + SECTOR_WIDTH), 0.0f };
+	_p7 = { (x - SECTOR_WIDTH), (y + SECTOR_HEIGHT), (z + SECTOR_WIDTH), 0.0f };
+	_p8 = { (x + SECTOR_WIDTH), (y + SECTOR_HEIGHT), (z + SECTOR_WIDTH), 0.0f };
+
+	// Check if any one point of the cube is in the view frustum.
+	for (unsigned int _i = 0; _i < 6; _i++)
 	{
 		_plane = XMLoadFloat4(&planes[_i]);
 
-		_result = XMPlaneDotCoord(_plane, _pos1);
+		_result = XMPlaneDotCoord(_plane, _p1);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 
-		_result = XMPlaneDotCoord(_plane, _pos2);
+		_result = XMPlaneDotCoord(_plane, _p2);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 
-		_result = XMPlaneDotCoord(_plane, _pos3);
+		_result = XMPlaneDotCoord(_plane, _p3);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 
-		_result = XMPlaneDotCoord(_plane, _pos4);
+		_result = XMPlaneDotCoord(_plane, _p4);
+		if (_result.m128_f32[0] >= 0.0f)
+			continue;
+
+		_result = XMPlaneDotCoord(_plane, _p5);
+		if (_result.m128_f32[0] >= 0.0f)
+			continue;
+
+		_result = XMPlaneDotCoord(_plane, _p6);
+		if (_result.m128_f32[0] >= 0.0f)
+			continue;
+
+		_result = XMPlaneDotCoord(_plane, _p7);
+		if (_result.m128_f32[0] >= 0.0f)
+			continue;
+
+		_result = XMPlaneDotCoord(_plane, _p8);
 		if (_result.m128_f32[0] >= 0.0f)
 			continue;
 

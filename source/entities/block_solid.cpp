@@ -3,7 +3,7 @@
 
 #include "block_solid.h"
 
-SolidBlock::SolidBlock(SolidBlockType type, float x, float y, float z)
+SolidBlock::SolidBlock(BlockType type, float x, float y, float z)
     :BasicEntity(x, y, z), type(type)
 {
 }
@@ -12,7 +12,7 @@ SolidBlock::~SolidBlock()
 {
 }
 
-void SolidBlock::SetType(SolidBlockType what)
+void SolidBlock::SetType(BlockType what)
 {
     type = what;
 }
@@ -27,7 +27,7 @@ void SolidBlock::SetPosition(DirectX::XMFLOAT3 pos)
     SetPosition(pos.x, pos.y, pos.z);
 }
 
-SolidBlockType SolidBlock::GetBlockType()
+BlockType SolidBlock::GetBlockType()
 {
     return type;
 }

@@ -5,7 +5,7 @@
 
 #include "block_digged.h"
 
-BlockDiggedEvent::BlockDiggedEvent(EventHandler* handler, Player* player, SolidBlockType type, DirectX::XMFLOAT3 position)
+BlockDiggedEvent::BlockDiggedEvent(EventHandler* handler, Player* player, BlockType type, DirectX::XMFLOAT3 position)
     :IEvent(EventType::BLOCK_DIGGED, handler), player(player), type(type), position(position)
 {
 }

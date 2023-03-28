@@ -1,4 +1,5 @@
 
+#include "defs_world.h"
 #include "../entities/block_solid.h"
 #include "block_digged.h"
 #include "..\entities\player.h"
@@ -8,20 +9,18 @@
 
 #include "finish_dig.h"
 
-FinishDigEvent::FinishDigEvent(EventHandler* handler, Player* player, SolidBlock* block)
-	:IEvent(EventType::FINISH_DIG, handler), player(player), block(block)
+FinishDigEvent::FinishDigEvent(EventHandler* handler, Player* player, DirectX::XMFLOAT3& position, BlockType blockType)
+	:IEvent(EventType::FINISH_DIG, handler), player(player), block_type(blockType), position(position)
 {
 }
 
 void FinishDigEvent::Fire()
 {
-    auto _pos = block->Position();
-    auto _type = block->GetBlockType();
-    auto _segment = player->GetWorld()->GetSegment(_pos.x, _pos.y, _pos.z);
-    auto _block_index = player->GetWorld()->GetBlockIndex(_pos.x, _pos.y, _pos.z);
+    auto _segment = player->GetWorld()->GetSegment(position.x, position.y, position.z);
+    auto _block_index = GetBlockIndex(position.x, position.y, position.z);
     _segment->RemoveBlock(_block_index.x, _block_index.y, _block_index.z);
     _segment->RebuildBuffers();
 
-    auto _event = new BlockDiggedEvent(parent, player, _type, _pos);
+    auto _event = new BlockDiggedEvent(parent, player, block_type, position);
     parent->FeedEvent(_event);
 }

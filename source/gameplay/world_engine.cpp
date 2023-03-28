@@ -1,14 +1,14 @@
 
 #include <cassert>
 #include <chrono>
-#include <unordered_map>
+#include <DirectXMath.h>
 
 #include "../external/FastNoiseSIMD/FastNoiseSIMD.h"
 
 #include "defs_world.h"
 #include "../entities/player.h"
 #include "../scene/compartments/segment.h"
-#include "../scene/compartments/pillar.h"
+#include "../scene/compartments/sector.h"
 #include "../scene/world.h"
 #include "../scene/scene.h"
 #include "../processors/processor_biome.h"
@@ -18,7 +18,7 @@
 #include "world_engine.h"
 
 WorldEngine::WorldEngine(int targetSeed)
-	:scene(nullptr), player(nullptr), world(nullptr), seed(targetSeed), heightmap(nullptr)
+	:scene(nullptr), player(nullptr), world(nullptr), seed(targetSeed), heightmap(nullptr), last_sector(nullptr), range(2)
 {
 	if (seed == 0) //no seed passed, calculate one
 	{
@@ -38,6 +38,8 @@ WorldEngine::~WorldEngine()
 
 void WorldEngine::SetupStartingWorld()
 {
+	//return;
+
 	if (!scene)
 		assert(false);
 
@@ -56,36 +58,45 @@ void WorldEngine::SetupStartingWorld()
 		}
 
 	//rebuild all world segments' buffers?
-	/*for (auto& _segment : world->near_pillars)
-	{
-		_segment.second->RebuildBuffers();
-	}*/
 
-	for (auto& _pillar : world->pillars)
+	for (auto& _sector : world->sectors)
 	{
-		for (auto& _segment : _pillar.second->segments)
-			_segment.second->RebuildBuffers();
+		for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
+			for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
+				for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
+				{
+					if (_sector.second->segments[_i][_j][_k])
+						_sector.second->segments[_i][_j][_k]->RebuildBuffers();
+				}
 
-		_pillar.second->biome_processed = true;
+		_sector.second->biome_processed = true;
 	}
 
-	//bool has_collision = false;
-	//for (size_t bucket = 0; bucket < world->pillars.bucket_count(); bucket++) {
-	//	auto _size = world->pillars.bucket_size(bucket);
-	//	if (_size > 1) {
-	//		has_collision = true;
-	//		//break;
-	//	}
-	//}
+	for (int _i = -range; _i < range + 1; _i++)
+		for (int _j = -range; _j < range + 1; _j++)
+		{
+			auto _sector = world->GetSector(player->Position().x + (_i * SECTOR_WIDTH), player->Position().z + (_j * SECTOR_WIDTH), true);
+			near_sectors.push_back(_sector);
+		}
+
+	last_sector = world->GetSector(player->Position().x, player->Position().z);
 }
 
 bool WorldEngine::Initialize()
 {
 	scene = Supervisor::QueryService<Scene*>("scene");
+
+	if (!scene)
+		return false;
+
 	world = scene->GetWorld();
 	player = scene->GetPlayer();
+
+	if (!world || !player)
+		return false;
+
 	auto _t1 = std::chrono::high_resolution_clock::now();
-	heightmap = noise_generator->GetPerlinSet(0, 0, 0, 200, 200, 1);
+	heightmap = noise_generator->GetPerlinSet(0, 0, 0, WORLD_INITIAL_DIMENSION_BLOCKS, WORLD_INITIAL_DIMENSION_BLOCKS, 1);
 	auto _t2 = std::chrono::high_resolution_clock::now();
 	auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
 	int i = 0;
@@ -103,27 +114,46 @@ void WorldEngine::WorldLoadTick()
 	if (!player)
 		return;
 
-	auto _current_pillar = world->GetPillar(player->Position().x, player->Position().z);
-	if (_current_pillar == last_pillar)
+	auto _current_sector = world->GetSector(player->Position().x, player->Position().z);
+	if (_current_sector == last_sector)
+		return;
+
+	if (!_current_sector)
 		return;
 
 	auto _t1 = std::chrono::high_resolution_clock::now();
 
-	for (auto& _pillar : world->near_pillars)
-	{
-		if (_pillar->biome_processed)
-			continue;
+	//collect the sectors in immediate vicinity of the player
+	near_sectors.clear();
 
-		auto _heightmap = noise_generator->GetPerlinSet((int)(_pillar->x / SEGMENT_LENGTH), 0, (int)(_pillar->z / SEGMENT_LENGTH), 10, 1, 10);
-
-		BiomeProcessor::ProcessBiome(_heightmap, world, _pillar);
-
-		for (auto& _segment : _pillar->segments)
+	for (int _i = -range; _i < range + 1; _i++)
+		for (int _j = -range; _j < range + 1; _j++)
 		{
-			_segment.second->RebuildBuffers();
+			auto _sector = world->GetSector(_current_sector->x + (_i * SECTOR_WIDTH), _current_sector->z + (_j * SECTOR_WIDTH), false);
+			if (_sector)
+				near_sectors.push_back(_sector);
 		}
 
-		_pillar->biome_processed = true;
+	//return;
+
+	for (auto& _sector : near_sectors)
+	{
+		if (_sector->biome_processed)
+			continue;
+
+		auto _heightmap = noise_generator->GetPerlinSet((int)(_sector->x * SECTOR_WIDTH), 0, (int)(_sector->z * SECTOR_WIDTH), SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE, SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE, 1);
+
+		BiomeProcessor::ProcessBiome(_heightmap, world, _sector);
+
+		for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
+			for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
+				for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
+				{
+					if (_sector->segments[_i][_j][_k])
+						_sector->segments[_i][_j][_k]->RebuildBuffers();
+				}
+
+		_sector->biome_processed = true;
 
 		noise_generator->FreeNoiseSet(_heightmap);
 	}
@@ -134,32 +164,11 @@ void WorldEngine::WorldLoadTick()
 
 }
 
+void WorldEngine::SetVicinityRange(unsigned int value)
+{
+	value > 1 ? range = value : range = 1;
+}
+
 void WorldEngine::LoadWorld(float x, float z)
 {
 }
-
-/*_sX = (-(WORLD_INITIAL_DIMENSION_SIZE / 2.0f) + _x) * SEGMENT_LENGTH;
-_sZ = (-(WORLD_INITIAL_DIMENSION_SIZE / 2.0f) + _z) * SEGMENT_LENGTH;
-_sIndex = _x * WORLD_INITIAL_DIMENSION_SIZE + _z;
-
-auto& _biome = biomes[_sIndex];
-_biome.height = WORLD_GENERATION_MAX_HEIGHT_DIFF * noise_generator->GetPerlin(_sX, _sZ);
-Segment* _segment = world->GetSegment(_sX, _biome.height, _sZ);
-if (!_segment)
-assert(false);
-_biome.top_segment = _segment;
-//TODO: improve
-for (int _k = 0; _k < SEGMENT_DIMENSION_SIZE; _k++)
-{
-	_bX = _sX + _k;
-	for (int _l = 0; _l < SEGMENT_DIMENSION_SIZE; _l++)
-	{
-		_bZ = _sZ + _l;
-		auto _val = WORLD_GENERATION_MAX_HEIGHT_DIFF * noise_generator->GetPerlin(_bX, _bZ);
-		auto _ind = world->GetBlockIndex(_bX, _val, _bZ);
-		_segment->AddBlock(_ind.x, _ind.y, _ind.z);
-	}
-}
-BiomeProcessor::ProcessBiome(_biome);
-_segment->RebuildBuffers();
-		}*/

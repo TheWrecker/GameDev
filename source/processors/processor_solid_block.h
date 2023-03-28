@@ -3,6 +3,7 @@
 	#define PROCESSOR_SOLID_BLOCK_H
 
 	#include <vector>
+	#include <DirectXMath.h>
 
 	#include "defs_pipeline.h"
 	#include "defs_blocks.h"
@@ -21,8 +22,8 @@
 		static void Rebuild(Segment* target);
 
 	private:
-		static bool CheckNextSegmentBlock(SolidBlock* block, FaceName face);
-		static bool CheckBlockFace(Segment* segment, SolidBlock* block, FaceName face);
+		static bool CheckNextSegmentBlock(FaceName face);
+		static bool CheckBlockFace(Segment* segment, FaceName face);
 		static void AddFaceVertices(Segment* target, Face& face);
 
 		static TextureAtlas* texture_atlas;
@@ -34,6 +35,8 @@
 			index_z,
 			solids,
 			current_index;
+
+		static DirectX::XMFLOAT3 position;
 	};
 
 #endif // !PROCESSOR_SOLID_BLOCK_H

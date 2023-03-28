@@ -13,6 +13,7 @@
 	class Player;
 	class Scene;
 	class Presenter;
+	class Worldengine;
 
 	class VisionPerimeter
 	{
@@ -22,7 +23,7 @@
 
 		bool Initialize();
 		void CollectVisionPerimeter(std::vector<Segment*>& container);
-		void SetPerimeterRange(float value = 50.0f);
+		void SetPerimeterRange(float value = 70.0f);
 
 	private:
 		BasicCamera* camera;
@@ -30,11 +31,9 @@
 		Player* player;
 		Scene* scene;
 		Presenter* presenter;
+		WorldEngine* world_engine;
 
 		float range;
-		Pillar* last_pillar;
-		std::vector<Pillar*> near_pillars;
-
 		Frustrum frustrum;
 	};
 
