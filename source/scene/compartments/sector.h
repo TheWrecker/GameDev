@@ -18,8 +18,7 @@
 
 		float x, z;
 		Segment* segments[SECTOR_HORIZONTAL_SIZE][SECTOR_VERTICAL_SIZE][SECTOR_HORIZONTAL_SIZE];
-
-		bool biome_processed;
+		bool biomes_processed;
 
 	private:
 		Scene* scene;

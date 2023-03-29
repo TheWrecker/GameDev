@@ -6,6 +6,7 @@
 	#include <vector>
 
 	#include <interface_service.h>
+	#include "../core/executor.h"
 
 	class Player;
 	class Sector;
@@ -21,8 +22,8 @@
 
 		bool Initialize() override;
 		void SetupStartingWorld();
-		void BeginWorldGeneration();
-		void WorldLoadTick();
+		void StartWorldGeneration();
+		void StopWorldGeneration();
 
 		void SetVicinityRange(unsigned int value);
 
@@ -30,11 +31,17 @@
 
 	private:
 		void LoadWorld(float x, float z);
+		void WorldLoadTick();
 
+		void RebuildSector(Sector* target);
+
+		Executor* executor;
 		Scene* scene;
 		World* world;
 		Player* player;
 
+		bool enabled;
+		PeriodicTask update_task;
 		Sector* last_sector;
 		int seed;
 		int range;

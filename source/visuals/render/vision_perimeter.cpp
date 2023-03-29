@@ -43,6 +43,9 @@ bool VisionPerimeter::Initialize()
 
 void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 {
+	if (world_engine->near_sectors.empty())
+		return;
+
 	using namespace DirectX;
 
 	//calculate the vision frustrum
@@ -53,30 +56,30 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 	//filter all near sectors
 	//TODO: render range differs from world near range? make it lesser?
 	Segment* _segment = nullptr;
-	for (auto& _sector : world_engine->near_sectors)
+	for (auto _sector : world_engine->near_sectors)
 	{
 		if (frustrum.IntersectsSector(_sector->x, _sector->z))
-		{
-			for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
-				for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
-					for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
-					{
-						_segment = _sector->segments[_i][_j][_k];
-						if (_segment)
+			{
+				for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
+					for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
+						for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
 						{
-							XMFLOAT3 _pos = { _segment->Position().x + SEGMENT_LENGTH / 2.0f,
-								_segment->Position().y + SEGMENT_LENGTH / 2.0f,
-								_segment->Position().z + SEGMENT_LENGTH / 2.0f };
-
-							if (frustrum.IntersectsCube(_pos, SEGMENT_LENGTH / 2.0f))
+							_segment = _sector->segments[_i][_j][_k];
+							if (_segment)
 							{
-								container.push_back(_segment);
+								XMFLOAT3 _pos = { _segment->Position().x + SEGMENT_LENGTH / 2.0f,
+									_segment->Position().y + SEGMENT_LENGTH / 2.0f,
+									_segment->Position().z + SEGMENT_LENGTH / 2.0f };
+
+								if (frustrum.IntersectsCube(_pos, SEGMENT_LENGTH / 2.0f))
+								{
+									container.push_back(_segment);
+								}
 							}
 						}
-					}
-		}
+			}
 			
-	}
+		}
 
 }
 

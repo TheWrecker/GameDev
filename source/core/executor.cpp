@@ -8,12 +8,16 @@
 
 Executor::Executor(Supervisor* parent)
     :ticker(ticker), speed(1.0f), game_time(0.0f), real_time(0.0f), paused(false), realtime_container(),
-    gametime_container(), diff(0.0f), supervisor(parent)
+    gametime_container(), diff(0.0f), supervisor(parent), thread_count(0)
 {
 }
 
 Executor::~Executor()
 {
+    for (auto _thread : execution_threads)
+    {
+        StopExecution(_thread);
+    }
     supervisor->ExecutorDestroyed();
 }
 
@@ -82,7 +86,7 @@ PeriodicTask Executor::RegisterPeriodicTask(Callback func, float interval, bool 
     else
     {
         gametime_container.emplace_back(func, interval);
-        return realtime_container.cend()--;
+        return gametime_container.cend()--;
     }
 }
 
@@ -91,7 +95,45 @@ void Executor::RemovePeriodicTask(PeriodicTask target, bool realTime)
     if (realTime)
         realtime_container.erase(target);
     else
-        realtime_container.erase(target);
+        gametime_container.erase(target);
+}
+
+ExecutionThread* Executor::StartExecution(Callback func)
+{
+    auto _exec = new ExecutionThread(func);
+    auto& _shutdown_bool = _exec->shutdown;
+    auto& _pause_bool = _exec->paused;
+    auto& _exec_func = _exec->func;
+
+    auto _thread_main = [&_shutdown_bool, &_pause_bool, &_exec_func]() {
+        while (!_shutdown_bool)
+        {
+            if (_pause_bool)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(10)); //TODO: assess and bench?
+            }
+            else
+            {
+                _exec_func();
+            }
+        }
+    };
+
+    _exec->exec_thread = std::thread(_thread_main);
+
+    execution_threads.push_back(_exec);
+    thread_count++;
+    return _exec;
+}
+
+void Executor::StopExecution(ExecutionThread* target)
+{
+    if (!target)
+        return;
+    target->shutdown = true;
+    target->exec_thread.join();
+    auto _num = execution_threads.remove(target);
+    thread_count -= (unsigned int)_num;
 }
 
 float Executor::GetGameSpeed()
@@ -107,4 +149,19 @@ float Executor::GetGameTime()
 float Executor::GetRealTime()
 {
     return real_time;
+}
+
+void ExecutionThread::PauseExecution()
+{
+    paused = true;
+}
+
+void ExecutionThread::ResumeExecution()
+{
+    paused = false;
+}
+
+void ExecutionThread::Shutdown()
+{
+    shutdown = true;
 }

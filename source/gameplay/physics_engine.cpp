@@ -253,14 +253,14 @@ void PhysicsEngine::UpdateAllSystems()
 			//anti-stuck temporary measurement
 			_block1 = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z);
 			//are we inside a block?
-			//if (_block1 != BlockType::EMPTY)
-			//{
-			//	//well we are but we shouldn't be
-			//	//for now only step back once, later maybe loop untill we are 100% outside blocks
-			//	_temp_pos.x -= _rotation.x;
-			//	_temp_pos.z -= _rotation.z;
-			//	_temp_pos.y += 1.0f;
-			//}
+			if (_block1 != BlockType::EMPTY)
+			{
+				//well we are but we shouldn't be
+				//for now only step back once, later maybe loop untill we are 100% outside blocks
+				_temp_pos.x -= _rotation.x;
+				_temp_pos.z -= _rotation.z;
+				_temp_pos.y += 1.0f;
+			}
 
 			_entity->SetPosition(_temp_pos);
 		}

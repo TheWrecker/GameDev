@@ -2,7 +2,7 @@
 #ifndef PROCESSOR_BIOME_H
 	#define PROCESSOR_BIOME_H
 
-	class Sector;
+	class Segment;
 	class World;
 
 	class BiomeProcessor
@@ -11,7 +11,10 @@
 		static bool Setup(float heightAmp = 20.0f, float floor = 0.0f);
 
 		static void ProcessBiome(World* world, float x, float y, float z);
-		static void ProcessBiome(float* heightmap, World* world, Sector* sector);
+		//static void ProcessBiome(float* heightmap, World* world, Segment* segment);
+
+		static void ProcessSegmentColumn(Segment* segment, unsigned int x, unsigned int z, float value);
+		static void FillUnderlyingColumn(Segment* segment, unsigned int x, unsigned int z, unsigned int indexY);
 
 	private:
 		static float height_amplitude;

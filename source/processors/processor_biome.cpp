@@ -70,16 +70,87 @@ void BiomeProcessor::ProcessBiome(World* world, float x, float y, float z)
 	}
 }
 
-void BiomeProcessor::ProcessBiome(float* heightmap, World* world, Sector* sector)
+//void BiomeProcessor::ProcessBiome(float* heightmap, World* world, Segment* segment)
+//{
+//	float _bX, _bZ;
+//	float _val = 0.0f;
+//	for (unsigned int _i = 0; _i < SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE; _i++)
+//		for (unsigned int _j = 0; _j < SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE; _j++)
+//		{
+//			_bX = sector->x + (_i * SOLID_BLOCK_SIZE);
+//			_bZ = sector->z + (_j * SOLID_BLOCK_SIZE);
+//			_val = heightmap[_i * SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE + _j];
+//			BiomeProcessor::ProcessBiome(world, _bX, _val, _bZ);
+//		}
+//}
+
+void BiomeProcessor::ProcessSegmentColumn(Segment* segment, unsigned int x, unsigned int z, float value)
 {
-	float _bX, _bZ;
-	float _val = 0.0f;
-	for (unsigned int _i = 0; _i < SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE; _i++)
-		for (unsigned int _j = 0; _j < SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE; _j++)
+	auto _rand = ((int)(value) ^ 0x93751f) % 10;
+	auto _indY = (int)floorf(fmod(value, SEGMENT_DIMENSION_SIZE));
+
+	if (_indY < _rand)
+		_rand = _indY;
+	BlockType _type = BlockType::TEST;
+	if (value > 20.0f)
+	{
+		_type = BlockType::GRASS;
+	}
+	else if (value > 15.0f)
+	{
+		_type = BlockType::GRASS_ON_DIRT;
+	}
+	else
+	{
+		_type = BlockType::SAND;
+	}
+
+	segment->SetBlock(x, _indY, z, _type);
+
+	if (_indY == 0)
+		return;
+
+	for (int _i = _indY; _i >= _rand; _i--)
+	{
+		segment->SetBlock(x, _i, z, _type);
+	}
+
+	for (int _i = _rand - 1; _i > -1; _i--)
+	{
+		segment->SetBlock(x, _i, z, BlockType::DIRT);
+	}
+
+}
+
+void BiomeProcessor::FillUnderlyingColumn(Segment* segment, unsigned int x, unsigned int z, unsigned int indexY)
+{
+	switch (indexY)
+	{
+	case 2:
+	{
+		for (int _i = SEGMENT_DIMENSION_SIZE - 1; _i > -1; _i--)
 		{
-			_bX = sector->x + (_i * SOLID_BLOCK_SIZE);
-			_bZ = sector->z + (_j * SOLID_BLOCK_SIZE);
-			_val = heightmap[_i * SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE + _j];
-			BiomeProcessor::ProcessBiome(world, _bX, _val, _bZ);
+			segment->SetBlock(x, _i, z, BlockType::DIRT);
 		}
+		break;
+	}
+	case 1:
+	{
+		for (int _i = SEGMENT_DIMENSION_SIZE - 1; _i > -1; _i--)
+		{
+			segment->SetBlock(x, _i, z, BlockType::STONE);
+		}
+		break;
+	}
+	case 0:
+	{
+		for (int _i = SEGMENT_DIMENSION_SIZE - 1; _i > -1; _i--)
+		{
+			segment->SetBlock(x, _i, z, BlockType::TEST);
+		}
+		break;
+	}
+	default:
+		break;
+	}
 }

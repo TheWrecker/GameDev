@@ -59,7 +59,7 @@ void Scene::SwitchMode(SceneMode mode)
 			//switch camera type
 			// feed eye height to camera
 			active_camera->SetDirection(1.0f, -1.0f, 0.0f);
-			player->SetPosition(20.0f, 20.0f, 20.0f);
+			player->SetPosition(20.0f, 45.0f, 20.0f);
 			active_camera->HookToEntity(player.get());
 			//TODO: move to unit factory?
 			physics_engine->RegisterMovementComponent(player.get());
@@ -71,7 +71,7 @@ void Scene::SwitchMode(SceneMode mode)
 			
 			//signal the start to the system engines
 			physics_engine->Start();
-			world_engine->BeginWorldGeneration();
+			world_engine->StartWorldGeneration();
 			Supervisor::QueryService<EventHandler*>("event_handler")->Resume();
 
 			break;
@@ -117,7 +117,7 @@ void Scene::Update()
 	player->Update();
 	active_camera->Update();
 	world->Update();
-	world_engine->WorldLoadTick();
+	//world_engine->WorldLoadTick();
 }
 
 void Scene::SwitchCameraType(CameraType type)

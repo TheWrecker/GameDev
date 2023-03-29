@@ -34,6 +34,7 @@
 		bool IsEmpty();
 
 		BlockType blocks[SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE];
+		bool biome_processed;
 
 	private:
 		friend class SolidBlockProcessor;

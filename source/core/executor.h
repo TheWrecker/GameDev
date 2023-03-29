@@ -5,6 +5,7 @@
 	#include <chrono>
 	#include <functional>
 	#include <list>
+	#include <thread>
 
 	#include "interface_service.h"
 
@@ -27,6 +28,29 @@
 
 	typedef std::list<PeriodicTaskInfo>::const_iterator PeriodicTask;
 
+	class ExecutionThread
+	{
+	public:
+		ExecutionThread(Callback func)
+			:paused(false), shutdown(false), exec_thread(), func(func)
+		{}
+
+		void PauseExecution();
+		void ResumeExecution();
+
+	private:
+		friend class Executor;
+
+		void Shutdown();
+
+		bool
+			paused,
+			shutdown;
+
+		Callback func;
+		std::thread exec_thread;
+	};
+
 	class Supervisor;
 
 	class Executor : public IService
@@ -44,23 +68,30 @@
 		PeriodicTask RegisterPeriodicTask(Callback func, float interval, bool realTime = false);
 		void RemovePeriodicTask(PeriodicTask target, bool realTime = false);
 
+		ExecutionThread* StartExecution(Callback func);
+		void StopExecution(ExecutionThread* target);
+
 		float GetGameSpeed();
 		float GetGameTime();
 		float GetRealTime();
 
 	private:
 		Supervisor* supervisor;
-
-		std::list<PeriodicTaskInfo>
-			realtime_container,
-			gametime_container;
-
 		SystemTicker* ticker;
+
 		float
 			diff,
 			speed,
 			real_time,
 			game_time;
+
+		std::list<PeriodicTaskInfo>
+			realtime_container,
+			gametime_container;
+
+		std::list<ExecutionThread*> execution_threads;
+
+		unsigned int thread_count;
 		bool paused;
 	};
 

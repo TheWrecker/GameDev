@@ -8,7 +8,7 @@
 #include "segment.h"
 
 Segment::Segment(Scene* scene, BlockType type, bool fill, float x, float y, float z)
-    :default_type(type), blocks(), scene(scene), block_count(0)
+    :default_type(type), blocks(), scene(scene), block_count(0), biome_processed(false)
 {
     position = { x, y, z };
     vertex_buffer = std::make_unique<VertexBuffer<SolidBlockVertex>>(scene->GetDevice(), scene->GetContext());

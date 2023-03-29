@@ -4,7 +4,7 @@
 #include "sector.h"
 
 Sector::Sector(Scene* scene, float x, float z)
-    :scene(scene), x(x), z(z), biome_processed(false)
+    :scene(scene), x(x), z(z), biomes_processed(false)
 {
     for (unsigned int _x = 0; _x < SECTOR_HORIZONTAL_SIZE; _x++)
         for (unsigned int _y = 0; _y < SECTOR_VERTICAL_SIZE; _y++)
