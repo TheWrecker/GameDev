@@ -171,7 +171,10 @@
       <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
-    <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_avx512.cpp" />
+    <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_avx512.cpp">
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</WholeProgramOptimization>
+    </ClCompile>
     <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_internal.cpp" />
     <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_neon.cpp" />
     <ClCompile Include="source\external\FastNoiseSIMD\FastNoiseSIMD_sse2.cpp" />

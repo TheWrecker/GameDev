@@ -46,7 +46,6 @@ void WorldEngine::SetupStartingWorld()
 	world = scene->GetWorld();
 
 	float _bX, _bZ, _val;
-
 	auto _tp1 = std::chrono::high_resolution_clock::now();
 	for (int _x = 0; _x < WORLD_INITIAL_DIMENSION_BLOCKS; _x++)
 		for (int _z = 0; _z < WORLD_INITIAL_DIMENSION_BLOCKS; _z++)
@@ -56,6 +55,17 @@ void WorldEngine::SetupStartingWorld()
 			_val = heightmap[_x * WORLD_INITIAL_DIMENSION_BLOCKS + _z];
 			BiomeProcessor::ProcessBiome(world, _bX, _val, _bZ);
 		}
+
+	//for (int _x = 0; _x < 10; _x++)
+	//	for (int _z = 0; _z < 10; _z++)
+	//	{
+	//		_bX = -(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f) + _x;
+	//		_bZ = -(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f) + _z;
+	//		_val = heightmap[_ind];
+	//		BiomeProcessor::ProcessBiome(world, _bX, _val, _bZ);
+	//		_ind++;
+	//	}
+
 
 	//rebuild all world segments' buffers?
 
@@ -96,7 +106,7 @@ bool WorldEngine::Initialize()
 		return false;
 
 	auto _t1 = std::chrono::high_resolution_clock::now();
-	heightmap = noise_generator->GetPerlinSet(0, 0, 0, WORLD_INITIAL_DIMENSION_BLOCKS, WORLD_INITIAL_DIMENSION_BLOCKS, 1);
+	heightmap = noise_generator->GetPerlinSet(-(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f), -(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f), 0, WORLD_INITIAL_DIMENSION_BLOCKS, WORLD_INITIAL_DIMENSION_BLOCKS, 1);
 	auto _t2 = std::chrono::high_resolution_clock::now();
 	auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
 	int i = 0;
@@ -141,7 +151,7 @@ void WorldEngine::WorldLoadTick()
 		if (_sector->biome_processed)
 			continue;
 
-		auto _heightmap = noise_generator->GetPerlinSet((int)(_sector->x * SECTOR_WIDTH), 0, (int)(_sector->z * SECTOR_WIDTH), SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE, SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE, 1);
+		auto _heightmap = noise_generator->GetPerlinSet(_sector->x, _sector->z, 0, SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE, SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE , 1);
 
 		BiomeProcessor::ProcessBiome(_heightmap, world, _sector);
 

@@ -79,7 +79,7 @@ void BiomeProcessor::ProcessBiome(float* heightmap, World* world, Sector* sector
 		{
 			_bX = sector->x + (_i * SOLID_BLOCK_SIZE);
 			_bZ = sector->z + (_j * SOLID_BLOCK_SIZE);
-			_val = heightmap[_i * SEGMENT_DIMENSION_SIZE + _j];
+			_val = heightmap[_i * SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE + _j];
 			BiomeProcessor::ProcessBiome(world, _bX, _val, _bZ);
 		}
 }

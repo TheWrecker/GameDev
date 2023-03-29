@@ -81,11 +81,6 @@ void World::Update()
 
 bool World::CreateBlock(BlockType type, float x, float y, float z, bool rebuildSegment)
 {
-	if (x >= 63.0f && x < 64.0f)
-		if (y >= 13.0f && y < 14.0f)
-			if (z >= 9.0f && z < 10.0f)
-				int i = 0;
-
 	SectorIndex _sector_index = GetSectorIndex(x, z);
 	auto _sector = GetSector(_sector_index, true);
 
