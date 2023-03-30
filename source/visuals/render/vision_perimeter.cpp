@@ -64,7 +64,7 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 					for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
 						for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
 						{
-							_segment = _sector->segments[_i][_j][_k];
+							_segment = _sector->segments[_i][_j][_k].load();
 							if (_segment)
 							{
 								XMFLOAT3 _pos = { _segment->Position().x + SEGMENT_LENGTH / 2.0f,

@@ -6,6 +6,7 @@
 #include "sys_profiler.h"
 #include "sys_ticker.h"
 #include "executor.h"
+#include "garbage_collector.h"
 #include "../input/mouse.h"
 #include "../input/keyboard.h"
 #include "../visuals/presenter.h"
@@ -42,6 +43,9 @@ Supervisor::Supervisor(InstanceHandle instance)
 
 	IService* _executor = new Executor(this);
 	services->AdoptService("executor", _executor);
+
+	IService* _garbage_collector = new GarbageCollector();
+	services->AdoptService("garbage_collector", _garbage_collector);
 
 	IService* _mouse = new Mouse();
 	services->AdoptService("mouse", _mouse);

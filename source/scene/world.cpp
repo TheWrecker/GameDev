@@ -68,8 +68,8 @@ void World::SetupDevelopementWorld()
 			for (unsigned int _y = 0; _y < SECTOR_VERTICAL_SIZE; _y++)
 				for (unsigned int _z = 0; _z < SECTOR_HORIZONTAL_SIZE; _z++)
 				{
-					if (_sector.second->segments[_x][_y][_z])
-						_sector.second->segments[_x][_y][_z]->RebuildBuffers();
+					//if (_sector.second->segments[_x][_y][_z].load())
+					//	_sector.second->segments[_x][_y][_z].load()->RebuildBuffers();
 				}
 	}
 
@@ -97,7 +97,7 @@ bool World::CreateBlock(BlockType type, float x, float y, float z, bool rebuildS
 	_segment->SetBlock(_block_index.x, _block_index.y, _block_index.z, type);
 
 	if (rebuildSegment)
-		_segment->RebuildBuffers();
+		_segment->RebuildBuffers(_sector, _segment_index);
 
 	return true;
 }
@@ -121,14 +121,14 @@ Segment* World::GetSegment(Sector* sector, SegmentIndex& index, bool force)
 {
 	assert(index.IsValid());
 
-	auto _result = sector->segments[index.x][index.y][index.z];
+	auto _result = sector->segments[index.x][index.y][index.z].load();
 	if (_result)
 		return _result;
 	else if (force)
 	{
 		auto _segment = new Segment(scene, BlockType::TEST, false, 
 			sector->x + (index.x * SEGMENT_LENGTH), (index.y * SEGMENT_LENGTH), sector->z + (index.z * SEGMENT_LENGTH));
-		sector->segments[index.x][index.y][index.z] = _segment;
+		sector->segments[index.x][index.y][index.z].store(_segment);
 		return _segment;
 	}
 

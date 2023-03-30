@@ -20,6 +20,7 @@
 		WorldEngine(int seed = 0);
 		~WorldEngine();
 
+		void Update() override;
 		bool Initialize() override;
 		void SetupStartingWorld();
 		void StartWorldGeneration();
@@ -44,6 +45,7 @@
 
 		bool enabled;
 		PeriodicTask update_task;
+		ExecutionThread* exec_task;
 		Sector* last_sector;
 		int seed;
 		int range;

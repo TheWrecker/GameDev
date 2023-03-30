@@ -2,6 +2,7 @@
 #ifndef SEGMENT_H
 	#define SEGMENT_H
 
+	#include <mutex>
 	#include <memory>
 	#include <DirectXMath.h>
 
@@ -11,6 +12,7 @@
 	#include "../visuals/elements/buffer_vertex.h"
 
 	class IndexBuffer;
+	class Sector;
 	class Scene;
 
 	class Segment
@@ -25,7 +27,7 @@
 		void SetType(BlockType type);
 		void Fill(BlockType type);
 		void Move(float x, float y, float z);
-		void RebuildBuffers();
+		void RebuildBuffers(Sector* parent, SegmentIndex index);
 
 		const DirectX::XMMATRIX World_Matrix();
 		const DirectX::XMFLOAT3& Position();
@@ -33,16 +35,17 @@
 		IndexBuffer* GetIndexBuffer();
 		bool IsEmpty();
 
+		std::mutex draw_mutex;
 		BlockType blocks[SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE][SEGMENT_DIMENSION_SIZE];
 		bool biome_processed;
+		unsigned int block_count;
 
 	private:
 		friend class SolidBlockProcessor;
 		Scene* scene;
 
 		BlockType default_type;
-		unsigned int block_count;
-		const DirectX::XMFLOAT3 position;
+		DirectX::XMFLOAT3 position;
 
 		std::unique_ptr<VertexBuffer<SolidBlockVertex>> vertex_buffer;
 		std::unique_ptr<IndexBuffer> index_buffer;

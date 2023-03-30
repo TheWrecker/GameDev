@@ -304,6 +304,9 @@
     <ClCompile Include="source\scene\assets\texture_atlas.cpp">
       <Filter>source\scene\assets</Filter>
     </ClCompile>
+    <ClCompile Include="source\core\garbage_collector.cpp">
+      <Filter>source\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\platform.h">
@@ -563,6 +566,9 @@
     </ClInclude>
     <ClInclude Include="source\scene\compartments\sector.h">
       <Filter>source\scene\compartments</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\garbage_collector.h">
+      <Filter>source\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

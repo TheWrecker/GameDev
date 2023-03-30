@@ -24,7 +24,7 @@ constexpr auto
 
 WorldEngine::WorldEngine(int targetSeed)
 	:scene(nullptr), player(nullptr), world(nullptr), seed(targetSeed), heightmap(nullptr), last_sector(nullptr), range(2),
-	enabled(false)
+	enabled(false), exec_task(nullptr)
 {
 	if (seed == 0) //no seed passed, calculate one
 	{
@@ -36,14 +36,18 @@ WorldEngine::WorldEngine(int targetSeed)
 	}
 	noise_generator = std::unique_ptr<FastNoiseSIMD>(FastNoiseSIMD::NewFastNoiseSIMD(seed));
 	noise_generator->SetFrequency(0.02);
-	near_sectors.reserve(25);
+	near_sectors.reserve(50);
 }
 
 WorldEngine::~WorldEngine()
 {
 	noise_generator->FreeNoiseSet(heightmap);
 	if (Supervisor::GetLastInstance()->IsExecutorAvailable())
-		executor->RemovePeriodicTask(update_task);
+	{
+		//executor->RemovePeriodicTask(update_task);
+		/*if (exec_task)
+			executor->StopExecution(exec_task);*/
+	}
 }
 
 void WorldEngine::SetupStartingWorld()
@@ -74,8 +78,11 @@ void WorldEngine::SetupStartingWorld()
 			for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
 				for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
 				{
-					if (_sector.second->segments[_i][_j][_k])
-						_sector.second->segments[_i][_j][_k]->RebuildBuffers();
+					if (_sector.second->segments[_i][_j][_k].load())
+					{
+						_sector.second->segments[_i][_j][_k].load()->RebuildBuffers(_sector.second, SegmentIndex(_i, _j, _k));
+						_sector.second->segments[_i][_j][_k].load()->biome_processed = true;
+					}
 				}
 
 		_sector.second->biomes_processed = true;
@@ -89,6 +96,33 @@ void WorldEngine::SetupStartingWorld()
 		}
 
 	last_sector = world->GetSector(player->Position().x, player->Position().z);
+}
+
+void WorldEngine::Update()
+{
+	Player* player = scene->GetPlayer();
+	if (!player)
+		return;
+
+	auto _current_sector = world->GetSector(player->Position().x, player->Position().z);
+	if (_current_sector == last_sector)
+		return;
+
+	if (!_current_sector)
+		return;
+
+	auto _t1 = std::chrono::high_resolution_clock::now();
+
+	//collect the sectors in immediate vicinity of the player
+	near_sectors.clear();
+
+	for (int _i = -range; _i < range + 1; _i++)
+		for (int _j = -range; _j < range + 1; _j++)
+		{
+			auto _sector = world->GetSector(_current_sector->x + (_i * SECTOR_WIDTH), _current_sector->z + (_j * SECTOR_WIDTH), true);
+			if (_sector)
+				near_sectors.push_back(_sector);
+		}
 }
 
 bool WorldEngine::Initialize()
@@ -119,11 +153,21 @@ bool WorldEngine::Initialize()
 void WorldEngine::StartWorldGeneration()
 {
 	enabled = true;
+
+	if (exec_task)
+	{
+		exec_task->ResumeExecution();
+		return;
+	}
+
+	exec_task = executor->StartExecution(std::bind(&WorldEngine::WorldLoadTick, this));
+
 }
 
 void WorldEngine::StopWorldGeneration()
 {
 	enabled = false;
+	exec_task->PauseExecution();
 }
 
 void WorldEngine::WorldLoadTick()
@@ -131,26 +175,6 @@ void WorldEngine::WorldLoadTick()
 	Player* player = scene->GetPlayer();
 	if (!player)
 		return;
-
-	auto _current_sector = world->GetSector(player->Position().x, player->Position().z);
-	if (_current_sector == last_sector)
-		return;
-
-	if (!_current_sector)
-		return;
-
-	auto _t1 = std::chrono::high_resolution_clock::now();
-
-	//collect the sectors in immediate vicinity of the player
-	near_sectors.clear();
-
-	for (int _i = -range; _i < range + 1; _i++)
-		for (int _j = -range; _j < range + 1; _j++)
-		{
-			auto _sector = world->GetSector(_current_sector->x + (_i * SECTOR_WIDTH), _current_sector->z + (_j * SECTOR_WIDTH), true);
-			if (_sector)
-				near_sectors.push_back(_sector);
-		}
 
 	if (!enabled)
 		return;
@@ -163,7 +187,7 @@ void WorldEngine::WorldLoadTick()
 		for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
 			for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
 			{
-				auto _temp_seg = _sector->segments[_i][0][_k];
+				auto _temp_seg = _sector->segments[_i][0][_k].load();
 
 				if (_temp_seg)
 				{
@@ -177,9 +201,12 @@ void WorldEngine::WorldLoadTick()
 				auto _heightmap = noise_generator->GetPerlinSet(_sector->x + _i * SEGMENT_LENGTH, _sector->z + _k * SEGMENT_LENGTH, 0,
 					SEGMENT_DIMENSION_SIZE, SEGMENT_DIMENSION_SIZE, 1);
 
-				for (unsigned int _t = 0; _t < 6; _t++)
+				Segment* _segs[5];
+
+				for (unsigned int _t = 0; _t < 5; _t++)
 				{
-					_sector->CreateSegment(SegmentIndex(_i, _t, _k));
+					_segs[_t] = new Segment(scene, BlockType::TEST, false, _sector->x + _i * SEGMENT_LENGTH,
+						_t * SEGMENT_LENGTH, _sector->z + _k * SEGMENT_LENGTH);
 				}
 
 				for (unsigned int _m = 0; _m < SEGMENT_DIMENSION_SIZE; _m++)
@@ -188,35 +215,47 @@ void WorldEngine::WorldLoadTick()
 						auto _value = _heightmap[_m * SEGMENT_DIMENSION_SIZE + _n] * 20.0f + 20.0f;
 						auto _indY = (unsigned int)_value / SEGMENT_DIMENSION_SIZE;
 
-						auto _segment = _sector->segments[_i][_indY][_k];
+						auto _segment = _segs[_indY];
 						BiomeProcessor::ProcessSegmentColumn(_segment, _m, _n, _value);
 
 						for (int _o = _indY - 1; _o > -1; _o--)
 						{
-							auto _underlying_segment = _sector->segments[_i][_o][_k];
+							auto _underlying_segment = _segs[_o];
 							BiomeProcessor::FillUnderlyingColumn(_underlying_segment, _m, _n, _o);
-							_underlying_segment->biome_processed = true;
-							//_underlying_segment->RebuildBuffers();
 						}
 
-						_segment->biome_processed = true;
-						//_segment->RebuildBuffers();
 					}
+				
 
+				for (unsigned int _q = 0; _q < 5; _q++)
+				{
+					if (_segs[_q]->block_count > 0)
+					{
+						_segs[_q]->RebuildBuffers(_sector, SegmentIndex(_i, _q, _k));
+						_segs[_q]->biome_processed = true;
+						_sector->AddSegment(_segs[_q], SegmentIndex(_i, _q, _k));
+
+					}
+					else
+					{
+						delete _segs[_q];
+					}
+				}
+				
 				noise_generator->FreeNoiseSet(_heightmap);
 				return;
 			}
 
-		if (_count == SECTOR_HORIZONTAL_SIZE * SECTOR_HORIZONTAL_SIZE)
+		/*if (_count == SECTOR_HORIZONTAL_SIZE * SECTOR_HORIZONTAL_SIZE)
 		{
 			_sector->biomes_processed = true;
 			RebuildSector(_sector);
-		}
+		}*/
 	}
-	auto _t2 = std::chrono::high_resolution_clock::now();
-	auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
-	if (_ti > 1.5f)
-		int i = 0;
+	//auto _t2 = std::chrono::high_resolution_clock::now();
+	//auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
+	//if (_ti > 1.5f)
+	//	int i = 0;
 }
 
 void WorldEngine::RebuildSector(Sector* target)
@@ -225,8 +264,8 @@ void WorldEngine::RebuildSector(Sector* target)
 		for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
 			for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
 			{
-				if (target->segments[_i][_j][_k])
-					target->segments[_i][_j][_k]->RebuildBuffers();
+				if (target->segments[_i][_j][_k].load())
+					target->segments[_i][_j][_k].load()->RebuildBuffers(target, SegmentIndex(_i,_j,_k));
 			}
 
 }

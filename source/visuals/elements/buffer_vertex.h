@@ -11,7 +11,7 @@
 	class VertexBuffer
 	{
 	public:
-		VertexBuffer(ID3D11Device* device = nullptr, ID3D11DeviceContext* context = nullptr, std::size_t reserve = 2000);
+		VertexBuffer(ID3D11Device* device = nullptr, ID3D11DeviceContext* context = nullptr, std::size_t reserve = 3000);
 		~VertexBuffer();
 		void Initialize(ID3D11Device* device, ID3D11DeviceContext* context);
 

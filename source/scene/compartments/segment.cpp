@@ -28,7 +28,7 @@ Segment::Segment(Scene* scene, BlockType type, bool fill, float x, float y, floa
     if (fill)
     {
         Fill(default_type);
-        RebuildBuffers();
+        //RebuildBuffers();
     }
 }
 
@@ -81,17 +81,17 @@ void Segment::RemoveBlock(unsigned int x, unsigned int y, unsigned int z)
     block_count--;
 }
 
-void Segment::RebuildBuffers()
+void Segment::RebuildBuffers(Sector* parent, SegmentIndex index)
 {
-    SolidBlockProcessor::Rebuild(this);
+    SolidBlockProcessor::Rebuild(parent, this, index);
 }
 
-DirectX::XMMATRIX Segment::World_Matrix()
+const DirectX::XMMATRIX Segment::World_Matrix()
 {
     return DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 }
 
-DirectX::XMFLOAT3 Segment::Position()
+const DirectX::XMFLOAT3& Segment::Position()
 {
     return position;
 }

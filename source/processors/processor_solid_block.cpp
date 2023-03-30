@@ -6,6 +6,7 @@
 #include "../scene/assets/texture_atlas.h"
 #include "../entities/block_solid.h"
 #include "../scene/compartments/segment.h"
+#include "../scene/compartments/sector.h"
 #include "../scene/world.h"
 #include "../scene/scene.h"
 #include "../core/supervisor.h"
@@ -167,61 +168,111 @@ const std::vector<unsigned int> Indices = {
 	0, 2, 3
 };
 
-unsigned int SolidBlockProcessor::index_x = 0;
-unsigned int SolidBlockProcessor::index_y = 0;
-unsigned int SolidBlockProcessor::index_z = 0;
-unsigned int SolidBlockProcessor::solids = 0;
-unsigned int SolidBlockProcessor::current_index = 0;
-DirectX::XMFLOAT3 SolidBlockProcessor::position = {};
+thread_local unsigned int SolidBlockProcessor::index_x = 0;
+thread_local unsigned int SolidBlockProcessor::index_y = 0;
+thread_local unsigned int SolidBlockProcessor::index_z = 0;
+thread_local unsigned int SolidBlockProcessor::solids = 0;
+thread_local unsigned int SolidBlockProcessor::current_index = 0;
+thread_local DirectX::XMFLOAT3 SolidBlockProcessor::position = {};
 
 TextureAtlas* SolidBlockProcessor::texture_atlas = nullptr;
 World* SolidBlockProcessor::world = nullptr;
 
-bool SolidBlockProcessor::CheckNextSegmentBlock(FaceName face)
+bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& index, FaceName face)
 {
+	//TODO: check even the adjacent sectors
+
 	BlockType _block = BlockType::EMPTY;
 	switch (face)
 	{
 		case FaceName::LEFT:
 		{
-			_block = world->GetBlock(position.x - HALF_BLOCK_SIZE, position.y, position.z);
+			if (index.x == 0)
+				return true;
+
+			auto _segment = sector->segments[index.x - 1][index.y][index.z].load();
+			if (!_segment)
+				return true;
+
+			_block = _segment->blocks[SEGMENT_DIMENSION_SIZE - 1][index_y][index_z];
 			if (_block == BlockType::EMPTY)
 				return true;
+
 			break; 
 		}
 		case FaceName::RIGHT:
 		{
-			_block = world->GetBlock(position.x + THREEHALVES_BLOCK_SIZE, position.y, position.z);
+			if (index.x == SECTOR_HORIZONTAL_SIZE - 1)
+				return true;
+
+			auto _segment = sector->segments[index.x + 1][index.y][index.z].load();
+			if (!_segment)
+				return true;
+
+			_block = _segment->blocks[0][index_y][index_z];
 			if (_block == BlockType::EMPTY)
 				return true;
+
 			break;
 		}
 		case FaceName::TOP:
 		{
-			_block = world->GetBlock(position.x, position.y + THREEHALVES_BLOCK_SIZE, position.z);
+			if (index.y == SECTOR_VERTICAL_SIZE - 1)
+				return true;
+
+			auto _segment = sector->segments[index.x][index.y + 1][index.z].load();
+			if (!_segment)
+				return true;
+
+			_block = _segment->blocks[index_x][0][index_z];
 			if (_block == BlockType::EMPTY)
 				return true;
+
 			break;
 		}
 		case FaceName::BOTTOM:
 		{
-			_block = world->GetBlock(position.x, position.y - HALF_BLOCK_SIZE, position.z);
+			if (index.y == 0)
+				return true;
+
+			auto _segment = sector->segments[index.x][index.y - 1][index.z].load();
+			if (!_segment)
+				return true;
+
+			_block = _segment->blocks[index_x][SEGMENT_DIMENSION_SIZE - 1][index_z];
 			if (_block == BlockType::EMPTY)
 				return true;
+
 			break;
 		}
 		case FaceName::FRONT:
 		{
-			_block = world->GetBlock(position.x, position.y, position.z - HALF_BLOCK_SIZE);
+			if (index.z == 0)
+				return true;
+
+			auto _segment = sector->segments[index.x][index.y][index.z - 1].load();
+			if (!_segment)
+				return true;
+
+			_block = _segment->blocks[index_x][index_y][SEGMENT_DIMENSION_SIZE - 1];
 			if (_block == BlockType::EMPTY)
 				return true;
+
 			break;
 		}
 		case FaceName::BACK:
 		{
-			_block = world->GetBlock(position.x, position.y, position.z + THREEHALVES_BLOCK_SIZE);
+			if (index.z == SECTOR_HORIZONTAL_SIZE - 1)
+				return true;
+
+			auto _segment = sector->segments[index.x][index.y][index.z + 1].load();
+			if (!_segment)
+				return true;
+
+			_block = _segment->blocks[index_x][index_y][0];
 			if (_block == BlockType::EMPTY)
 				return true;
+
 			break;
 		}
 		default:
@@ -230,14 +281,14 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(FaceName face)
 	return false;
 }
 
-bool SolidBlockProcessor::CheckBlockFace(Segment* segment, FaceName face)
+bool SolidBlockProcessor::CheckBlockFace(Sector* sector, Segment* segment, SegmentIndex& index, FaceName face)
 {
 	switch (face)
 	{
 		case FaceName::LEFT:
 		{
 			if (index_x == 0)
-				return CheckNextSegmentBlock(face);
+				return CheckNextSegmentBlock(sector, index, face);
 
 			if (segment->blocks[index_x - 1][index_y][index_z] == BlockType::EMPTY)
 				return true;
@@ -247,7 +298,7 @@ bool SolidBlockProcessor::CheckBlockFace(Segment* segment, FaceName face)
 		case FaceName::RIGHT:
 		{
 			if (index_x == SEGMENT_DIMENSION_SIZE - 1)
-				return CheckNextSegmentBlock(face);
+				return CheckNextSegmentBlock(sector, index, face);
 
 			if (segment->blocks[index_x + 1][index_y][index_z] == BlockType::EMPTY)
 				return true;
@@ -257,7 +308,7 @@ bool SolidBlockProcessor::CheckBlockFace(Segment* segment, FaceName face)
 		case FaceName::TOP:
 		{
 			if (index_y == SEGMENT_DIMENSION_SIZE - 1)
-				return CheckNextSegmentBlock(face);
+				return CheckNextSegmentBlock(sector, index, face);
 
 			if (segment->blocks[index_x][index_y + 1][index_z] == BlockType::EMPTY)
 				return true;
@@ -266,7 +317,7 @@ bool SolidBlockProcessor::CheckBlockFace(Segment* segment, FaceName face)
 		case FaceName::BOTTOM:
 		{
 			if (index_y == 0)
-				return CheckNextSegmentBlock(face);
+				return CheckNextSegmentBlock(sector, index, face);
 
 			if (segment->blocks[index_x][index_y - 1][index_z] == BlockType::EMPTY)
 				return true;
@@ -275,7 +326,7 @@ bool SolidBlockProcessor::CheckBlockFace(Segment* segment, FaceName face)
 		case FaceName::FRONT:
 		{
 			if (index_z == 0)
-				return CheckNextSegmentBlock(face);
+				return CheckNextSegmentBlock(sector, index, face);
 
 			if (segment->blocks[index_x][index_y][index_z - 1] == BlockType::EMPTY)
 				return true;
@@ -285,7 +336,7 @@ bool SolidBlockProcessor::CheckBlockFace(Segment* segment, FaceName face)
 		case FaceName::BACK:
 		{
 			if (index_z == SEGMENT_DIMENSION_SIZE - 1)
-				return CheckNextSegmentBlock(face);
+				return CheckNextSegmentBlock(sector, index, face);
 
 			if (segment->blocks[index_x][index_y][index_z + 1] == BlockType::EMPTY)
 				return true;
@@ -329,7 +380,7 @@ bool SolidBlockProcessor::Setup()
 	return texture_atlas && world;
 }
 
-void SolidBlockProcessor::Rebuild(Segment* target)
+void SolidBlockProcessor::Rebuild(Sector* sector, Segment* target, SegmentIndex index)
 {
 	if (!texture_atlas)
 		return;
@@ -338,6 +389,8 @@ void SolidBlockProcessor::Rebuild(Segment* target)
 	target->index_buffer->Clear();
 	index_x = index_y = index_z = solids = current_index = 0;
 	BlockType _block = BlockType::EMPTY;
+
+	SegmentIndex _index = index;
 
 	//TODO: better approach/algorithm
 	for (index_x = 0; index_x < SEGMENT_DIMENSION_SIZE; index_x++)
@@ -352,22 +405,22 @@ void SolidBlockProcessor::Rebuild(Segment* target)
 				position.y = target->position.y + (index_y * SOLID_BLOCK_SIZE);
 				position.z = target->position.z + (index_z * SOLID_BLOCK_SIZE);
 
-				if (CheckBlockFace(target, FaceName::LEFT))
+				if (CheckBlockFace(sector, target, _index, FaceName::LEFT))
 					AddFaceVertices(target, LeftFace);
 
-				if (CheckBlockFace(target, FaceName::RIGHT))
+				if (CheckBlockFace(sector, target, _index, FaceName::RIGHT))
 					AddFaceVertices(target, RightFace);
 
-				if (CheckBlockFace(target, FaceName::TOP))
+				if (CheckBlockFace(sector, target, _index, FaceName::TOP))
 					AddFaceVertices(target, TopFace);
 
-				if (CheckBlockFace(target, FaceName::BOTTOM))
+				if (CheckBlockFace(sector, target, _index, FaceName::BOTTOM))
 					AddFaceVertices(target, BottomFace);
 
-				if (CheckBlockFace(target, FaceName::FRONT))
+				if (CheckBlockFace(sector, target, _index, FaceName::FRONT))
 					AddFaceVertices(target, FrontFace);
 
-				if (CheckBlockFace(target, FaceName::BACK))
+				if (CheckBlockFace(sector, target, _index, FaceName::BACK))
 					AddFaceVertices(target, BackFace);
 			}
 	

@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\core\executor.cpp" />
+    <ClCompile Include="source\core\garbage_collector.cpp" />
     <ClCompile Include="source\core\service_manager.cpp" />
     <ClCompile Include="source\core\platform.cpp" />
     <ClCompile Include="source\core\supervisor.cpp" />
@@ -240,6 +241,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\executor.h" />
+    <ClInclude Include="source\core\garbage_collector.h" />
     <ClInclude Include="source\core\platform.h" />
     <ClInclude Include="source\core\service_manager.h" />
     <ClInclude Include="source\core\supervisor.h" />

@@ -57,10 +57,18 @@ void SolidBlockRender::Render()
 	pixel_shader->Apply();
 	input_layout->Bind();
 
+	if (render_segments.empty())
+		return;
+
 	for (auto _segment : render_segments)
 	{
+		if (!_segment)
+			continue;
+
 		if (_segment->IsEmpty())
 			continue;
+
+		_segment->draw_mutex.lock();
 
 		DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_segment->World_Matrix()) };
 		per_object_buffer->Update(_cb);
@@ -68,5 +76,7 @@ void SolidBlockRender::Render()
 		_segment->GetVertexBuffer()->Bind(1);
 		_segment->GetIndexBuffer()->Bind();
 		context->DrawIndexed(_segment->GetIndexBuffer()->GetIndexCount(), 0, 0);
+
+		_segment->draw_mutex.unlock();
 	}
 }

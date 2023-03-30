@@ -14,10 +14,16 @@ Executor::Executor(Supervisor* parent)
 
 Executor::~Executor()
 {
-    for (auto _thread : execution_threads)
+    while (execution_threads.size() > 0)
     {
-        StopExecution(_thread);
+        auto _thread = execution_threads.front();
+
+        if (_thread)
+        {
+            StopExecution(_thread);
+        }
     }
+
     supervisor->ExecutorDestroyed();
 }
 
