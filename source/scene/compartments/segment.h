@@ -27,8 +27,8 @@
 		void Move(float x, float y, float z);
 		void RebuildBuffers();
 
-		DirectX::XMMATRIX World_Matrix();
-		DirectX::XMFLOAT3 Position();
+		const DirectX::XMMATRIX World_Matrix();
+		const DirectX::XMFLOAT3& Position();
 		VertexBuffer<SolidBlockVertex>* GetVertexBuffer();
 		IndexBuffer* GetIndexBuffer();
 		bool IsEmpty();
@@ -42,7 +42,7 @@
 
 		BlockType default_type;
 		unsigned int block_count;
-		DirectX::XMFLOAT3 position;
+		const DirectX::XMFLOAT3 position;
 
 		std::unique_ptr<VertexBuffer<SolidBlockVertex>> vertex_buffer;
 		std::unique_ptr<IndexBuffer> index_buffer;

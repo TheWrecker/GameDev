@@ -30,6 +30,8 @@
 		std::vector<Sector*> near_sectors;
 
 	private:
+		friend Scene;
+
 		void LoadWorld(float x, float z);
 		void WorldLoadTick();
 

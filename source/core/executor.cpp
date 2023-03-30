@@ -133,6 +133,7 @@ void Executor::StopExecution(ExecutionThread* target)
     target->shutdown = true;
     target->exec_thread.join();
     auto _num = execution_threads.remove(target);
+    delete target;
     thread_count -= (unsigned int)_num;
 }
 

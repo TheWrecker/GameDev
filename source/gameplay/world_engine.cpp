@@ -17,6 +17,10 @@
 #include "../core/supervisor.h"
 
 #include "world_engine.h"
+constexpr auto 
+	WORLD_INITIAL_DIMENSION_SIZE = 20, //segments in each dimension
+	WORLD_INITIAL_DIMENSION_BLOCKS = WORLD_INITIAL_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE,
+	WORLD_INITIAL_SIZE = WORLD_INITIAL_DIMENSION_SIZE * WORLD_INITIAL_DIMENSION_SIZE;
 
 WorldEngine::WorldEngine(int targetSeed)
 	:scene(nullptr), player(nullptr), world(nullptr), seed(targetSeed), heightmap(nullptr), last_sector(nullptr), range(2),
@@ -31,6 +35,7 @@ WorldEngine::WorldEngine(int targetSeed)
 			assert(false); //time since epoch is negative, what do you expect?
 	}
 	noise_generator = std::unique_ptr<FastNoiseSIMD>(FastNoiseSIMD::NewFastNoiseSIMD(seed));
+	noise_generator->SetFrequency(0.02);
 	near_sectors.reserve(25);
 }
 
@@ -106,7 +111,7 @@ bool WorldEngine::Initialize()
 	auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
 	int i = 0;
 
-	update_task = executor->RegisterPeriodicTask(std::bind(&WorldEngine::WorldLoadTick, this), 50, false);
+	//update_task = executor->RegisterPeriodicTask(std::bind(&WorldEngine::WorldLoadTick, this), 25, false);
 
 	return true;
 }
@@ -191,11 +196,11 @@ void WorldEngine::WorldLoadTick()
 							auto _underlying_segment = _sector->segments[_i][_o][_k];
 							BiomeProcessor::FillUnderlyingColumn(_underlying_segment, _m, _n, _o);
 							_underlying_segment->biome_processed = true;
-							_underlying_segment->RebuildBuffers();
+							//_underlying_segment->RebuildBuffers();
 						}
 
 						_segment->biome_processed = true;
-						_segment->RebuildBuffers();
+						//_segment->RebuildBuffers();
 					}
 
 				noise_generator->FreeNoiseSet(_heightmap);

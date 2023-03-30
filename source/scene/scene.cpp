@@ -117,7 +117,7 @@ void Scene::Update()
 	player->Update();
 	active_camera->Update();
 	world->Update();
-	//world_engine->WorldLoadTick();
+	world_engine->WorldLoadTick();
 }
 
 void Scene::SwitchCameraType(CameraType type)

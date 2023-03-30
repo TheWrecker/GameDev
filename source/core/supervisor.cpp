@@ -142,7 +142,8 @@ void Supervisor::PassControl()
 	_scene->SwitchMode(SceneMode::DEVELOPEMENT);
 
 	//start the executor
-	QueryService<Executor*>("executor")->Resume();
+	auto _executor = QueryService<Executor*>("executor");
+	_executor->Resume();
 
 	//start the input handler
 	QueryService<InputHandler*>("input_handler")->Resume();
@@ -150,6 +151,15 @@ void Supervisor::PassControl()
 	//begin the main engine loop
 	auto _platform = QueryService<Platform*>("platform");
 	auto _presenter = QueryService<Presenter*>("presenter");
+
+	//test
+	auto _draw_func = [&]()
+	{
+		_presenter->Draw();
+		_presenter->Present();
+	};
+	//auto _ret_f = _executor->StartExecution(_draw_func);
+
 	while (!_platform->ProcessPlatformMessages())
 	{
 		//update all services
@@ -162,4 +172,6 @@ void Supervisor::PassControl()
 		_presenter->Draw();
 		_presenter->Present();
 	}
+
+	//_executor->StopExecution(_ret_f);
 }
