@@ -28,7 +28,7 @@ void World::SetupDevelopementWorld()
 	for (int i = -5; i < 5; i++)
 		for (int j = -5; j < 5; j++)
 		{
-			auto _segment = GetSegment(i * SEGMENT_LENGTH, 0.0f, j * SEGMENT_LENGTH, true);
+			auto _segment = GetSegment((float)(i * SEGMENT_LENGTH), 0.0f, (float)(j * SEGMENT_LENGTH), true);
 			auto _rand = abs((i % 3) + (j % 3));
 			switch (_rand)
 			{
@@ -97,7 +97,7 @@ bool World::CreateBlock(BlockType type, float x, float y, float z, bool rebuildS
 	_segment->SetBlock(_block_index.x, _block_index.y, _block_index.z, type);
 
 	if (rebuildSegment)
-		_segment->RebuildBuffers(_sector, _segment_index);
+		_segment->RebuildBuffers();
 
 	return true;
 }
@@ -127,7 +127,7 @@ Segment* World::GetSegment(Sector* sector, SegmentIndex& index, bool force)
 	else if (force)
 	{
 		auto _segment = new Segment(scene, BlockType::TEST, false, 
-			sector->x + (index.x * SEGMENT_LENGTH), (index.y * SEGMENT_LENGTH), sector->z + (index.z * SEGMENT_LENGTH));
+			sector->x + (index.x * SEGMENT_LENGTH), (float)(index.y * SEGMENT_LENGTH), sector->z + (index.z * SEGMENT_LENGTH));
 		sector->segments[index.x][index.y][index.z].store(_segment);
 		return _segment;
 	}
@@ -143,7 +143,7 @@ Sector* World::GetSector(float x, float z, bool force)
 		return _result->second;
 	else if (force)
 	{
-		auto _sector = new Sector(scene, _index.x * SECTOR_WIDTH, _index.z * SECTOR_WIDTH);
+		auto _sector = new Sector(scene, (float)(_index.x * SECTOR_WIDTH), (float)(_index.z * SECTOR_WIDTH));
 		sectors.insert(std::pair(_index, _sector));
 		return _sector;
 	}
@@ -161,7 +161,7 @@ Segment* World::CreateSegment(float x, float y, float z)
 		return _result->second->GetSegment(_segment_index, true);
 	else
 	{
-		auto _sector = new Sector(scene, _sector_index.x * SECTOR_WIDTH, _sector_index.z * SECTOR_WIDTH);
+		auto _sector = new Sector(scene, (float)(_sector_index.x * SECTOR_WIDTH), (float)(_sector_index.z * SECTOR_WIDTH));
 		sectors.insert(std::pair(_sector_index, _sector));
 		return _sector->CreateSegment(_segment_index);
 	}
@@ -201,7 +201,7 @@ Sector* World::GetSector(SectorIndex& index, bool force)
 		return _result->second;
 	else if (force)
 	{
-		auto _sector = new Sector(scene, index.x * SECTOR_WIDTH, index.z * SECTOR_WIDTH);
+		auto _sector = new Sector(scene, (float)(index.x * SECTOR_WIDTH), (float)(index.z * SECTOR_WIDTH));
 		sectors.insert(std::pair(index, _sector));
 		return _sector;
 	}

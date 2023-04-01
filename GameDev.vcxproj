@@ -276,6 +276,7 @@
     <ClInclude Include="source\external\ImGui\imstb_rectpack.h" />
     <ClInclude Include="source\external\ImGui\imstb_textedit.h" />
     <ClInclude Include="source\external\ImGui\imstb_truetype.h" />
+    <ClInclude Include="source\external\MPMC Queue.h" />
     <ClInclude Include="source\gameplay\items\item_container.h" />
     <ClInclude Include="source\gameplay\items\item_stack.h" />
     <ClInclude Include="source\gameplay\physics\collision_physics.h" />

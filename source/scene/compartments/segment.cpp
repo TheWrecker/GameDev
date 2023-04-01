@@ -11,8 +11,8 @@ Segment::Segment(Scene* scene, BlockType type, bool fill, float x, float y, floa
     :default_type(type), blocks(), scene(scene), block_count(0), biome_processed(false)
 {
     position = { x, y, z };
-    vertex_buffer = std::make_unique<VertexBuffer<SolidBlockVertex>>(scene->GetDevice(), scene->GetContext());
-    index_buffer = std::make_unique<IndexBuffer>(scene->GetDevice(), scene->GetContext());
+    vertex_buffer = new VertexBuffer<SolidBlockVertex>(scene->GetDevice(), scene->GetContext());
+    index_buffer = new IndexBuffer(scene->GetDevice(), scene->GetContext());
 
     for (unsigned int i = 0; i < SEGMENT_DIMENSION_SIZE; i++)
     {
@@ -34,7 +34,8 @@ Segment::Segment(Scene* scene, BlockType type, bool fill, float x, float y, floa
 
 Segment::~Segment()
 {
-
+    delete vertex_buffer;
+    delete index_buffer;
 }
 
 void Segment::SetType(BlockType type)
@@ -45,7 +46,6 @@ void Segment::SetType(BlockType type)
 void Segment::Move(float x, float y, float z)
 {
     position = { x, y, z };
-    //RebuildBuffers();
 }
 
 void Segment::Fill(BlockType type)
@@ -62,6 +62,7 @@ void Segment::Fill(BlockType type)
         }
     }
     block_count = SEGMENT_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE;
+    mesh_rebuilt.store(false);
 }
 
 void Segment::SetBlock(unsigned int x, unsigned int y, unsigned int z, BlockType type)
@@ -70,6 +71,7 @@ void Segment::SetBlock(unsigned int x, unsigned int y, unsigned int z, BlockType
         block_count++;
 
     blocks[x][y][z] = type;
+    mesh_rebuilt.store(false);
 }
 
 void Segment::RemoveBlock(unsigned int x, unsigned int y, unsigned int z)
@@ -79,12 +81,20 @@ void Segment::RemoveBlock(unsigned int x, unsigned int y, unsigned int z)
 
     blocks[x][y][z] = BlockType::EMPTY;
     block_count--;
+    mesh_rebuilt.store(false);
 }
 
-void Segment::RebuildBuffers(Sector* parent, SegmentIndex index)
+//------------------------------ THREAD INFO ------------------------------
+// EXCLUSIVELY CALLED FROM THE MAIN THREAD AND NOT OTHER THREADS
+//-------------------------------------------------------------------------
+void Segment::RebuildBuffers()
 {
-    SolidBlockProcessor::Rebuild(parent, this, index);
+    SolidBlockProcessor::RebuildSegmentSingle(this);
+    //we don't set mesh_rebuilt to true here, since we need to process the segment against adjacent segments and sectors
+    //instead we create a preliminary mesh to prevent visual artifacts and then later finalize the mesh which
+    //we do in the WorldEngine tick
 }
+//-------------------------------------------------------------------------
 
 const DirectX::XMMATRIX Segment::World_Matrix()
 {
@@ -98,12 +108,12 @@ const DirectX::XMFLOAT3& Segment::Position()
 
 VertexBuffer<SolidBlockVertex>* Segment::GetVertexBuffer()
 {
-    return vertex_buffer.get();
+    return vertex_buffer;
 }
 
 IndexBuffer* Segment::GetIndexBuffer()
 {
-    return index_buffer.get();
+    return index_buffer;
 }
 
 bool Segment::IsEmpty()

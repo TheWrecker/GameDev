@@ -21,7 +21,7 @@ void FinishDigEvent::Fire()
     auto _segment_index = GetSegmentIndex(position.x, position.y, position.z);
     auto _sector = player->GetWorld()->GetSector(position.x, position.z);
     _segment->RemoveBlock(_block_index.x, _block_index.y, _block_index.z);
-    _segment->RebuildBuffers(_sector, _segment_index);
+    _segment->RebuildBuffers();
 
     auto _event = new BlockDiggedEvent(parent, player, block_type, position);
     parent->FeedEvent(_event);

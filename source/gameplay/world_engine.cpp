@@ -6,12 +6,15 @@
 #include "../external/FastNoiseSIMD/FastNoiseSIMD.h"
 
 #include "defs_world.h"
+#include "../core/garbage_collector.h"
+#include "../visuals/elements/buffer_index.h"
 #include "../entities/player.h"
 #include "../scene/compartments/segment.h"
 #include "../scene/compartments/sector.h"
 #include "../scene/world.h"
 #include "../scene/scene.h"
 #include "../processors/processor_biome.h"
+#include "../processors/processor_solid_block.h"
 #include "../scene/scene.h"
 #include "../core/executor.h"
 #include "../core/supervisor.h"
@@ -35,7 +38,7 @@ WorldEngine::WorldEngine(int targetSeed)
 			assert(false); //time since epoch is negative, what do you expect?
 	}
 	noise_generator = std::unique_ptr<FastNoiseSIMD>(FastNoiseSIMD::NewFastNoiseSIMD(seed));
-	noise_generator->SetFrequency(0.02);
+	noise_generator->SetFrequency(0.02f);
 	near_sectors.reserve(50);
 }
 
@@ -72,16 +75,19 @@ void WorldEngine::SetupStartingWorld()
 
 	//rebuild all world segments' buffers?
 
+	Segment* _segment = nullptr;
 	for (auto& _sector : world->sectors)
 	{
 		for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
 			for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
 				for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
 				{
-					if (_sector.second->segments[_i][_j][_k].load())
+					_segment = _sector.second->segments[_i][_j][_k].load();
+					if (_segment)
 					{
-						_sector.second->segments[_i][_j][_k].load()->RebuildBuffers(_sector.second, SegmentIndex(_i, _j, _k));
-						_sector.second->segments[_i][_j][_k].load()->biome_processed = true;
+						SolidBlockProcessor::RebuildSegmentInSector(_sector.second, _segment, SegmentIndex(_i, _j, _k),
+							_segment->vertex_buffer, _segment->index_buffer);
+						_segment->biome_processed = true;
 					}
 				}
 
@@ -129,8 +135,9 @@ bool WorldEngine::Initialize()
 {
 	scene = Supervisor::QueryService<Scene*>("scene");
 	executor = Supervisor::QueryService<Executor*>("executor");
+	garbage_collector = Supervisor::QueryService<GarbageCollector*>("garbage_collector");
 
-	if (!scene || !executor)
+	if (!scene || !executor || !garbage_collector)
 		return false;
 
 	world = scene->GetWorld();
@@ -140,7 +147,7 @@ bool WorldEngine::Initialize()
 		return false;
 
 	auto _t1 = std::chrono::high_resolution_clock::now();
-	heightmap = noise_generator->GetPerlinSet(-(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f), -(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f), 0, WORLD_INITIAL_DIMENSION_BLOCKS, WORLD_INITIAL_DIMENSION_BLOCKS, 1);
+	heightmap = noise_generator->GetPerlinSet((int) (-WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f), (int)(-WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f), 0, WORLD_INITIAL_DIMENSION_BLOCKS, WORLD_INITIAL_DIMENSION_BLOCKS, 1);
 	auto _t2 = std::chrono::high_resolution_clock::now();
 	auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
 	int i = 0;
@@ -160,8 +167,12 @@ void WorldEngine::StartWorldGeneration()
 		return;
 	}
 
-	exec_task = executor->StartExecution(std::bind(&WorldEngine::WorldLoadTick, this));
+	auto _world_engine_tick = [&]() {
+		WorldLoadTick();
+		SectorMeshTick();
+	};
 
+	exec_task = executor->StartExecution(_world_engine_tick);
 }
 
 void WorldEngine::StopWorldGeneration()
@@ -181,9 +192,11 @@ void WorldEngine::WorldLoadTick()
 
 	for (auto _sector : near_sectors)
 	{
-		if (_sector->biomes_processed)
+		if (_sector->biomes_processed.load())
 			continue;
+
 		unsigned int _count = 0;
+
 		for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
 			for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
 			{
@@ -198,15 +211,15 @@ void WorldEngine::WorldLoadTick()
 					}
 				}
 
-				auto _heightmap = noise_generator->GetPerlinSet(_sector->x + _i * SEGMENT_LENGTH, _sector->z + _k * SEGMENT_LENGTH, 0,
-					SEGMENT_DIMENSION_SIZE, SEGMENT_DIMENSION_SIZE, 1);
+				auto _heightmap = noise_generator->GetPerlinSet((int)(_sector->x + _i * SEGMENT_LENGTH), 
+					(int)(_sector->z + _k * SEGMENT_LENGTH), 0,	SEGMENT_DIMENSION_SIZE, SEGMENT_DIMENSION_SIZE, 1);
 
 				Segment* _segs[5];
 
 				for (unsigned int _t = 0; _t < 5; _t++)
 				{
 					_segs[_t] = new Segment(scene, BlockType::TEST, false, _sector->x + _i * SEGMENT_LENGTH,
-						_t * SEGMENT_LENGTH, _sector->z + _k * SEGMENT_LENGTH);
+						(float)(_t * SEGMENT_LENGTH), _sector->z + _k * SEGMENT_LENGTH);
 				}
 
 				for (unsigned int _m = 0; _m < SEGMENT_DIMENSION_SIZE; _m++)
@@ -231,8 +244,8 @@ void WorldEngine::WorldLoadTick()
 				{
 					if (_segs[_q]->block_count > 0)
 					{
-						_segs[_q]->RebuildBuffers(_sector, SegmentIndex(_i, _q, _k));
-						_segs[_q]->biome_processed = true;
+						_segs[_q]->RebuildBuffers();
+						_segs[_q]->biome_processed.store(true);
 						_sector->AddSegment(_segs[_q], SegmentIndex(_i, _q, _k));
 
 					}
@@ -246,11 +259,11 @@ void WorldEngine::WorldLoadTick()
 				return;
 			}
 
-		/*if (_count == SECTOR_HORIZONTAL_SIZE * SECTOR_HORIZONTAL_SIZE)
+		if (_count == SECTOR_HORIZONTAL_SIZE * SECTOR_HORIZONTAL_SIZE)
 		{
-			_sector->biomes_processed = true;
-			RebuildSector(_sector);
-		}*/
+			_sector->biomes_processed.store(true);
+		}
+
 	}
 	//auto _t2 = std::chrono::high_resolution_clock::now();
 	//auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
@@ -258,16 +271,51 @@ void WorldEngine::WorldLoadTick()
 	//	int i = 0;
 }
 
-void WorldEngine::RebuildSector(Sector* target)
+void WorldEngine::SectorMeshTick()
 {
-	for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
-		for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
-			for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
-			{
-				if (target->segments[_i][_j][_k].load())
-					target->segments[_i][_j][_k].load()->RebuildBuffers(target, SegmentIndex(_i,_j,_k));
-			}
+	if (!enabled)
+		return;
 
+	Segment* _segment = nullptr;
+
+	for (auto _sector : near_sectors)
+	{
+		if (_sector->mesh_rebuilt.load())
+			continue;
+	
+		for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
+			for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
+				for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
+				{
+					_segment = _sector->segments[_i][_j][_k].load();
+					if (_segment)
+					{
+						if (_segment->mesh_rebuilt.load())
+							continue;
+
+						auto _vbuffer = new VertexBuffer<SolidBlockVertex>(scene->GetDevice(), scene->GetContext());
+						auto _ibuffer = new IndexBuffer(scene->GetDevice(), scene->GetContext());
+
+						SolidBlockProcessor::RebuildSegmentInSector(_sector, _segment, SegmentIndex(_i, _j, _k), _vbuffer, _ibuffer);
+
+						_segment->draw_mutex.lock();
+						
+						auto _old_vbuffer = _segment->vertex_buffer.exchange(_vbuffer);
+						auto _old_ibuffer = _segment->index_buffer.exchange(_ibuffer);
+						_segment->mesh_rebuilt.store(true);
+
+						_segment->draw_mutex.unlock();
+
+						garbage_collector->AddSegmentVertexBuffer(_old_vbuffer);
+						garbage_collector->AddIndexBuffer(_old_ibuffer);
+
+						return;
+
+					}
+				}
+
+		_sector->mesh_rebuilt.store(true);
+	}
 }
 
 void WorldEngine::SetVicinityRange(unsigned int value)

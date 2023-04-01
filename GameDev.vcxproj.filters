@@ -570,6 +570,9 @@
     <ClInclude Include="source\core\garbage_collector.h">
       <Filter>source\core</Filter>
     </ClInclude>
+    <ClInclude Include="source\external\MPMC Queue.h">
+      <Filter>source\external</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="source\visuals\shaders\dev_v.hlsl">

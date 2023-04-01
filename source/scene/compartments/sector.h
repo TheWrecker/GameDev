@@ -22,11 +22,15 @@
 
 		float x, z;
 		std::atomic<Segment*> segments[SECTOR_HORIZONTAL_SIZE][SECTOR_VERTICAL_SIZE][SECTOR_HORIZONTAL_SIZE];
-		bool biomes_processed;
 
 	private:
+		friend class WorldEngine;
+
 		Scene* scene;
 		GarbageCollector* garbage_collector;
+
+		std::atomic<bool> mesh_rebuilt;
+		std::atomic<bool> biomes_processed;
 	};
 
 #endif // !SECTOR_H

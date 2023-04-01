@@ -8,6 +8,7 @@
 	#include <interface_service.h>
 	#include "../core/executor.h"
 
+	class GarbageCollector;
 	class Player;
 	class Sector;
 	class World;
@@ -35,9 +36,9 @@
 
 		void LoadWorld(float x, float z);
 		void WorldLoadTick();
+		void SectorMeshTick();
 
-		void RebuildSector(Sector* target);
-
+		GarbageCollector* garbage_collector;
 		Executor* executor;
 		Scene* scene;
 		World* world;

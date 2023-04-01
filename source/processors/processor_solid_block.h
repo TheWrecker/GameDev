@@ -8,6 +8,7 @@
 	#include "defs_pipeline.h"
 	#include "defs_blocks.h"
 	#include "defs_world.h"
+	#include "../visuals/elements/buffer_vertex.h"
 
 	typedef const std::vector<SolidBlockVertex> Face;
 
@@ -21,12 +22,17 @@
 	{
 	public:
 		static bool Setup();
-		static void Rebuild(Sector* sector,Segment* target, SegmentIndex index);
+
+		static void RebuildSegmentSingle(Segment* target);
+		static void RebuildSegmentInSector(Sector* sector,Segment* target, SegmentIndex index,
+			VertexBuffer<SolidBlockVertex>* vbuffer, IndexBuffer* ibuffer);
 
 	private:
 		static bool CheckNextSegmentBlock(Sector* sector, SegmentIndex& index, FaceName face);
-		static bool CheckBlockFace(Sector* sector, Segment* segment, SegmentIndex& index, FaceName face);
+		static bool CheckBlockFaceInSector(Sector* sector, Segment* segment, SegmentIndex& index, FaceName face);
+		static bool CheckBlockFaceSingle(FaceName face);
 		static void AddFaceVertices(Segment* target, Face& face);
+		static void AddFaceVerticesCustomBuffers(Segment* target, Face& face, VertexBuffer<SolidBlockVertex>* vbuffer, IndexBuffer* ibuffer);
 
 		static TextureAtlas* texture_atlas;
 		static World* world;
@@ -35,10 +41,7 @@
 			index_x,
 			index_y,
 			index_z,
-			solids,
 			current_index;
-
-		static thread_local DirectX::XMFLOAT3 position;
 	};
 
 #endif // !PROCESSOR_SOLID_BLOCK_H

@@ -2,12 +2,16 @@
 #ifndef GARBAGE_COLLECTOR_H
 	#define GARBAGE_COLLECTOR_H
 
-	#include <list>
+	#include <memory>
+
+	#include "../external/MPMC Queue.h"
 
 	#include "interface_service.h"
-	//#include "executor.h"
+	#include "defs_pipeline.h"
+	#include "../visuals/elements/buffer_vertex.h"
 
 	class Segment;
+	class IndexBuffer;
 
 	class GarbageCollector : public IService
 	{
@@ -18,10 +22,15 @@
 		void Update() override;
 
 		void AddSegment(Segment* target);
+		void AddSegmentVertexBuffer(VertexBuffer<SolidBlockVertex>* target);
+
+		void AddIndexBuffer(IndexBuffer* target);
 
 	private:
 
-		std::list<Segment*> segments;
+		std::unique_ptr<rigtorp::MPMCQueue<Segment*>> segments;
+		std::unique_ptr<rigtorp::MPMCQueue<VertexBuffer<SolidBlockVertex>*>> segment_vertex_buffers;
+		std::unique_ptr<rigtorp::MPMCQueue<IndexBuffer*>> index_buffers;
 		//TODO: run in periodic task instead
 
 	};
