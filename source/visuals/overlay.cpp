@@ -20,6 +20,7 @@
 #include "../core/sys_ticker.h"
 #include "presenter.h"
 #include "../gameplay/physics_engine.h"
+#include "../gameplay/world_engine.h"
 
 #include "overlay.h"
 
@@ -73,8 +74,15 @@ bool Overlay::Initialize()
 	if (!ticker || !mouse || !keyboard)
 		return false;
 
+	physics_engine = presenter->QueryService<PhysicsEngine*>("physics_engine");
+	world_engine = presenter->QueryService<WorldEngine*>("world_engine");
+
+	if (!world_engine || !physics_engine)
+		return false;
+
 	aggregator = presenter->GetAggregator();
 	scene = presenter->QueryService<Scene*>("scene");
+
 
 	if (!aggregator || !scene)
 		return false;
@@ -191,17 +199,10 @@ void Overlay::Draw()
 			aggregator->render_dev->object->SetPosition(_position.x, _position.y, _position.z);
 		}
 
-		static PhysicsEngine* _physics_engine = presenter->QueryService<PhysicsEngine*>("physics_engine");
 		if (ImGui::CollapsingHeader("World"))
 		{
-			if (_physics_engine)
-			{
-				ImGui::Checkbox("Physics Enabled", &_physics_engine->enabled);
-			}
-			else
-			{
-				_physics_engine = presenter->QueryService<PhysicsEngine*>("physics_engine");
-			}
+			ImGui::Checkbox("Physics Enabled", &physics_engine->enabled);
+			ImGui::Checkbox("WorldEngine Enabled", &world_engine->enabled);
 		}
 
 		if (ImGui::CollapsingHeader("Player"))

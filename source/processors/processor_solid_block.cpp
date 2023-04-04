@@ -17,6 +17,8 @@ constexpr auto ONE_THIRD = 1.0f / 3.0f;
 constexpr auto TWO_THIRDS = 2.0f / 3.0f;
 constexpr auto HALF_BLOCK_SIZE = SOLID_BLOCK_SIZE / 2.0f;
 constexpr auto THREEHALVES_BLOCK_SIZE = SOLID_BLOCK_SIZE * 1.5f;
+const
+
 
 Face RightFace = {
 	{
@@ -186,7 +188,22 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 		case FaceName::LEFT:
 		{
 			if (index.x == 0)
-				return true;
+			{
+				auto _adjacent_sector = world->GetSector(sector->x - SEGMENT_LENGTH, sector->z + 1.0f);
+
+				if (!_adjacent_sector)
+					return true;
+
+				auto _adjacent_segment = _adjacent_sector->segments[SECTOR_HORIZONTAL_SIZE - 1][index.y][index.z].load();
+
+				if (!_adjacent_segment)
+					return true;
+
+				if (_adjacent_segment->blocks[SEGMENT_DIMENSION_SIZE - 1][index_y][index_z] == BlockType::EMPTY)
+					return true;
+
+				return false;
+			}
 
 			auto _segment = sector->segments[index.x - 1][index.y][index.z].load();
 			if (!_segment)
@@ -196,12 +213,27 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 			if (_block == BlockType::EMPTY)
 				return true;
 
-			break; 
+			return false;
 		}
 		case FaceName::RIGHT:
 		{
 			if (index.x == SECTOR_HORIZONTAL_SIZE - 1)
-				return true;
+			{
+				auto _adjacent_sector = world->GetSector(sector->x + SECTOR_WIDTH + SEGMENT_LENGTH, sector->z + 1.0f);
+
+				if (!_adjacent_sector)
+					return true;
+
+				auto _adjacent_segment = _adjacent_sector->segments[0][index.y][index.z].load();
+
+				if (!_adjacent_segment)
+					return true;
+
+				if (_adjacent_segment->blocks[0][index_y][index_z] == BlockType::EMPTY)
+					return true;
+
+				return false;
+			}
 
 			auto _segment = sector->segments[index.x + 1][index.y][index.z].load();
 			if (!_segment)
@@ -211,7 +243,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 			if (_block == BlockType::EMPTY)
 				return true;
 
-			break;
+			return false;
 		}
 		case FaceName::TOP:
 		{
@@ -226,7 +258,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 			if (_block == BlockType::EMPTY)
 				return true;
 
-			break;
+			return false;
 		}
 		case FaceName::BOTTOM:
 		{
@@ -241,12 +273,27 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 			if (_block == BlockType::EMPTY)
 				return true;
 
-			break;
+			return false;
 		}
 		case FaceName::FRONT:
 		{
 			if (index.z == 0)
-				return true;
+			{
+				auto _adjacent_sector = world->GetSector(sector->x + 1.0f, sector->z - SEGMENT_LENGTH);
+
+				if (!_adjacent_sector)
+					return true;
+
+				auto _adjacent_segment = _adjacent_sector->segments[index.x][index.y][SECTOR_HORIZONTAL_SIZE - 1].load();
+
+				if (!_adjacent_segment)
+					return true;
+
+				if (_adjacent_segment->blocks[index_x][index_y][SEGMENT_DIMENSION_SIZE - 1] == BlockType::EMPTY)
+					return true;
+
+				return false;
+			}
 
 			auto _segment = sector->segments[index.x][index.y][index.z - 1].load();
 			if (!_segment)
@@ -256,12 +303,27 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 			if (_block == BlockType::EMPTY)
 				return true;
 
-			break;
+			return false;
 		}
 		case FaceName::BACK:
 		{
 			if (index.z == SECTOR_HORIZONTAL_SIZE - 1)
-				return true;
+			{
+				auto _adjacent_sector = world->GetSector(sector->x + 1.0f, sector->z + SECTOR_WIDTH + SEGMENT_LENGTH);
+
+				if (!_adjacent_sector)
+					return true;
+
+				auto _adjacent_segment = _adjacent_sector->segments[index.x][index.y][0].load();
+
+				if (!_adjacent_segment)
+					return true;
+
+				if (_adjacent_segment->blocks[index_x][index_y][0] == BlockType::EMPTY)
+					return true;
+
+				return false;
+			}
 
 			auto _segment = sector->segments[index.x][index.y][index.z + 1].load();
 			if (!_segment)
@@ -271,7 +333,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 			if (_block == BlockType::EMPTY)
 				return true;
 
-			break;
+			return false;
 		}
 		default:
 			break;
@@ -310,6 +372,7 @@ bool SolidBlockProcessor::CheckBlockFaceInSector(Sector* sector, Segment* segmen
 
 			if (segment->blocks[index_x][index_y + 1][index_z] == BlockType::EMPTY)
 				return true;
+
 			break;
 		}
 		case FaceName::BOTTOM:
@@ -319,6 +382,7 @@ bool SolidBlockProcessor::CheckBlockFaceInSector(Sector* sector, Segment* segmen
 
 			if (segment->blocks[index_x][index_y - 1][index_z] == BlockType::EMPTY)
 				return true;
+
 			break;
 		}
 		case FaceName::FRONT:
@@ -338,6 +402,7 @@ bool SolidBlockProcessor::CheckBlockFaceInSector(Sector* sector, Segment* segmen
 
 			if (segment->blocks[index_x][index_y][index_z + 1] == BlockType::EMPTY)
 				return true;
+
 			break;
 		}
 		default:
@@ -349,13 +414,16 @@ bool SolidBlockProcessor::CheckBlockFaceInSector(Sector* sector, Segment* segmen
 	return false;
 }
 
-bool SolidBlockProcessor::CheckBlockFaceSingle(FaceName face)
+bool SolidBlockProcessor::CheckBlockFaceSingle(Segment* segment, FaceName face)
 {
 	switch (face)
 	{
 	case FaceName::LEFT:
 	{
 		if (index_x == 0)
+			return true;
+
+		if (segment->blocks[index_x - 1][index_y][index_z] == BlockType::EMPTY)
 			return true;
 
 		break;
@@ -365,11 +433,17 @@ bool SolidBlockProcessor::CheckBlockFaceSingle(FaceName face)
 		if (index_x == SEGMENT_DIMENSION_SIZE - 1)
 			return true;
 
+		if (segment->blocks[index_x + 1][index_y][index_z] == BlockType::EMPTY)
+			return true;
+
 		break;
 	}
 	case FaceName::TOP:
 	{
 		if (index_y == SEGMENT_DIMENSION_SIZE - 1)
+			return true;
+
+		if (segment->blocks[index_x][index_y + 1][index_z] == BlockType::EMPTY)
 			return true;
 
 		break;
@@ -379,6 +453,9 @@ bool SolidBlockProcessor::CheckBlockFaceSingle(FaceName face)
 		if (index_y == 0)
 			return true;
 
+		if (segment->blocks[index_x][index_y - 1][index_z] == BlockType::EMPTY)
+			return true;
+
 		break;
 	}
 	case FaceName::FRONT:
@@ -386,11 +463,17 @@ bool SolidBlockProcessor::CheckBlockFaceSingle(FaceName face)
 		if (index_z == 0)
 			return true;
 
+		if (segment->blocks[index_x][index_y][index_z - 1] == BlockType::EMPTY)
+			return true;
+
 		break;
 	}
 	case FaceName::BACK:
 	{
 		if (index_z == SEGMENT_DIMENSION_SIZE - 1)
+			return true;
+
+		if (segment->blocks[index_x][index_y][index_z + 1] == BlockType::EMPTY)
 			return true;
 
 		break;
@@ -455,9 +538,6 @@ bool SolidBlockProcessor::Setup()
 	return texture_atlas && world;
 }
 
-//------------------------------ THREAD INFO ------------------------------
-// EXCLUSIVELY CALLED FROM THE MAIN THREAD AND NOT OTHER THREADS
-//-------------------------------------------------------------------------
 void SolidBlockProcessor::RebuildSegmentSingle(Segment* target)
 {
 	if (!texture_atlas)
@@ -477,41 +557,37 @@ void SolidBlockProcessor::RebuildSegmentSingle(Segment* target)
 				if (_block == BlockType::EMPTY)
 					continue;
 
-				if (CheckBlockFaceSingle(FaceName::LEFT))
+				if (CheckBlockFaceSingle(target, FaceName::LEFT))
 					AddFaceVertices(target, LeftFace);
 
-				if (CheckBlockFaceSingle(FaceName::RIGHT))
+				if (CheckBlockFaceSingle(target, FaceName::RIGHT))
 					AddFaceVertices(target, RightFace);
 
-				if (CheckBlockFaceSingle(FaceName::TOP))
+				if (CheckBlockFaceSingle(target, FaceName::TOP))
 					AddFaceVertices(target, TopFace);
 
-				if (CheckBlockFaceSingle(FaceName::BOTTOM))
+				if (CheckBlockFaceSingle(target, FaceName::BOTTOM))
 					AddFaceVertices(target, BottomFace);
 
-				if (CheckBlockFaceSingle(FaceName::FRONT))
+				if (CheckBlockFaceSingle(target, FaceName::FRONT))
 					AddFaceVertices(target, FrontFace);
 
-				if (CheckBlockFaceSingle(FaceName::BACK))
+				if (CheckBlockFaceSingle(target, FaceName::BACK))
 					AddFaceVertices(target, BackFace);
 			}
 
 	target->vertex_buffer.load()->Build();
 	target->index_buffer.load()->Build();
 }
-//-------------------------------------------------------------------------
 
-//------------------------------ THREAD INFO ------------------------------
-// EXCLUSIVELY CALLED FROM THE WORLDENGINE THREAD AND NOT OTHER THREADS
-//-------------------------------------------------------------------------
 void SolidBlockProcessor::RebuildSegmentInSector(Sector* sector, Segment* target, SegmentIndex index,
 	VertexBuffer<SolidBlockVertex>* vbuffer, IndexBuffer* ibuffer)
 {
 	if (!texture_atlas)
 		return;
 
-	target->vertex_buffer.load()->Clear();
-	target->index_buffer.load()->Clear();
+	vbuffer->Clear();
+	ibuffer->Clear();
 	index_x = index_y = index_z = current_index = 0;
 	BlockType _block = BlockType::EMPTY;
 
@@ -548,4 +624,3 @@ void SolidBlockProcessor::RebuildSegmentInSector(Sector* sector, Segment* target
 	vbuffer->Build();
 	ibuffer->Build();
 }
-//-------------------------------------------------------------------------

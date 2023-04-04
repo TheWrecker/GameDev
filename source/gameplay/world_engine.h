@@ -33,6 +33,7 @@
 
 	private:
 		friend Scene;
+		friend class Overlay;
 
 		void LoadWorld(float x, float z);
 		void WorldLoadTick();

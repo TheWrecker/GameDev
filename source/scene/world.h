@@ -51,6 +51,8 @@
         std::unordered_map<SectorIndex, Sector*, std::hash<SectorIndex>> sectors;
 
     private:
+        friend class FinishDigEvent;
+
         BlockType GetBlock(Segment* segment, BlockIndex& index);
         Segment* GetSegment(Sector* sector, SegmentIndex& index, bool force = false);
         Sector* GetSector(SectorIndex& index, bool force = false);

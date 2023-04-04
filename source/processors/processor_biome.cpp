@@ -87,7 +87,7 @@ void BiomeProcessor::ProcessBiome(World* world, float x, float y, float z)
 void BiomeProcessor::ProcessSegmentColumn(Segment* segment, unsigned int x, unsigned int z, float value)
 {
 	auto _rand = ((int)(value) ^ 0x93751f) % 10;
-	auto _indY = (int)floorf(fmod(value, SEGMENT_DIMENSION_SIZE));
+	auto _indY = (int)floorf(fmodf(value, SEGMENT_DIMENSION_SIZE));
 
 	if (_indY < _rand)
 		_rand = _indY;

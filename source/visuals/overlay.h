@@ -14,6 +14,8 @@
 	class Scene;
 	class Presenter;
 	class SystemTicker;
+	class WorldEngine;
+	class PhysicsEngine;
 
 	class Overlay
 	{
@@ -38,6 +40,8 @@
 		SystemTicker* ticker;
 		Keyboard* keyboard;
 		Mouse* mouse;
+		WorldEngine* world_engine;
+		PhysicsEngine* physics_engine;
 
 		bool show;
 	};

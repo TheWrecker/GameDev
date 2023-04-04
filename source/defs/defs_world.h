@@ -89,7 +89,7 @@
 
 	inline SectorIndex GetSectorIndex(float x, float z)
 	{
-		return SectorIndex{ (int)floor(x / SECTOR_WIDTH), (int)floor(z / SECTOR_WIDTH) };
+		return SectorIndex{ (int)floorf(x / SECTOR_WIDTH), (int)floorf(z / SECTOR_WIDTH) };
 	}
 
 #endif // !DEFS_WORLD_H

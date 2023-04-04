@@ -30,7 +30,7 @@
 	private:
 		static bool CheckNextSegmentBlock(Sector* sector, SegmentIndex& index, FaceName face);
 		static bool CheckBlockFaceInSector(Sector* sector, Segment* segment, SegmentIndex& index, FaceName face);
-		static bool CheckBlockFaceSingle(FaceName face);
+		static bool CheckBlockFaceSingle(Segment* segment, FaceName face);
 		static void AddFaceVertices(Segment* target, Face& face);
 		static void AddFaceVerticesCustomBuffers(Segment* target, Face& face, VertexBuffer<SolidBlockVertex>* vbuffer, IndexBuffer* ibuffer);
 
