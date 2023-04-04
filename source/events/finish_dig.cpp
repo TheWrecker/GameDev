@@ -38,7 +38,7 @@ void FinishDigEvent::Fire()
 
         if (_adjacent_segment)
             SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index,
-                _segment->GetVertexBuffer(), _segment->GetIndexBuffer());
+                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
     }
     else if ((_segment_index.x == SECTOR_HORIZONTAL_SIZE - 1) && (_block_index.x == SEGMENT_DIMENSION_SIZE - 1))
     {
@@ -48,22 +48,22 @@ void FinishDigEvent::Fire()
 
         if (_adjacent_segment)
             SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index,
-                _segment->GetVertexBuffer(), _segment->GetIndexBuffer());
+                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
     }
     else if ((_block_index.x == 0) || (_block_index.x == SEGMENT_DIMENSION_SIZE - 1))
     {
         _new_segment_index = { _segment_index.x , _segment_index.y, _segment_index.z };
 
         if (_block_index.x == 0)
-            _new_segment_index.x++;
-        else if (_block_index.x == SEGMENT_DIMENSION_SIZE - 1)
             _new_segment_index.x--;
+        else if (_block_index.x == SEGMENT_DIMENSION_SIZE - 1)
+            _new_segment_index.x++;
 
         _adjacent_segment = _sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
         if (_adjacent_segment)
             SolidBlockProcessor::RebuildSegmentInSector(_sector, _adjacent_segment, _new_segment_index,
-                _segment->GetVertexBuffer(), _segment->GetIndexBuffer());
+                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
     }
 
     if ((_segment_index.y == 0) && (_block_index.y == 0))
@@ -91,7 +91,7 @@ void FinishDigEvent::Fire()
 
         if (_adjacent_segment)
             SolidBlockProcessor::RebuildSegmentInSector(_sector, _adjacent_segment, _new_segment_index,
-                _segment->GetVertexBuffer(), _segment->GetIndexBuffer());
+                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
     }
 
     if ((_segment_index.z == 0) && (_block_index.z == 0))
@@ -102,7 +102,7 @@ void FinishDigEvent::Fire()
 
         if (_adjacent_segment)
             SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index,
-                _segment->GetVertexBuffer(), _segment->GetIndexBuffer());
+                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
     }
     else if ((_segment_index.z == SECTOR_HORIZONTAL_SIZE - 1) && (_block_index.z == SEGMENT_DIMENSION_SIZE - 1))
     {
@@ -112,22 +112,22 @@ void FinishDigEvent::Fire()
 
         if (_adjacent_segment)
             SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index,
-                _segment->GetVertexBuffer(), _segment->GetIndexBuffer());
+                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
     }
     else if ((_block_index.z == 0) || (_block_index.z == SEGMENT_DIMENSION_SIZE - 1))
     {
         _new_segment_index = { _segment_index.x , _segment_index.y, _segment_index.z };
 
         if (_block_index.z == 0)
-            _new_segment_index.z++;
-        else if (_block_index.z == SEGMENT_DIMENSION_SIZE - 1)
             _new_segment_index.z--;
+        else if (_block_index.z == SEGMENT_DIMENSION_SIZE - 1)
+            _new_segment_index.z++;
 
         _adjacent_segment = _sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
         if (_adjacent_segment)
             SolidBlockProcessor::RebuildSegmentInSector(_sector, _adjacent_segment, _new_segment_index,
-                _segment->GetVertexBuffer(), _segment->GetIndexBuffer());
+                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
     }
 
     SolidBlockProcessor::RebuildSegmentInSector(_sector, _segment, _segment_index, _segment->GetVertexBuffer(), _segment->GetIndexBuffer());

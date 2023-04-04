@@ -189,7 +189,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 		{
 			if (index.x == 0)
 			{
-				auto _adjacent_sector = world->GetSector(sector->x - SEGMENT_LENGTH, sector->z + 1.0f);
+				auto _adjacent_sector = world->GetSector(sector->x - SEGMENT_LENGTH, sector->z);
 
 				if (!_adjacent_sector)
 					return true;
@@ -219,7 +219,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 		{
 			if (index.x == SECTOR_HORIZONTAL_SIZE - 1)
 			{
-				auto _adjacent_sector = world->GetSector(sector->x + SECTOR_WIDTH + SEGMENT_LENGTH, sector->z + 1.0f);
+				auto _adjacent_sector = world->GetSector(sector->x + SECTOR_WIDTH + SEGMENT_LENGTH, sector->z);
 
 				if (!_adjacent_sector)
 					return true;
@@ -279,7 +279,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 		{
 			if (index.z == 0)
 			{
-				auto _adjacent_sector = world->GetSector(sector->x + 1.0f, sector->z - SEGMENT_LENGTH);
+				auto _adjacent_sector = world->GetSector(sector->x, sector->z - SEGMENT_LENGTH);
 
 				if (!_adjacent_sector)
 					return true;
@@ -309,7 +309,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 		{
 			if (index.z == SECTOR_HORIZONTAL_SIZE - 1)
 			{
-				auto _adjacent_sector = world->GetSector(sector->x + 1.0f, sector->z + SECTOR_WIDTH + SEGMENT_LENGTH);
+				auto _adjacent_sector = world->GetSector(sector->x, sector->z + SECTOR_WIDTH + SEGMENT_LENGTH);
 
 				if (!_adjacent_sector)
 					return true;

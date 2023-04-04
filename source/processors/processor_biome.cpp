@@ -46,7 +46,7 @@ void BiomeProcessor::ProcessBiome(World* world, float x, float y, float z)
 
 	auto _curr = y - SOLID_BLOCK_SIZE;
 	auto _inc = SOLID_BLOCK_SIZE;
-	while (_curr > generation_floor_height)
+	while (_curr >= generation_floor_height)
 	{
 		if (_inc < 4.0f)//create the same block
 		{
@@ -69,20 +69,6 @@ void BiomeProcessor::ProcessBiome(World* world, float x, float y, float z)
 		_curr -= SOLID_BLOCK_SIZE;
 	}
 }
-
-//void BiomeProcessor::ProcessBiome(float* heightmap, World* world, Segment* segment)
-//{
-//	float _bX, _bZ;
-//	float _val = 0.0f;
-//	for (unsigned int _i = 0; _i < SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE; _i++)
-//		for (unsigned int _j = 0; _j < SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE; _j++)
-//		{
-//			_bX = sector->x + (_i * SOLID_BLOCK_SIZE);
-//			_bZ = sector->z + (_j * SOLID_BLOCK_SIZE);
-//			_val = heightmap[_i * SEGMENT_DIMENSION_SIZE * SECTOR_HORIZONTAL_SIZE + _j];
-//			BiomeProcessor::ProcessBiome(world, _bX, _val, _bZ);
-//		}
-//}
 
 void BiomeProcessor::ProcessSegmentColumn(Segment* segment, unsigned int x, unsigned int z, float value)
 {
