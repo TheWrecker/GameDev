@@ -12,14 +12,14 @@
 	class BlockDiggedEvent : public IEvent
 	{
 	public:
-		BlockDiggedEvent(EventHandler* handler, Player* player, BlockType type, DirectX::XMFLOAT3 position);
+		BlockDiggedEvent(EventHandler* handler, Player* player, BlockType type, DirectX::XMINT3 position);
 
 		void Fire() override;
 
 	private:
 		Player* player;
 		BlockType type;
-		DirectX::XMFLOAT3 position;
+		DirectX::XMINT3 position;
 	};
 
 #endif // !BLOCK_DIGGED_H

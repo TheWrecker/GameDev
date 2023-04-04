@@ -6,7 +6,7 @@
 
 #include "begin_placement.h"
 
-BeginPlacementEvent::BeginPlacementEvent(EventHandler* handler, Player* player, DirectX::XMFLOAT3 pos)
+BeginPlacementEvent::BeginPlacementEvent(EventHandler* handler, Player* player, DirectX::XMINT3 pos)
 	:IEvent(EventType::FINISH_DIG, handler), player(player), position(pos)
 {
 }
@@ -23,7 +23,7 @@ void BeginPlacementEvent::Fire()
 	if (_type == BlockType::EMPTY)
 		return;
 
-	auto _block = player->GetWorld()->CreateBlock(_type, position.x, position.y, position.z, true);
+	auto _block = player->GetWorld()->CreateBlockByGridPos(_type, position.x, position.y, position.z, true);
 
 	_item->RemoveFromStack();
 }

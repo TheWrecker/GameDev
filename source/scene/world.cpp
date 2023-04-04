@@ -1,6 +1,7 @@
 
 #include <chrono>
 
+#include "util_funcs.h"
 #include "../entities/player.h"
 #include "compartments/segment.h"
 #include "compartments/sector.h"
@@ -22,64 +23,13 @@ World::~World()
 
 void World::SetupDevelopementWorld()
 {
-
-	return;
-
-	//for (int i = -5; i < 5; i++)
-	//	for (int j = -5; j < 5; j++)
-	//	{
-	//		auto _segment = GetSegment((float)(i * SEGMENT_LENGTH), 0.0f, (float)(j * SEGMENT_LENGTH), true);
-	//		auto _rand = abs((i % 3) + (j % 3));
-	//		switch (_rand)
-	//		{
-	//			case 0:
-	//			{
-	//				_segment->Fill(BlockType::GRASS);
-	//				break;
-	//			}
-	//			case 1:
-	//			{
-	//				_segment->Fill(BlockType::DIRT);
-	//				break;
-	//			}
-	//			case 2:
-	//			{
-	//				_segment->Fill(BlockType::GRASS_ON_DIRT);
-	//				break;
-	//			}
-	//			case 3:
-	//			{
-	//				_segment->Fill(BlockType::STONE);
-	//				break;
-	//			}
-	//			case 4:
-	//			{
-	//				_segment->Fill(BlockType::SAND);
-	//				break;
-	//			}
-	//			default:
-	//				assert(false);
-	//		}
-	//	}
-
-	//for (auto& _sector : sectors)
-	//{
-	//	for (unsigned int _x = 0; _x < SECTOR_HORIZONTAL_SIZE; _x++)
-	//		for (unsigned int _y = 0; _y < SECTOR_VERTICAL_SIZE; _y++)
-	//			for (unsigned int _z = 0; _z < SECTOR_HORIZONTAL_SIZE; _z++)
-	//			{
-	//				//if (_sector.second->segments[_x][_y][_z].load())
-	//				//	_sector.second->segments[_x][_y][_z].load()->RebuildBuffers();
-	//			}
-	//}
-
 }
 
 void World::Update()
 {
 }
 
-bool World::CreateBlock(BlockType type, int x, int y, int z, bool rebuildSegment)
+bool World::CreateBlockByGridPos(BlockType type, int x, int y, int z, bool rebuildSegment)
 {
 	SectorIndex _sector_index = GetSectorIndex(x, z);
 	auto _sector = GetSector(_sector_index, true);
@@ -102,52 +52,41 @@ bool World::CreateBlock(BlockType type, int x, int y, int z, bool rebuildSegment
 	return true;
 }
 
-Segment* World::GetSegment(int x, int y, int z, bool force)
+bool World::CreateBlockByWorldPos(BlockType type, float x, float y, float z, bool rebuildSegment)
+{
+	auto _x = int_floor(x);
+	auto _y = int_floor(y);
+	auto _z = int_floor(z);
+	return CreateBlockByGridPos(type, _x, _y, _z, rebuildSegment);
+}
+
+BlockType World::GetBlockByGridPos(int x, int y, int z)
 {
 	SectorIndex _sector_index = GetSectorIndex(x, z);
-	auto _sector = GetSector(_sector_index, force);
+	auto _sector = GetSector(_sector_index);
 
-	if (!_sector && force)
-	{
-		assert(false);
-		return nullptr;
-	}
+	if (!_sector)
+		return BlockType::EMPTY;
 
-	SegmentIndex _index = GetSegmentIndex(x, y, z);
-	return GetSegment(_sector, _index, force);
+	SegmentIndex _segment_index = GetSegmentIndex(x, y, z);
+	if (!_segment_index.IsValid())
+		return BlockType::EMPTY;
+
+	auto _segment = GetSegment(_sector, _segment_index);
+
+	if (!_segment)
+		return BlockType::EMPTY;
+
+	BlockIndex _block_index = GetBlockIndex(x, y, z);
+	return GetBlock(_segment, _block_index);
 }
 
-Segment* World::GetSegment(Sector* sector, SegmentIndex& index, bool force)
+BlockType World::GetBlockByWorldPos(float x, float y, float z)
 {
-	assert(index.IsValid());
-
-	auto _result = sector->segments[index.x][index.y][index.z].load();
-	if (_result)
-		return _result;
-	else if (force)
-	{
-		auto _segment = new Segment(scene, BlockType::TEST, false, 
-			sector->x + (index.x * SEGMENT_LENGTH), index.y * SEGMENT_LENGTH, sector->z + index.z * SEGMENT_LENGTH);
-		sector->segments[index.x][index.y][index.z].store(_segment);
-		return _segment;
-	}
-
-	return nullptr;
-}
-
-Sector* World::GetSector(int x, int z, int force)
-{
-	SectorIndex _index = GetSectorIndex(x, z);
-	auto _result = sectors.find(_index);
-	if (_result != sectors.end())
-		return _result->second;
-	else if (force)
-	{
-		auto _sector = new Sector(scene, _index.x * SECTOR_WIDTH, _index.z * SECTOR_WIDTH);
-		sectors.insert(std::pair(_index, _sector));
-		return _sector;
-	}
-	return nullptr;
+	auto _x = int_floor(x);
+	auto _y = int_floor(y);
+	auto _z = int_floor(z);
+	return GetBlockByGridPos(_x, _y, _z);
 }
 
 Segment* World::CreateSegment(int x, int y, int z)
@@ -167,31 +106,73 @@ Segment* World::CreateSegment(int x, int y, int z)
 	}
 }
 
-BlockType World::GetBlock(int x, int y, int z)
+Segment* World::GetSegmentByGridPos(int x, int y, int z, bool force)
 {
 	SectorIndex _sector_index = GetSectorIndex(x, z);
-	auto _sector = GetSector(_sector_index);
+	auto _sector = GetSector(_sector_index, force);
 
-	if (!_sector)
-		return BlockType::EMPTY;
+	if (!_sector && force)
+	{
+		assert(false);
+		return nullptr;
+	}
 
-	SegmentIndex _segment_index = GetSegmentIndex(x, y, z);
-	if (!_segment_index.IsValid())
-		return BlockType::EMPTY;
+	SegmentIndex _index = GetSegmentIndex(x, y, z);
+	return GetSegment(_sector, _index, force);
+}
 
-	auto _segment = GetSegment(_sector,_segment_index);
+Segment* World::GetSegmentByWorldPos(float x, float y, float z, bool force)
+{
+	auto _x = int_floor(x);
+	auto _y = int_floor(y);
+	auto _z = int_floor(z);
+	return GetSegmentByGridPos(_x, _y, _z, force);
+}
 
-	if (!_segment)
-		return BlockType::EMPTY;
+Sector* World::GetSectorByGridPos(int x, int z, int force)
+{
+	SectorIndex _index = GetSectorIndex(x, z);
+	auto _result = sectors.find(_index);
+	if (_result != sectors.end())
+		return _result->second;
+	else if (force)
+	{
+		auto _sector = new Sector(scene, _index.x * SECTOR_WIDTH, _index.z * SECTOR_WIDTH);
+		sectors.insert(std::pair(_index, _sector));
+		return _sector;
+	}
+	return nullptr;
+}
 
-	BlockIndex _block_index = GetBlockIndex(x, y, z);
-	return GetBlock(_segment, _block_index);
+Sector* World::GetSectorByWorldPos(float x, float z, int force)
+{
+	auto _x = int_floor(x);
+	auto _z = int_floor(z);
+	return GetSectorByGridPos(_x, _z, force);
 }
 
 BlockType World::GetBlock(Segment* segment, BlockIndex& index)
 {
 	assert(index.IsValid());
 	return segment->blocks[index.x][index.y][index.z];
+}
+
+Segment* World::GetSegment(Sector* sector, SegmentIndex& index, bool force)
+{
+	assert(index.IsValid());
+
+	auto _result = sector->segments[index.x][index.y][index.z].load();
+	if (_result)
+		return _result;
+	else if (force)
+	{
+		auto _segment = new Segment(scene, BlockType::TEST, false,
+			sector->x + (index.x * SEGMENT_LENGTH), index.y * SEGMENT_LENGTH, sector->z + index.z * SEGMENT_LENGTH);
+		sector->segments[index.x][index.y][index.z].store(_segment);
+		return _segment;
+	}
+
+	return nullptr;
 }
 
 Sector* World::GetSector(SectorIndex& index, bool force)

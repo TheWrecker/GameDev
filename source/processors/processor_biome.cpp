@@ -36,27 +36,29 @@ void BiomeProcessor::ProcessBiome(World* world, int x, float y, int z)
 	{
 		_type = BlockType::SAND;
 	}
-	world->CreateBlock(_type, x, (int)y, z, false);
+	auto _y = int_floor(y);
 
-	auto _curr = (int)(y) - SOLID_BLOCK_SIZE;
+	world->CreateBlockByGridPos(_type, x, _y, z, false);
+
+	auto _curr = _y - SOLID_BLOCK_SIZE;
 	auto _inc = SOLID_BLOCK_SIZE;
 	while (_curr >= generation_floor_height)
 	{
 		if (_inc < 4)//create the same block
 		{
-			world->CreateBlock(_type, x, _curr, z, false);
+			world->CreateBlockByGridPos(_type, x, _curr, z, false);
 		}
 		else if (_inc < 10) //create dirt
 		{
-			world->CreateBlock(BlockType::DIRT, x, _curr, z, false);
+			world->CreateBlockByGridPos(BlockType::DIRT, x, _curr, z, false);
 		}
 		else if (_inc < 20) //create stone
 		{
-			world->CreateBlock(BlockType::STONE, x, _curr, z, false);
+			world->CreateBlockByGridPos(BlockType::STONE, x, _curr, z, false);
 		}
 		else //create test block for now until we reach the floor
 		{
-			world->CreateBlock(BlockType::TEST, x, _curr, z, false);
+			world->CreateBlockByGridPos(BlockType::TEST, x, _curr, z, false);
 		}
 
 		_inc += SOLID_BLOCK_SIZE;

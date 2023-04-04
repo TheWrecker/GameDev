@@ -132,7 +132,7 @@ void PhysicsEngine::UpdateAllSystems()
 			_rotation.y = 0.0f;
 			_temp_pos = _entity->Position();
 
-			_block1 = world->GetBlock(_temp_pos.x, _temp_pos.y - (_collision->half_height + 0.1f) , _temp_pos.z);
+			_block1 = world->GetBlockByWorldPos(_temp_pos.x, _temp_pos.y - (_collision->half_height + 0.1f) , _temp_pos.z);
 			//is there a block directly below us?
 			if (_block1 != BlockType::EMPTY)
 			{
@@ -151,7 +151,7 @@ void PhysicsEngine::UpdateAllSystems()
 			if (_component->vertical_speed > 0.0f)
 			{
 				//we are going upwards, check above us
-				_block1 = world->GetBlock(_temp_pos.x, _temp_pos.y + _collision->half_height, _temp_pos.z);
+				_block1 = world->GetBlockByWorldPos(_temp_pos.x, _temp_pos.y + _collision->half_height, _temp_pos.z);
 				//is there a block directly above us?
  				if (_block1 != BlockType::EMPTY)
 				{
@@ -180,9 +180,9 @@ void PhysicsEngine::UpdateAllSystems()
 			_coll = _xz_direction * (_collision->half_width + 0.1f) * copysignf(1.0f, _component->front_speed);
 
 			//check if we collide with blocks
-			_block1 = world->GetBlock(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
-			_block2 = world->GetBlock(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z);
-			_block3 = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
+			_block1 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
+			_block2 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z);
+			_block3 = world->GetBlockByWorldPos(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
 			if ((_block1 != BlockType::EMPTY) || (_block2 != BlockType::EMPTY) || (_block3 != BlockType::EMPTY))
 			{
 				_component->front_speed = 0.0f;
@@ -190,7 +190,7 @@ void PhysicsEngine::UpdateAllSystems()
 			else
 			{
 				//check if we will collide with a block
-				_block1 = world->GetBlock(_temp_pos.x + XMVectorGetX(_front_move) + XMVectorGetX(_coll),
+				_block1 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_front_move) + XMVectorGetX(_coll),
 					_temp_pos.y,
 					_temp_pos.z + XMVectorGetZ(_front_move) + +XMVectorGetZ(_coll));
 				if (_block1 != BlockType::EMPTY)
@@ -219,9 +219,9 @@ void PhysicsEngine::UpdateAllSystems()
 			_coll = _right_vector * (_collision->half_width + 0.1f) * copysignf(1.0f, _component->side_speed);
 
 			//check if we collide with a block
-			_block1 = world->GetBlock(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
-			_block2 = world->GetBlock(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z);
-			_block3 = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
+			_block1 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
+			_block2 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z);
+			_block3 = world->GetBlockByWorldPos(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
 			if ((_block1 != BlockType::EMPTY) || (_block2 != BlockType::EMPTY) || (_block3 != BlockType::EMPTY))
 			{
 				_component->side_speed = 0.0f;
@@ -229,7 +229,7 @@ void PhysicsEngine::UpdateAllSystems()
 			else
 			{
 				//check if we will collide with a block
-				_block1 = world->GetBlock(_temp_pos.x + XMVectorGetX(_front_move) + XMVectorGetX(_coll),
+				_block1 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_front_move) + XMVectorGetX(_coll),
 					_temp_pos.y,
 					_temp_pos.z + XMVectorGetZ(_front_move) + +XMVectorGetZ(_coll));
 				if (_block1 != BlockType::EMPTY)
@@ -251,7 +251,7 @@ void PhysicsEngine::UpdateAllSystems()
 			}
 
 			//anti-stuck temporary measurement
-			_block1 = world->GetBlock(_temp_pos.x, _temp_pos.y, _temp_pos.z);
+			_block1 = world->GetBlockByWorldPos(_temp_pos.x, _temp_pos.y, _temp_pos.z);
 			//are we inside a block?
 			if (_block1 != BlockType::EMPTY)
 			{

@@ -9,7 +9,7 @@
 	#include <locale>
 
 	template<typename type>
-	inline void DXRelease(type& target)
+	static inline void DXRelease(type& target)
 	{
 		if (target)
 		{
@@ -18,38 +18,28 @@
 		}
 	}
 
-	//std::wstring String_To_WString(const std::string& str)
-	//{
-	//    using convert_typeX = std::codecvt_utf8<wchar_t>;
-	//    std::wstring_convert<convert_typeX, wchar_t> converterX;
-	//
-	//    return converterX.from_bytes(str);
-	//}
-	//
-	//std::string WString_To_String(const std::wstring& wstr)
-	//{
-	//    using convert_typeX = std::codecvt_utf8<wchar_t>;
-	//    std::wstring_convert<convert_typeX, wchar_t> converterX;
-	//
-	//    return converterX.to_bytes(wstr);
-	//}
-
-	inline std::wstring String_To_WString(const std::string& target)
+	static inline std::wstring String_To_WString(const std::string& target)
 	{
-		auto what = target.c_str();
-		std::size_t size = target.size() + 1;
-		std::wstring wc(size, L'#');
-		mbstowcs(&wc[0], what, size);
-		return wc;
+		auto _what = target.c_str();
+		std::size_t _size = target.size() + 1;
+		std::wstring _wc(_size, L'#');
+		mbstowcs(&_wc[0], _what, _size);
+		return _wc;
 	}
 
-	inline std::string WString_To_String(const std::wstring& target)
+	static inline std::string WString_To_String(const std::wstring& target)
 	{
-		auto what = target.c_str();
-		std::size_t size = target.size() + 1;
-		std::string mc(size, '#');
-		wcstombs(&mc[0], what, size);
-		return mc;
+		auto _what = target.c_str();
+		std::size_t _size = target.size() + 1;
+		std::string _mc(_size, '#');
+		wcstombs(&_mc[0], _what, _size);
+		return _mc;
+	}
+
+	static inline int int_floor(float value)
+	{
+		int _i = (int)value;
+		return _i - (_i > value);
 	}
 
 	#if defined( DEBUG ) || defined( _DEBUG )

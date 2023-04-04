@@ -93,17 +93,17 @@ void InputHandler::Update()
 					if (mouse->GetButtonTracker()->leftButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
 					{
 						//TODO: hold for 0.4 sec to dig block
-						DirectX::XMFLOAT3 _pos = {};
+						DirectX::XMINT3 _pos = {};
 						if (!player->GetInteractionBlockPos(_pos))
 							return;
 
-						auto _event = new FinishDigEvent(event_handler, player, _pos, world->GetBlock(_pos.x, _pos.y, _pos.z));
+						auto _event = new FinishDigEvent(event_handler, player, _pos, world->GetBlockByGridPos(_pos.x, _pos.y, _pos.z));
 						event_handler->FeedEvent(_event);
 						break;
 					}
 					if (mouse->GetButtonTracker()->rightButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
 					{
-						DirectX::XMFLOAT3 _pos = {};
+						DirectX::XMINT3 _pos = {};
 						if (!player->GetPlacementBlockPos(_pos))
 							return;
 
@@ -116,7 +116,7 @@ void InputHandler::Update()
 				{
 					if (mouse->GetButtonTracker()->rightButton == DirectX::Mouse::ButtonStateTracker::PRESSED)
 					{
-						DirectX::XMFLOAT3 _pos = {};
+						DirectX::XMINT3 _pos = {};
 						if (!player->GetPlacementBlockPos(_pos))
 							return;
 

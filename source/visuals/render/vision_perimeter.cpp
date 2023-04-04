@@ -58,7 +58,7 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 	Segment* _segment = nullptr;
 	for (auto _sector : world_engine->near_sectors)
 	{
-		if (frustrum.IntersectsSector(_sector->x, _sector->z))
+		if (frustrum.IntersectsSector((float)_sector->x, (float)_sector->z))
 			{
 				for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
 					for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)

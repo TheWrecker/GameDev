@@ -15,10 +15,6 @@
 
 constexpr auto ONE_THIRD = 1.0f / 3.0f;
 constexpr auto TWO_THIRDS = 2.0f / 3.0f;
-constexpr auto HALF_BLOCK_SIZE = SOLID_BLOCK_SIZE / 2.0f;
-constexpr auto THREEHALVES_BLOCK_SIZE = SOLID_BLOCK_SIZE * 1.5f;
-const
-
 
 Face RightFace = {
 	{
@@ -189,7 +185,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 		{
 			if (index.x == 0)
 			{
-				auto _adjacent_sector = world->GetSector(sector->x - SEGMENT_LENGTH, sector->z);
+				auto _adjacent_sector = world->GetSectorByGridPos(sector->x - SEGMENT_LENGTH, sector->z);
 
 				if (!_adjacent_sector)
 					return true;
@@ -219,7 +215,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 		{
 			if (index.x == SECTOR_HORIZONTAL_SIZE - 1)
 			{
-				auto _adjacent_sector = world->GetSector(sector->x + SECTOR_WIDTH + SEGMENT_LENGTH, sector->z);
+				auto _adjacent_sector = world->GetSectorByGridPos(sector->x + SECTOR_WIDTH, sector->z);
 
 				if (!_adjacent_sector)
 					return true;
@@ -279,7 +275,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 		{
 			if (index.z == 0)
 			{
-				auto _adjacent_sector = world->GetSector(sector->x, sector->z - SEGMENT_LENGTH);
+				auto _adjacent_sector = world->GetSectorByGridPos(sector->x, sector->z - SEGMENT_LENGTH);
 
 				if (!_adjacent_sector)
 					return true;
@@ -309,7 +305,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 		{
 			if (index.z == SECTOR_HORIZONTAL_SIZE - 1)
 			{
-				auto _adjacent_sector = world->GetSector(sector->x, sector->z + SECTOR_WIDTH + SEGMENT_LENGTH);
+				auto _adjacent_sector = world->GetSectorByGridPos(sector->x, sector->z + SECTOR_WIDTH);
 
 				if (!_adjacent_sector)
 					return true;

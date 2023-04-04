@@ -10,13 +10,13 @@
 	class FinishDigEvent : public IEvent
 	{
 	public:
-		FinishDigEvent(EventHandler* handler ,Player* player, DirectX::XMFLOAT3& position, BlockType blockType);
+		FinishDigEvent(EventHandler* handler ,Player* player, DirectX::XMINT3& position, BlockType blockType);
 
 		void Fire() override;
 
 	private:
 		Player* player;
-		DirectX::XMFLOAT3 position;
+		DirectX::XMINT3 position;
 		BlockType block_type;
 	};
 

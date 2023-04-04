@@ -3,6 +3,9 @@
 	#define DEFS_WORLD_H
 
 	#include <cmath>
+	#include <DirectXMath.h>
+
+	#include "util_funcs.h"
 
 	constexpr int
 	SOLID_BLOCK_SIZE = 1,
@@ -40,12 +43,12 @@
 		int x, z;
 	};
 
-	inline bool operator ==(const SectorIndex& left, const SectorIndex& right) noexcept
+	static inline bool operator ==(const SectorIndex& left, const SectorIndex& right) noexcept
 	{
 		return (left.x == right.x) && (left.z == right.z);
 	}
 
-	inline BlockIndex GetBlockIndex(int x, int y, int z)
+	static inline BlockIndex GetBlockIndex(int x, int y, int z)
 	{
 		/*auto _xf = floorf(x);
 		auto _yf = floorf(y);
@@ -66,7 +69,7 @@
 		return BlockIndex(_x, _y, _z);
 	}
 
-	inline SegmentIndex GetSegmentIndex(int x, int y, int z)
+	static inline SegmentIndex GetSegmentIndex(int x, int y, int z)
 	{
 		//auto _xf = floorf(x);
 		//auto _yf = floorf(y);
@@ -95,9 +98,20 @@
 		return SegmentIndex(_x, _y, _z);
 	}
 
-	inline SectorIndex GetSectorIndex(int x, int z)
+	static inline SectorIndex GetSectorIndex(int x, int z)
 	{
-		return SectorIndex{ x / SECTOR_WIDTH, z / SECTOR_WIDTH };
+		return SectorIndex{
+			x < 0 ? int_floor((float)x / SECTOR_WIDTH) : x / SECTOR_WIDTH,
+			z < 0 ? int_floor((float)z / SECTOR_WIDTH) : z / SECTOR_WIDTH };
+	}
+
+	static inline DirectX::XMINT3 GetGridPos(DirectX::XMFLOAT3& position)
+	{
+		return {
+			int_floor(position.x),
+			int_floor(position.y),
+			int_floor(position.z)
+		};
 	}
 
 #endif // !DEFS_WORLD_H

@@ -11,17 +11,17 @@
 
 #include "finish_dig.h"
 
-FinishDigEvent::FinishDigEvent(EventHandler* handler, Player* player, DirectX::XMFLOAT3& position, BlockType blockType)
+FinishDigEvent::FinishDigEvent(EventHandler* handler, Player* player, DirectX::XMINT3& position, BlockType blockType)
 	:IEvent(EventType::FINISH_DIG, handler), player(player), block_type(blockType), position(position)
 {
 }
 
 void FinishDigEvent::Fire()
 {
-    auto _segment = player->GetWorld()->GetSegment(position.x, position.y, position.z);
+    auto _segment = player->GetWorld()->GetSegmentByGridPos(position.x, position.y, position.z);
     auto _block_index = GetBlockIndex(position.x, position.y, position.z);
     auto _segment_index = GetSegmentIndex(position.x, position.y, position.z);
-    auto _sector = player->GetWorld()->GetSector(position.x, position.z);
+    auto _sector = player->GetWorld()->GetSectorByGridPos(position.x, position.z);
 
     _segment->RemoveBlock(_block_index.x, _block_index.y, _block_index.z);
 
@@ -32,7 +32,7 @@ void FinishDigEvent::Fire()
     //test
     if ((_segment_index.x == 0) && (_block_index.x == 0))
     {
-        _adjacent_sector = player->GetWorld()->GetSector(position.x - SEGMENT_LENGTH, position.z, true);
+        _adjacent_sector = player->GetWorld()->GetSectorByGridPos(position.x - SEGMENT_LENGTH, position.z, true);
         _new_segment_index = { SECTOR_HORIZONTAL_SIZE - 1, _segment_index.y, _segment_index.z };
         _adjacent_segment = _adjacent_sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
@@ -42,7 +42,7 @@ void FinishDigEvent::Fire()
     }
     else if ((_segment_index.x == SECTOR_HORIZONTAL_SIZE - 1) && (_block_index.x == SEGMENT_DIMENSION_SIZE - 1))
     {
-        _adjacent_sector = player->GetWorld()->GetSector(position.x + SEGMENT_LENGTH, position.z, true);
+        _adjacent_sector = player->GetWorld()->GetSectorByGridPos(position.x + SEGMENT_LENGTH, position.z, true);
         _new_segment_index = { 0, _segment_index.y, _segment_index.z };
         _adjacent_segment = _adjacent_sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
@@ -96,7 +96,7 @@ void FinishDigEvent::Fire()
 
     if ((_segment_index.z == 0) && (_block_index.z == 0))
     {
-        _adjacent_sector = player->GetWorld()->GetSector(position.x, position.z - SEGMENT_LENGTH, true);
+        _adjacent_sector = player->GetWorld()->GetSectorByGridPos(position.x, position.z - SEGMENT_LENGTH, true);
         _new_segment_index = { _segment_index.x, _segment_index.y, SECTOR_HORIZONTAL_SIZE - 1 };
         _adjacent_segment = _adjacent_sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
@@ -106,7 +106,7 @@ void FinishDigEvent::Fire()
     }
     else if ((_segment_index.z == SECTOR_HORIZONTAL_SIZE - 1) && (_block_index.z == SEGMENT_DIMENSION_SIZE - 1))
     {
-        _adjacent_sector = player->GetWorld()->GetSector(position.x, position.z + SEGMENT_LENGTH, true);
+        _adjacent_sector = player->GetWorld()->GetSectorByGridPos(position.x, position.z + SEGMENT_LENGTH, true);
         _new_segment_index = { _segment_index.x, _segment_index.y, 0 };
         _adjacent_segment = _adjacent_sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 

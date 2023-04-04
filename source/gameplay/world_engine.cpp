@@ -86,7 +86,7 @@ void WorldEngine::Update()
 	if (!player)
 		return;
 
-	auto _current_sector = world->GetSector(player->Position().x, player->Position().z);
+	auto _current_sector = world->GetSectorByWorldPos(player->Position().x, player->Position().z);
 	if (_current_sector == last_sector)
 		return;
 
@@ -101,7 +101,7 @@ void WorldEngine::Update()
 	for (int _i = -range; _i < range + 1; _i++)
 		for (int _j = -range; _j < range + 1; _j++)
 		{
-			auto _sector = world->GetSector(_current_sector->x + (_i * SECTOR_WIDTH), _current_sector->z + (_j * SECTOR_WIDTH), true);
+			auto _sector = world->GetSectorByGridPos(_current_sector->x + (_i * SECTOR_WIDTH), _current_sector->z + (_j * SECTOR_WIDTH), true);
 			if (_sector)
 				near_sectors.push_back(_sector);
 		}
@@ -151,11 +151,11 @@ void WorldEngine::SetupStartingWorld()
 	for (int _i = -range; _i < range + 1; _i++)
 		for (int _j = -range; _j < range + 1; _j++)
 		{
-			auto _sector = world->GetSector(player->Position().x + (_i * SECTOR_WIDTH), player->Position().z + (_j * SECTOR_WIDTH), true);
+			auto _sector = world->GetSectorByWorldPos(player->Position().x + (_i * SECTOR_WIDTH), player->Position().z + (_j * SECTOR_WIDTH), true);
 			near_sectors.push_back(_sector);
 		}
 
-	last_sector = world->GetSector(player->Position().x, player->Position().z);
+	last_sector = world->GetSectorByWorldPos(player->Position().x, player->Position().z);
 }
 
 void WorldEngine::StartWorldGeneration()

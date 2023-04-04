@@ -40,13 +40,17 @@
 	    void SetupDevelopementWorld();
         void Update();
 
-        bool CreateBlock(BlockType type, int x, int y, int z, bool rebuildSegment = false);
-        BlockType GetBlock(int x, int y, int z);
+        bool CreateBlockByGridPos(BlockType type, int x, int y, int z, bool rebuildSegment = false);
+        bool CreateBlockByWorldPos(BlockType type, float x, float y, float z, bool rebuildSegment = false);
+        BlockType GetBlockByGridPos(int x, int y, int z);
+        BlockType GetBlockByWorldPos(float x, float y, float z);
 
         Segment* CreateSegment(int x, int y, int z);
-        Segment* GetSegment(int x, int y, int z, bool force = false);
+        Segment* GetSegmentByGridPos(int x, int y, int z, bool force = false);
+        Segment* GetSegmentByWorldPos(float x, float y, float z, bool force = false);
 
-        Sector* GetSector(int x, int z, int force = false);
+        Sector* GetSectorByGridPos(int x, int z, int force = false);
+        Sector* GetSectorByWorldPos(float x, float z, int force = false);
 
         std::unordered_map<SectorIndex, Sector*, std::hash<SectorIndex>> sectors;
 

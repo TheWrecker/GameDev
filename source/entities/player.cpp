@@ -1,4 +1,5 @@
 
+#include "util_funcs.h"
 #include "../gameplay/items/item_container.h"
 #include "../utils/ray.h"
 #include "block_solid.h"
@@ -44,7 +45,7 @@ void Player::SetActiveInventorySlot(unsigned int slot)
     selected_slot = slot;
 }
 
-bool Player::GetInteractionBlockPos(DirectX::XMFLOAT3& pos)
+bool Player::GetInteractionBlockPos(DirectX::XMINT3& pos)
 {
     Ray _ray(camera->Position(), camera->Direction());
     //TODO: gameplay constants/variables?
@@ -52,12 +53,10 @@ bool Player::GetInteractionBlockPos(DirectX::XMFLOAT3& pos)
     {
         //TODO: gameplay constants? algorithm constants?
         _ray.Advance(0.1f);
-        auto _block = world->GetBlock(_ray.end.x, _ray.end.y, _ray.end.z);
+        auto _block = world->GetBlockByWorldPos(_ray.end.x, _ray.end.y, _ray.end.z);
         if (_block != BlockType::EMPTY) //and block is diggable?
         {
-            pos.x = floorf(_ray.end.x);
-            pos.y = floorf(_ray.end.y);
-            pos.z = floorf(_ray.end.z);
+            pos = GetGridPos(_ray.end);
             //do other stuff?
             return true;
         }
@@ -65,7 +64,7 @@ bool Player::GetInteractionBlockPos(DirectX::XMFLOAT3& pos)
     return false;
 }
 
-bool Player::GetPlacementBlockPos(DirectX::XMFLOAT3& pos)
+bool Player::GetPlacementBlockPos(DirectX::XMINT3& pos)
 {
     Ray _ray(camera->Position(), camera->Direction());
     DirectX::XMFLOAT3 _inv_slope = { 1.0f / camera->Direction().x, 1.0f / camera->Direction().y, 1.0f / camera->Direction().z };
@@ -74,14 +73,12 @@ bool Player::GetPlacementBlockPos(DirectX::XMFLOAT3& pos)
     {
         //TODO: gameplay constants? algorithm constants?
         _ray.Advance(0.1f);
-        auto _block = world->GetBlock(_ray.end.x, _ray.end.y, _ray.end.z);
+        auto _block = world->GetBlockByWorldPos(_ray.end.x, _ray.end.y, _ray.end.z);
         if (_block != BlockType::EMPTY)
         {
             //TODO: enhance algorithm?
-            pos.x = floorf(_ray.end.x);
-            pos.y = floorf(_ray.end.y);
-            pos.z = floorf(_ray.end.z);
-            DirectX::XMFLOAT3 _bbox_min = pos;
+            pos = GetGridPos(_ray.end);
+            DirectX::XMFLOAT3 _bbox_min = { (float)pos.x, (float)pos.y, (float)pos.z };
             DirectX::XMFLOAT3 _bbox_max = { _bbox_min.x + SOLID_BLOCK_SIZE, _bbox_min.y + SOLID_BLOCK_SIZE, _bbox_min.z + SOLID_BLOCK_SIZE };
             float tmin = 0.0, tmax = INFINITY;
 

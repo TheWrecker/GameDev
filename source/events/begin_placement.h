@@ -12,13 +12,13 @@
 	class BeginPlacementEvent : public IEvent
 	{
 	public:
-		BeginPlacementEvent(EventHandler* handler, Player* player, DirectX::XMFLOAT3 pos);
+		BeginPlacementEvent(EventHandler* handler, Player* player, DirectX::XMINT3 pos);
 
 		void Fire() override;
 
 	private:
 		Player* player;
-		DirectX::XMFLOAT3 position;
+		DirectX::XMINT3 position;
 	};
 
 #endif // !BEGIN_PLACEMENT_H

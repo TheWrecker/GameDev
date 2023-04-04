@@ -94,7 +94,7 @@ void Segment::RebuildBuffers()
 
 const DirectX::XMMATRIX Segment::World_Matrix()
 {
-    return DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+    return DirectX::XMMatrixTranslation((float)position.x, (float)position.y, (float)position.z);
 }
 
 const DirectX::XMINT3& Segment::Position()

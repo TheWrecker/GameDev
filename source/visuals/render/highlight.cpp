@@ -24,8 +24,8 @@ HighlightRender::HighlightRender(Presenter* parent)
 		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot)
 		.Build();
 
-	transformation_matrix = DirectX::XMMatrixMultiply(DirectX::XMMatrixScaling(1.04f, 1.04f, 1.04f),
-		DirectX::XMMatrixTranslation(-0.02f, -0.02f, -0.02f));
+	transformation_matrix = DirectX::XMMatrixMultiply(DirectX::XMMatrixScaling(1.06f, 1.06f, 1.06f),
+		DirectX::XMMatrixTranslation(-0.03f, -0.03f, -0.03f));
 }
 
 HighlightRender::~HighlightRender()
@@ -53,20 +53,20 @@ void HighlightRender::Render()
 			break;
 		case InteractionMode::DIG_MODE:
 		{
-			DirectX::XMFLOAT3 _temp_pos = {};
+			DirectX::XMINT3 _temp_pos = {};
 			if (!player->GetInteractionBlockPos(_temp_pos))
 				return;
 			_cb = { DirectX::XMMatrixMultiplyTranspose(transformation_matrix,
-				DirectX::XMMatrixTranslation(_temp_pos.x , _temp_pos.y, _temp_pos.z)) };
+				DirectX::XMMatrixTranslation((float)_temp_pos.x , (float)_temp_pos.y, (float)_temp_pos.z)) };
 			break;
 		}
 		case InteractionMode::PLACEMENT_MODE:
 		{
-			DirectX::XMFLOAT3 _temp_pos = {};
+			DirectX::XMINT3 _temp_pos = {};
 			if (!player->GetPlacementBlockPos(_temp_pos))
 				return;
 
-			_cb = { DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(_temp_pos.x , _temp_pos.y, _temp_pos.z)) };
+			_cb = { DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation((float)_temp_pos.x , (float)_temp_pos.y, (float)_temp_pos.z)) };
 			break;
 		}
 		default:
