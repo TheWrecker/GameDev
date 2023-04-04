@@ -13,14 +13,14 @@
 	class Sector
 	{
 	public:
-		Sector(Scene* scene, float x, float z);
+		Sector(Scene* scene, int x, int z);
 		~Sector();
 
 		void AddSegment(Segment* target, SegmentIndex index);
 		Segment* CreateSegment(const SegmentIndex& index);
 		Segment* GetSegment(const SegmentIndex& index, bool force = false);
 
-		float x, z;
+		int x, z;
 		std::atomic<Segment*> segments[SECTOR_HORIZONTAL_SIZE][SECTOR_VERTICAL_SIZE][SECTOR_HORIZONTAL_SIZE];
 
 	private:

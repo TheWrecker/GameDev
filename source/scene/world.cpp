@@ -25,53 +25,53 @@ void World::SetupDevelopementWorld()
 
 	return;
 
-	for (int i = -5; i < 5; i++)
-		for (int j = -5; j < 5; j++)
-		{
-			auto _segment = GetSegment((float)(i * SEGMENT_LENGTH), 0.0f, (float)(j * SEGMENT_LENGTH), true);
-			auto _rand = abs((i % 3) + (j % 3));
-			switch (_rand)
-			{
-				case 0:
-				{
-					_segment->Fill(BlockType::GRASS);
-					break;
-				}
-				case 1:
-				{
-					_segment->Fill(BlockType::DIRT);
-					break;
-				}
-				case 2:
-				{
-					_segment->Fill(BlockType::GRASS_ON_DIRT);
-					break;
-				}
-				case 3:
-				{
-					_segment->Fill(BlockType::STONE);
-					break;
-				}
-				case 4:
-				{
-					_segment->Fill(BlockType::SAND);
-					break;
-				}
-				default:
-					assert(false);
-			}
-		}
+	//for (int i = -5; i < 5; i++)
+	//	for (int j = -5; j < 5; j++)
+	//	{
+	//		auto _segment = GetSegment((float)(i * SEGMENT_LENGTH), 0.0f, (float)(j * SEGMENT_LENGTH), true);
+	//		auto _rand = abs((i % 3) + (j % 3));
+	//		switch (_rand)
+	//		{
+	//			case 0:
+	//			{
+	//				_segment->Fill(BlockType::GRASS);
+	//				break;
+	//			}
+	//			case 1:
+	//			{
+	//				_segment->Fill(BlockType::DIRT);
+	//				break;
+	//			}
+	//			case 2:
+	//			{
+	//				_segment->Fill(BlockType::GRASS_ON_DIRT);
+	//				break;
+	//			}
+	//			case 3:
+	//			{
+	//				_segment->Fill(BlockType::STONE);
+	//				break;
+	//			}
+	//			case 4:
+	//			{
+	//				_segment->Fill(BlockType::SAND);
+	//				break;
+	//			}
+	//			default:
+	//				assert(false);
+	//		}
+	//	}
 
-	for (auto& _sector : sectors)
-	{
-		for (unsigned int _x = 0; _x < SECTOR_HORIZONTAL_SIZE; _x++)
-			for (unsigned int _y = 0; _y < SECTOR_VERTICAL_SIZE; _y++)
-				for (unsigned int _z = 0; _z < SECTOR_HORIZONTAL_SIZE; _z++)
-				{
-					//if (_sector.second->segments[_x][_y][_z].load())
-					//	_sector.second->segments[_x][_y][_z].load()->RebuildBuffers();
-				}
-	}
+	//for (auto& _sector : sectors)
+	//{
+	//	for (unsigned int _x = 0; _x < SECTOR_HORIZONTAL_SIZE; _x++)
+	//		for (unsigned int _y = 0; _y < SECTOR_VERTICAL_SIZE; _y++)
+	//			for (unsigned int _z = 0; _z < SECTOR_HORIZONTAL_SIZE; _z++)
+	//			{
+	//				//if (_sector.second->segments[_x][_y][_z].load())
+	//				//	_sector.second->segments[_x][_y][_z].load()->RebuildBuffers();
+	//			}
+	//}
 
 }
 
@@ -79,7 +79,7 @@ void World::Update()
 {
 }
 
-bool World::CreateBlock(BlockType type, float x, float y, float z, bool rebuildSegment)
+bool World::CreateBlock(BlockType type, int x, int y, int z, bool rebuildSegment)
 {
 	SectorIndex _sector_index = GetSectorIndex(x, z);
 	auto _sector = GetSector(_sector_index, true);
@@ -102,7 +102,7 @@ bool World::CreateBlock(BlockType type, float x, float y, float z, bool rebuildS
 	return true;
 }
 
-Segment* World::GetSegment(float x, float y, float z, bool force)
+Segment* World::GetSegment(int x, int y, int z, bool force)
 {
 	SectorIndex _sector_index = GetSectorIndex(x, z);
 	auto _sector = GetSector(_sector_index, force);
@@ -127,7 +127,7 @@ Segment* World::GetSegment(Sector* sector, SegmentIndex& index, bool force)
 	else if (force)
 	{
 		auto _segment = new Segment(scene, BlockType::TEST, false, 
-			sector->x + (index.x * SEGMENT_LENGTH), (float)(index.y * SEGMENT_LENGTH), sector->z + (index.z * SEGMENT_LENGTH));
+			sector->x + (index.x * SEGMENT_LENGTH), index.y * SEGMENT_LENGTH, sector->z + index.z * SEGMENT_LENGTH);
 		sector->segments[index.x][index.y][index.z].store(_segment);
 		return _segment;
 	}
@@ -135,7 +135,7 @@ Segment* World::GetSegment(Sector* sector, SegmentIndex& index, bool force)
 	return nullptr;
 }
 
-Sector* World::GetSector(float x, float z, bool force)
+Sector* World::GetSector(int x, int z, int force)
 {
 	SectorIndex _index = GetSectorIndex(x, z);
 	auto _result = sectors.find(_index);
@@ -143,14 +143,14 @@ Sector* World::GetSector(float x, float z, bool force)
 		return _result->second;
 	else if (force)
 	{
-		auto _sector = new Sector(scene, (float)(_index.x * SECTOR_WIDTH), (float)(_index.z * SECTOR_WIDTH));
+		auto _sector = new Sector(scene, _index.x * SECTOR_WIDTH, _index.z * SECTOR_WIDTH);
 		sectors.insert(std::pair(_index, _sector));
 		return _sector;
 	}
 	return nullptr;
 }
 
-Segment* World::CreateSegment(float x, float y, float z)
+Segment* World::CreateSegment(int x, int y, int z)
 {
 	SectorIndex _sector_index = GetSectorIndex(x, z);
 	SegmentIndex _segment_index = GetSegmentIndex(x, y, z);
@@ -161,13 +161,13 @@ Segment* World::CreateSegment(float x, float y, float z)
 		return _result->second->GetSegment(_segment_index, true);
 	else
 	{
-		auto _sector = new Sector(scene, (float)(_sector_index.x * SECTOR_WIDTH), (float)(_sector_index.z * SECTOR_WIDTH));
+		auto _sector = new Sector(scene, _sector_index.x * SECTOR_WIDTH, _sector_index.z * SECTOR_WIDTH);
 		sectors.insert(std::pair(_sector_index, _sector));
 		return _sector->CreateSegment(_segment_index);
 	}
 }
 
-BlockType World::GetBlock(float x, float y, float z)
+BlockType World::GetBlock(int x, int y, int z)
 {
 	SectorIndex _sector_index = GetSectorIndex(x, z);
 	auto _sector = GetSector(_sector_index);
@@ -201,7 +201,7 @@ Sector* World::GetSector(SectorIndex& index, bool force)
 		return _result->second;
 	else if (force)
 	{
-		auto _sector = new Sector(scene, (float)(index.x * SECTOR_WIDTH), (float)(index.z * SECTOR_WIDTH));
+		auto _sector = new Sector(scene, index.x * SECTOR_WIDTH, index.z * SECTOR_WIDTH);
 		sectors.insert(std::pair(index, _sector));
 		return _sector;
 	}

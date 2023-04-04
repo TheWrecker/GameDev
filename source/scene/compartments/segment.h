@@ -19,7 +19,7 @@
 	class Segment
 	{
 	public:
-		Segment(Scene* scene, BlockType type = BlockType::TEST, bool fill = false, float x = 0.0f, float y = 0.0f, float z = 0.0f);
+		Segment(Scene* scene, BlockType type = BlockType::TEST, bool fill = false, int x = 0, int y = 0, int z = 0);
 		~Segment();
 
 		void SetBlock(unsigned int x, unsigned int y, unsigned int z, BlockType type = BlockType::TEST);
@@ -27,11 +27,11 @@
 
 		void SetType(BlockType type);
 		void Fill(BlockType type);
-		void Move(float x, float y, float z);
+		void Move(int x, int y, int z);
 		void RebuildBuffers();
 
 		const DirectX::XMMATRIX World_Matrix();
-		const DirectX::XMFLOAT3& Position();
+		const DirectX::XMINT3& Position();
 		VertexBuffer<SolidBlockVertex>* GetVertexBuffer();
 		IndexBuffer* GetIndexBuffer();
 		bool IsEmpty();
@@ -47,7 +47,7 @@
 		Scene* scene;
 
 		BlockType default_type;
-		DirectX::XMFLOAT3 position;
+		DirectX::XMINT3 position;
 
 		std::mutex draw_mutex;
 		std::atomic<bool> mesh_rebuilt;

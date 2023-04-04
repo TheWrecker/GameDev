@@ -10,7 +10,7 @@
 	public:
 		static bool Setup(float heightAmp = 20.0f, float floor = 0.0f);
 
-		static void ProcessBiome(World* world, float x, float y, float z);
+		static void ProcessBiome(World* world, int x, float y, int z);
 		//static void ProcessBiome(float* heightmap, World* world, Segment* segment);
 
 		static void ProcessSegmentColumn(Segment* segment, unsigned int x, unsigned int z, float value);

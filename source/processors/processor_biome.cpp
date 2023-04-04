@@ -18,16 +18,10 @@ bool BiomeProcessor::Setup(float heightAmp, float floor)
 	return true;
 }
 
-void BiomeProcessor::ProcessBiome(World* world, float x, float y, float z)
+void BiomeProcessor::ProcessBiome(World* world, int x, float y, int z)
 {
 	y *= height_amplitude;
 	y += height_amplitude;
-
-	static float _max = 20.0f;
-	static float _min = 20.0f;
-
-	_max = fmax(_max, y);
-	_min = fmin(_min, y);
 
 	BlockType _type = BlockType::TEST;
 	if (y > 20.0f)
@@ -42,21 +36,21 @@ void BiomeProcessor::ProcessBiome(World* world, float x, float y, float z)
 	{
 		_type = BlockType::SAND;
 	}
-	world->CreateBlock(_type, x, y, z, false);
+	world->CreateBlock(_type, x, (int)y, z, false);
 
-	auto _curr = y - SOLID_BLOCK_SIZE;
+	auto _curr = (int)(y) - SOLID_BLOCK_SIZE;
 	auto _inc = SOLID_BLOCK_SIZE;
 	while (_curr >= generation_floor_height)
 	{
-		if (_inc < 4.0f)//create the same block
+		if (_inc < 4)//create the same block
 		{
 			world->CreateBlock(_type, x, _curr, z, false);
 		}
-		else if (_inc < 10.0f) //create dirt
+		else if (_inc < 10) //create dirt
 		{
 			world->CreateBlock(BlockType::DIRT, x, _curr, z, false);
 		}
-		else if (_inc < 20.0f) //create stone
+		else if (_inc < 20) //create stone
 		{
 			world->CreateBlock(BlockType::STONE, x, _curr, z, false);
 		}

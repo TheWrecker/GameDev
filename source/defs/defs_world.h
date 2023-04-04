@@ -45,32 +45,40 @@
 		return (left.x == right.x) && (left.z == right.z);
 	}
 
-	inline BlockIndex GetBlockIndex(float x, float y, float z)
+	inline BlockIndex GetBlockIndex(int x, int y, int z)
 	{
-		auto _xf = floorf(x);
+		/*auto _xf = floorf(x);
 		auto _yf = floorf(y);
-		auto _zf = floorf(z);
+		auto _zf = floorf(z);*/
 
-		auto _x = ((int)_xf % 10) + 10;
+		/*auto _x = ((int)_xf % 10) + 10;
 		auto _y = ((int)_yf % 10) + 10;
-		auto _z = ((int)_zf % 10) + 10;
+		auto _z = ((int)_zf % 10) + 10;*/
 
-		_x %= 10;
-		_y %= 10;
-		_z %= 10;
+		auto _x = ((x % 10) + 10) % 10;
+		auto _y = ((y % 10) + 10) % 10;
+		auto _z = ((z % 10) + 10) % 10;
+
+		//_x %= 10;
+		//_y %= 10;
+		//_z %= 10;
 
 		return BlockIndex(_x, _y, _z);
 	}
 
-	inline SegmentIndex GetSegmentIndex(float x, float y, float z)
+	inline SegmentIndex GetSegmentIndex(int x, int y, int z)
 	{
-		auto _xf = floorf(x);
-		auto _yf = floorf(y);
-		auto _zf = floorf(z);
+		//auto _xf = floorf(x);
+		//auto _yf = floorf(y);
+		//auto _zf = floorf(z);
 
-		auto _x = (int)_xf % SECTOR_WIDTH;
+		/*auto _x = (int)_xf % SECTOR_WIDTH;
 		auto _y = (int)_yf % SECTOR_HEIGHT;
-		auto _z = (int)_zf % SECTOR_WIDTH;
+		auto _z = (int)_zf % SECTOR_WIDTH;*/
+
+		auto _x = x % SECTOR_WIDTH;
+		auto _y = y % SECTOR_HEIGHT;
+		auto _z = z % SECTOR_WIDTH;
 
 		_x += SECTOR_WIDTH;
 		_y += SECTOR_HEIGHT;
@@ -87,9 +95,9 @@
 		return SegmentIndex(_x, _y, _z);
 	}
 
-	inline SectorIndex GetSectorIndex(float x, float z)
+	inline SectorIndex GetSectorIndex(int x, int z)
 	{
-		return SectorIndex{ (int)floorf(x / SECTOR_WIDTH), (int)floorf(z / SECTOR_WIDTH) };
+		return SectorIndex{ x / SECTOR_WIDTH, z / SECTOR_WIDTH };
 	}
 
 #endif // !DEFS_WORLD_H

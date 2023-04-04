@@ -7,7 +7,7 @@
 
 #include "segment.h"
 
-Segment::Segment(Scene* scene, BlockType type, bool fill, float x, float y, float z)
+Segment::Segment(Scene* scene, BlockType type, bool fill, int x, int y, int z)
     :default_type(type), blocks(), scene(scene), block_count(0), biome_processed(false)
 {
     position = { x, y, z };
@@ -43,7 +43,7 @@ void Segment::SetType(BlockType type)
     default_type = type;
 }
 
-void Segment::Move(float x, float y, float z)
+void Segment::Move(int x, int y, int z)
 {
     position = { x, y, z };
 }
@@ -84,9 +84,6 @@ void Segment::RemoveBlock(unsigned int x, unsigned int y, unsigned int z)
     mesh_rebuilt.store(false);
 }
 
-//------------------------------ THREAD INFO ------------------------------
-// EXCLUSIVELY CALLED FROM THE MAIN THREAD AND NOT OTHER THREADS
-//-------------------------------------------------------------------------
 void Segment::RebuildBuffers()
 {
     SolidBlockProcessor::RebuildSegmentSingle(this);
@@ -94,14 +91,13 @@ void Segment::RebuildBuffers()
     //instead we create a preliminary mesh to prevent visual artifacts and then later finalize the mesh which
     //we do in the WorldEngine tick
 }
-//-------------------------------------------------------------------------
 
 const DirectX::XMMATRIX Segment::World_Matrix()
 {
     return DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 }
 
-const DirectX::XMFLOAT3& Segment::Position()
+const DirectX::XMINT3& Segment::Position()
 {
     return position;
 }

@@ -21,7 +21,7 @@
 
 #include "world_engine.h"
 constexpr auto 
-	WORLD_INITIAL_DIMENSION_SIZE = 20, //segments in each dimension
+	WORLD_INITIAL_DIMENSION_SIZE = 10, //segments in each dimension
 	WORLD_INITIAL_DIMENSION_BLOCKS = WORLD_INITIAL_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE,
 	WORLD_INITIAL_SIZE = WORLD_INITIAL_DIMENSION_SIZE * WORLD_INITIAL_DIMENSION_SIZE;
 
@@ -53,6 +53,60 @@ WorldEngine::~WorldEngine()
 	}
 }
 
+bool WorldEngine::Initialize()
+{
+	scene = Supervisor::QueryService<Scene*>("scene");
+	executor = Supervisor::QueryService<Executor*>("executor");
+	garbage_collector = Supervisor::QueryService<GarbageCollector*>("garbage_collector");
+
+	if (!scene || !executor || !garbage_collector)
+		return false;
+
+	world = scene->GetWorld();
+	player = scene->GetPlayer();
+
+	if (!world || !player)
+		return false;
+
+	auto _t1 = std::chrono::high_resolution_clock::now();
+	heightmap = noise_generator->GetPerlinSet(-WORLD_INITIAL_DIMENSION_BLOCKS, -WORLD_INITIAL_DIMENSION_BLOCKS, 0, WORLD_INITIAL_DIMENSION_BLOCKS * 2, WORLD_INITIAL_DIMENSION_BLOCKS * 2, 1);
+	auto _t2 = std::chrono::high_resolution_clock::now();
+	auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
+	int i = 0;
+
+	//update_task = executor->RegisterPeriodicTask(std::bind(&WorldEngine::WorldLoadTick, this), 25, false);
+
+	return true;
+}
+
+
+void WorldEngine::Update()
+{
+	Player* player = scene->GetPlayer();
+	if (!player)
+		return;
+
+	auto _current_sector = world->GetSector(player->Position().x, player->Position().z);
+	if (_current_sector == last_sector)
+		return;
+
+	if (!_current_sector)
+		return;
+
+	auto _t1 = std::chrono::high_resolution_clock::now();
+
+	//collect the sectors in immediate vicinity of the player
+	near_sectors.clear();
+
+	for (int _i = -range; _i < range + 1; _i++)
+		for (int _j = -range; _j < range + 1; _j++)
+		{
+			auto _sector = world->GetSector(_current_sector->x + (_i * SECTOR_WIDTH), _current_sector->z + (_j * SECTOR_WIDTH), true);
+			if (_sector)
+				near_sectors.push_back(_sector);
+		}
+}
+
 void WorldEngine::SetupStartingWorld()
 {
 	//return;
@@ -62,15 +116,15 @@ void WorldEngine::SetupStartingWorld()
 
 	world = scene->GetWorld();
 
-	float _bX, _bZ, _val;
+	float _val;
 	auto _tp1 = std::chrono::high_resolution_clock::now();
-	for (int _x = 0; _x < WORLD_INITIAL_DIMENSION_BLOCKS; _x++)
-		for (int _z = 0; _z < WORLD_INITIAL_DIMENSION_BLOCKS; _z++)
+	unsigned int _count = 0;
+	for (int _x = -WORLD_INITIAL_DIMENSION_BLOCKS; _x < WORLD_INITIAL_DIMENSION_BLOCKS; _x++)
+		for (int _z = -WORLD_INITIAL_DIMENSION_BLOCKS; _z < WORLD_INITIAL_DIMENSION_BLOCKS; _z++)
 		{
-			_bX = -(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f) + _x;
-			_bZ = -(WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f) + _z;
-			_val = heightmap[_x * WORLD_INITIAL_DIMENSION_BLOCKS + _z];
-			BiomeProcessor::ProcessBiome(world, _bX, _val, _bZ);
+			_val = heightmap[_count];
+			BiomeProcessor::ProcessBiome(world, _x, _val, _z);
+			_count++;
 		}
 
 	//rebuild all world segments' buffers?
@@ -102,59 +156,6 @@ void WorldEngine::SetupStartingWorld()
 		}
 
 	last_sector = world->GetSector(player->Position().x, player->Position().z);
-}
-
-void WorldEngine::Update()
-{
-	Player* player = scene->GetPlayer();
-	if (!player)
-		return;
-
-	auto _current_sector = world->GetSector(player->Position().x, player->Position().z);
-	if (_current_sector == last_sector)
-		return;
-
-	if (!_current_sector)
-		return;
-
-	auto _t1 = std::chrono::high_resolution_clock::now();
-
-	//collect the sectors in immediate vicinity of the player
-	near_sectors.clear();
-
-	for (int _i = -range; _i < range + 1; _i++)
-		for (int _j = -range; _j < range + 1; _j++)
-		{
-			auto _sector = world->GetSector(_current_sector->x + (_i * SECTOR_WIDTH), _current_sector->z + (_j * SECTOR_WIDTH), true);
-			if (_sector)
-				near_sectors.push_back(_sector);
-		}
-}
-
-bool WorldEngine::Initialize()
-{
-	scene = Supervisor::QueryService<Scene*>("scene");
-	executor = Supervisor::QueryService<Executor*>("executor");
-	garbage_collector = Supervisor::QueryService<GarbageCollector*>("garbage_collector");
-
-	if (!scene || !executor || !garbage_collector)
-		return false;
-
-	world = scene->GetWorld();
-	player = scene->GetPlayer();
-
-	if (!world || !player)
-		return false;
-
-	auto _t1 = std::chrono::high_resolution_clock::now();
-	heightmap = noise_generator->GetPerlinSet((int) (-WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f), (int)(-WORLD_INITIAL_DIMENSION_BLOCKS / 2.0f), 0, WORLD_INITIAL_DIMENSION_BLOCKS, WORLD_INITIAL_DIMENSION_BLOCKS, 1);
-	auto _t2 = std::chrono::high_resolution_clock::now();
-	auto _ti = std::chrono::duration<float>(_t2 - _t1).count() * 1000;
-	int i = 0;
-
-	//update_task = executor->RegisterPeriodicTask(std::bind(&WorldEngine::WorldLoadTick, this), 25, false);
-
-	return true;
 }
 
 void WorldEngine::StartWorldGeneration()
@@ -211,15 +212,15 @@ void WorldEngine::WorldLoadTick()
 					}
 				}
 
-				auto _heightmap = noise_generator->GetPerlinSet((int)(_sector->x + _i * SEGMENT_LENGTH), 
-					(int)(_sector->z + _k * SEGMENT_LENGTH), 0,	SEGMENT_DIMENSION_SIZE, SEGMENT_DIMENSION_SIZE, 1);
+				auto _heightmap = noise_generator->GetPerlinSet(_sector->x + _i * SEGMENT_LENGTH, 
+					_sector->z + _k * SEGMENT_LENGTH, 0, SEGMENT_DIMENSION_SIZE, SEGMENT_DIMENSION_SIZE, 1);
 
 				Segment* _segs[5];
 
 				for (unsigned int _t = 0; _t < 5; _t++)
 				{
 					_segs[_t] = new Segment(scene, BlockType::TEST, false, _sector->x + _i * SEGMENT_LENGTH,
-						(float)(_t * SEGMENT_LENGTH), _sector->z + _k * SEGMENT_LENGTH);
+						_t * SEGMENT_LENGTH, _sector->z + _k * SEGMENT_LENGTH);
 				}
 
 				for (unsigned int _m = 0; _m < SEGMENT_DIMENSION_SIZE; _m++)
