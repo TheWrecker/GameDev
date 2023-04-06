@@ -31,8 +31,12 @@ Supervisor::Supervisor(InstanceHandle instance)
 
 	//TODO: change/improve service order in the vector?
 
+	//setup and start the windows infrastructure
+	auto _platform = new Platform(instance);
+	_platform->SetWindowsParameters();
+	_platform->Initialize();
+
 	//create all services and add them to service manager
-	IService* _platform = new Platform(instance);
 	services->AdoptService("platform", _platform);
 
 	IService* _ticker = new SystemTicker();
@@ -53,7 +57,9 @@ Supervisor::Supervisor(InstanceHandle instance)
 	IService* _keyboard = new Keyboard();
 	services->AdoptService("keyboard", _keyboard);
 
-	IService* _presenter = new Presenter(this);
+	RECT _rect = {};
+	GetClientRect(_platform->GetWindowHandle(), &_rect);
+	IService* _presenter = new Presenter(this, _rect.right - _rect.left, _rect.bottom - _rect.top);
 	services->AdoptService("presenter", _presenter);
 
 	IService* _scene = new Scene(static_cast<Presenter*>(_presenter));
@@ -102,10 +108,6 @@ bool Supervisor::InitializeAllSystems()
 {
 	//TODO: add perstep checks and retries
 	bool _result = true;
-
-	//setup and start the windows infrastructure
-	QueryService<Platform*>("platform")->SetWindowsParameters();
-	_result &= QueryService<Platform*>("platform")->Initialize();
 
 	//initialize the system profiler
 	_result &= QueryService<SystemProfiler*>("profiler")->Initialize();

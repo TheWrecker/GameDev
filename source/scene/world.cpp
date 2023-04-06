@@ -129,7 +129,7 @@ Segment* World::GetSegmentByWorldPos(float x, float y, float z, bool force)
 	return GetSegmentByGridPos(_x, _y, _z, force);
 }
 
-Sector* World::GetSectorByGridPos(int x, int z, int force)
+Sector* World::GetSectorByGridPos(int x, int z, bool force)
 {
 	SectorIndex _index = GetSectorIndex(x, z);
 	auto _result = sectors.find(_index);
@@ -144,7 +144,7 @@ Sector* World::GetSectorByGridPos(int x, int z, int force)
 	return nullptr;
 }
 
-Sector* World::GetSectorByWorldPos(float x, float z, int force)
+Sector* World::GetSectorByWorldPos(float x, float z, bool force)
 {
 	auto _x = int_floor(x);
 	auto _z = int_floor(z);

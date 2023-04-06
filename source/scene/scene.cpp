@@ -6,8 +6,11 @@
 #include "assets/texture_atlas.h"
 #include "camera/camera_firstperson.h"
 #include "../entities/player.h"
+#include "elements/renderable_frustrum.h"
 #include "elements/sun.h"
 #include "world.h"
+#include "../visuals/render/proxies.h"
+#include "../visuals/render/aggregator.h"
 #include "../visuals/presenter.h"
 #include "../gameplay/physics_engine.h"
 #include "../gameplay/world_engine.h"
@@ -33,6 +36,9 @@ Scene::Scene(Presenter* parent)
 
 	//elements
 	sun = std::make_unique<Sun>();
+
+	//test
+	renderable_frustrum = std::make_unique<RenderableFrustrum>(this);
 
 	//entities
 	player = std::make_unique<Player>(this);
@@ -65,6 +71,12 @@ void Scene::SwitchMode(SceneMode mode)
 			physics_engine->RegisterMovementComponent(player.get());
 			physics_engine->RegisterCollisionComponent(player.get());
 
+			//test
+			renderable_frustrum->SetPosition(20.0f, 40.0f, 20.0f);
+			renderable_frustrum->Initialize();
+			aggregator->render_proxies->AddProxy(renderable_frustrum.get());
+			aggregator->render_proxies->ShowProxies();
+
 			//generate the initial world
 			world_engine->SetupStartingWorld();
 			//world->SetupDevelopementWorld();
@@ -85,8 +97,9 @@ bool Scene::Initialize()
 {
 	physics_engine = Supervisor::QueryService<PhysicsEngine*>("physics_engine");
 	world_engine = Supervisor::QueryService<WorldEngine*>("world_engine");
+	aggregator = presenter->GetAggregator();
 
-	if (!physics_engine || !world_engine)
+	if (!physics_engine || !world_engine || !aggregator)
 		return false;
 
 	bool _result = true;

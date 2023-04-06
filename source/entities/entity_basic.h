@@ -10,7 +10,6 @@
 		BasicEntity(float x = 0.0f, float y = 0.0f, float z = 0.0f);
 		virtual ~BasicEntity();
 
-		virtual void Render();
 		virtual void Update();
 		virtual void SetPosition(float x, float y, float z);
 		virtual void SetPosition(DirectX::XMFLOAT3 position);

@@ -14,7 +14,7 @@ Physics Engine:
 
   Executor
    - move periodic task defs to a header?
-   - add dispatch/async capability? threadpool?
+   - add dispatch/async capability? threadpool? - partially done
 
   World, Compartments and Blocks
-   - change all indexes, positions and parameters from float to integers
+   - change all indexes, positions and parameters from float to integers - done

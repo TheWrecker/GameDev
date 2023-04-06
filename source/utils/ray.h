@@ -9,6 +9,7 @@
 	{
 	public:
 		Ray(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir);
+		Ray(DirectX::XMVECTOR& pos, DirectX::XMVECTOR& dir);
 		~Ray();
 
 		void Advance(float distance);
@@ -18,10 +19,14 @@
 		float GetLength();
 
 		DirectX::XMFLOAT3 position, direction, end;
+		DirectX::XMVECTOR position_vector, direction_vector, end_vector;
 
 	private:
-		DirectX::XMVECTOR position_vector, direction_vector, end_vector;
 		float length;
 	};
+
+	inline Ray ComputeIntersectionLine(DirectX::FXMVECTOR p1, DirectX::FXMVECTOR p2);
+
+	inline DirectX::XMVECTOR ComputeIntersectionPoint(DirectX::FXMVECTOR& plane, Ray& ray);
 
 #endif // !RAY_H

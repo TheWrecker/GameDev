@@ -42,6 +42,12 @@
 		return _i - (_i > value);
 	}
 
+	static inline float float_floor(float value)
+	{
+		int _i = (int)value;
+		return (float)(_i - (_i > value));
+	}
+
 	#if defined( DEBUG ) || defined( _DEBUG )
 		#define DXAssert(x) if ((x) < 0) {assert(false);} 
 		#define RetAssert(x) if (!(x)) {assert(false);} 

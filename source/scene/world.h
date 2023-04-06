@@ -49,8 +49,8 @@
         Segment* GetSegmentByGridPos(int x, int y, int z, bool force = false);
         Segment* GetSegmentByWorldPos(float x, float y, float z, bool force = false);
 
-        Sector* GetSectorByGridPos(int x, int z, int force = false);
-        Sector* GetSectorByWorldPos(float x, float z, int force = false);
+        Sector* GetSectorByGridPos(int x, int z, bool force = false);
+        Sector* GetSectorByWorldPos(float x, float z, bool force = false);
 
         std::unordered_map<SectorIndex, Sector*, std::hash<SectorIndex>> sectors;
 

@@ -33,7 +33,7 @@ SolidBlockRender::~SolidBlockRender()
 
 bool SolidBlockRender::Initialize()
 {
-	bool _result = RenderBase::Initialize();;
+	bool _result = RenderBase::Initialize();
 
 	perimeter = std::make_unique<VisionPerimeter>(presenter);
 	if (!perimeter.get())
@@ -53,12 +53,12 @@ void SolidBlockRender::Update()
 
 void SolidBlockRender::Render()
 {
+	if (render_segments.empty())
+		return;
+
 	vertex_shader->Apply();
 	pixel_shader->Apply();
 	input_layout->Bind();
-
-	if (render_segments.empty())
-		return;
 
 	for (auto _segment : render_segments)
 	{

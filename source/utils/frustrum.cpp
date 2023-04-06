@@ -14,24 +14,13 @@ Frustrum::~Frustrum()
 {
 }
 
-void Frustrum::CalculateFrustrum(DirectX::CXMMATRIX viewMatrix, DirectX::XMFLOAT4X4& projMatrix, float screenDepth)
+void Frustrum::CalculateFrustrum(DirectX::CXMMATRIX viewProjectionMatrix)
 {
 	using namespace DirectX;
 
-	float _zMinimum, _r;
-	XMFLOAT4X4 _matrix, _proj;
-	XMVECTOR _v;
-
-	_proj = projMatrix;
-	// Calculate the minimum Z distance in the frustum.
-	_zMinimum = -projMatrix._43 / projMatrix._33;
-	_r = screenDepth / (screenDepth - _zMinimum);
-	_proj._33 = _r;
-	_proj._43 = -_r * _zMinimum;
-
-	// Create the frustum matrix from the view matrix and updated projection matrix.
-	auto _mat = XMMatrixMultiply(viewMatrix, XMLoadFloat4x4(&_proj));
-	XMStoreFloat4x4(&_matrix, _mat);
+	XMVECTOR _v = {};
+	XMFLOAT4X4 _matrix = {};
+	XMStoreFloat4x4(&_matrix, viewProjectionMatrix);
 
 	// Calculate near plane of frustum.
 	planes[0].x = _matrix._14 + _matrix._13;
@@ -86,6 +75,25 @@ void Frustrum::CalculateFrustrum(DirectX::CXMMATRIX viewMatrix, DirectX::XMFLOAT
 	_v = XMLoadFloat4(&planes[5]);
 	_v = XMPlaneNormalize(_v);
 	XMStoreFloat4(&planes[5], _v);
+}
+
+void Frustrum::CalculateFrustrum(DirectX::CXMMATRIX viewMatrix, DirectX::XMFLOAT4X4& projMatrix, float screenDepth)
+{
+	using namespace DirectX;
+
+	float _zMinimum, _r;
+	XMFLOAT4X4 _proj = {};
+
+	_proj = projMatrix;
+	// Calculate the minimum Z distance in the frustum.
+	_zMinimum = -projMatrix._43 / projMatrix._33;
+	_r = screenDepth / (screenDepth - _zMinimum);
+	_proj._33 = _r;
+	_proj._43 = -_r * _zMinimum;
+
+	// Create the frustum matrix from the view matrix and updated projection matrix.
+	auto _mat = XMMatrixMultiply(viewMatrix, XMLoadFloat4x4(&_proj));
+	CalculateFrustrum(_mat);
 }
 
 bool Frustrum::IntersectsCube(DirectX::XMFLOAT3 center, float radius)
@@ -204,4 +212,64 @@ bool Frustrum::IntersectsSector(float x, float z)
 	}
 
 	return true;
+}
+
+const DirectX::XMFLOAT4& Frustrum::Top() const
+{
+	return planes[4];
+}
+
+const DirectX::XMFLOAT4& Frustrum::Bottom() const
+{
+	return planes[5];
+}
+
+const DirectX::XMFLOAT4& Frustrum::Left() const
+{
+	return planes[2];
+}
+
+const DirectX::XMFLOAT4& Frustrum::Right() const
+{
+	return planes[3];
+}
+
+const DirectX::XMFLOAT4& Frustrum::Near() const
+{
+	return planes[0];
+}
+
+const DirectX::XMFLOAT4& Frustrum::Far() const
+{
+	return planes[1];
+}
+
+DirectX::XMVECTOR Frustrum::Top_Vector() const
+{
+	return DirectX::XMLoadFloat4(&planes[4]);
+}
+
+DirectX::XMVECTOR Frustrum::Bottom_Vector() const
+{
+	return DirectX::XMLoadFloat4(&planes[5]);
+}
+
+DirectX::XMVECTOR Frustrum::Left_Vector() const
+{
+	return DirectX::XMLoadFloat4(&planes[2]);
+}
+
+DirectX::XMVECTOR Frustrum::Right_Vector() const
+{
+	return DirectX::XMLoadFloat4(&planes[3]);
+}
+
+DirectX::XMVECTOR Frustrum::Near_Vector() const
+{
+	return DirectX::XMLoadFloat4(&planes[0]);
+}
+
+DirectX::XMVECTOR Frustrum::Far_Vector() const
+{
+	return DirectX::XMLoadFloat4(&planes[1]);
 }

@@ -24,6 +24,12 @@
 		DirectX::XMFLOAT3 normal;
 	};
 
+	struct ColorVertexStruct
+	{
+		DirectX::XMFLOAT3 position;
+		DirectX::XMFLOAT4 color;
+	};
+
 	struct SolidBlockVertex
 	{
 		DirectX::XMFLOAT3 position;
@@ -79,6 +85,7 @@
 	enum class DefaultSampler
 	{
 		UNDEFINED = 0,
+		PROJECTION_WHITE = 12,
 		POINT = 13,
 		BILINEAR = 14,
 		END_PADDING = 15 //D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT (16)

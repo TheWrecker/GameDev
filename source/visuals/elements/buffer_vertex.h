@@ -11,9 +11,9 @@
 	class VertexBuffer
 	{
 	public:
-		VertexBuffer(ID3D11Device* device = nullptr, ID3D11DeviceContext* context = nullptr, std::size_t reserve = 3000);
+		VertexBuffer(ID3D11Device* device = nullptr, ID3D11DeviceContext* context = nullptr, unsigned int reserve = 30);
 		~VertexBuffer();
-		void Initialize(ID3D11Device* device, ID3D11DeviceContext* context);
+		void Initialize(ID3D11Device* device, ID3D11DeviceContext* context, unsigned int reserve = 30);
 
 		void AddVertex(type vertex);
 		void Clear();
@@ -37,7 +37,7 @@
 	};
 
 	template<typename type>
-	inline VertexBuffer<type>::VertexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, std::size_t reserve)
+	inline VertexBuffer<type>::VertexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, unsigned int reserve)
 		:device(device), context(context), buffer(), desc(), subresource(), is_built(false)
 	{
 		ZeroMemory(&desc, sizeof(desc));
@@ -58,13 +58,14 @@
 	}
 
 	template<typename type>
-	inline void VertexBuffer<type>::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
+	inline void VertexBuffer<type>::Initialize(ID3D11Device* device, ID3D11DeviceContext* context, unsigned int reserve)
 	{
 		if (device && context)
 		{
 			this->device = device;
 			this->context = context;
 		}
+		vertices.reserve(reserve);
 	}
 
 	template<typename type>

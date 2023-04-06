@@ -6,7 +6,7 @@
 
 #include "shader_vertex.h"
 
-VertexShader::VertexShader(Presenter* presenter, const std::wstring& file)
+VertexShader::VertexShader(Presenter* presenter, const std::wstring& file, const std::string& entry)
     :shader()
 {
 	device = presenter->GetDevice();
@@ -21,7 +21,7 @@ VertexShader::VertexShader(Presenter* presenter, const std::wstring& file)
 		_shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 	#endif
 
-	DXAssert(D3DCompileFromFile(file.c_str(), nullptr, nullptr, "main", "vs_5_0", _shaderFlags, 0, &blob, &_errorMessages));
+	DXAssert(D3DCompileFromFile(file.c_str(), nullptr, nullptr, entry.c_str(), "vs_5_0", _shaderFlags, 0, &blob, &_errorMessages));
 	byte_code = blob->GetBufferPointer();
 	byte_code_size = blob->GetBufferSize();
 	DXAssert(device->CreateVertexShader(byte_code, byte_code_size, 0, &shader));

@@ -307,6 +307,18 @@
     <ClCompile Include="source\core\garbage_collector.cpp">
       <Filter>source\core</Filter>
     </ClCompile>
+    <ClCompile Include="source\scene\camera\projector.cpp">
+      <Filter>source\scene\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\elements\renderable_frustrum.cpp">
+      <Filter>source\scene\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scene\elements\proxy.cpp">
+      <Filter>source\scene\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="source\visuals\render\proxies.cpp">
+      <Filter>source\visuals\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\platform.h">
@@ -573,6 +585,18 @@
     <ClInclude Include="source\external\MPMC Queue.h">
       <Filter>source\external</Filter>
     </ClInclude>
+    <ClInclude Include="source\scene\camera\projector.h">
+      <Filter>source\scene\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\elements\renderable_frustrum.h">
+      <Filter>source\scene\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\render\proxies.h">
+      <Filter>source\visuals\render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scene\elements\proxy.h">
+      <Filter>source\scene\elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="source\visuals\shaders\dev_v.hlsl">
@@ -615,6 +639,9 @@
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
     <FxCompile Include="source\visuals\shaders\highlight_p.hlsl">
+      <Filter>source\visuals\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="source\visuals\shaders\proxies.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
   </ItemGroup>

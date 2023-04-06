@@ -7,6 +7,7 @@
 
 	class HUDRender;
 	class HighlightRender;
+	class ProxyRender;
 	class SolidBlockRender;
 	class DevRender;
 	class SunMoon;
@@ -30,6 +31,7 @@
 
 	private:
 		friend class Overlay;
+		friend Scene;
 
 		ID3D11Device* device;
 		ID3D11DeviceContext* context;
@@ -45,6 +47,7 @@
 		std::unique_ptr<SkyRender> render_sky;
 		std::unique_ptr<SunMoon> render_sun_moon;
 		std::unique_ptr<SolidBlockRender> render_solid_blocks;
+		std::unique_ptr<ProxyRender> render_proxies;
 		std::unique_ptr<HighlightRender> render_highlight;
 		std::unique_ptr<HUDRender> render_hud;
 	};

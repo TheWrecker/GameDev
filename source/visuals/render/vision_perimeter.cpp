@@ -51,8 +51,8 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 	//calculate the vision frustrum
 	DirectX::XMFLOAT4X4 _proj = {};
 	DirectX::XMStoreFloat4x4(&_proj, camera->Projection_Matrix());
-	frustrum.CalculateFrustrum(camera->View_Matrix(), _proj);
-
+	//frustrum.CalculateFrustrum(camera->View_Matrix(), _proj);
+	frustrum.CalculateFrustrum(camera->View_Projection_Matrix());
 	//filter all near sectors
 	//TODO: render range differs from world near range? make it lesser?
 	Segment* _segment = nullptr;

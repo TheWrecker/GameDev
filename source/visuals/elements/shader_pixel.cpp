@@ -6,7 +6,7 @@
 
 #include "shader_pixel.h"
 
-PixelShader::PixelShader(Presenter* presenter, const std::wstring& file)
+PixelShader::PixelShader(Presenter* presenter, const std::wstring& file, const std::string& entry)
 	:shader()
 {
 	device = presenter->GetDevice();
@@ -21,7 +21,7 @@ PixelShader::PixelShader(Presenter* presenter, const std::wstring& file)
 		_shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 	#endif
 
-	DXAssert(D3DCompileFromFile(file.c_str(), nullptr, nullptr, "main", "ps_5_0", _shaderFlags, 0, &blob, &_errorMessages));
+	DXAssert(D3DCompileFromFile(file.c_str(), nullptr, nullptr, entry.c_str(), "ps_5_0", _shaderFlags, 0, &blob, &_errorMessages));
 	byte_code = blob->GetBufferPointer();
 	byte_code_size = blob->GetBufferSize();
 	DXAssert(device->CreatePixelShader(byte_code, byte_code_size, 0, &shader));

@@ -20,13 +20,14 @@ IndexBuffer::~IndexBuffer()
 		DXRelease(buffer);
 }
 
-void IndexBuffer::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
+void IndexBuffer::Initialize(ID3D11Device* device, ID3D11DeviceContext* context, unsigned int reserve)
 {
 	if (device && context)
 	{
 		this->device = device;
 		this->context = context;
 	}
+	indices.reserve(reserve);
 }
 
 void IndexBuffer::AddIndex(unsigned int index)

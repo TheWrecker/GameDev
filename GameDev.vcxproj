@@ -208,8 +208,11 @@
     <ClCompile Include="source\scene\assets\texture_atlas.cpp" />
     <ClCompile Include="source\scene\camera\camera_basic.cpp" />
     <ClCompile Include="source\scene\camera\camera_firstperson.cpp" />
+    <ClCompile Include="source\scene\camera\projector.cpp" />
     <ClCompile Include="source\scene\compartments\sector.cpp" />
     <ClCompile Include="source\scene\compartments\segment.cpp" />
+    <ClCompile Include="source\scene\elements\proxy.cpp" />
+    <ClCompile Include="source\scene\elements\renderable_frustrum.cpp" />
     <ClCompile Include="source\scene\elements\sun.cpp" />
     <ClCompile Include="source\scene\scene.cpp" />
     <ClCompile Include="source\scene\world.cpp" />
@@ -231,6 +234,7 @@
     <ClCompile Include="source\visuals\render\aggregator.cpp" />
     <ClCompile Include="source\visuals\render\highlight.cpp" />
     <ClCompile Include="source\visuals\render\hud.cpp" />
+    <ClCompile Include="source\visuals\render\proxies.cpp" />
     <ClCompile Include="source\visuals\render\solid_blocks.cpp" />
     <ClCompile Include="source\visuals\render\render_base.cpp" />
     <ClCompile Include="source\visuals\render\render_dev.cpp" />
@@ -295,8 +299,11 @@
     <ClInclude Include="source\scene\assets\texture_atlas.h" />
     <ClInclude Include="source\scene\camera\camera_basic.h" />
     <ClInclude Include="source\scene\camera\camera_firstperson.h" />
+    <ClInclude Include="source\scene\camera\projector.h" />
     <ClInclude Include="source\scene\compartments\sector.h" />
     <ClInclude Include="source\scene\compartments\segment.h" />
+    <ClInclude Include="source\scene\elements\proxy.h" />
+    <ClInclude Include="source\scene\elements\renderable_frustrum.h" />
     <ClInclude Include="source\scene\elements\sun.h" />
     <ClInclude Include="source\scene\scene.h" />
     <ClInclude Include="source\scene\world.h" />
@@ -321,6 +328,7 @@
     <ClInclude Include="source\visuals\render\aggregator.h" />
     <ClInclude Include="source\visuals\render\highlight.h" />
     <ClInclude Include="source\visuals\render\hud.h" />
+    <ClInclude Include="source\visuals\render\proxies.h" />
     <ClInclude Include="source\visuals\render\solid_blocks.h" />
     <ClInclude Include="source\visuals\render\render_base.h" />
     <ClInclude Include="source\visuals\render\render_pass.h" />
@@ -469,6 +477,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="source\visuals\shaders\proxies.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

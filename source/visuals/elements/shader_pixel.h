@@ -12,7 +12,7 @@
 	class PixelShader : public IShader
 	{
 	public:
-		PixelShader(Presenter* presenter, const std::wstring& file);
+		PixelShader(Presenter* presenter, const std::wstring& file, const std::string& entry = "main");
 		~PixelShader();
 
 		void Apply() override;

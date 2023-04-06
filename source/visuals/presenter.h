@@ -43,7 +43,7 @@
 	class Presenter : public IService
 	{
 	public:
-		Presenter(Supervisor* parent);
+		Presenter(Supervisor* parent, unsigned int width, unsigned int height);
 		~Presenter();
 
 		bool Initialize() override;
@@ -82,6 +82,9 @@
 		std::unique_ptr<Aggregator> aggregator;
 
 		bool isFullscreen;
+		unsigned int
+			screen_width,
+			screen_height;
 
 		//d3d parameters
 		//adapters

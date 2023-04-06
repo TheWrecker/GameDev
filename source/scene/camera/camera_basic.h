@@ -10,7 +10,7 @@
 	{
 	public:
 		BasicCamera(float fieldOfView = 90.0f, float aspectRatio = 4.0f/3.0f, float nearZ = 0.001f, float farZ = 1000.0f);
-		~BasicCamera();
+		virtual ~BasicCamera();
 
 		virtual void FeedRotation(float rotX, float rotY);
 		virtual void FeedMovement(float movX, float movY);

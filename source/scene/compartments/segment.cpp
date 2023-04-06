@@ -7,12 +7,15 @@
 
 #include "segment.h"
 
+constexpr unsigned int SEGMENT_VERTEX_RESERVE = 2000;
+constexpr unsigned int SEGMENT_INDEX_RESERVE = 3000;
+
 Segment::Segment(Scene* scene, BlockType type, bool fill, int x, int y, int z)
     :default_type(type), blocks(), scene(scene), block_count(0), biome_processed(false)
 {
     position = { x, y, z };
-    vertex_buffer = new VertexBuffer<SolidBlockVertex>(scene->GetDevice(), scene->GetContext());
-    index_buffer = new IndexBuffer(scene->GetDevice(), scene->GetContext());
+    vertex_buffer = new VertexBuffer<SolidBlockVertex>(scene->GetDevice(), scene->GetContext(), SEGMENT_VERTEX_RESERVE);
+    index_buffer = new IndexBuffer(scene->GetDevice(), scene->GetContext(), SEGMENT_INDEX_RESERVE);
 
     for (unsigned int i = 0; i < SEGMENT_DIMENSION_SIZE; i++)
     {

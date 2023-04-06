@@ -6,6 +6,7 @@
 #include "../elements/render_target.h"
 #include "hud.h"
 #include "highlight.h"
+#include "proxies.h"
 #include "solid_blocks.h"
 #include "render_dev.h"
 #include "sun_moon.h"
@@ -40,6 +41,9 @@ Aggregator::Aggregator(Presenter* parent)
 	//solid blocks
 	render_solid_blocks = std::make_unique<SolidBlockRender>(parent);
 
+	//proxies
+	render_proxies = std::make_unique<ProxyRender>(parent);
+
 	//block highlight
 	render_highlight = std::make_unique<HighlightRender>(parent);
 
@@ -71,6 +75,7 @@ bool Aggregator::Initialize()
 	_result &= render_highlight->Initialize();
 	_result &= render_sun_moon->Initialize();
 	_result &= render_solid_blocks->Initialize();
+	_result &= render_proxies->Initialize();
 	_result &= render_hud->Initialize();
 
 	//setup all render parameters
@@ -89,7 +94,9 @@ bool Aggregator::Initialize()
 	buffer_master->BindDefaultConstant(DefaultConstants::VIEW_PROJECTION_MATRIX);
 
 	//bind  default samplers 
+	state_master->BindDefaultTextureSampler(DefaultSampler::POINT);
 	state_master->BindDefaultTextureSampler(DefaultSampler::BILINEAR);
+	state_master->BindDefaultTextureSampler(DefaultSampler::PROJECTION_WHITE);
 
 	//bind default textures and the atlas
 	scene->GetTextureAtlas()->Bind();
@@ -136,7 +143,7 @@ void Aggregator::AggregateAllRenders()
 	render_sun_moon->Render();
 
 	//render dev
-	buffer_master->BindDefaultIndexBuffer(DefaultObjects::BLOCK_NORMAL);
+	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE_NORMAL);
 	render_dev->Render();
 
 	//render solid blocks
@@ -149,6 +156,13 @@ void Aggregator::AggregateAllRenders()
 	//render block highlights
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::BLOCK);
 	render_highlight->Render();
+
+	// render proxies
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	presenter->SetRasterizerState(RasterizerMode::CULL_NONE_SOLID_CW);
+	render_proxies->Render();
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
 
 	//render hud
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD);

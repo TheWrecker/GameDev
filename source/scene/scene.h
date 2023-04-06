@@ -7,6 +7,7 @@
 
 	#include "interface_service.h"
 
+	class RenderableFrustrum;
 	class Sun;
 	class BasicCamera;
 	class Player;
@@ -64,6 +65,9 @@
 		CameraType camera_type;
 		PhysicsEngine* physics_engine;
 		WorldEngine* world_engine;
+
+		//test
+		std::unique_ptr<RenderableFrustrum> renderable_frustrum;
 
 		std::unique_ptr<BasicCamera> active_camera;
 		std::unique_ptr<Sun> sun;

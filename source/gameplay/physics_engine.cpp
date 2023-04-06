@@ -157,7 +157,7 @@ void PhysicsEngine::UpdateAllSystems()
 				{
 					//there is, so stop going upwards
 					_component->vertical_speed = 0.0f;
-					_temp_pos.y = floorf(_temp_pos.y) - _collision->half_height;
+					_temp_pos.y = float_floor(_temp_pos.y) - _collision->half_height;
 				}
 				else
 				{
@@ -180,10 +180,11 @@ void PhysicsEngine::UpdateAllSystems()
 			_coll = _xz_direction * (_collision->half_width + 0.1f) * copysignf(1.0f, _component->front_speed);
 
 			//check if we collide with blocks
-			_block1 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
-			_block2 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z);
-			_block3 = world->GetBlockByWorldPos(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
-			if ((_block1 != BlockType::EMPTY) || (_block2 != BlockType::EMPTY) || (_block3 != BlockType::EMPTY))
+			//_block1 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
+			_block1 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z);
+			//_block2 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z);
+			//_block3 = world->GetBlockByWorldPos(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
+			if ((_block1 != BlockType::EMPTY) /*|| (_block2 != BlockType::EMPTY) || (_block3 != BlockType::EMPTY)*/)
 			{
 				_component->front_speed = 0.0f;
 			}
@@ -191,6 +192,34 @@ void PhysicsEngine::UpdateAllSystems()
 			{
 				//check if we will collide with a block
 				_block1 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_front_move) + XMVectorGetX(_coll),
+					_temp_pos.y,
+					_temp_pos.z /*+ XMVectorGetZ(_front_move) + +XMVectorGetZ(_coll)*/);
+				if (_block1 != BlockType::EMPTY)
+				{
+					//we do, so stop frontal movement and stand aside the block
+					_component->front_speed = 0.0f;
+					//auto _diffX = _block->Position().x - _temp_pos.x;
+					//auto _diffY = _block->Position().y - _temp_pos.y;
+					//_temp_pos.x -= _collision->half_width - _diffX - (floorf(_diffX / (_diffX * 2)) * SOLID_BLOCK_SIZE);
+					//_temp_pos.z -= _collision->half_width - _diffX - (floorf(_diffY / (_diffY * 2)) * SOLID_BLOCK_SIZE);
+				}
+				else
+				{
+					//we don't so move freely (we do the check next tick)
+					_temp_pos.x += XMVectorGetX(_front_move);
+				}
+
+			}
+
+			_block1 = world->GetBlockByWorldPos(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
+			if ((_block1 != BlockType::EMPTY) /*|| (_block2 != BlockType::EMPTY) || (_block3 != BlockType::EMPTY)*/)
+			{
+				_component->front_speed = 0.0f;
+			}
+			else
+			{
+				//check if we will collide with a block
+				_block1 = world->GetBlockByWorldPos(_temp_pos.x ,
 					_temp_pos.y,
 					_temp_pos.z + XMVectorGetZ(_front_move) + +XMVectorGetZ(_coll));
 				if (_block1 != BlockType::EMPTY)
@@ -205,7 +234,6 @@ void PhysicsEngine::UpdateAllSystems()
 				else
 				{
 					//we don't so move freely (we do the check next tick)
-					_temp_pos.x += XMVectorGetX(_front_move);
 					_temp_pos.z += XMVectorGetZ(_front_move);
 				}
 
@@ -219,10 +247,10 @@ void PhysicsEngine::UpdateAllSystems()
 			_coll = _right_vector * (_collision->half_width + 0.1f) * copysignf(1.0f, _component->side_speed);
 
 			//check if we collide with a block
-			_block1 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
-			_block2 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z);
-			_block3 = world->GetBlockByWorldPos(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
-			if ((_block1 != BlockType::EMPTY) || (_block2 != BlockType::EMPTY) || (_block3 != BlockType::EMPTY))
+			_block1 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z );
+			/*_block2 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_coll), _temp_pos.y, _temp_pos.z);
+			_block3 = world->GetBlockByWorldPos(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));*/
+			if ((_block1 != BlockType::EMPTY) /*|| (_block2 != BlockType::EMPTY) || (_block3 != BlockType::EMPTY)*/)
 			{
 				_component->side_speed = 0.0f;
 			}
@@ -231,21 +259,42 @@ void PhysicsEngine::UpdateAllSystems()
 				//check if we will collide with a block
 				_block1 = world->GetBlockByWorldPos(_temp_pos.x + XMVectorGetX(_front_move) + XMVectorGetX(_coll),
 					_temp_pos.y,
-					_temp_pos.z + XMVectorGetZ(_front_move) + +XMVectorGetZ(_coll));
+					_temp_pos.z);
 				if (_block1 != BlockType::EMPTY)
 				{
 					//we do, so stop frontal movement and stand aside the block
 					_component->side_speed = 0.0f;
-					//auto _diffX = _block->Position().x - _temp_pos.x;
-					//auto _diffY = _block->Position().y - _temp_pos.y;
-					//_temp_pos.x -= _collision->half_width - _diffX - (floorf(_diffX / (_diffX * 2)) * SOLID_BLOCK_SIZE);
-					//_temp_pos.z -= _collision->half_width - _diffX - (floorf(_diffY / (_diffY * 2)) * SOLID_BLOCK_SIZE);
+
 				}
 				else
 				{
 					//we don't so move freely (we do the check next tick)
-					_temp_pos.x += XMVectorGetX(_side_move);
-					_temp_pos.z += XMVectorGetZ(_side_move);
+					_temp_pos.x += XMVectorGetX(_side_move);;
+				}
+
+			}
+
+			_block1 = world->GetBlockByWorldPos(_temp_pos.x, _temp_pos.y, _temp_pos.z + XMVectorGetZ(_coll));
+			if ((_block1 != BlockType::EMPTY))
+			{
+				_component->side_speed = 0.0f;
+			}
+			else
+			{
+				//check if we will collide with a block
+				_block1 = world->GetBlockByWorldPos(_temp_pos.x,
+					_temp_pos.y,
+					_temp_pos.z + XMVectorGetZ(_front_move) + XMVectorGetZ(_coll));
+				if (_block1 != BlockType::EMPTY)
+				{
+					//we do, so stop frontal movement and stand aside the block
+					_component->side_speed = 0.0f;
+
+				}
+				else
+				{
+					//we don't so move freely (we do the check next tick)
+					_temp_pos.z += XMVectorGetZ(_side_move);;
 				}
 
 			}
@@ -279,6 +328,6 @@ void PhysicsEngine::ProcessPlayerNoPhysics()
 	auto _side_move = _right_dir * _elapsed_time * player->side * 20.0f;
 	auto _position = player->Position_Vector() + _front_move + _side_move;
 	XMFLOAT3 _final_pos = {};
-	XMStoreFloat3(&_final_pos, _position);
+	DirectX::XMStoreFloat3(&_final_pos, _position);
 	player->SetPosition(_final_pos);
 }

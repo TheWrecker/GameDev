@@ -9,8 +9,9 @@
 
 #include "presenter.h"
 
-Presenter::Presenter(Supervisor* parent)
-	:supervisor(parent), depth_stencil_enabled(true), multisampling_enabled(false), isFullscreen(false), blend_enabled(false)
+Presenter::Presenter(Supervisor* parent, unsigned int width, unsigned int height)
+	:supervisor(parent), depth_stencil_enabled(true), multisampling_enabled(false), isFullscreen(false), blend_enabled(false),
+	screen_width(width), screen_height(height)
 {
 	HRESULT result = 0;
 	UINT createDeviceFlags = 0;
@@ -27,6 +28,9 @@ Presenter::Presenter(Supervisor* parent)
 	DXAssert(device->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&graphics_interface)));
 	DXAssert(graphics_interface->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(&graphics_adapter)));
 	DXAssert(graphics_adapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&graphics_factory)));
+
+	overlay = std::make_unique<Overlay>(this);
+	aggregator = std::make_unique<Aggregator>(this);
 }
 
 Presenter::~Presenter()
@@ -85,9 +89,6 @@ bool Presenter::Initialize()
 	RetAssert(SetRasterizerState(RasterizerMode::CULL_NONE_SOLID_CW));
 	CreateBlendStates();
 	SetBlendMode(BlendMode::DISABLED);
-
-	overlay = std::make_unique<Overlay>(this);
-	aggregator = std::make_unique<Aggregator>(this);
 
 	//show all live d3d11device objects
 	/*ID3D11Debug* _debug = nullptr;
@@ -190,10 +191,10 @@ bool Presenter::CreateSwapChain(bool isResize)
 	//fill-in swapchain description struct
 	//TODO: make dynamic resoulution - done?
 	//TODO: less Magic Numbers
-	RECT _rect = {};
-	GetClientRect(QueryService<Platform*>("platform")->GetWindowHandle(), &_rect);
 	if (isResize)
 	{
+		RECT _rect = {};
+		GetClientRect(QueryService<Platform*>("platform")->GetWindowHandle(), &_rect);
 		swapchain_desc.Width = _rect.right - _rect.left;
 		swapchain_desc.Height = _rect.bottom - _rect.top;
 		DXAssert(swapchain->ResizeBuffers(0, swapchain_desc.Width, swapchain_desc.Height, DXGI_FORMAT_UNKNOWN, swapchain_desc.Flags));
@@ -201,8 +202,8 @@ bool Presenter::CreateSwapChain(bool isResize)
 	else
 	{
 		ZeroMemory(&swapchain_desc, sizeof(swapchain_desc));
-		swapchain_desc.Width = _rect.right - _rect.left;
-		swapchain_desc.Height = _rect.bottom - _rect.top;
+		swapchain_desc.Width = screen_width;
+		swapchain_desc.Height = screen_height;
 		swapchain_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		swapchain_desc.Stereo = false;
 		swapchain_desc.Scaling = DXGI_SCALING_STRETCH;
@@ -507,10 +508,10 @@ ID3D11DeviceContext* Presenter::GetContext()
 
 unsigned int Presenter::GetScreenWidth()
 {
-	return swapchain_desc.Width;
+	return screen_width;
 }
 
 unsigned int Presenter::GetScreenHeight()
 {
-	return swapchain_desc.Height;
+	return screen_height;
 }

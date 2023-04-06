@@ -8,7 +8,6 @@ struct PS_INPUT
     float2 uv : TEXCOORDS;
 };
 
-
 float4 main(PS_INPUT input) : SV_TARGET
 {
     float4 color = inputTexture.Sample(BilinearSampler, input.uv);

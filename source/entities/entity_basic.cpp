@@ -11,10 +11,6 @@ BasicEntity::~BasicEntity()
 {
 }
 
-void BasicEntity::Render()
-{
-}
-
 void BasicEntity::Update()
 {
 }

@@ -12,7 +12,7 @@
 	class VertexShader : public IShader
 	{
 	public:
-		VertexShader(Presenter* presenter, const std::wstring& file);
+		VertexShader(Presenter* presenter, const std::wstring& file, const std::string& entry = "main");
 		~VertexShader();
 
 		void Apply() override;

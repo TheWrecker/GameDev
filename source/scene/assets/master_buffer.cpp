@@ -13,6 +13,10 @@
 BufferMaster::BufferMaster()
 	:scene(nullptr), default_constant_buffers(), default_index_buffers(), default_vertex_buffers(), normal_vertex_buffers()
 {
+	default_constant_buffers.resize(static_cast<unsigned int>(DefaultConstants::END_PADDING));
+	default_vertex_buffers.resize(static_cast<unsigned int>(DefaultObjects::END_PADDING));
+	normal_vertex_buffers.resize(static_cast<unsigned int>(DefaultObjects::END_PADDING));
+	default_index_buffers.resize(static_cast<unsigned int>(DefaultObjects::END_PADDING));
 }
 
 bool BufferMaster::Initialize()
@@ -264,8 +268,8 @@ unsigned int BufferMaster::GetCurrentSlot(DefaultObjects target)
 
 void BufferMaster::CreateObjectBuffers(unsigned int index, Model* model, bool addNormals)
 {
-	std::size_t _vertexCount = model->meshes.at(0)->vertices.size();
-	std::size_t i = 0;
+	unsigned int _vertexCount = (unsigned int)model->meshes.at(0)->vertices.size();
+	unsigned int i = 0;
 	if (addNormals)
 	{
 		normal_vertex_buffers[index] = new VertexBuffer<NormalVertexStruct>(device, context, _vertexCount);
@@ -295,7 +299,7 @@ void BufferMaster::CreateObjectBuffers(unsigned int index, Model* model, bool ad
 		default_vertex_buffers[index]->Build();
 	}
 
-	std::size_t _indexCount = model->meshes.at(0)->indices.size();
+	unsigned int _indexCount = (unsigned int)model->meshes.at(0)->indices.size();
 	default_index_buffers[index] = new IndexBuffer(device, context, _indexCount);
 	for (auto& element : model->meshes.at(0)->indices)
 	{
