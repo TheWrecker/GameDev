@@ -60,6 +60,9 @@
 		ModelManager* GetModelManager();
 
 	private:
+		friend class Overlay;
+		friend class DevRender;
+
 		Presenter* presenter;
 		Aggregator* aggregator;
 		CameraType camera_type;

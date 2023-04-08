@@ -135,7 +135,7 @@ void Aggregator::AggregateAllRenders()
 	presenter->SetRasterizerState(RasterizerMode::CULL_FRONT_SOLID_CW);
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
 	render_sky->Render();
-	presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
+	presenter->SetRasterizerState(RasterizerMode::CULL_NONE_SOLID_CW);
 
 	//render sun or moon
 	//TODO: dynamic time of day

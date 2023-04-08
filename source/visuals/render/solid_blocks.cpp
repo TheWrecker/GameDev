@@ -2,6 +2,7 @@
 #include "../elements/shader_vertex.h"
 #include "../elements/shader_pixel.h"
 #include "../elements/input_layout.h"
+#include "../elements/buffer_vertex.h"
 #include "../scene/assets/master_buffer.h"
 #include "../scene/compartments/segment.h"
 #include "../scene/world.h"
@@ -65,7 +66,7 @@ void SolidBlockRender::Render()
 		if (!_segment)
 			continue;
 
-		if (_segment->IsEmpty())
+		if (_segment->vertex_buffer.load()->GetVertexCount() == 0)
 			continue;
 
 		_segment->draw_mutex.lock();

@@ -7,6 +7,7 @@
 
 	#include "proxy.h"
 	#include "../utils/frustrum.h"
+	#include "../camera/projector.h"
 
 	class Scene;
 
@@ -17,14 +18,19 @@
 		~RenderableFrustrum();
 
 		bool Initialize();
+		bool UpdateToCamera();
 		void SetColor(DirectX::XMFLOAT4 value);
+		void SetPosition(float x, float y, float z) override;
 
 	private:
+		friend class DevRender;
+
 		void CalculateCorners();
 		void RebuildBuffers() override;
 
 		Scene* scene;
 
+		Projector projector;
 		Frustrum frustrum;
 		DirectX::XMFLOAT3 corners[8];
 		DirectX::XMFLOAT4 color;

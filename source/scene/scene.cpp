@@ -64,18 +64,21 @@ void Scene::SwitchMode(SceneMode mode)
 			//setup scene elements
 			//switch camera type
 			// feed eye height to camera
-			active_camera->SetDirection(1.0f, -1.0f, 0.0f);
+			active_camera->SetDirection(0.0f, 0.0f, -1.0f);
+			active_camera->SetPosition(20.0f, 27.0f, 27.0f);
+
+			//test
+			renderable_frustrum->Initialize();
+			renderable_frustrum->UpdateToCamera();
 			player->SetPosition(20.0f, 45.0f, 20.0f);
 			active_camera->HookToEntity(player.get());
+
+			aggregator->render_proxies->AddProxy(renderable_frustrum.get());
+			aggregator->render_proxies->ShowProxies();
+
 			//TODO: move to unit factory?
 			physics_engine->RegisterMovementComponent(player.get());
 			physics_engine->RegisterCollisionComponent(player.get());
-
-			//test
-			renderable_frustrum->SetPosition(20.0f, 40.0f, 20.0f);
-			renderable_frustrum->Initialize();
-			aggregator->render_proxies->AddProxy(renderable_frustrum.get());
-			aggregator->render_proxies->ShowProxies();
 
 			//generate the initial world
 			world_engine->SetupStartingWorld();

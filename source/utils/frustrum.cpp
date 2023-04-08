@@ -86,10 +86,10 @@ void Frustrum::CalculateFrustrum(DirectX::CXMMATRIX viewMatrix, DirectX::XMFLOAT
 
 	_proj = projMatrix;
 	// Calculate the minimum Z distance in the frustum.
-	_zMinimum = -projMatrix._43 / projMatrix._33;
+	_zMinimum = projMatrix._43 / projMatrix._33;
 	_r = screenDepth / (screenDepth - _zMinimum);
 	_proj._33 = _r;
-	_proj._43 = -_r * _zMinimum;
+	_proj._43 = _r * _zMinimum;
 
 	// Create the frustum matrix from the view matrix and updated projection matrix.
 	auto _mat = XMMatrixMultiply(viewMatrix, XMLoadFloat4x4(&_proj));

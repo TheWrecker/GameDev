@@ -259,7 +259,7 @@ bool SolidBlockProcessor::CheckNextSegmentBlock(Sector* sector, SegmentIndex& in
 		case FaceName::BOTTOM:
 		{
 			if (index.y == 0)
-				return true;
+				return false; //don't build the face towards the abyss
 
 			auto _segment = sector->segments[index.x][index.y - 1][index.z].load();
 			if (!_segment)

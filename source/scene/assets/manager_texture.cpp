@@ -34,6 +34,7 @@ void TextureManager::LoadBaseTextures()
     Load(L"assets/textures/sun.dds", "sun"); //sun
     Load(L"assets/textures/crosshair1.png", "crosshair1"); //crosshair 1
     Load(L"assets/textures/highlight.png", "highlight"); //block highlight
+    Load(L"assets/textures/logo.png", "logo"); //logo
 }
 
 void TextureManager::Load(const std::wstring& file, const std::string& name)
@@ -73,6 +74,8 @@ void TextureManager::BindDefaultTextures()
     context->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::CROSSHAIR_1), 1, &_shader_view);
     _shader_view = GetShaderView("highlight");
     context->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::HIGHLIGHT), 1, &_shader_view);
+    _shader_view = GetShaderView("logo");
+    context->PSSetShaderResources(GetDefaultTextureIndex(DefaultTextures::LOGO), 1, &_shader_view);
 }
 
 ID3D11ShaderResourceView* TextureManager::GetShaderView(const std::string& name)

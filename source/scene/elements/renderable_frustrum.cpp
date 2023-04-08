@@ -51,21 +51,41 @@ RenderableFrustrum::~RenderableFrustrum()
 
 bool RenderableFrustrum::Initialize()
 {
-    auto _camera = scene->GetActiveCamera();
+	return UpdateToCamera();
+}
 
-    if (!_camera)
-        return false;
+bool RenderableFrustrum::UpdateToCamera()
+{
+	auto _camera = scene->GetActiveCamera();
 
-    frustrum.CalculateFrustrum(_camera->View_Projection_Matrix());
+	if (!_camera)
+		return false;
+
+	SetPosition(_camera->Position().x, _camera->Position().y, _camera->Position().z);
+	DirectX::XMFLOAT4X4 _proj = {};
+	DirectX::XMStoreFloat4x4(&_proj, _camera->Projection_Matrix());
+	frustrum.CalculateFrustrum(_camera->View_Matrix(), _proj, 30.0f);
+	//frustrum.CalculateFrustrum(_camera->View_Projection_Matrix());
 	CalculateCorners();
+	projector.SetPosition(_camera->Position().x, _camera->Position().y, _camera->Position().z);
+	projector.SetDirection(_camera->Direction().x, _camera->Direction().y, _camera->Direction().z);
 	RebuildBuffers();
 
-    return true;
+	return true;
 }
 
 void RenderableFrustrum::SetColor(DirectX::XMFLOAT4 value)
 {
 	color = value;
+}
+
+void RenderableFrustrum::SetPosition(float x, float y, float z)
+{
+	position.x = x;
+	position.y = y;
+	position.z = z;
+	// world matrix is implicit in the view matrix, so we store an identity matrix
+	world_matrix = DirectX::XMMatrixIdentity();
 }
 
 void RenderableFrustrum::CalculateCorners()

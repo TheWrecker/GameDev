@@ -83,23 +83,30 @@ void BasicCamera::SetDirection(float x, float y, float z)
 		_direction.y = 0.99f;
 	auto _new_direction = DirectX::XMLoadFloat3(&_direction);
 	_new_direction = DirectX::XMVector3Normalize(_new_direction);
-	_new_direction = DirectX::XMVectorNegate(_new_direction);
+	//_new_direction = DirectX::XMVectorNegate(_new_direction);
 	DirectX::XMVECTOR _up_vector = { 0.0f, 1.0f, 0.0f, 0.0f };
-	auto _side_vector = DirectX::XMVector3Cross(_up_vector, _new_direction);
+	auto _side_vector = DirectX::XMVector3Cross(_new_direction, _up_vector);
 	_side_vector = DirectX::XMVector3Normalize(_side_vector);
-	_up_vector = DirectX::XMVector3Cross(_new_direction, _side_vector);
+	_up_vector = DirectX::XMVector3Cross(_side_vector, _new_direction);
 	_up_vector = DirectX::XMVector3Normalize(_up_vector);
+	//_side_vector = DirectX::XMVector3Cross(_new_direction, _up_vector);
+	//_up_vector = DirectX::XMVector3Cross(_side_vector, _new_direction);
 
-	DirectX::XMVECTOR _bottom_row = { 0.0f, 0.0f, 0.0f, 1.0f };
+	//DirectX::XMVECTOR _bottom_row = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-	DirectX::XMMATRIX _orientation_matrix = {
-		_side_vector,
-		_up_vector,
-		_new_direction,
-		_bottom_row};
+	//DirectX::XMMATRIX _orientation_matrix = {
+	//	_side_vector,
+	//	_up_vector,
+	//	_new_direction,
+	//	_bottom_row};
 
-	rotation_matrix = _orientation_matrix;
-	Rotate(_orientation_matrix);
+	//rotation_matrix = _orientation_matrix;
+	DirectX::XMStoreFloat3(&direction, _new_direction);
+	DirectX::XMStoreFloat3(&up, _up_vector);
+	DirectX::XMStoreFloat3(&right, _side_vector);
+
+	UpdateViewMatrix();
+	//Rotate(_orientation_matrix);
 }
 
 void BasicCamera::SetPosition(float x, float y, float z)
@@ -107,6 +114,7 @@ void BasicCamera::SetPosition(float x, float y, float z)
 	position.x = x;
 	position.y = y;
 	position.z = z;
+	UpdateViewMatrix();
 }
 
 void BasicCamera::Rotate(DirectX::CXMMATRIX matrix)
@@ -117,12 +125,13 @@ void BasicCamera::Rotate(DirectX::CXMMATRIX matrix)
 	_new_up = DirectX::XMVector3Normalize(_new_up);
 	auto _new_right = DirectX::XMVector3TransformNormal(Right_Vector(), matrix);
 	_new_right = DirectX::XMVector3Normalize(_new_right);
-	/*right_vector = DirectX::XMVector3Cross(direction_vector, up_vector);
-	up_vector = DirectX::XMVector3Cross(right_vector, direction_vector);*/
+	//_new_right = DirectX::XMVector3Cross(_new_direction, _new_up);
+	//_new_up = DirectX::XMVector3Cross(_new_right, _new_direction);
 
 	DirectX::XMStoreFloat3(&direction, _new_direction);
 	DirectX::XMStoreFloat3(&up, _new_up);
 	DirectX::XMStoreFloat3(&right, _new_right);
+	UpdateViewMatrix();
 }
 
 const DirectX::XMFLOAT3 BasicCamera::Position()
@@ -170,10 +179,10 @@ const DirectX::XMMATRIX BasicCamera::View_Projection_Matrix() const
 	return DirectX::XMLoadFloat4x4(&view_projection_matrix);
 }
 
-const DirectX::XMMATRIX BasicCamera::Rotation_Matrix() const
-{
-	return rotation_matrix;
-}
+//const DirectX::XMMATRIX BasicCamera::Rotation_Matrix() const
+//{
+//	return rotation_matrix;
+//}
 
 void BasicCamera::UpdateViewProjectionMatrix()
 {

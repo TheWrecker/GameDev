@@ -91,7 +91,7 @@ void BufferMaster::RebuildDefaults()
 	//view projection matrix
 	{
 		_index = static_cast<unsigned int>(DefaultConstants::VIEW_PROJECTION_MATRIX);
-		_info = { camera->View_Projection_Matrix() };
+		_info = { DirectX::XMMatrixTranspose(camera->View_Projection_Matrix()) };
 		default_constant_buffers[_index] = new ConstantBuffer<DefaultConstantStruct>(device, context);
 		default_constant_buffers[_index]->Update(_info);
 	}

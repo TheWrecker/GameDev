@@ -71,6 +71,7 @@
 	enum class DefaultTextures : unsigned int
 	{
 		UNDEFINED = 0,
+		LOGO = 118,
 		HIGHLIGHT = 119,
 		FIRST_PASS = 120,
 		CROSSHAIR_1 = 121,

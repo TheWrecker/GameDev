@@ -12,6 +12,7 @@
 		Projector();
 		~Projector();
 
+		const DirectX::XMMATRIX Screen_Matrix() const;
 		const DirectX::XMMATRIX View_Projection_Screen_Matrix() const;
 
 	private:

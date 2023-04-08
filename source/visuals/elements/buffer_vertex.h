@@ -116,7 +116,7 @@
 	template<typename type>
 	inline unsigned int VertexBuffer<type>::GetVertexCount()
 	{
-		return vertices.size();
+		return (unsigned int)vertices.size();
 	}
 
 #endif // !BUFFER_VERTEX_H

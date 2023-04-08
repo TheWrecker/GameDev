@@ -10,6 +10,7 @@
 #include "../input/mouse.h"
 #include "../gameplay/items/item_container.h"
 #include "../entities/player.h"
+#include "../scene/elements/renderable_frustrum.h"
 #include "../scene/elements/sun.h"
 #include "../scene/compartments/segment.h"
 #include "../scene/world.h"
@@ -182,6 +183,9 @@ void Overlay::Draw()
 			ImGui::DragFloat4("Ambient Color", (float*)&sun->light_info.ambient, 0.01f, 0.0f, 1.0f);
 			ImGui::Separator();
 			ImGui::DragFloat3("Light Direction", (float*)&sun->light_info.direction, 0.01f, -1.0f, 1.0f);
+
+			if (ImGui::Button("Show current Frustrum"))
+				scene->renderable_frustrum->UpdateToCamera();
 		}
 
 		if (ImGui::CollapsingHeader("Object"))
