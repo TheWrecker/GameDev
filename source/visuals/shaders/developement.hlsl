@@ -48,16 +48,6 @@ struct VS_OUTPUT
     float attenuation : ATTENUATION;
 };
 
-struct PS_INPUT
-{
-    float4 position : SV_POSITION;
-    float2 uv : TEXCOORDS;
-    float3 normals : NORMALS;
-    float3 world_pos : WORLDPOS;
-    float4 proj_coord : PROJCOORD;
-    float attenuation : ATTENUATION;
-};
-
 VS_OUTPUT vs_main(VS_INPUT vertex)
 {
     VS_OUTPUT output;
@@ -76,7 +66,7 @@ VS_OUTPUT vs_main(VS_INPUT vertex)
     return output;
 }
 
-float4 ps_main(PS_INPUT input) : SV_TARGET
+float4 ps_main(VS_OUTPUT input) : SV_TARGET
 {
     float3 _light_direction = normalize(light_position - input.world_pos);
     float3 _view_direction = normalize(camera_position - input.world_pos);
@@ -90,14 +80,15 @@ float4 ps_main(PS_INPUT input) : SV_TARGET
     float3 _diffuse = _color.rgb * saturate(_n_dot_l) * light_color.rgb * input.attenuation * light_color.a;
     float3 _specular = specular_color.rgb * saturate(_n_dot_h) * input.attenuation * specular_color.a * specular_power;
 
-    input.proj_coord.x /= input.proj_coord.w;
-    input.proj_coord.y /= input.proj_coord.w;
-       
-    float3 _proj_color = projectionTexture.Sample(ProjectionSampler, input.proj_coord.xy).rgb;
+    float4 _out = float4(saturate(_ambient + _diffuse + _specular), _color.a);
     
-    float4 _tmp = float4(saturate(_ambient + _diffuse + _specular), _color.a);
-    _tmp.rgb *= _proj_color;
-
-    return saturate(_tmp);
-    //return float4(_proj_color, 1.0f);
+    if (input.proj_coord.w > 0.0f)
+    {
+        input.proj_coord.xy /= input.proj_coord.w;
+        float3 _proj_color = projectionTexture.Sample(ProjectionSampler, input.proj_coord.xy).rgb;
+        
+        _out.rgb *= _proj_color;
+    }
+    
+    return _out;
 }

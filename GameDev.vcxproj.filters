@@ -319,6 +319,9 @@
     <ClCompile Include="source\visuals\render\proxies.cpp">
       <Filter>source\visuals\render</Filter>
     </ClCompile>
+    <ClCompile Include="source\visuals\elements\depth_map.cpp">
+      <Filter>source\visuals\elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\platform.h">
@@ -596,6 +599,9 @@
     </ClInclude>
     <ClInclude Include="source\scene\elements\proxy.h">
       <Filter>source\scene\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="source\visuals\elements\depth_map.h">
+      <Filter>source\visuals\elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

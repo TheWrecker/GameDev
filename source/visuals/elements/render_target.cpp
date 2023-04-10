@@ -20,9 +20,6 @@ RenderTarget::RenderTarget(Presenter* presenter)
 	back_buffer_desc.SampleDesc.Quality = 0;
 	back_buffer_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	back_buffer_desc.Usage = D3D11_USAGE_DEFAULT;
-	DXAssert(device->CreateTexture2D(&back_buffer_desc, 0, &back_buffer));
-	DXAssert(device->CreateShaderResourceView(back_buffer, 0, &back_buffer_view));
-	DXAssert(device->CreateRenderTargetView(back_buffer, 0, &back_buffer_target_view));
 
 	ZeroMemory(&depth_stencil_desc, sizeof(depth_stencil_desc));
 	depth_stencil_desc.Width = back_buffer_desc.Width;
@@ -34,8 +31,6 @@ RenderTarget::RenderTarget(Presenter* presenter)
 	depth_stencil_desc.SampleDesc.Quality = 0;
 	depth_stencil_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	depth_stencil_desc.Usage = D3D11_USAGE_DEFAULT;
-	DXAssert(device->CreateTexture2D(&depth_stencil_desc, 0, &depth_stencil));
-	DXAssert(device->CreateDepthStencilView(depth_stencil, 0, &depth_stencil_view));
 }
 
 RenderTarget::~RenderTarget()
@@ -45,6 +40,23 @@ RenderTarget::~RenderTarget()
 	DXRelease(back_buffer_target_view);
 	DXRelease(depth_stencil);
 	DXRelease(depth_stencil_view);
+}
+
+bool RenderTarget::CreateInterfaces()
+{
+	DXRelease(back_buffer);
+	DXRelease(back_buffer_view);
+	DXRelease(back_buffer_target_view);
+	DXRelease(depth_stencil);
+	DXRelease(depth_stencil_view);
+
+	DXAssert(device->CreateTexture2D(&back_buffer_desc, 0, &back_buffer));
+	DXAssert(device->CreateShaderResourceView(back_buffer, 0, &back_buffer_view));
+	DXAssert(device->CreateRenderTargetView(back_buffer, 0, &back_buffer_target_view));
+	DXAssert(device->CreateTexture2D(&depth_stencil_desc, 0, &depth_stencil));
+	DXAssert(device->CreateDepthStencilView(depth_stencil, 0, &depth_stencil_view));
+
+	return true;
 }
 
 void RenderTarget::Bind()

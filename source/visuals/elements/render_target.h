@@ -10,15 +10,17 @@
 	{
 	public:
 		RenderTarget(Presenter* presenter);
-		~RenderTarget();
+		virtual ~RenderTarget();
 
-		void Bind();
+		bool CreateInterfaces();
+		virtual void Bind();
+
 		ID3D11RenderTargetView* GetTargetView();
 		ID3D11DepthStencilView* GetDepthStencilView();
 		ID3D11ShaderResourceView* GetShaderView();
 		ID3D11ShaderResourceView** GetPointerToShaderView();
 
-	private:
+	protected:
 		ID3D11Device* device;
 		ID3D11DeviceContext* context;
 		Presenter* presenter;

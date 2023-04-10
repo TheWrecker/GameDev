@@ -12,6 +12,7 @@ RenderPass::RenderPass(Presenter* parent, const std::wstring& pixelShader)
 	:RenderBase(parent)
 {
 	render_target = std::make_unique<RenderTarget>(parent);
+	render_target->CreateInterfaces();
 	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/pass_v.hlsl");
 	pixel_shader = std::make_unique<PixelShader>(presenter, pixelShader);
 

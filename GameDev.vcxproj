@@ -219,6 +219,7 @@
     <ClCompile Include="source\utils\frustrum.cpp" />
     <ClCompile Include="source\utils\ray.cpp" />
     <ClCompile Include="source\visuals\elements\buffer_index.cpp" />
+    <ClCompile Include="source\visuals\elements\depth_map.cpp" />
     <ClCompile Include="source\visuals\elements\input_layout.cpp" />
     <ClCompile Include="source\visuals\elements\render_target.cpp" />
     <ClCompile Include="source\visuals\elements\sampler_texture.cpp" />
@@ -313,6 +314,7 @@
     <ClInclude Include="source\visuals\elements\buffer_constant.h" />
     <ClInclude Include="source\visuals\elements\buffer_index.h" />
     <ClInclude Include="source\visuals\elements\buffer_vertex.h" />
+    <ClInclude Include="source\visuals\elements\depth_map.h" />
     <ClInclude Include="source\visuals\elements\input_layout.h" />
     <ClInclude Include="source\visuals\elements\render_target.h" />
     <ClInclude Include="source\visuals\elements\sampler_texture.h" />
