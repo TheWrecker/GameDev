@@ -11,6 +11,11 @@
 		PIXEL
 	};
 
+	struct VertexPosStruct
+	{
+		DirectX::XMFLOAT3 position;
+	};
+
 	struct DefaultVertexStruct
 	{
 		DirectX::XMFLOAT3 position;
@@ -86,6 +91,7 @@
 	enum class DefaultSampler
 	{
 		UNDEFINED = 0,
+		DEPTH_WHITE = 11,
 		PROJECTION_WHITE = 12,
 		POINT = 13,
 		BILINEAR = 14,

@@ -4,6 +4,7 @@
 #include "../scene/assets/texture_atlas.h"
 #include "../scene/assets/master_buffer.h"
 #include "../elements/render_target.h"
+//#include "../elements/depth_map.h"
 #include "hud.h"
 #include "highlight.h"
 #include "proxies.h"
@@ -12,6 +13,7 @@
 #include "sun_moon.h"
 #include "sky.h"
 #include "render_pass.h"
+#include "depth_pass.h"
 #include "../scene/scene.h"
 #include "../presenter.h"
 
@@ -34,6 +36,9 @@ Aggregator::Aggregator(Presenter* parent)
 
 	//render pass
 	render_pass = std::make_unique<RenderPass>(parent, L"source/visuals/shaders/pass_p.hlsl");
+
+	//depth pass
+	//depth_pass = std::make_unique<DepthPass>(parent, 500, 500);
 
 	//Sun and Moon
 	render_sun_moon = std::make_unique<SunMoon>(parent);
@@ -70,6 +75,7 @@ bool Aggregator::Initialize()
 	bool _result = true;
 	//initialize renderers
 	_result &= render_pass->Initialize();
+	//_result &= depth_pass->Initialize();
 	_result &= render_sky->Initialize();
 	_result &= render_dev->Initialize();
 	_result &= render_highlight->Initialize();
@@ -142,8 +148,7 @@ void Aggregator::AggregateAllRenders()
 	//buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
 	render_sun_moon->Render();
 
-	//render dev
-	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE_NORMAL);
+	//render developement & tests
 	render_dev->Render();
 
 	//render solid blocks

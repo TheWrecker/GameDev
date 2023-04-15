@@ -49,7 +49,9 @@ DepthMap::~DepthMap()
 
 void DepthMap::Bind()
 {
-    context->OMSetRenderTargets(1, &back_buffer_target_view, depth_stencil_view);
+    ID3D11RenderTargetView* _null_render_target = nullptr;
+    context->OMSetRenderTargets(1, &_null_render_target, stencil_view);
+    context->RSSetViewports(1, &viewport);
 }
 
 unsigned int DepthMap::GetWidth() const
@@ -70,6 +72,11 @@ const D3D11_VIEWPORT& DepthMap::Viewport() const
 ID3D11ShaderResourceView* DepthMap::GetShaderView() const
 {
     return shader_view;
+}
+
+ID3D11ShaderResourceView** DepthMap::GetPointerToShaderView()
+{
+    return &shader_view;
 }
 
 ID3D11DepthStencilView* DepthMap::GetDepthStencilView() const

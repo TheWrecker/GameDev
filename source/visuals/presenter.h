@@ -52,6 +52,7 @@
 		void Present();
 
 		void ToggleFullscreen();
+		void BindDefaultRenderTargetAndStencil();
 		bool SetMultiSampling(MultiSamplingType type, UINT count, UINT quality);
 		bool SetDepthStencil(bool state, D3D11_TEXTURE2D_DESC* desc);
 		bool SetRasterizerState(RasterizerMode);

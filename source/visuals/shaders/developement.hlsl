@@ -1,9 +1,13 @@
 
 SamplerState BilinearSampler : register(s14);
 SamplerState ProjectionSampler : register(s12);
+SamplerState DepthSampler : register(s11);
 
 Texture2D projectionTexture : register(t118); //logo
 Texture2D inputTexture : register(t123);
+Texture2D depthMap : register(t03);
+
+float DepthBias = 0.005;
 
 cbuffer PerFrame : register(b12)
 {
@@ -31,6 +35,12 @@ cbuffer DevData : register(b2)
     float4x4 projector_matrix; //new vec x 4
 }
 
+struct DepthPass_Input
+{
+    float3 position : POSITION;
+    float2 uv : TEXCOORDS;
+};
+
 struct VS_INPUT
 {
     float3 position : POSITION;
@@ -47,6 +57,12 @@ struct VS_OUTPUT
     float4 proj_coord : PROJCOORD;
     float attenuation : ATTENUATION;
 };
+
+float4 depth_pass_main(DepthPass_Input vertex) : SV_Position
+{
+    float4 _pos = float4(vertex.position, 1.0);
+    return mul(mul(_pos, world_matrix), projector_matrix);
+}
 
 VS_OUTPUT vs_main(VS_INPUT vertex)
 {
@@ -82,13 +98,20 @@ float4 ps_main(VS_OUTPUT input) : SV_TARGET
 
     float4 _out = float4(saturate(_ambient + _diffuse + _specular), _color.a);
     
+    float3 _proj_color = (1, 1, 1);
+    
     if (input.proj_coord.w > 0.0f)
     {
-        input.proj_coord.xy /= input.proj_coord.w;
-        float3 _proj_color = projectionTexture.Sample(ProjectionSampler, input.proj_coord.xy).rgb;
+        input.proj_coord.xyz /= input.proj_coord.w;
         
-        _out.rgb *= _proj_color;
+        float _pixelDepth = input.proj_coord.z;
+        float _sampledepth = depthMap.Sample(DepthSampler, input.proj_coord.xy).x + DepthBias;
+        
+        _proj_color = _pixelDepth > _sampledepth ? _proj_color :
+        projectionTexture.Sample(ProjectionSampler, input.proj_coord.xy).rgb;
     }
+    
+    _out.rgb *= _proj_color;
     
     return _out;
 }

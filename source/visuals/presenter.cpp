@@ -138,6 +138,12 @@ void Presenter::ToggleFullscreen()
 	RetAssert(CreateSwapChain(true));
 }
 
+void Presenter::BindDefaultRenderTargetAndStencil()
+{
+	context->OMSetRenderTargets(1, &render_target_view, depth_stencil_view);
+	context->RSSetViewports(1, &view_port);
+}
+
 bool Presenter::SetMultiSampling(MultiSamplingType type, UINT count, UINT quality)
 {
 	assert(device);

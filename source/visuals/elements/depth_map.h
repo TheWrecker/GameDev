@@ -18,9 +18,12 @@
 		unsigned int GetHeight() const;
 		const D3D11_VIEWPORT& Viewport() const;
 		ID3D11ShaderResourceView* GetShaderView() const;
+		ID3D11ShaderResourceView** GetPointerToShaderView();
 		ID3D11DepthStencilView* GetDepthStencilView() const;
 
 	private:
+		friend class DepthPass;
+
 		ID3D11Device* device;
 		ID3D11DeviceContext* context;
 		Presenter* presenter;

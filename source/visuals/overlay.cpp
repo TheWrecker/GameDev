@@ -188,19 +188,31 @@ void Overlay::Draw()
 				scene->renderable_frustrum->UpdateToCamera();
 		}
 
-		if (ImGui::CollapsingHeader("Object"))
+		if (ImGui::CollapsingHeader("Objects"))
 		{
-			static DirectX::XMFLOAT3 _rotation = aggregator->render_dev->object->Rotation();
-			ImGui::DragFloat3("Object Rotation", (float*)&_rotation, 1.0f, 0.0f, 360.0f);
-			aggregator->render_dev->object->SetRotation(_rotation.x/57.2958f, _rotation.y/ 57.2958f, _rotation.z/ 57.2958f);
+			static DirectX::XMFLOAT3 _obj_rotation = aggregator->render_dev->object->Rotation();
+			ImGui::DragFloat3("Object Rotation", (float*)&_obj_rotation, 1.0f, 0.0f, 360.0f);
+			aggregator->render_dev->object->SetRotation(_obj_rotation.x/57.2958f, _obj_rotation.y/ 57.2958f, _obj_rotation.z/ 57.2958f);
 
-			static DirectX::XMFLOAT3 _scale = aggregator->render_dev->object->Scale();
-			ImGui::DragFloat3("Object Scale", (float*)&_scale, 0.1f, 0.01f, 100.0f);
-			aggregator->render_dev->object->SetScale(_scale.x, _scale.y, _scale.z);
+			static DirectX::XMFLOAT3 _obj_scale = aggregator->render_dev->object->Scale();
+			ImGui::DragFloat3("Object Scale", (float*)&_obj_scale, 0.1f, 0.01f, 100.0f);
+			aggregator->render_dev->object->SetScale(_obj_scale.x, _obj_scale.y, _obj_scale.z);
 
-			static DirectX::XMFLOAT3 _position = aggregator->render_dev->object->Position();
-			ImGui::DragFloat3("Object Position", (float*)&_position, 0.5f, -50.01f, 50.0f);
-			aggregator->render_dev->object->SetPosition(_position.x, _position.y, _position.z);
+			static DirectX::XMFLOAT3 _obj_position = aggregator->render_dev->object->Position();
+			ImGui::DragFloat3("Object Position", (float*)&_obj_position, 0.5f, -50.01f, 50.0f);
+			aggregator->render_dev->object->SetPosition(_obj_position.x, _obj_position.y, _obj_position.z);
+
+			static DirectX::XMFLOAT3 _pln_rotation = aggregator->render_dev->plane->Rotation();
+			ImGui::DragFloat3("Plane Rotation", (float*)&_pln_rotation, 1.0f, 0.0f, 360.0f);
+			aggregator->render_dev->plane->SetRotation(_pln_rotation.x / 57.2958f, _pln_rotation.y / 57.2958f, _pln_rotation.z / 57.2958f);
+
+			static DirectX::XMFLOAT3 _pln_scale = aggregator->render_dev->plane->Scale();
+			ImGui::DragFloat3("Plane Scale", (float*)&_pln_scale, 0.1f, 0.01f, 100.0f);
+			aggregator->render_dev->plane->SetScale(_pln_scale.x, _pln_scale.y, _pln_scale.z);
+
+			static DirectX::XMFLOAT3 _pln_position = aggregator->render_dev->plane->Position();
+			ImGui::DragFloat3("Plane Position", (float*)&_pln_position, 0.5f, -50.01f, 50.0f);
+			aggregator->render_dev->plane->SetPosition(_pln_position.x, _pln_position.y, _pln_position.z);
 		}
 
 		if (ImGui::CollapsingHeader("World"))
