@@ -103,6 +103,7 @@ bool Aggregator::Initialize()
 	state_master->BindDefaultTextureSampler(DefaultSampler::POINT);
 	state_master->BindDefaultTextureSampler(DefaultSampler::BILINEAR);
 	state_master->BindDefaultTextureSampler(DefaultSampler::PROJECTION_WHITE);
+	state_master->BindDefaultTextureSampler(DefaultSampler::DEPTH_WHITE);
 
 	//bind default textures and the atlas
 	scene->GetTextureAtlas()->Bind();

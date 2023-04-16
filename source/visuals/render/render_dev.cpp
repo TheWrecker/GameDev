@@ -40,13 +40,13 @@ DevRender::DevRender(Presenter* parent)
 		.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, _slot1)
 		.Build();
 
-	input_layout_plane = std::make_unique<InputLayout>(presenter, vertex_shader2.get());
+	input_layout_plane = std::make_unique<InputLayout>(presenter, vertex_shader.get());
 	input_layout_plane->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot2)
 		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot2)
 		.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, _slot2)
 		.Build();
 
-	input_layout_depth = std::make_unique<InputLayout>(presenter, vertex_shader.get());
+	input_layout_depth = std::make_unique<InputLayout>(presenter, vertex_shader2.get());
 	input_layout_depth->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot1)
 		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot1)
 		.Build();
@@ -80,7 +80,7 @@ bool DevRender::Initialize()
 void DevRender::Render()
 {
 	dev_data.camera_position = camera->Position();
-	dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Screen_Matrix());
+	dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Matrix());
 	dev_buffer->Update(dev_data);
 	dev_buffer->Bind(BindStage::VERTEX, 2);
 	dev_buffer->Bind(BindStage::PIXEL, 2);
@@ -94,12 +94,19 @@ void DevRender::Render()
 
 	depth_pass->Clear();
 	depth_pass->BindAsStencilTarget();
+
+	ID3D11PixelShader* _null_ps = { nullptr };
+
+	context->PSSetShader(_null_ps, nullptr, 0);
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
 	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::SPHERE), 0, 0);
 
 	//TODO: add render target stack class
 
 	presenter->BindDefaultRenderTargetAndStencil();
+
+	dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Screen_Matrix());
+	dev_buffer->Update(dev_data);
 
 	DefaultConstantStruct _cb2 = { DirectX::XMMatrixTranspose(plane->World_Matrix()) };
 	object_buffer->Update(_cb2);
