@@ -36,10 +36,9 @@ void DepthPass::BindAsStencilTarget()
     depth_map->Bind();
 }
 
-void DepthPass::BindAsShaderResource()
+void DepthPass::BindAsShaderResource(unsigned int slot)
 {
-    //TODO: slot as parameter?
-    context->PSSetShaderResources(3, 1, depth_map->GetPointerToShaderView());
+    context->PSSetShaderResources(slot, 1, depth_map->GetPointerToShaderView());
 }
 
 DepthMap* DepthPass::GetDepthMap()

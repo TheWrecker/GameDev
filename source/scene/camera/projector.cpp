@@ -6,8 +6,8 @@ Projector::Projector()
 {
     DirectX::XMFLOAT4X4 _temp_mat = {};
 
-    float _scalingBiasX = 0.5f + (0.5f / 800.0f);
-    float _scalingBiasY = 0.5f + (0.5f / 600.0f);
+    float _scalingBiasX = 0.5f + (0.5f / 784.0f);
+    float _scalingBiasY = 0.5f + (0.5f / 561.0f);
 
     _temp_mat._11 = 0.5f;
     _temp_mat._22 = -0.5f;

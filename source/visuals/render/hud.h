@@ -2,6 +2,8 @@
 #ifndef HUD_H
 	#define HUD_H
 
+	#include <memory>
+
 	#include "render_base.h"
 
 	class Presenter;

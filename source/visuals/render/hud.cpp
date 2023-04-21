@@ -12,8 +12,8 @@
 HUDRender::HUDRender(Presenter* parent)
 	:RenderBase(parent)
 {
-	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/hud_v.hlsl");
-	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/hud_p.hlsl");
+	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/hud.hlsl", "vs_main");
+	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/hud.hlsl", "ps_main");
 
 	unsigned int _slot = static_cast<unsigned int>(DefaultObjects::QUAD);
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
@@ -32,5 +32,6 @@ void HUDRender::Render()
 	vertex_shader->Apply();
 	pixel_shader->Apply();
 
+	buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD);
 	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::QUAD), 0, 0);
 }

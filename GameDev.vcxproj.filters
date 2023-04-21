@@ -638,10 +638,10 @@
     <FxCompile Include="source\visuals\shaders\sun_moon_p.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="source\visuals\shaders\hud_v.hlsl">
+    <FxCompile Include="source\visuals\shaders\hud.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="source\visuals\shaders\hud_p.hlsl">
+    <FxCompile Include="source\visuals\shaders\texture_overlay.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
     <FxCompile Include="source\visuals\shaders\highlight_v.hlsl">

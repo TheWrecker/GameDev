@@ -20,7 +20,7 @@
 		void Render() override {};
 		void Clear();
 		void BindAsStencilTarget();
-		void BindAsShaderResource();
+		void BindAsShaderResource(unsigned int slot);
 
 		DepthMap* GetDepthMap();
 

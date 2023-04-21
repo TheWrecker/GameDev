@@ -171,7 +171,6 @@ void Aggregator::AggregateAllRenders()
 	presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
 
 	//render hud
-	buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD);
 	render_hud->Render();
 
 	//disable alpha blending
