@@ -37,6 +37,11 @@ void PhysicsEngine::Start()
 	enabled = true;
 }
 
+void PhysicsEngine::Stop()
+{
+	enabled = false;
+}
+
 bool PhysicsEngine::Initialize()
 {
 	ticker = Supervisor::QueryService<SystemTicker*>("ticker");

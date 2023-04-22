@@ -76,7 +76,7 @@ float4 depth_pass_main(DepthPass_Input vertex) : SV_Position
 
 float4 depth_pass_draw(float4 vertex : SV_Position) : SV_Target
 {
-    vertex.z /= vertex.w;
+    //vertex.z /= vertex.w;
     return float4(vertex.zzz, 1.0f);
 }
 

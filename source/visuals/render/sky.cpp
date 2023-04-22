@@ -21,7 +21,7 @@ SkyRender::SkyRender(Presenter* parent)
 		.Build();
 
 	per_frame_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
-	scale_matrix = DirectX::XMMatrixScaling(500.0f, 500.0f, 500.0f);
+	scale_matrix = DirectX::XMMatrixScaling(190.0f, 190.0f, 190.0f);
 }
 
 SkyRender::~SkyRender()

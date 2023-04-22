@@ -24,6 +24,7 @@
 		bool Initialize() override;
 		void Update() override;
 		void Start();
+		void Stop();
 
 		void RegisterMovementComponent(MovePhysics* target);
 		void RemoveMovementComponent(MovePhysics* target);

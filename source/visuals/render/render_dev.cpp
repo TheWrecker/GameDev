@@ -20,7 +20,7 @@ DevRender::DevRender(Presenter* parent)
 	:RenderBase(parent)
 {
 	object = std::make_unique<TransformableEntity>();
-	object->SetPosition(20.0f, 27.0f, 20.0f);
+	object->SetPosition(20.0f, 27.0f, 19.0f);
 	object->SetScale(5.0f, 5.0f, 5.0f);
 
 	plane = std::make_unique<TransformableEntity>();
@@ -158,13 +158,15 @@ void DevRender::Render()
 	buffer_master->BindDefaultObject(DefaultObjects::QUAD_NORMAL);
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD_NORMAL);
 	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::QUAD_NORMAL), 0, 0);
-	context->PSSetShaderResources(3, 1, &_null_view);
 
 	_cb1 = { DirectX::XMMatrixTranspose(object->World_Matrix()) };
 	object_buffer->Update(_cb1);
 	object_buffer->Bind(BindStage::VERTEX, 1);
 
 	input_layout->Bind();
+
+	dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Screen_Matrix());
+	dev_buffer->Update(dev_data);
 
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE_NORMAL);
 	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::SPHERE_NORMAL), 0, 0);
@@ -180,4 +182,5 @@ void DevRender::Render()
 	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::QUAD), 0, 0);
 
 	context->PSSetShaderResources(2, 1, &_null_view);
+	context->PSSetShaderResources(3, 1, &_null_view);
 }

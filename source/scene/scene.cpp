@@ -86,6 +86,7 @@ void Scene::SwitchMode(SceneMode mode)
 			
 			//signal the start to the system engines
 			physics_engine->Start();
+			physics_engine->Stop(); //test
 			world_engine->StartWorldGeneration();
 			Supervisor::QueryService<EventHandler*>("event_handler")->Resume();
 
