@@ -3,8 +3,8 @@
 #include "../elements/shader_pixel.h"
 #include "../elements/input_layout.h"
 #include "../elements/render_target.h"
+#include "../elements/depth_map.h"
 #include "../scene/assets/manager_texture.h"
-#include "depth_pass.h"
 #include "../scene/assets/master_buffer.h"
 #include "../entities/entity_transformable.h"
 #include "../scene/elements/renderable_frustrum.h"
@@ -17,10 +17,10 @@
 static const ::DirectX::XMVECTORF32 RENDER_TARGET_DEFAULT_COLOR = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 DevRender::DevRender(Presenter* parent)
-	:RenderBase(parent)
+	:RenderBase(parent), use_render_target_as_depth_map(false)
 {
 	object = std::make_unique<TransformableEntity>();
-	object->SetPosition(20.0f, 27.0f, 19.0f);
+	object->SetPosition(20.0f, 27.0f, 14.0f);
 	object->SetScale(5.0f, 5.0f, 5.0f);
 
 	plane = std::make_unique<TransformableEntity>();
@@ -64,13 +64,11 @@ DevRender::DevRender(Presenter* parent)
 		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot3)
 		.Build();
 
-	depth_pass = std::make_unique<DepthPass>(parent, parent->GetScreenWidth(), parent->GetScreenHeight());
-
 	dev_data.ambient_color = { 0.2f, 0.2f, 0.2f, 1.0f };
-	dev_data.light_color = { 0.8f, 0.0f, 0.0f, 0.8f };
+	dev_data.light_color = { 0.8f, 0.8f, 0.8f, 1.0f };
 	dev_data.specular_color = { 1.0f, 1.0f, 1.0f, 0.5f };
-	dev_data.light_radius = 40.0f;
-	dev_data.specular_power = 2.0f;
+	dev_data.light_radius = 80.0f;
+	dev_data.specular_power = 1.0f;
 	dev_data.camera_position = { 20.0f, 20.0f, 20.0f };
 	dev_data.light_position = { 30.0f, 40.0f, 30.0f };
 	dev_data.projector_matrix = {};
@@ -83,6 +81,8 @@ DevRender::DevRender(Presenter* parent)
 	DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_final_matrix) };
 	texture_overlay_buffer->Update(_cb);
 	texture_overlay_buffer->Bind(BindStage::VERTEX, 1);
+
+	depth_map = std::make_unique<DepthMap>(parent, parent->GetScreenWidth(), parent->GetScreenHeight());
 
 	render_target = std::make_unique<RenderTarget>(parent);
 	render_target->CreateInterfaces();
@@ -97,7 +97,7 @@ bool DevRender::Initialize()
 	bool _result = true;
 
 	_result &= RenderBase::Initialize();
-	_result &= depth_pass->Initialize();
+	//_result &= depth_pass->Initialize();
 
 	return _result;
 }
@@ -108,6 +108,7 @@ void DevRender::Render()
 	ID3D11PixelShader* _null_ps = { nullptr };
 
 	dev_data.camera_position = camera->Position();
+	dev_data.light_position = scene->renderable_frustrum->GetPosition();
 	dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Matrix());
 	//dev_data.projector_matrix = DirectX::XMMatrixTranspose(camera->View_Projection_Matrix());
 	dev_buffer->Update(dev_data);
@@ -120,26 +121,38 @@ void DevRender::Render()
 
 	input_layout_depth->Bind();
 	vertex_shader2->Apply();
-	pixel_shader2->Apply();
 
-	//depth_pass->Clear();
-	context->ClearRenderTargetView(render_target->GetTargetView(), reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
-	context->ClearDepthStencilView(render_target->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	render_target->Bind();
+	if (use_render_target_as_depth_map)
+		pixel_shader2->Apply();
 
-	//depth_pass->BindAsStencilTarget();
+	if (use_render_target_as_depth_map)
+	{
+		context->ClearRenderTargetView(render_target->GetTargetView(), reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
+		context->ClearDepthStencilView(render_target->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		render_target->Bind();
+		pixel_shader2->Apply();
+	}
+	else
+	{
+		depth_map->Clear();
+		depth_map->BindAsStencilTarget();
+		context->PSSetShader(_null_ps, nullptr, 0);
 
-	//presenter->SetRasterizerState(RasterizerMode::CULL_FRONT_SOLID_CW);
+		//presenter->SetRasterizerState(RasterizerMode::DEPTH_MAP);
+	}
 
-	//context->PSSetShader(pixel_shader2);
+
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
 	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::SPHERE), 0, 0);
 
-	//presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
+	if (!use_render_target_as_depth_map)
+	{
+		//presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
+	}
 
 	//TODO: add render target stack class
-
 	presenter->BindDefaultRenderTargetAndStencil();
+
 
 	dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Screen_Matrix());
 	dev_buffer->Update(dev_data);
@@ -151,9 +164,17 @@ void DevRender::Render()
 	input_layout_plane->Bind();
 	vertex_shader->Apply();
 	pixel_shader->Apply();
-	//depth_pass->BindAsShaderResource(3);
-	context->PSSetShaderResources(2, 1, render_target->GetPointerToShaderView());
-	context->PSSetShaderResources(3, 1, render_target->GetPointerToShaderView());
+
+	if (use_render_target_as_depth_map)
+	{
+		context->PSSetShaderResources(2, 1, render_target->GetPointerToShaderView());
+		context->PSSetShaderResources(3, 1, render_target->GetPointerToShaderView());
+	}
+	else
+	{
+		depth_map->BindAsShaderResource(3);
+		depth_map->BindAsShaderResource(2);
+	}
 
 	buffer_master->BindDefaultObject(DefaultObjects::QUAD_NORMAL);
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD_NORMAL);
@@ -170,8 +191,6 @@ void DevRender::Render()
 
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE_NORMAL);
 	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::SPHERE_NORMAL), 0, 0);
-
-	//depth_pass->BindAsShaderResource(2);
 
 	texture_overlay_buffer->Bind(BindStage::VERTEX, 1);
 	texture_overlay_input_layout->Bind();

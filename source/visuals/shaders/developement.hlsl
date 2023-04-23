@@ -1,9 +1,9 @@
 
 SamplerState BilinearSampler : register(s14);
 SamplerState ProjectionSampler : register(s12);
-SamplerState DepthSampler : register(s11);
+//SamplerComparisonState DepthSampler : register(s10); //PCF
+SamplerState DepthSampler : register(s11); //Point
 
-Texture2D projectionTexture : register(t118); //logo
 Texture2D inputTexture : register(t123);
 Texture2D depthMap : register(t03);
 
@@ -69,7 +69,7 @@ float4 depth_pass_main(DepthPass_Input vertex) : SV_Position
     _pos =  mul(_pos, world_matrix);
     _pos = mul(_pos, projector_matrix);
     
-   // _pos.xyz /= _pos.w;
+    //_pos.xyz /= _pos.w;
     
     return _pos;
 }
@@ -119,8 +119,9 @@ float4 ps_main(VS_OUTPUT input) : SV_TARGET
         input.proj_coord.xyz /= input.proj_coord.w;
         
         float _pixel_Depth = input.proj_coord.z;
+        //float _sample_Depth = depthMap.SampleCmpLevelZero(DepthSampler, input.proj_coord.xy, _pixel_Depth).x;
         float _sample_Depth = depthMap.Sample(DepthSampler, input.proj_coord.xy).x + DepthBias;
-        
+
         shadow_color = (_pixel_Depth > _sample_Depth ? ColorBlack : ColorWhite);
         
     }

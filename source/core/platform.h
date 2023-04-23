@@ -16,7 +16,7 @@
 			~Platform();
 
 			//TODO: add more parameters
-			void SetWindowsParameters(int width = 800, int height = 600);
+			void SetWindowsParameters(int width = 1024, int height = 768);
 			bool Initialize() override;
 			bool ProcessPlatformMessages();
 

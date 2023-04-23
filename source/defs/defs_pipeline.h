@@ -91,7 +91,8 @@
 	enum class DefaultSampler
 	{
 		UNDEFINED = 0,
-		DEPTH_WHITE = 11,
+		DEPTH_PCF_WHITE = 10,
+		DEPTH_POINT_WHITE = 11,
 		PROJECTION_WHITE = 12,
 		POINT = 13,
 		BILINEAR = 14,

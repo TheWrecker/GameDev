@@ -233,7 +233,6 @@
     <ClCompile Include="source\visuals\overlay.cpp" />
     <ClCompile Include="source\visuals\presenter.cpp" />
     <ClCompile Include="source\visuals\render\aggregator.cpp" />
-    <ClCompile Include="source\visuals\render\depth_pass.cpp" />
     <ClCompile Include="source\visuals\render\highlight.cpp" />
     <ClCompile Include="source\visuals\render\hud.cpp" />
     <ClCompile Include="source\visuals\render\proxies.cpp" />
@@ -329,7 +328,6 @@
     <ClInclude Include="source\visuals\overlay.h" />
     <ClInclude Include="source\visuals\presenter.h" />
     <ClInclude Include="source\visuals\render\aggregator.h" />
-    <ClInclude Include="source\visuals\render\depth_pass.h" />
     <ClInclude Include="source\visuals\render\highlight.h" />
     <ClInclude Include="source\visuals\render\hud.h" />
     <ClInclude Include="source\visuals\render\proxies.h" />
@@ -422,17 +420,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="source\visuals\shaders\pass_p.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="source\visuals\shaders\pass_v.hlsl">
+    <FxCompile Include="source\visuals\shaders\render_pass.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

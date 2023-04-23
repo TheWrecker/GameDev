@@ -184,7 +184,13 @@ void Overlay::Draw()
 			ImGui::Separator();
 			ImGui::DragFloat3("Light Direction", (float*)&sun->light_info.direction, 0.01f, -1.0f, 1.0f);
 
-			if (ImGui::Button("Show current Frustrum"))
+			ImGui::Separator();
+
+			ImGui::Checkbox("Use a render target as depth map", &aggregator->render_dev->use_render_target_as_depth_map);
+
+			ImGui::Separator();
+
+			if (ImGui::Button("Update light frustrum to the camera"))
 				scene->renderable_frustrum->UpdateToCamera();
 		}
 

@@ -7,7 +7,7 @@
 	#include "../elements/buffer_constant.h"
 	#include "render_base.h"
 
-	class DepthPass;
+	class DepthMap;
 	class RenderTarget;
 	class TransformableEntity;
 	class Presenter;
@@ -46,7 +46,7 @@
 		std::unique_ptr<VertexShader> vertex_shader2;
 		std::unique_ptr<InputLayout> input_layout_depth;
 		std::unique_ptr<InputLayout> input_layout_plane;
-		std::unique_ptr<DepthPass> depth_pass;
+		std::unique_ptr<DepthMap> depth_map;
 		std::unique_ptr<RenderTarget> render_target;
 		std::unique_ptr<PixelShader> pixel_shader2;
 
@@ -57,6 +57,8 @@
 		std::unique_ptr<VertexShader> texture_overlay_vertex_shader;
 		std::unique_ptr<PixelShader> texture_overlay_pixel_shader;
 		std::unique_ptr<InputLayout> texture_overlay_input_layout;
+
+		bool use_render_target_as_depth_map;
 	};
 
 #endif // !RENDER_DEV_H

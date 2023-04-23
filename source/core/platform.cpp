@@ -165,8 +165,8 @@ bool Platform::Initialize()
 	#ifdef _WINDOWS
 
 		//TODO: fewer magic values
-		auto flags = WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU;
-		window_handle = CreateWindow(window_class.lpszClassName, window_class.lpszClassName, flags, 100, 100, width, height, nullptr, nullptr, instance_handle, nullptr);
+		auto flags = WS_POPUP;//WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU;
+		window_handle = CreateWindow(window_class.lpszClassName, window_class.lpszClassName, flags, 250, 50, width, height, nullptr, nullptr, instance_handle, nullptr);
 		if (!window_handle)
 		{
 			assert(false);

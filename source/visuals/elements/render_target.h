@@ -10,10 +10,10 @@
 	{
 	public:
 		RenderTarget(Presenter* presenter);
-		virtual ~RenderTarget();
+		~RenderTarget();
 
 		bool CreateInterfaces();
-		virtual void Bind();
+		void Bind();
 
 		ID3D11RenderTargetView* GetTargetView();
 		ID3D11DepthStencilView* GetDepthStencilView();

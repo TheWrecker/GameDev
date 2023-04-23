@@ -322,9 +322,6 @@
     <ClCompile Include="source\visuals\elements\depth_map.cpp">
       <Filter>source\visuals\elements</Filter>
     </ClCompile>
-    <ClCompile Include="source\visuals\render\depth_pass.cpp">
-      <Filter>source\visuals\render</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\platform.h">
@@ -606,9 +603,6 @@
     <ClInclude Include="source\visuals\elements\depth_map.h">
       <Filter>source\visuals\elements</Filter>
     </ClInclude>
-    <ClInclude Include="source\visuals\render\depth_pass.h">
-      <Filter>source\visuals\render</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="source\visuals\shaders\developement.hlsl">
@@ -620,10 +614,7 @@
     <FxCompile Include="source\visuals\shaders\sky_p.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
-    <FxCompile Include="source\visuals\shaders\pass_v.hlsl">
-      <Filter>source\visuals\shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="source\visuals\shaders\pass_p.hlsl">
+    <FxCompile Include="source\visuals\shaders\render_pass.hlsl">
       <Filter>source\visuals\shaders</Filter>
     </FxCompile>
     <FxCompile Include="source\visuals\shaders\solid_blocks_v.hlsl">

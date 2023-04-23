@@ -17,6 +17,7 @@
 
 	enum class RasterizerMode
 	{
+		//general states
 		CULL_NONE_SOLID_CW,
 		CULL_NONE_SOLID_CCW,
 		CULL_NONE_WIREFRAME_CW,
@@ -28,7 +29,11 @@
 		CULL_FRONT_SOLID_CW,
 		CULL_FRONT_SOLID_CCW,
 		CULL_FRONT_WIREFRAME_CW,
-		CULL_FRONT_WIREFRAME_CCW
+		CULL_FRONT_WIREFRAME_CCW,
+
+		//specialized states
+		DEPTH_MAP
+
 	};
 
 	enum class BlendMode
@@ -111,6 +116,7 @@
 
 		//rasterizer
 		ID3D11RasterizerState
+			//general states
 			* rasterizer_state_NSCW,
 			* rasterizer_state_NSCCW,
 			* rasterizer_state_NWCW,
@@ -122,7 +128,10 @@
 			* rasterizer_state_FSCW,
 			* rasterizer_state_FSCCW,
 			* rasterizer_state_FWCW,
-			* rasterizer_state_FWCCW;
+			* rasterizer_state_FWCCW,
+
+			//specialized states
+			* rasterizer_state_depthmap;
 
 		//pipeline states
 		bool depth_stencil_enabled, multisampling_enabled, blend_enabled;

@@ -12,7 +12,7 @@
 	class RenderPass : public RenderBase
 	{
 	public:
-		RenderPass(Presenter* parent, const std::wstring& pixelShader);
+		RenderPass(Presenter* parent);
 		~RenderPass();
 
 		void BindAsRenderTarget();

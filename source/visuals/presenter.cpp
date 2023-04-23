@@ -47,6 +47,7 @@ Presenter::~Presenter()
 	DXRelease(rasterizer_state_FSCCW);
 	DXRelease(rasterizer_state_FWCW);
 	DXRelease(rasterizer_state_FWCCW);
+	DXRelease(rasterizer_state_depthmap);
 	DXRelease(blend_state_disabled);
 	DXRelease(blend_state_enabled);
 	DXRelease(back_buffer);
@@ -303,6 +304,8 @@ void Presenter::CreateRasterizerStates()
 	D3D11_RASTERIZER_DESC _rasterizer_desc = {};
 	ZeroMemory(&_rasterizer_desc, sizeof(_rasterizer_desc));
 
+	//General Rasterizer States
+
 	// Cull None, Solid Fill, Clockwise
 	_rasterizer_desc.CullMode = D3D11_CULL_NONE;
 	_rasterizer_desc.FillMode = D3D11_FILL_SOLID;
@@ -374,6 +377,16 @@ void Presenter::CreateRasterizerStates()
 	_rasterizer_desc.FillMode = D3D11_FILL_WIREFRAME;
 	_rasterizer_desc.FrontCounterClockwise = true;
 	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_FWCCW));
+
+	//Specialized Rasterizer States
+
+	// Depth Map Rasterizer
+	_rasterizer_desc.CullMode = D3D11_CULL_FRONT;
+	_rasterizer_desc.SlopeScaledDepthBias = 20;
+	_rasterizer_desc.DepthBias = 84000;
+	_rasterizer_desc.DepthBiasClamp = 1.0f;
+	_rasterizer_desc.FillMode = D3D11_FILL_SOLID;
+	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_depthmap));
 }
 
 void Presenter::CreateBlendStates()
@@ -453,6 +466,8 @@ bool Presenter::SetRasterizerState(RasterizerMode mode)
 		case RasterizerMode::CULL_FRONT_WIREFRAME_CW: context->RSSetState(rasterizer_state_FWCW);
 			break;
 		case RasterizerMode::CULL_FRONT_WIREFRAME_CCW: context->RSSetState(rasterizer_state_FWCCW);
+			break;
+		case RasterizerMode::DEPTH_MAP: context->RSSetState(rasterizer_state_depthmap);
 			break;
 		default:
 		{

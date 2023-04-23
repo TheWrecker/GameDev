@@ -4,7 +4,7 @@
 #include "../scene/assets/texture_atlas.h"
 #include "../scene/assets/master_buffer.h"
 #include "../elements/render_target.h"
-//#include "../elements/depth_map.h"
+#include "../elements/depth_map.h"
 #include "hud.h"
 #include "highlight.h"
 #include "proxies.h"
@@ -13,7 +13,6 @@
 #include "sun_moon.h"
 #include "sky.h"
 #include "render_pass.h"
-#include "depth_pass.h"
 #include "../scene/scene.h"
 #include "../presenter.h"
 
@@ -35,7 +34,7 @@ Aggregator::Aggregator(Presenter* parent)
 	render_dev = std::make_unique<DevRender>(parent);
 
 	//render pass
-	render_pass = std::make_unique<RenderPass>(parent, L"source/visuals/shaders/pass_p.hlsl");
+	render_pass = std::make_unique<RenderPass>(parent);
 
 	//depth pass
 	//depth_pass = std::make_unique<DepthPass>(parent, 500, 500);
@@ -103,7 +102,8 @@ bool Aggregator::Initialize()
 	state_master->BindDefaultTextureSampler(DefaultSampler::POINT);
 	state_master->BindDefaultTextureSampler(DefaultSampler::BILINEAR);
 	state_master->BindDefaultTextureSampler(DefaultSampler::PROJECTION_WHITE);
-	state_master->BindDefaultTextureSampler(DefaultSampler::DEPTH_WHITE);
+	state_master->BindDefaultTextureSampler(DefaultSampler::DEPTH_POINT_WHITE);
+	state_master->BindDefaultTextureSampler(DefaultSampler::DEPTH_PCF_WHITE);
 
 	//bind default textures and the atlas
 	scene->GetTextureAtlas()->Bind();

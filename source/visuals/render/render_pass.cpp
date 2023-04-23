@@ -8,13 +8,13 @@
 
 #include "render_pass.h"
 
-RenderPass::RenderPass(Presenter* parent, const std::wstring& pixelShader)
+RenderPass::RenderPass(Presenter* parent)
 	:RenderBase(parent)
 {
 	render_target = std::make_unique<RenderTarget>(parent);
 	render_target->CreateInterfaces();
-	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/pass_v.hlsl");
-	pixel_shader = std::make_unique<PixelShader>(presenter, pixelShader);
+	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/render_pass.hlsl", "vs_main");
+	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/render_pass.hlsl", "ps_main");
 
 	unsigned int _slot = static_cast<unsigned int>(DefaultObjects::QUAD_FULLSCREEN);
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
