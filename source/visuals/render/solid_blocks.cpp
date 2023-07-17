@@ -12,10 +12,10 @@
 #include "solid_blocks.h"
 
 SolidBlockRender::SolidBlockRender(Presenter* parent)
-	:RenderBase(parent)
+	:RenderBase(parent), test_bool(true)
 {
-	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/solid_blocks_v.hlsl");
-	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/solid_blocks_p.hlsl");
+	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "vs_main");
+	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "ps_main");
 
 	unsigned int _slot = 1;
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
@@ -56,9 +56,11 @@ void SolidBlockRender::Render()
 {
 	if (render_segments.empty())
 		return;
-
-	vertex_shader->Apply();
-	pixel_shader->Apply();
+	if (test_bool)
+	{
+		vertex_shader->Apply();
+		pixel_shader->Apply();
+	}
 	input_layout->Bind();
 
 	for (auto _segment : render_segments)

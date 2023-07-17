@@ -32,6 +32,7 @@
 	private:
 		friend class Overlay;
 		friend Scene;
+		friend DevRender;
 
 		ID3D11Device* device;
 		ID3D11DeviceContext* context;

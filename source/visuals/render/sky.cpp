@@ -11,8 +11,8 @@
 SkyRender::SkyRender(Presenter* parent)
 	:RenderBase(parent)
 {
-	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/sky_v.hlsl");
-	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/sky_p.hlsl");
+	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/sky.hlsl", "vs_main");
+	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/sky.hlsl", "ps_main");
 
 	unsigned int _sphere_slot = static_cast<unsigned int>(DefaultObjects::SPHERE);
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());

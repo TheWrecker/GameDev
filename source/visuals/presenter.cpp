@@ -382,9 +382,9 @@ void Presenter::CreateRasterizerStates()
 
 	// Depth Map Rasterizer
 	_rasterizer_desc.CullMode = D3D11_CULL_FRONT;
-	_rasterizer_desc.SlopeScaledDepthBias = 20;
-	_rasterizer_desc.DepthBias = 84000;
-	_rasterizer_desc.DepthBiasClamp = 1.0f;
+	_rasterizer_desc.SlopeScaledDepthBias = 2.0f;
+	_rasterizer_desc.DepthBias = 42000;
+	_rasterizer_desc.DepthBiasClamp = 0.05f;
 	_rasterizer_desc.FillMode = D3D11_FILL_SOLID;
 	DXAssert(device->CreateRasterizerState(&_rasterizer_desc, &rasterizer_state_depthmap));
 }

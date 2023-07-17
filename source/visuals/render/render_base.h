@@ -15,6 +15,7 @@
 	class StateMaster;
 	class BasicCamera;
 	class Scene;
+	class Aggregator;
 	class Presenter;
 
 	class RenderBase
@@ -36,6 +37,7 @@
 		ID3D11Device* device;
 		ID3D11DeviceContext* context;
 		Presenter* presenter;
+		Aggregator* aggregator;
 		Scene* scene;
 		BasicCamera* camera;
 		StateMaster* state_master;

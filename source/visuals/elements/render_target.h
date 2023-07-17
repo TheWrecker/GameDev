@@ -33,6 +33,8 @@
 		ID3D11Texture2D* depth_stencil;
 		D3D11_TEXTURE2D_DESC depth_stencil_desc;
 		ID3D11DepthStencilView* depth_stencil_view;
+
+		D3D11_VIEWPORT viewport;
 	};
 
 #endif // !RENDER_TARGET_H

@@ -21,6 +21,8 @@
 		void Update() override;
 		void Render() override;
 
+		bool test_bool;
+
 	private:
 		friend class Overlay;
 

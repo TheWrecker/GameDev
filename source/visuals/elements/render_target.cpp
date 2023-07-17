@@ -31,6 +31,13 @@ RenderTarget::RenderTarget(Presenter* presenter)
 	depth_stencil_desc.SampleDesc.Quality = 0;
 	depth_stencil_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	depth_stencil_desc.Usage = D3D11_USAGE_DEFAULT;
+
+	viewport.TopLeftX = 0.0f;
+	viewport.TopLeftY = 0.0f;
+	viewport.Width = static_cast<float>(presenter->GetScreenWidth());
+	viewport.Height = static_cast<float>(presenter->GetScreenHeight());
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
 }
 
 RenderTarget::~RenderTarget()
@@ -62,6 +69,7 @@ bool RenderTarget::CreateInterfaces()
 void RenderTarget::Bind()
 {
 	context->OMSetRenderTargets(1, &back_buffer_target_view, depth_stencil_view);
+	context->RSSetViewports(1, &viewport);
 }
 
 ID3D11RenderTargetView* RenderTarget::GetTargetView()

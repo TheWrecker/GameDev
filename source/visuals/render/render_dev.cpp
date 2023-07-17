@@ -10,6 +10,8 @@
 #include "../scene/elements/renderable_frustrum.h"
 #include "../scene/camera/camera_basic.h"
 #include "../scene/scene.h"
+#include "solid_blocks.h"
+#include "aggregator.h"
 #include "../presenter.h"
 
 #include "render_dev.h"
@@ -122,8 +124,8 @@ void DevRender::Render()
 	input_layout_depth->Bind();
 	vertex_shader2->Apply();
 
-	if (use_render_target_as_depth_map)
-		pixel_shader2->Apply();
+	/*if (use_render_target_as_depth_map)
+		pixel_shader2->Apply();*/
 
 	if (use_render_target_as_depth_map)
 	{
@@ -141,18 +143,23 @@ void DevRender::Render()
 		//presenter->SetRasterizerState(RasterizerMode::DEPTH_MAP);
 	}
 
+	aggregator->render_solid_blocks->test_bool = false;
+
+	aggregator->render_solid_blocks->Update();
+	aggregator->render_solid_blocks->Render();
+
+	aggregator->render_solid_blocks->test_bool = true;
 
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
 	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::SPHERE), 0, 0);
 
 	if (!use_render_target_as_depth_map)
 	{
-		//presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
+		presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
 	}
 
 	//TODO: add render target stack class
 	presenter->BindDefaultRenderTargetAndStencil();
-
 
 	dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Screen_Matrix());
 	dev_buffer->Update(dev_data);
@@ -200,6 +207,6 @@ void DevRender::Render()
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD);
 	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::QUAD), 0, 0);
 
-	context->PSSetShaderResources(2, 1, &_null_view);
-	context->PSSetShaderResources(3, 1, &_null_view);
+	//context->PSSetShaderResources(2, 1, &_null_view);
+	//context->PSSetShaderResources(3, 1, &_null_view);
 }

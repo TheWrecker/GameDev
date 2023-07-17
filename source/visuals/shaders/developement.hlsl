@@ -40,7 +40,7 @@ cbuffer DevData : register(b2)
 
 //TODO: move projector to separate buffer
 
-struct DepthPass_Input
+struct DepthPass_INPUT
 {
     float3 position : POSITION;
     float2 uv : TEXCOORDS;
@@ -63,7 +63,7 @@ struct VS_OUTPUT
     float attenuation : ATTENUATION;
 };
 
-float4 depth_pass_main(DepthPass_Input vertex) : SV_Position
+float4 depth_pass_main(DepthPass_INPUT vertex) : SV_Position
 {
     float4 _pos = float4(vertex.position, 1.0);
     _pos =  mul(_pos, world_matrix);

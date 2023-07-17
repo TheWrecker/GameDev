@@ -22,8 +22,9 @@ RenderBase::~RenderBase()
 bool RenderBase::Initialize()
 {
 	scene = presenter->QueryService<Scene*>("scene");
+	aggregator = presenter->GetAggregator();
 
-	if (!scene)
+	if (!scene || !aggregator)
 		return false;
 
 	camera = scene->GetActiveCamera();

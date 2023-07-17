@@ -15,8 +15,8 @@ HighlightRender::HighlightRender(Presenter* parent)
 {
 	object_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
 
-	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/highlight_v.hlsl");
-	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/highlight_p.hlsl");
+	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/highlight.hlsl", "vs_main");
+	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/highlight.hlsl", "ps_main");
 
 	unsigned int _slot = static_cast<unsigned int>(DefaultObjects::BLOCK);
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
