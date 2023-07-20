@@ -50,7 +50,9 @@ void BasicCamera::UpdateViewMatrix()
 
 void BasicCamera::UpdateProjectionMatrix()
 {
-	DirectX::XMStoreFloat4x4(&projection_matrix, DirectX::XMMatrixPerspectiveFovRH(fov, aspect_ratio, near_plane, far_plane));
+	DirectX::XMStoreFloat4x4(&projection_matrix,
+		//DirectX::XMMatrixOrthographicRH(800, 600, 0.0f, 200.0f));
+		DirectX::XMMatrixPerspectiveFovRH(fov, aspect_ratio, near_plane, far_plane));
 	UpdateViewProjectionMatrix();
 }
 

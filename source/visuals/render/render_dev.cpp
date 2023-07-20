@@ -21,73 +21,75 @@ static const ::DirectX::XMVECTORF32 RENDER_TARGET_DEFAULT_COLOR = { 1.0f, 1.0f, 
 DevRender::DevRender(Presenter* parent)
 	:RenderBase(parent), use_render_target_as_depth_map(false)
 {
-	object = std::make_unique<TransformableEntity>();
-	object->SetPosition(20.0f, 27.0f, 14.0f);
-	object->SetScale(5.0f, 5.0f, 5.0f);
+	//object = std::make_unique<TransformableEntity>();
+	//object->SetPosition(20.0f, 27.0f, 14.0f);
+	//object->SetScale(5.0f, 5.0f, 5.0f);
 
-	plane = std::make_unique<TransformableEntity>();
-	plane->SetPosition(-10.0f, 7.0f, 0.0f);
-	plane->SetScale(60.0f, 45.0f, 1.0f);
+	//plane = std::make_unique<TransformableEntity>();
+	//plane->SetPosition(-10.0f, 7.0f, 0.0f);
+	//plane->SetScale(60.0f, 45.0f, 1.0f);
 
-	object_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
-	dev_buffer = std::make_unique<ConstantBuffer<DevData>>(device, context);
+	//object_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
+	//dev_buffer = std::make_unique<ConstantBuffer<DevData>>(device, context);
 
-	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/developement.hlsl", "vs_main");
-	vertex_shader2 = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/developement.hlsl", "depth_pass_main");
-	pixel_shader2 = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/developement.hlsl", "depth_pass_draw");
-	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/developement.hlsl", "ps_main");
+	//vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/developement.hlsl", "vs_main");
+	//vertex_shader2 = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "vs_first_pass");
+	//pixel_shader2 = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/developement.hlsl", "depth_pass_draw");
+	//pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/developement.hlsl", "ps_main");
 
-	texture_overlay_vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/texture_overlay.hlsl", "vs_main");
-	texture_overlay_pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/texture_overlay.hlsl", "ps_main");
+	//texture_overlay_vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/texture_overlay.hlsl", "vs_main");
+	//texture_overlay_pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/texture_overlay.hlsl", "ps_main");
 
-	unsigned int _slot1 = static_cast<unsigned int>(DefaultObjects::SPHERE_NORMAL);
-	unsigned int _slot2 = static_cast<unsigned int>(DefaultObjects::QUAD_NORMAL);
-	unsigned int _slot3 = static_cast<unsigned int>(DefaultObjects::QUAD);
+	//unsigned int _slot1 = 1; //static_cast<unsigned int>(DefaultObjects::SPHERE_NORMAL);
+	//unsigned int _slot2 = static_cast<unsigned int>(DefaultObjects::QUAD_NORMAL);
+	//unsigned int _slot3 = static_cast<unsigned int>(DefaultObjects::QUAD);
 
-	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
-	input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot1)
-		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot1)
-		.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, _slot1)
-		.Build();
+	//input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
+	//input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot1)
+	//	.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot1)
+	//	.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, _slot1)
+	//	.Build();
 
-	input_layout_plane = std::make_unique<InputLayout>(presenter, vertex_shader.get());
-	input_layout_plane->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot2)
-		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot2)
-		.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, _slot2)
-		.Build();
+	//input_layout_plane = std::make_unique<InputLayout>(presenter, vertex_shader.get());
+	//input_layout_plane->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot2)
+	//	.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot2)
+	//	.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, _slot2)
+	//	.Build();
 
-	input_layout_depth = std::make_unique<InputLayout>(presenter, vertex_shader2.get());
-	input_layout_depth->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot1)
-		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot1)
-		.Build();
+	//input_layout_depth = std::make_unique<InputLayout>(presenter, vertex_shader2.get());
+	//input_layout_depth->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot1)
+	//	.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot1)
+	//	.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, _slot1)
+	//	.AddElement("ATLAS_SLICE", DXGI_FORMAT_R32_FLOAT, _slot1)
+	//	.Build();
 
-	texture_overlay_input_layout = std::make_unique<InputLayout>(presenter, texture_overlay_vertex_shader.get());
-	texture_overlay_input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot3)
-		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot3)
-		.Build();
+	//texture_overlay_input_layout = std::make_unique<InputLayout>(presenter, texture_overlay_vertex_shader.get());
+	//texture_overlay_input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot3)
+	//	.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot3)
+	//	.Build();
 
-	dev_data.ambient_color = { 0.2f, 0.2f, 0.2f, 1.0f };
-	dev_data.light_color = { 0.8f, 0.8f, 0.8f, 1.0f };
-	dev_data.specular_color = { 1.0f, 1.0f, 1.0f, 0.5f };
-	dev_data.light_radius = 80.0f;
-	dev_data.specular_power = 1.0f;
-	dev_data.camera_position = { 20.0f, 20.0f, 20.0f };
-	dev_data.light_position = { 30.0f, 40.0f, 30.0f };
-	dev_data.projector_matrix = {};
+	//dev_data.ambient_color = { 0.2f, 0.2f, 0.2f, 1.0f };
+	//dev_data.light_color = { 0.8f, 0.8f, 0.8f, 1.0f };
+	//dev_data.specular_color = { 1.0f, 1.0f, 1.0f, 0.5f };
+	//dev_data.light_radius = 80.0f;
+	//dev_data.specular_power = 1.0f;
+	//dev_data.camera_position = { 20.0f, 20.0f, 20.0f };
+	//dev_data.light_position = { 30.0f, 40.0f, 30.0f };
+	//dev_data.projector_matrix = {};
 
-	texture_overlay_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
-	auto _scale_matrix = DirectX::XMMatrixScaling(0.5f, 0.5f, 1.0f);
-	DirectX::XMFLOAT2 _texture_position = { -1.0f, -1.0f };
-	auto _translation_matrix = DirectX::XMMatrixTranslation(_texture_position.x, _texture_position.y, 0.0f);
-	auto _final_matrix = DirectX::XMMatrixMultiply(_scale_matrix, _translation_matrix);
-	DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_final_matrix) };
-	texture_overlay_buffer->Update(_cb);
-	texture_overlay_buffer->Bind(BindStage::VERTEX, 1);
+	//texture_overlay_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
+	//auto _scale_matrix = DirectX::XMMatrixScaling(0.5f, 0.5f, 1.0f);
+	//DirectX::XMFLOAT2 _texture_position = { -1.0f, -1.0f };
+	//auto _translation_matrix = DirectX::XMMatrixTranslation(_texture_position.x, _texture_position.y, 0.0f);
+	//auto _final_matrix = DirectX::XMMatrixMultiply(_scale_matrix, _translation_matrix);
+	//DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_final_matrix) };
+	//texture_overlay_buffer->Update(_cb);
+	//texture_overlay_buffer->Bind(BindStage::VERTEX, 1);
 
-	depth_map = std::make_unique<DepthMap>(parent, parent->GetScreenWidth(), parent->GetScreenHeight());
+	//depth_map = std::make_unique<DepthMap>(parent, parent->GetScreenWidth(), parent->GetScreenHeight());
 
-	render_target = std::make_unique<RenderTarget>(parent);
-	render_target->CreateInterfaces();
+	//render_target = std::make_unique<RenderTarget>(parent);
+	//render_target->CreateInterfaces();
 }
 
 DevRender::~DevRender()
@@ -106,12 +108,25 @@ bool DevRender::Initialize()
 
 void DevRender::Render()
 {
+	return;
+
 	ID3D11ShaderResourceView* _null_view = { nullptr };
 	ID3D11PixelShader* _null_ps = { nullptr };
 
 	dev_data.camera_position = camera->Position();
 	dev_data.light_position = scene->renderable_frustrum->GetPosition();
-	dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Matrix());
+	//dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Matrix());
+
+	/*auto _matWV = DirectX::XMMatrixMultiply(DirectX::XMMatrixTranslation(scene->renderable_frustrum->position.x,
+		scene->renderable_frustrum->position.y, scene->renderable_frustrum->position.z),
+		DirectX::XMMatrixLookAtRH(DirectX::XMLoadFloat3(&scene->renderable_frustrum->position),
+		DirectX::XMVECTOR(0,0,0,1), DirectX::XMVECTOR(0,1.0,0,1)));*/
+
+	/*auto _matWVP = DirectX::XMMatrixMultiply(_matWV,
+		DirectX::XMMatrixOrthographicRH(presenter->GetScreenWidth(), presenter->GetScreenHeight(), 0.1f, 300.0f));*/
+
+	//dev_data.projector_matrix = DirectX::XMMatrixTranspose(_matWVP);
+
 	//dev_data.projector_matrix = DirectX::XMMatrixTranspose(camera->View_Projection_Matrix());
 	dev_buffer->Update(dev_data);
 	dev_buffer->Bind(BindStage::VERTEX, 2);
@@ -143,12 +158,15 @@ void DevRender::Render()
 		//presenter->SetRasterizerState(RasterizerMode::DEPTH_MAP);
 	}
 
-	aggregator->render_solid_blocks->test_bool = false;
+	//aggregator->render_solid_blocks->test_bool = false;
 
 	aggregator->render_solid_blocks->Update();
 	aggregator->render_solid_blocks->Render();
 
-	aggregator->render_solid_blocks->test_bool = true;
+	//aggregator->render_solid_blocks->test_bool = true;
+
+	//dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Matrix());
+	dev_buffer->Update(dev_data);
 
 	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE);
 	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::SPHERE), 0, 0);
@@ -161,8 +179,8 @@ void DevRender::Render()
 	//TODO: add render target stack class
 	presenter->BindDefaultRenderTargetAndStencil();
 
-	dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Screen_Matrix());
-	dev_buffer->Update(dev_data);
+	/*dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Screen_Matrix());
+	dev_buffer->Update(dev_data);*/
 
 	DefaultConstantStruct _cb2 = { DirectX::XMMatrixTranspose(plane->World_Matrix()) };
 	object_buffer->Update(_cb2);
@@ -183,9 +201,9 @@ void DevRender::Render()
 		depth_map->BindAsShaderResource(2);
 	}
 
-	buffer_master->BindDefaultObject(DefaultObjects::QUAD_NORMAL);
-	buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD_NORMAL);
-	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::QUAD_NORMAL), 0, 0);
+	//buffer_master->BindDefaultObject(DefaultObjects::QUAD_NORMAL);
+	//buffer_master->BindDefaultIndexBuffer(DefaultObjects::QUAD_NORMAL);
+	//context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::QUAD_NORMAL), 0, 0);
 
 	_cb1 = { DirectX::XMMatrixTranspose(object->World_Matrix()) };
 	object_buffer->Update(_cb1);
@@ -193,11 +211,11 @@ void DevRender::Render()
 
 	input_layout->Bind();
 
-	dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Screen_Matrix());
+	//dev_data.projector_matrix = DirectX::XMMatrixTranspose(scene->renderable_frustrum->projector.View_Projection_Screen_Matrix());
 	dev_buffer->Update(dev_data);
 
-	buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE_NORMAL);
-	context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::SPHERE_NORMAL), 0, 0);
+	//buffer_master->BindDefaultIndexBuffer(DefaultObjects::SPHERE_NORMAL);
+	//context->DrawIndexed(buffer_master->GetIndexCount(DefaultObjects::SPHERE_NORMAL), 0, 0);
 
 	texture_overlay_buffer->Bind(BindStage::VERTEX, 1);
 	texture_overlay_input_layout->Bind();

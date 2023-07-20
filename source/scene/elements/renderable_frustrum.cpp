@@ -64,7 +64,7 @@ bool RenderableFrustrum::UpdateToCamera()
 	SetPosition(_camera->Position().x, _camera->Position().y, _camera->Position().z);
 	DirectX::XMFLOAT4X4 _proj = {};
 	DirectX::XMStoreFloat4x4(&_proj, _camera->Projection_Matrix());
-	frustrum.CalculateFrustrum(_camera->View_Matrix(), _proj, 30.0f);
+	frustrum.CalculateFrustrum(_camera->View_Matrix(), _proj, 100.0f);
 	//frustrum.CalculateFrustrum(_camera->View_Projection_Matrix());
 	CalculateCorners();
 	projector.SetPosition(_camera->Position().x, _camera->Position().y, _camera->Position().z);

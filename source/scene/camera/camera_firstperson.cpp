@@ -4,7 +4,7 @@
 #include "camera_firstperson.h"
 
 FirstPersonCamera::FirstPersonCamera()
-	:eye_height(0.7f)
+	:BasicCamera(), eye_height(0.7f)
 {
 }
 

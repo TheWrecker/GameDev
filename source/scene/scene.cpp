@@ -19,7 +19,7 @@
 #include "scene.h"
 
 Scene::Scene(Presenter* parent)
-	:presenter(parent)
+	:presenter(parent), attach_depthmap(false)
 {
 	//assets
 	texture_manager = std::make_unique<TextureManager>();
@@ -135,6 +135,9 @@ void Scene::Update()
 	active_camera->Update();
 	world->Update();
 	//world_engine->WorldLoadTick();
+	
+	if (attach_depthmap)
+		renderable_frustrum->UpdateToCamera();
 }
 
 void Scene::SwitchCameraType(CameraType type)

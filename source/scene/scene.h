@@ -59,6 +59,9 @@
 		TextureAtlas* GetTextureAtlas();
 		ModelManager* GetModelManager();
 
+		//test
+		std::unique_ptr<RenderableFrustrum> renderable_frustrum;
+
 	private:
 		friend class Overlay;
 		friend class DevRender;
@@ -69,9 +72,6 @@
 		PhysicsEngine* physics_engine;
 		WorldEngine* world_engine;
 
-		//test
-		std::unique_ptr<RenderableFrustrum> renderable_frustrum;
-
 		std::unique_ptr<BasicCamera> active_camera;
 		std::unique_ptr<Sun> sun;
 		std::unique_ptr<Player> player;
@@ -81,6 +81,8 @@
 		std::unique_ptr<TextureManager> texture_manager;
 		std::unique_ptr<TextureAtlas> atlas;
 		std::unique_ptr<ModelManager> model_manager;
+
+		bool attach_depthmap;
 	};
 
 #endif // !SCENE_H

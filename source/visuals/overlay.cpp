@@ -16,6 +16,7 @@
 #include "../scene/world.h"
 #include "../scene/scene.h"
 #include "render/render_dev.h"
+#include "render/solid_blocks.h"
 #include "render/aggregator.h"
 #include "../core/platform.h"
 #include "../core/sys_ticker.h"
@@ -176,6 +177,19 @@ void Overlay::Draw()
 		}
 		*/
 
+		if (ImGui::CollapsingHeader("Render"))
+		{
+			ImGui::Checkbox("Use a render target as depth map", &aggregator->render_solid_blocks->use_render_target_as_depth_map);
+			ImGui::Checkbox("Show depth map", &aggregator->render_solid_blocks->show_depth_map);
+
+			ImGui::Separator();
+
+			ImGui::Checkbox("Attach depth map to camera", &scene->attach_depthmap);
+
+			if (ImGui::Button("Move light frustrum to the camera"))
+				scene->renderable_frustrum->UpdateToCamera();
+		}
+
 		if (ImGui::CollapsingHeader("Scene"))
 		{
 			ImGui::DragFloat4("Light Color", (float*)&sun->light_info.color, 0.01f, 0.0f, 1.0f);
@@ -183,42 +197,6 @@ void Overlay::Draw()
 			ImGui::DragFloat4("Ambient Color", (float*)&sun->light_info.ambient, 0.01f, 0.0f, 1.0f);
 			ImGui::Separator();
 			ImGui::DragFloat3("Light Direction", (float*)&sun->light_info.direction, 0.01f, -1.0f, 1.0f);
-
-			ImGui::Separator();
-
-			ImGui::Checkbox("Use a render target as depth map", &aggregator->render_dev->use_render_target_as_depth_map);
-
-			ImGui::Separator();
-
-			if (ImGui::Button("Update light frustrum to the camera"))
-				scene->renderable_frustrum->UpdateToCamera();
-		}
-
-		if (ImGui::CollapsingHeader("Objects"))
-		{
-			static DirectX::XMFLOAT3 _obj_rotation = aggregator->render_dev->object->Rotation();
-			ImGui::DragFloat3("Object Rotation", (float*)&_obj_rotation, 1.0f, 0.0f, 360.0f);
-			aggregator->render_dev->object->SetRotation(_obj_rotation.x/57.2958f, _obj_rotation.y/ 57.2958f, _obj_rotation.z/ 57.2958f);
-
-			static DirectX::XMFLOAT3 _obj_scale = aggregator->render_dev->object->Scale();
-			ImGui::DragFloat3("Object Scale", (float*)&_obj_scale, 0.1f, 0.01f, 100.0f);
-			aggregator->render_dev->object->SetScale(_obj_scale.x, _obj_scale.y, _obj_scale.z);
-
-			static DirectX::XMFLOAT3 _obj_position = aggregator->render_dev->object->Position();
-			ImGui::DragFloat3("Object Position", (float*)&_obj_position, 0.5f, -50.01f, 50.0f);
-			aggregator->render_dev->object->SetPosition(_obj_position.x, _obj_position.y, _obj_position.z);
-
-			static DirectX::XMFLOAT3 _pln_rotation = aggregator->render_dev->plane->Rotation();
-			ImGui::DragFloat3("Plane Rotation", (float*)&_pln_rotation, 1.0f, 0.0f, 360.0f);
-			aggregator->render_dev->plane->SetRotation(_pln_rotation.x / 57.2958f, _pln_rotation.y / 57.2958f, _pln_rotation.z / 57.2958f);
-
-			static DirectX::XMFLOAT3 _pln_scale = aggregator->render_dev->plane->Scale();
-			ImGui::DragFloat3("Plane Scale", (float*)&_pln_scale, 0.1f, 0.01f, 100.0f);
-			aggregator->render_dev->plane->SetScale(_pln_scale.x, _pln_scale.y, _pln_scale.z);
-
-			static DirectX::XMFLOAT3 _pln_position = aggregator->render_dev->plane->Position();
-			ImGui::DragFloat3("Plane Position", (float*)&_pln_position, 0.5f, -50.01f, 50.0f);
-			aggregator->render_dev->plane->SetPosition(_pln_position.x, _pln_position.y, _pln_position.z);
 		}
 
 		if (ImGui::CollapsingHeader("World"))

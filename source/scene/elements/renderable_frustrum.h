@@ -23,7 +23,7 @@
 		void SetPosition(float x, float y, float z) override;
 
 	private:
-		friend class DevRender;
+		friend class SolidBlockRender;
 
 		void CalculateCorners();
 		void RebuildBuffers() override;

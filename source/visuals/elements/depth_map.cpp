@@ -15,22 +15,22 @@ DepthMap::DepthMap(Presenter* presenter, unsigned int width, unsigned int height
     texture_desc.Height = height;
     texture_desc.MipLevels = 1;
     texture_desc.ArraySize = 1;
-    texture_desc.Format = DXGI_FORMAT_R24G8_TYPELESS;
-    //texture_desc.Format = DXGI_FORMAT_R32_TYPELESS;
+    //texture_desc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+    texture_desc.Format = DXGI_FORMAT_R32_TYPELESS;
     texture_desc.SampleDesc.Count = 1;
     texture_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
     DXAssert(device->CreateTexture2D(&texture_desc, 0, &texture));
 
     ZeroMemory(&shader_view_desc, sizeof(shader_view_desc));
-    shader_view_desc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-    //shader_view_desc.Format = DXGI_FORMAT_R32_FLOAT;
+    //shader_view_desc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+    shader_view_desc.Format = DXGI_FORMAT_R32_FLOAT;
     shader_view_desc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
     shader_view_desc.Texture2D.MipLevels = 1;
     DXAssert(device->CreateShaderResourceView(texture, &shader_view_desc, &shader_view));
 
     ZeroMemory(&depth_stencil_desc, sizeof(depth_stencil_desc));
-    depth_stencil_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    //depth_stencil_desc.Format = DXGI_FORMAT_D32_FLOAT;
+    //depth_stencil_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depth_stencil_desc.Format = DXGI_FORMAT_D32_FLOAT;
     depth_stencil_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     depth_stencil_desc.Texture2D.MipSlice = 0;
     DXAssert(device->CreateDepthStencilView(texture, &depth_stencil_desc, &depth_stencil_view));

@@ -26,7 +26,7 @@ constexpr auto
 	WORLD_INITIAL_SIZE = WORLD_INITIAL_DIMENSION_SIZE * WORLD_INITIAL_DIMENSION_SIZE;
 
 WorldEngine::WorldEngine(int targetSeed)
-	:scene(nullptr), player(nullptr), world(nullptr), seed(targetSeed), heightmap(nullptr), last_sector(nullptr), range(2),
+	:scene(nullptr), player(nullptr), world(nullptr), seed(targetSeed), heightmap(nullptr), last_sector(nullptr), range(3),
 	enabled(false), exec_task(nullptr)
 {
 	if (seed == 0) //no seed passed, calculate one

@@ -4,15 +4,24 @@
 
 #include "render_target.h"
 
-RenderTarget::RenderTarget(Presenter* presenter)
+RenderTarget::RenderTarget(Presenter* presenter, unsigned int width, unsigned int height)
 	:presenter(presenter)
 {
 	device = presenter->GetDevice();
 	context = presenter->GetContext();
 	//TODO: dynamic initialization
 	ZeroMemory(&back_buffer_desc, sizeof(back_buffer_desc));
-	back_buffer_desc.Width = presenter->GetScreenWidth();
-	back_buffer_desc.Height = presenter->GetScreenHeight();
+
+	if (width == 0)
+		back_buffer_desc.Width = presenter->GetScreenWidth();
+	else
+		back_buffer_desc.Width = width;
+
+	if (height == 0)
+		back_buffer_desc.Height = presenter->GetScreenHeight();
+	else
+		back_buffer_desc.Height = height;
+
 	back_buffer_desc.MipLevels = 1;
 	back_buffer_desc.ArraySize = 1;
 	back_buffer_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -34,8 +43,8 @@ RenderTarget::RenderTarget(Presenter* presenter)
 
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
-	viewport.Width = static_cast<float>(presenter->GetScreenWidth());
-	viewport.Height = static_cast<float>(presenter->GetScreenHeight());
+	viewport.Width = static_cast<float>(back_buffer_desc.Width);
+	viewport.Height = static_cast<float>(back_buffer_desc.Height);
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 }

@@ -9,7 +9,7 @@
 	class RenderTarget
 	{
 	public:
-		RenderTarget(Presenter* presenter);
+		RenderTarget(Presenter* presenter, unsigned int width = 0, unsigned int height = 0);
 		~RenderTarget();
 
 		bool CreateInterfaces();
