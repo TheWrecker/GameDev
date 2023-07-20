@@ -34,7 +34,8 @@
 		std::unique_ptr<ConstantBuffer<DefaultConstantStruct>>
 			per_object_buffer,
 			sun_direction_buffer,
-			bias_buffer;
+			bias_buffer,
+			light_buffer;
 
 		std::unique_ptr<VertexShader> vertex_shader_depth;
 		std::unique_ptr<PixelShader> pixel_shader_depth;

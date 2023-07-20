@@ -196,7 +196,9 @@ void Overlay::Draw()
 			ImGui::Separator();
 			ImGui::DragFloat4("Ambient Color", (float*)&sun->light_info.ambient, 0.01f, 0.0f, 1.0f);
 			ImGui::Separator();
-			ImGui::DragFloat3("Light Direction", (float*)&sun->light_info.direction, 0.01f, -1.0f, 1.0f);
+			ImGui::Text("Light Direction x: %f, y: %f, z: %f", scene->renderable_frustrum->projector.Direction().x,
+				scene->renderable_frustrum->projector.Direction().y,
+				scene->renderable_frustrum->projector.Direction().z);
 		}
 
 		if (ImGui::CollapsingHeader("World"))

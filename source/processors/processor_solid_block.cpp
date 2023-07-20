@@ -116,23 +116,23 @@ Face FrontFace = {
 	{
 	DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f),
 	DirectX::XMFLOAT2(1.0f, ONE_THIRD),
-	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f),
 	DirectX::XMFLOAT2(1.0f, TWO_THIRDS),
-	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
 	0.0f
 	}, {
 
 	DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f),
 	DirectX::XMFLOAT2(0.0f, ONE_THIRD),
-	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
 	DirectX::XMFLOAT2(0.0f, TWO_THIRDS),
-	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
 	0.0f
 	}
 };
@@ -141,22 +141,22 @@ Face BackFace = {
 	{
 	DirectX::XMFLOAT3(0.0f, 1.0f, 1.0f),
 	DirectX::XMFLOAT2(0.0f, ONE_THIRD),
-	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	DirectX::XMFLOAT2(0.0f, TWO_THIRDS),
-	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),
 	DirectX::XMFLOAT2(1.0f, ONE_THIRD),
-	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}, {
 	DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f),
 	DirectX::XMFLOAT2(1.0f, TWO_THIRDS),
-	DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f),
+	DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f),
 	0.0f
 	}
 };

@@ -10,6 +10,7 @@
 #include "../scene/camera/projector.h"
 #include "../scene/compartments/segment.h"
 #include "../scene/world.h"
+#include "../scene/elements/sun.h"
 #include "../scene/scene.h"
 #include "vision_perimeter.h"
 #include "../presenter.h"
@@ -73,6 +74,15 @@ SolidBlockRender::SolidBlockRender(Presenter* parent)
 	_cb = { DirectX::XMMatrixTranspose(_bias_mat) };
 	bias_buffer->Update(_cb);
 	bias_buffer->Bind(BindStage::VERTEX, 3);
+
+	light_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
+
+	_cb.matrix.r[0] = { -.5f, -0.5f, -0.5f, 1.0f };
+	_cb.matrix.r[1] = { 1.0f, 1.0f, 1.0f, 1.0f }; //light
+	_cb.matrix.r[2] = { 0.5f, 0.5f, 0.5f, 1.0f }; //ambient
+	_cb.matrix.r[3] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+	light_buffer->Update(_cb);
 }
 
 SolidBlockRender::~SolidBlockRender()
@@ -125,13 +135,20 @@ void SolidBlockRender::Render()
 		//create light orthographic projection
 		//auto _matWV = DirectX::XMMatrixMultiply(scene->renderable_frustrum->World_Matrix(),	DirectX::XMMatrixLookToRH(_pos, _dir, _up));
 		auto _matWV = DirectX::XMMatrixLookToRH(_pos, _dir, _up);
-		auto _matWVP = DirectX::XMMatrixMultiply(_matWV, DirectX::XMMatrixOrthographicRH(160, 120, 0, 100.0f));
+		auto _matWVP = DirectX::XMMatrixMultiply(_matWV, DirectX::XMMatrixOrthographicRH(160, 120, 50, 200.0f));
 		//auto _matWVP = DirectX::XMMatrixMultiply(_matWV, scene->renderable_frustrum->projector.Projection_Matrix());
 
 		DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_matWVP) };
 		sun_direction_buffer->Update(_cb);
 		sun_direction_buffer->Bind(BindStage::VERTEX, 2);
 		bias_buffer->Bind(BindStage::VERTEX, 3);
+
+		//TODO: move to sun
+		_cb = { scene->GetSun()->GetLightInfo() };
+		_cb.matrix.r[0] = DirectX::XMVectorNegate(scene->renderable_frustrum->projector.Direction_Vector());
+
+		light_buffer->Update(_cb);
+		light_buffer->Bind(BindStage::PIXEL, 4);
 
 		//apply depth states
 		input_layout->Bind();

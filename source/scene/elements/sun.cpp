@@ -7,8 +7,8 @@ Sun::Sun()
     SetPosition(0.0f,200.0f,0.0f);
     SetScale(25.0f);
     light_info.direction = { -0.3f, 1.0f, -0.6f, 1.0f };
-    light_info.color = { 1.0f, 1.0f, 0.9f, 0.8f };
-    light_info.ambient = { 1.0f, 1.0f, 1.0f, 0.5f };
+    light_info.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    light_info.ambient = { 0.5f, 0.5f, 0.5f, 1.0f };
 }
 
 Sun::~Sun()
@@ -21,6 +21,8 @@ void Sun::SetPosition(float x, float y, float z)
     position.y = y;
     position.z = z;
     translation_matrix = DirectX::XMMatrixTranslation(x, y, z);
+    auto _dir = DirectX::XMVector3Normalize(DirectX::XMVectorNegate(DirectX::XMLoadFloat3(&position)));
+    DirectX::XMStoreFloat4(&light_info.direction, _dir);
 }
 
 void Sun::SetScale(float value)

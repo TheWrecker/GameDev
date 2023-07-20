@@ -31,7 +31,7 @@ cbuffer BiasMatrix : register(b3)
     float4x4 bias_matrix;
 }
 
-cbuffer LightData : register(b11)
+cbuffer LightData : register(b4)
 {
     float4 light_direction;
     float4 light_color;
@@ -87,39 +87,28 @@ VS_OUTPUT vs_second_pass(VS_INPUT vertex)
 
 float4 ps_second_pass(VS_OUTPUT input) : SV_TARGET
 {
-    float4 texture_color = inputTexture.Sample(BilinearSampler, input.uvw);
-    
-    //float4 ambient = texture_color * ambient_color * ambient_color.a;
-    //float n_l = dot(input.normal, light_direction.rgb);
-    //float4 diffuse = n_l > 0 ? texture_color * n_l * light_color * light_color.a : (float4) 0;
-    
-    //float4 shadow_color = ColorWhite;
-    
+    float4 texture_color = inputTexture.Sample(BilinearSampler, input.uvw);    
+    float4 ambient = texture_color * ambient_color;
+        
     input.proj_coord.xyz /= input.proj_coord.w;
     
-    input.proj_coord.x = input.proj_coord.x/2 + 0.5f;
-    input.proj_coord.y = input.proj_coord.y/-2 + 0.5f;
+    //if (input.proj_coord.x < -1.0f || input.proj_coord.x > 1.0f ||
+    //    input.proj_coord.y < -1.0f || input.proj_coord.y > 1.0f ||
+    //    input.proj_coord.z < 0.0f || input.proj_coord.z > 1.0f) return ambient;
     
-    float visibility = 1.0;
+    input.proj_coord.x = input.proj_coord.x / 2 + 0.5f;
+    input.proj_coord.y = input.proj_coord.y / -2 + 0.5f;
+    
     float _sampled_depth = depthMap.Sample(DepthSampler, input.proj_coord.xy) + DepthBias;
  
     if (_sampled_depth < input.proj_coord.z)
     {
-        visibility = 0.5;
+        return ambient;
     }
+
     
-    //if (input.proj_coord.w > 0.0f)
-    //{
-    //    input.proj_coord.xyz /= input.proj_coord.w;
-        
-    //    float _pixel_Depth = input.proj_coord.z;
-    //    //float _sample_Depth = depthMap.SampleCmpLevelZero(DepthSampler, input.proj_coord.xy, _pixel_Depth).x;
-    //    float _sample_Depth = depthMap.Sample(DepthSampler, input.proj_coord.xy).x + DepthBias;
-        
-    //    shadow_color = (_pixel_Depth > _sample_Depth ? ShadowCoefficient : ColorWhite);
-    //}
+    float n_l = dot(input.normal, light_direction.xyz);
+    float4 diffuse = n_l > 0 ? texture_color * n_l * light_color : 0;
     
-    //return saturate(ambient + diffuse) * shadow_color;
-    
-    return texture_color * visibility;
+    return saturate(ambient + diffuse);
 }

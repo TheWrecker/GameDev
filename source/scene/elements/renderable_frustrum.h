@@ -24,6 +24,7 @@
 
 	private:
 		friend class SolidBlockRender;
+		friend class Overlay;
 
 		void CalculateCorners();
 		void RebuildBuffers() override;
