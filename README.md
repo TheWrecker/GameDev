@@ -19,7 +19,7 @@ Currently displays:
 - Average Frame Time
 - Last Frame Time
 
-![Performance Profiler](https://github.com/TheWrecker/GameDev/assets/14818908/534e7e4e-9b8a-4438-9dcf-00019555fe17)
+![Perf](https://github.com/TheWrecker/GameDev/assets/14818908/08fb3c0a-f277-49bc-9a2e-44c5695ae821)
 
  
 ## Gameplay
@@ -27,7 +27,7 @@ Currently displays:
 World is generated around the player as they move, making the world horizontally infinite.
 - Can be switched off.
 
- ![2023-07-20 20-46-52](https://github.com/TheWrecker/GameDev/assets/14818908/e7417d22-86ec-4544-86e3-92f81a01ccab)
+![2023-07-20 20-46-52(2)](https://github.com/TheWrecker/GameDev/assets/14818908/cc0e194c-d25f-4152-8234-2e5f9ece26cb)
 
  
 ### Block Placement and Removal
