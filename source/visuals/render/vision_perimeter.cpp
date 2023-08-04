@@ -46,6 +46,29 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 	if (world_engine->near_sectors.empty())
 		return;
 
+	Segment* _segment = nullptr;
+
+	for (auto _sector : world_engine->near_sectors)
+	{
+		for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
+			for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
+				for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
+				{
+					_segment = _sector->segments[_i][_j][_k].load();
+					if (_segment)
+					{
+						container.push_back(_segment);
+					}
+				}
+
+	}
+}
+
+void VisionPerimeter::PerformViewFrustrumCulling(std::vector<Segment*>& source, std::vector<Segment*>& target)
+{
+	if (source.empty())
+		return;
+
 	using namespace DirectX;
 
 	//calculate the vision frustrum
@@ -53,33 +76,22 @@ void VisionPerimeter::CollectVisionPerimeter(std::vector<Segment*>& container)
 	DirectX::XMStoreFloat4x4(&_proj, camera->Projection_Matrix());
 	//frustrum.CalculateFrustrum(camera->View_Matrix(), _proj);
 	frustrum.CalculateFrustrum(camera->View_Projection_Matrix());
+
 	//filter all near sectors
 	//TODO: render range differs from world near range? make it lesser?
-	Segment* _segment = nullptr;
-	for (auto _sector : world_engine->near_sectors)
+	for (auto _segment : source)
 	{
-		if (frustrum.IntersectsSector((float)_sector->x, (float)_sector->z))
-			{
-				for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
-					for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
-						for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
-						{
-							_segment = _sector->segments[_i][_j][_k].load();
-							if (_segment)
-							{
-								XMFLOAT3 _pos = { _segment->Position().x + SEGMENT_LENGTH / 2.0f,
-									_segment->Position().y + SEGMENT_LENGTH / 2.0f,
-									_segment->Position().z + SEGMENT_LENGTH / 2.0f };
 
-								if (frustrum.IntersectsCube(_pos, SEGMENT_LENGTH / 2.0f))
-								{
-									container.push_back(_segment);
-								}
-							}
-						}
-			}
-			
+		XMFLOAT3 _pos = { _segment->Position().x + SEGMENT_LENGTH / 2.0f,
+			_segment->Position().y + SEGMENT_LENGTH / 2.0f,
+			_segment->Position().z + SEGMENT_LENGTH / 2.0f };
+
+		if (frustrum.IntersectsCube(_pos, SEGMENT_LENGTH / 2.0f))
+		{
+			target.push_back(_segment);
 		}
+
+	}
 
 }
 

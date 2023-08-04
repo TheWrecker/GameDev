@@ -22,11 +22,12 @@ static const ::DirectX::XMVECTORF32 RENDER_TARGET_DEFAULT_COLOR = { 1.0f, 1.0f, 
 SolidBlockRender::SolidBlockRender(Presenter* parent)
 	:RenderBase(parent), render_shadows(true), show_depth_map(true)
 {
-	vertex_shader_depth = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "vs_first_pass");
-	pixel_shader_depth = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "ps_first_pass");
-	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "vs_second_pass");
-	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "ps_second_pass");
-
+	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "vs_simple_directional_lighting");
+	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "ps_simple_directional_lighting");
+	vs_shadowmap_depth = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "vs_shadowmap_first_pass");
+	ps_shadowmap_depth = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "ps_shadowmap_first_pass");
+	vs_shadowmap_render = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "vs_shadowmap_second_pass");
+	ps_shadowmap_render = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "ps_shadowmap_second_pass");
 	texture_overlay_vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/texture_overlay.hlsl", "vs_main");
 	texture_overlay_pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/texture_overlay.hlsl", "ps_main");
 
@@ -57,10 +58,7 @@ SolidBlockRender::SolidBlockRender(Presenter* parent)
 	texture_overlay_buffer->Update(_cb);
 	texture_overlay_buffer->Bind(BindStage::VERTEX, 1);
 
-	depth_map = std::make_unique<DepthMap>(parent, 4096, 3072);
-
-	render_target = std::make_unique<RenderTarget>(parent, 4096, 3072);
-	render_target->CreateInterfaces();
+	depth_map = std::make_unique<DepthMap>(parent, 8192, 6144);
 
 	bias_buffer = std::make_unique<ConstantBuffer<DefaultConstantStruct>>(device, context);
 
@@ -97,7 +95,8 @@ bool SolidBlockRender::Initialize()
 	if (!perimeter.get())
 		return false;
 
-	render_segments.reserve(500);
+	near_segments.reserve(2000);
+	visible_segments.reserve(1000);
 	_result &= perimeter->Initialize();
 
 	return _result;
@@ -105,21 +104,55 @@ bool SolidBlockRender::Initialize()
 
 void SolidBlockRender::Update()
 {
-	render_segments.clear();
-	perimeter->CollectVisionPerimeter(render_segments);
+	near_segments.clear();
+	visible_segments.clear();
+	perimeter->CollectVisionPerimeter(near_segments);
 }
 
 void SolidBlockRender::Render()
 {
-
-	if (render_segments.empty())
+	if (near_segments.empty())
 		return;
+
+	//test: upate light data
+	//TODO: move to sun
+	//auto& _pos = scene->renderable_frustrum->projector.Position_Vector();
+	auto _pos = scene->GetActiveCamera()->Position_Vector();
+	auto _dir = scene->renderable_frustrum->projector.Direction_Vector();
+	auto _up = scene->renderable_frustrum->projector.Up_Vector();
+
+	{
+		using namespace DirectX;
+
+		_pos -= _dir * 200.0f;
+
+	}
+
+	//create light orthographic projection
+	//auto _matWV = DirectX::XMMatrixMultiply(scene->renderable_frustrum->World_Matrix(),	DirectX::XMMatrixLookToRH(_pos, _dir, _up));
+	auto _matWV = DirectX::XMMatrixLookToRH(_pos, _dir, _up);
+	auto _matWVP = DirectX::XMMatrixMultiply(_matWV, DirectX::XMMatrixOrthographicRH(320, 240, 1.0f, 400.0f));
+	//auto _matWVP = DirectX::XMMatrixMultiply(_matWV, scene->renderable_frustrum->projector.Projection_Matrix());
+
+	DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_matWVP) };
+	sun_direction_buffer->Update(_cb);
+	sun_direction_buffer->Bind(BindStage::VERTEX, 2);
+	bias_buffer->Bind(BindStage::VERTEX, 3);
+	_cb = { scene->GetSun()->GetLightInfo() };
+	_cb.matrix.r[0] = DirectX::XMVectorNegate(scene->renderable_frustrum->projector.Direction_Vector());
+
+	light_buffer->Update(_cb);
+	light_buffer->Bind(BindStage::PIXEL, 4);
+
+	//end test
+	//begin rendering
 	if (!render_shadows)
 	{
 		vertex_shader->Apply();
 		pixel_shader->Apply();
 		input_layout->Bind();
 
+		perimeter->PerformViewFrustrumCulling(near_segments, visible_segments);
 		RenderSegments();
 	}
 	else
@@ -128,76 +161,40 @@ void SolidBlockRender::Render()
 		ID3D11PixelShader* _null_ps = { nullptr };
 
 		//depth pass
-		auto& _pos = scene->renderable_frustrum->projector.Position_Vector();
-		auto _dir = scene->renderable_frustrum->projector.Direction_Vector();
-		auto _up = scene->renderable_frustrum->projector.Up_Vector();
-
-		//create light orthographic projection
-		//auto _matWV = DirectX::XMMatrixMultiply(scene->renderable_frustrum->World_Matrix(),	DirectX::XMMatrixLookToRH(_pos, _dir, _up));
-		auto _matWV = DirectX::XMMatrixLookToRH(_pos, _dir, _up);
-		auto _matWVP = DirectX::XMMatrixMultiply(_matWV, DirectX::XMMatrixOrthographicRH(160, 120, 50, 200.0f));
-		//auto _matWVP = DirectX::XMMatrixMultiply(_matWV, scene->renderable_frustrum->projector.Projection_Matrix());
-
-		DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_matWVP) };
-		sun_direction_buffer->Update(_cb);
-		sun_direction_buffer->Bind(BindStage::VERTEX, 2);
-		bias_buffer->Bind(BindStage::VERTEX, 3);
-
-		//TODO: move to sun
-		_cb = { scene->GetSun()->GetLightInfo() };
-		_cb.matrix.r[0] = DirectX::XMVectorNegate(scene->renderable_frustrum->projector.Direction_Vector());
-
-		light_buffer->Update(_cb);
-		light_buffer->Bind(BindStage::PIXEL, 4);
-
+		
 		//apply depth states
 		input_layout->Bind();
-		vertex_shader_depth->Apply();
-		//presenter->SetRasterizerState(RasterizerMode::CULL_FRONT_SOLID_CW);
+		vs_shadowmap_depth->Apply();
+		//presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
 
 		//setup render target
-		if (use_render_target_as_depth_map)
-		{
-			context->ClearRenderTargetView(render_target->GetTargetView(), reinterpret_cast<const float*>(&RENDER_TARGET_DEFAULT_COLOR));
-			context->ClearDepthStencilView(render_target->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-			render_target->Bind();
-			pixel_shader_depth->Apply();
-		}
-		else
-		{
-			depth_map->Clear();
-			depth_map->BindAsStencilTarget();
-			context->PSSetShader(_null_ps, nullptr, 0);
-
-			//presenter->SetRasterizerState(RasterizerMode::DEPTH_MAP);
-		}
+		depth_map->Clear();
+		depth_map->BindAsStencilTarget();
+		context->PSSetShader(_null_ps, nullptr, 0);
+		//presenter->SetRasterizerState(RasterizerMode::DEPTH_MAP);
 
 		//render segments from light's orthographic view
-		RenderSegments();
+		RenderSegments(true);
 
 		//bind default render targets
 		//TODO: add render target stack class
 		presenter->BindDefaultRenderTargetAndStencil();
 
 		//bind render targets as resources
-		if (use_render_target_as_depth_map)
-		{
-			context->PSSetShaderResources(2, 1, render_target->GetPointerToShaderView());
-			context->PSSetShaderResources(3, 1, render_target->GetPointerToShaderView());
-		}
-		else
-		{
-			depth_map->BindAsShaderResource(2);
-			depth_map->BindAsShaderResource(3);
-		}
+		depth_map->BindAsShaderResource(2);
+		depth_map->BindAsShaderResource(3);
 
 		//apply proper render states
-		vertex_shader->Apply();
-		pixel_shader->Apply();
+		vs_shadowmap_render->Apply();
+		ps_shadowmap_render->Apply();
 		presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
 
+		//cull out-of-view segments
+		//we don't perform culling earlier since out-of-view segments may cast in-view shadow
+		perimeter->PerformViewFrustrumCulling(near_segments, visible_segments);
+
 		//render segments
-		RenderSegments();
+		RenderSegments(false);
 
 		//render the depth map
 		if (show_depth_map)
@@ -217,9 +214,14 @@ void SolidBlockRender::Render()
 	}
 }
 
-void SolidBlockRender::RenderSegments()
+void SolidBlockRender::RenderSegments(bool renderAll)
 {
-	for (auto _segment : render_segments)
+	std::vector<Segment*>& _target_container = visible_segments;
+
+	if (renderAll)
+		_target_container = near_segments;
+
+	for (auto _segment : _target_container)
 	{
 		if (!_segment)
 			continue;
@@ -238,4 +240,5 @@ void SolidBlockRender::RenderSegments()
 
 		_segment->draw_mutex.unlock();
 	}
+	
 }

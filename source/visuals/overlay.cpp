@@ -179,15 +179,31 @@ void Overlay::Draw()
 
 		if (ImGui::CollapsingHeader("Render"))
 		{
-			ImGui::Checkbox("Use a render target as depth map", &aggregator->render_solid_blocks->use_render_target_as_depth_map);
-			ImGui::Checkbox("Show depth map", &aggregator->render_solid_blocks->show_depth_map);
+			ImGui::SetCursorPosX(20.0f);
 
-			ImGui::Separator();
+			if (ImGui::CollapsingHeader("Shadows"))
+			{
+				ImGui::SetCursorPosX(40.0f);
+				ImGui::Checkbox("Attach light frustrum to camera", &scene->attach_depthmap);
 
-			ImGui::Checkbox("Attach depth map to camera", &scene->attach_depthmap);
+				ImGui::SetCursorPosX(40.0f);
+				if (ImGui::Button("Move light frustrum to the camera"))
+					scene->renderable_frustrum->UpdateToCamera();
 
-			if (ImGui::Button("Move light frustrum to the camera"))
-				scene->renderable_frustrum->UpdateToCamera();
+				ImGui::Separator();
+
+				ImGui::SetCursorPosX(40.0f);
+				ImGui::Checkbox("Use shadow map for global lighting", &aggregator->render_solid_blocks->render_shadows);
+
+
+				if (aggregator->render_solid_blocks->render_shadows)
+				{			
+					ImGui::SetCursorPosX(60.0f);
+					ImGui::Checkbox("Show shadow map", &aggregator->render_solid_blocks->show_depth_map);
+
+
+				}
+			}
 		}
 
 		if (ImGui::CollapsingHeader("Scene"))

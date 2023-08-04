@@ -26,10 +26,12 @@
 	private:
 		friend class Overlay;
 
-		void RenderSegments();
+		void RenderSegments(bool renderAll = false);
 
 		std::unique_ptr<VisionPerimeter> perimeter;
-		std::vector<Segment*> render_segments;
+		std::vector<Segment*>
+			near_segments,
+			visible_segments;
 
 		std::unique_ptr<ConstantBuffer<DefaultConstantStruct>>
 			per_object_buffer,
@@ -37,11 +39,15 @@
 			bias_buffer,
 			light_buffer;
 
-		std::unique_ptr<VertexShader> vertex_shader_depth;
-		std::unique_ptr<PixelShader> pixel_shader_depth;
+		std::unique_ptr<VertexShader>
+			vs_shadowmap_depth,
+			vs_shadowmap_render;
+
+		std::unique_ptr<PixelShader>
+			ps_shadowmap_depth,
+			ps_shadowmap_render;
 
 		std::unique_ptr<DepthMap> depth_map;
-		std::unique_ptr<RenderTarget> render_target;
 		std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> texture_overlay_buffer;
 		std::unique_ptr<VertexShader> texture_overlay_vertex_shader;
 		std::unique_ptr<PixelShader> texture_overlay_pixel_shader;
@@ -49,7 +55,6 @@
 
 		bool render_shadows;
 		bool show_depth_map;
-		bool use_render_target_as_depth_map;
 	};
 
 #endif // !SOLID_BLOCKS_H

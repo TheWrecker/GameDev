@@ -100,10 +100,10 @@ bool StateMaster::Initialize()
 
 	//SHADOW PCF WHITE
 	ZeroMemory(&desc, sizeof(desc));
-	desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
-	desc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
-	desc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
-	desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+	desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+	desc.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
+	desc.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
+	desc.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
 	desc.MipLODBias = 0.0f;
 	desc.MaxAnisotropy = 1;
 	desc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;

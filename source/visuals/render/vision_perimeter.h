@@ -23,6 +23,7 @@
 
 		bool Initialize();
 		void CollectVisionPerimeter(std::vector<Segment*>& container);
+		void PerformViewFrustrumCulling(std::vector<Segment*>& source, std::vector<Segment*>& target);
 		void SetPerimeterRange(float value = 70.0f);
 
 	private:
