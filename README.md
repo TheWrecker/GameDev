@@ -93,4 +93,7 @@ Voxel faces are dynamically illuminated based on the global light direction. Cur
 ### Shadow Map (**Work in Progress**)
 Basic shadowmapping.
 - Adjustable light frustrum
-- Able to use either a render-target or a depth-map.
+  
+![2023-08-04 17-16-20](https://github.com/TheWrecker/GameDev/assets/14818908/6c1a0f95-f7dc-4600-9126-a6ba553d5701)
+
+
