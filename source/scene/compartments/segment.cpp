@@ -11,7 +11,7 @@ constexpr unsigned int SEGMENT_VERTEX_RESERVE = 2000;
 constexpr unsigned int SEGMENT_INDEX_RESERVE = 3000;
 
 Segment::Segment(Scene* scene, BlockType type, bool fill, int x, int y, int z)
-    :default_type(type), blocks(), scene(scene), block_count(0), biome_processed(false)
+    :default_type(type), blocks(), scene(scene), block_count(0), biome_processed(false), mesh_generated(false), mesh_rebuilt(false)
 {
     position = { x, y, z };
     vertex_buffer = new VertexBuffer<SolidBlockVertex>(scene->GetDevice(), scene->GetContext(), SEGMENT_VERTEX_RESERVE);
@@ -65,6 +65,7 @@ void Segment::Fill(BlockType type)
         }
     }
     block_count = SEGMENT_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE;
+    mesh_generated.store(false);
     mesh_rebuilt.store(false);
 }
 
@@ -74,6 +75,7 @@ void Segment::SetBlock(unsigned int x, unsigned int y, unsigned int z, BlockType
         block_count++;
 
     blocks[x][y][z] = type;
+    mesh_generated.store(false);
     mesh_rebuilt.store(false);
 }
 
@@ -84,6 +86,7 @@ void Segment::RemoveBlock(unsigned int x, unsigned int y, unsigned int z)
 
     blocks[x][y][z] = BlockType::EMPTY;
     block_count--;
+    mesh_generated.store(false);
     mesh_rebuilt.store(false);
 }
 

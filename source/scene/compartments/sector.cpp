@@ -6,7 +6,7 @@
 #include "sector.h"
 
 Sector::Sector(Scene* scene, int x, int z)
-    :scene(scene), x(x), z(z), biomes_processed(false), mesh_rebuilt(false)
+    :scene(scene), x(x), z(z), biomes_processed(false), mesh_generated(false), mesh_rebuilt(false)
 {
     for (unsigned int _x = 0; _x < SECTOR_HORIZONTAL_SIZE; _x++)
         for (unsigned int _y = 0; _y < SECTOR_VERTICAL_SIZE; _y++)
@@ -37,6 +37,7 @@ void Sector::AddSegment(Segment* target, SegmentIndex index)
     {
         garbage_collector->AddSegment(_prev);
     }
+    mesh_generated.store(false);
     mesh_rebuilt.store(false);
 }
 
@@ -48,6 +49,7 @@ Segment* Sector::CreateSegment(const SegmentIndex& index)
         auto _segment = new Segment(scene, BlockType::TEST, false,
             x + index.x * SEGMENT_LENGTH, index.y * SEGMENT_LENGTH, z + index.z * SEGMENT_LENGTH);
         segments[index.x][index.y][index.z].store(_segment);
+        mesh_generated.store(false);
         mesh_rebuilt.store(false);
         return _segment;
     }
@@ -69,6 +71,7 @@ Segment* Sector::GetSegment(const SegmentIndex& index, bool force)
         auto _segment = new Segment(scene, BlockType::TEST, false,
             x + index.x * SEGMENT_LENGTH, index.y * SEGMENT_LENGTH, z + index.z * SEGMENT_LENGTH);
         segments[index.x][index.y][index.z].store(_segment);
+        mesh_generated.store(false);
         mesh_rebuilt.store(false);
         return _segment;
     }

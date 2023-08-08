@@ -29,8 +29,10 @@
 		Scene* scene;
 		GarbageCollector* garbage_collector;
 
-		std::atomic<bool> mesh_rebuilt;
-		std::atomic<bool> biomes_processed;
+		std::atomic<bool> 
+			mesh_generated,
+			mesh_rebuilt,
+			biomes_processed;
 	};
 
 #endif // !SECTOR_H

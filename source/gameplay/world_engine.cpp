@@ -20,10 +20,11 @@
 #include "../core/supervisor.h"
 
 #include "world_engine.h"
-constexpr auto 
+constexpr auto
 	WORLD_INITIAL_DIMENSION_SIZE = 10, //segments in each dimension
 	WORLD_INITIAL_DIMENSION_BLOCKS = WORLD_INITIAL_DIMENSION_SIZE * SEGMENT_DIMENSION_SIZE,
-	WORLD_INITIAL_SIZE = WORLD_INITIAL_DIMENSION_SIZE * WORLD_INITIAL_DIMENSION_SIZE;
+	WORLD_INITIAL_SIZE = WORLD_INITIAL_DIMENSION_SIZE * WORLD_INITIAL_DIMENSION_SIZE,
+	SECTOR_ADJACENT = SEGMENT_LENGTH + SECTOR_WIDTH;
 
 WorldEngine::WorldEngine(int targetSeed)
 	:scene(nullptr), player(nullptr), world(nullptr), seed(targetSeed), heightmap(nullptr), last_sector(nullptr), range(3),
@@ -281,9 +282,70 @@ void WorldEngine::SectorMeshTick()
 
 	for (auto _sector : near_sectors)
 	{
-		if (_sector->mesh_rebuilt.load())
+		if (_sector->mesh_generated.load())
 			continue;
 	
+		for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
+			for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
+				for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
+				{
+					_segment = _sector->segments[_i][_j][_k].load();
+					if (_segment)
+					{
+						if (_segment->mesh_generated.load())
+							continue;
+
+						auto _vbuffer = new VertexBuffer<SolidBlockVertex>(scene->GetDevice(), scene->GetContext());
+						auto _ibuffer = new IndexBuffer(scene->GetDevice(), scene->GetContext());
+
+						SolidBlockProcessor::RebuildSegmentInSector(_sector, _segment, SegmentIndex(_i, _j, _k), _vbuffer, _ibuffer);
+
+						_segment->draw_mutex.lock();
+						
+						auto _old_vbuffer = _segment->vertex_buffer.exchange(_vbuffer);
+						auto _old_ibuffer = _segment->index_buffer.exchange(_ibuffer);
+						_segment->mesh_generated.store(true);
+
+						_segment->draw_mutex.unlock();
+
+						garbage_collector->AddSegmentVertexBuffer(_old_vbuffer);
+						garbage_collector->AddIndexBuffer(_old_ibuffer);
+
+						return;
+
+					}
+				}
+
+		_sector->mesh_generated.store(true);
+	}
+
+	int _x = 0, _z = 0;
+
+	for (auto _sector : near_sectors)
+	{
+		if (_sector->mesh_rebuilt.load())
+			continue;
+
+		_x = _sector->x;
+		_z = _sector->z;
+
+		if (!world->GetSectorByGridPos(_x - SEGMENT_LENGTH, _z + SECTOR_ADJACENT))
+			continue;
+		if (!world->GetSectorByGridPos(_x - SEGMENT_LENGTH, _z))
+			continue;
+		if (!world->GetSectorByGridPos(_x - SEGMENT_LENGTH, _z - SEGMENT_LENGTH))
+			continue;
+		if (!world->GetSectorByGridPos(_x , _z + SECTOR_ADJACENT))
+			continue;
+		if (!world->GetSectorByGridPos(_x , _z - SEGMENT_LENGTH))
+			continue;
+		if (!world->GetSectorByGridPos(_x + SECTOR_ADJACENT, _z + SECTOR_ADJACENT))
+			continue;
+		if (!world->GetSectorByGridPos(_x + SECTOR_ADJACENT, _z))
+			continue;
+		if (!world->GetSectorByGridPos(_x + SECTOR_ADJACENT, _z - SEGMENT_LENGTH))
+			continue;
+
 		for (unsigned int _i = 0; _i < SECTOR_HORIZONTAL_SIZE; _i++)
 			for (unsigned int _j = 0; _j < SECTOR_VERTICAL_SIZE; _j++)
 				for (unsigned int _k = 0; _k < SECTOR_HORIZONTAL_SIZE; _k++)
@@ -300,7 +362,7 @@ void WorldEngine::SectorMeshTick()
 						SolidBlockProcessor::RebuildSegmentInSector(_sector, _segment, SegmentIndex(_i, _j, _k), _vbuffer, _ibuffer);
 
 						_segment->draw_mutex.lock();
-						
+
 						auto _old_vbuffer = _segment->vertex_buffer.exchange(_vbuffer);
 						auto _old_ibuffer = _segment->index_buffer.exchange(_ibuffer);
 						_segment->mesh_rebuilt.store(true);

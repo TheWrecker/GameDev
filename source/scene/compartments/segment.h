@@ -50,8 +50,10 @@
 		DirectX::XMINT3 position;
 
 		std::mutex draw_mutex;
-		std::atomic<bool> mesh_rebuilt;
-		std::atomic<bool> biome_processed;
+		std::atomic<bool> 
+			mesh_generated,
+			mesh_rebuilt,
+			biome_processed;
 		std::atomic<unsigned int> block_count;
 
 		std::atomic<VertexBuffer<SolidBlockVertex>*> vertex_buffer;

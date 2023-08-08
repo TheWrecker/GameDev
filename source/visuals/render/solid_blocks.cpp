@@ -187,7 +187,7 @@ void SolidBlockRender::Render()
 		//apply proper render states
 		vs_shadowmap_render->Apply();
 		ps_shadowmap_render->Apply();
-		presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
+		presenter->SetRasterizerState(RasterizerMode::CULL_NONE_SOLID_CW);
 
 		//cull out-of-view segments
 		//we don't perform culling earlier since out-of-view segments may cast in-view shadow
