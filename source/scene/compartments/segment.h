@@ -32,7 +32,10 @@
 
 		const DirectX::XMMATRIX World_Matrix();
 		const DirectX::XMINT3& Position();
-		VertexBuffer<SolidBlockVertex>* GetVertexBuffer();
+		VertexBuffer<DirectX::XMFLOAT3>* GetPositionBuffer();
+		VertexBuffer<DirectX::XMFLOAT2>* GetUVBuffer();
+		VertexBuffer<DirectX::XMFLOAT3>* GetNormalsBuffer();
+		VertexBuffer<float>* GetSliceBuffer();
 		IndexBuffer* GetIndexBuffer();
 		bool IsEmpty();
 
@@ -56,7 +59,10 @@
 			biome_processed;
 		std::atomic<unsigned int> block_count;
 
-		std::atomic<VertexBuffer<SolidBlockVertex>*> vertex_buffer;
+		std::atomic<VertexBuffer<DirectX::XMFLOAT3>*> position_buffer;
+		std::atomic<VertexBuffer<DirectX::XMFLOAT2>*> uv_buffer;
+		std::atomic<VertexBuffer<DirectX::XMFLOAT3>*> normal_buffer;
+		std::atomic<VertexBuffer<float>*> slice_buffer;
 		std::atomic<IndexBuffer*> index_buffer;
 	};
 

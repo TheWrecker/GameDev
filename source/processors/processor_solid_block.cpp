@@ -495,33 +495,14 @@ void SolidBlockProcessor::AddFaceVertices(Segment* target, Face& face)
 		_vertex.position.y = _face_vertex.position.y + (index_y * SOLID_BLOCK_SIZE); //_pos.y;
 		_vertex.position.z = _face_vertex.position.z + (index_z * SOLID_BLOCK_SIZE); //_pos.z;
 		_vertex.atlas_slice = (static_cast<float>(static_cast<unsigned int>(target->blocks[index_x][index_y][index_z]) - 1.0f)) /* / _array_range*/;
-		target->vertex_buffer.load()->AddVertex(_vertex);
+		target->position_buffer.load()->AddVertex(_vertex.position);
+		target->uv_buffer.load()->AddVertex(_vertex.uv);
+		target->normal_buffer.load()->AddVertex(_vertex.normal);
+		target->slice_buffer.load()->AddVertex(_vertex.atlas_slice);
 	}
 	for (auto& _index : Indices)
 	{
 		target->index_buffer.load()->AddIndex(_index + current_index);
-	}
-	current_index += 4;
-}
-
-void SolidBlockProcessor::AddFaceVerticesCustomBuffers(Segment* target, Face& face, 
-	VertexBuffer<SolidBlockVertex>* vbuffer, IndexBuffer* ibuffer)
-{
-	SolidBlockVertex _vertex = {};
-	auto _array_range = texture_atlas->GetArraySliceCount();
-	for (auto& _face_vertex : face)
-	{
-		_vertex = _face_vertex;
-		//auto _pos = target->blocks[index_x][index_y][index_z]->Position();
-		_vertex.position.x = _face_vertex.position.x + (index_x * SOLID_BLOCK_SIZE); //_pos.x;
-		_vertex.position.y = _face_vertex.position.y + (index_y * SOLID_BLOCK_SIZE); //_pos.y;
-		_vertex.position.z = _face_vertex.position.z + (index_z * SOLID_BLOCK_SIZE); //_pos.z;
-		_vertex.atlas_slice = (static_cast<float>(static_cast<unsigned int>(target->blocks[index_x][index_y][index_z]) - 1.0f)) /* / _array_range*/;
-		vbuffer->AddVertex(_vertex);
-	}
-	for (auto& _index : Indices)
-	{
-		ibuffer->AddIndex(_index + current_index);
 	}
 	current_index += 4;
 }
@@ -539,7 +520,10 @@ void SolidBlockProcessor::RebuildSegmentSingle(Segment* target)
 	if (!texture_atlas)
 		return;
 
-	target->vertex_buffer.load()->Clear();
+	target->position_buffer.load()->Clear();
+	target->uv_buffer.load()->Clear();
+	target->normal_buffer.load()->Clear();
+	target->slice_buffer.load()->Clear();
 	target->index_buffer.load()->Clear();
 	index_x = index_y = index_z  = current_index = 0;
 	BlockType _block = BlockType::EMPTY;
@@ -572,18 +556,24 @@ void SolidBlockProcessor::RebuildSegmentSingle(Segment* target)
 					AddFaceVertices(target, BackFace);
 			}
 
-	target->vertex_buffer.load()->Build();
+	target->position_buffer.load()->Build();
+	target->uv_buffer.load()->Build();
+	target->normal_buffer.load()->Build();
+	target->slice_buffer.load()->Build();
 	target->index_buffer.load()->Build();
 }
 
-void SolidBlockProcessor::RebuildSegmentInSector(Sector* sector, Segment* target, SegmentIndex index,
-	VertexBuffer<SolidBlockVertex>* vbuffer, IndexBuffer* ibuffer)
+void SolidBlockProcessor::RebuildSegmentInSector(Sector* sector, Segment* target, SegmentIndex index)
 {
 	if (!texture_atlas)
 		return;
 
-	vbuffer->Clear();
-	ibuffer->Clear();
+	target->position_buffer.load()->Clear();
+	target->uv_buffer.load()->Clear();
+	target->normal_buffer.load()->Clear();
+	target->slice_buffer.load()->Clear();
+	target->index_buffer.load()->Clear();
+
 	index_x = index_y = index_z = current_index = 0;
 	BlockType _block = BlockType::EMPTY;
 
@@ -599,24 +589,27 @@ void SolidBlockProcessor::RebuildSegmentInSector(Sector* sector, Segment* target
 					continue;
 
 				if (CheckBlockFaceInSector(sector, target, _index, FaceName::LEFT))
-					AddFaceVerticesCustomBuffers(target, LeftFace, vbuffer, ibuffer);
+					AddFaceVertices(target, LeftFace);
 
 				if (CheckBlockFaceInSector(sector, target, _index, FaceName::RIGHT))
-					AddFaceVerticesCustomBuffers(target, RightFace, vbuffer, ibuffer);
+					AddFaceVertices(target, RightFace);
 
 				if (CheckBlockFaceInSector(sector, target, _index, FaceName::TOP))
-					AddFaceVerticesCustomBuffers(target, TopFace, vbuffer, ibuffer);
+					AddFaceVertices(target, TopFace);
 
 				if (CheckBlockFaceInSector(sector, target, _index, FaceName::BOTTOM))
-					AddFaceVerticesCustomBuffers(target, BottomFace, vbuffer, ibuffer);
+					AddFaceVertices(target, BottomFace);
 
 				if (CheckBlockFaceInSector(sector, target, _index, FaceName::FRONT))
-					AddFaceVerticesCustomBuffers(target, FrontFace, vbuffer, ibuffer);
+					AddFaceVertices(target, FrontFace);
 
 				if (CheckBlockFaceInSector(sector, target, _index, FaceName::BACK))
-					AddFaceVerticesCustomBuffers(target, BackFace, vbuffer, ibuffer);
+					AddFaceVertices(target, BackFace);
 			}
 	
-	vbuffer->Build();
-	ibuffer->Build();
+	target->position_buffer.load()->Build();
+	target->uv_buffer.load()->Build();
+	target->normal_buffer.load()->Build();
+	target->slice_buffer.load()->Build();
+	target->index_buffer.load()->Build();
 }

@@ -14,7 +14,10 @@ Segment::Segment(Scene* scene, BlockType type, bool fill, int x, int y, int z)
     :default_type(type), blocks(), scene(scene), block_count(0), biome_processed(false), mesh_generated(false), mesh_rebuilt(false)
 {
     position = { x, y, z };
-    vertex_buffer = new VertexBuffer<SolidBlockVertex>(scene->GetDevice(), scene->GetContext(), SEGMENT_VERTEX_RESERVE);
+    position_buffer = new VertexBuffer<DirectX::XMFLOAT3>(scene->GetDevice(), scene->GetContext(), SEGMENT_VERTEX_RESERVE);
+    uv_buffer = new VertexBuffer<DirectX::XMFLOAT2>(scene->GetDevice(), scene->GetContext(), SEGMENT_VERTEX_RESERVE);
+    normal_buffer = new VertexBuffer<DirectX::XMFLOAT3>(scene->GetDevice(), scene->GetContext(), SEGMENT_VERTEX_RESERVE);
+    slice_buffer = new VertexBuffer<float>(scene->GetDevice(), scene->GetContext(), SEGMENT_VERTEX_RESERVE);
     index_buffer = new IndexBuffer(scene->GetDevice(), scene->GetContext(), SEGMENT_INDEX_RESERVE);
 
     for (unsigned int i = 0; i < SEGMENT_DIMENSION_SIZE; i++)
@@ -37,7 +40,11 @@ Segment::Segment(Scene* scene, BlockType type, bool fill, int x, int y, int z)
 
 Segment::~Segment()
 {
-    delete vertex_buffer;
+    //no smart pointer yet pepehands
+    delete position_buffer;
+    delete uv_buffer;
+    delete normal_buffer;
+    delete slice_buffer;
     delete index_buffer;
 }
 
@@ -108,9 +115,24 @@ const DirectX::XMINT3& Segment::Position()
     return position;
 }
 
-VertexBuffer<SolidBlockVertex>* Segment::GetVertexBuffer()
+VertexBuffer<DirectX::XMFLOAT3>* Segment::GetPositionBuffer()
 {
-    return vertex_buffer;
+    return position_buffer;
+}
+
+VertexBuffer<DirectX::XMFLOAT2>* Segment::GetUVBuffer()
+{
+    return uv_buffer;
+}
+
+VertexBuffer<DirectX::XMFLOAT3>* Segment::GetNormalsBuffer()
+{
+    return normal_buffer;
+}
+
+VertexBuffer<float>* Segment::GetSliceBuffer()
+{
+    return slice_buffer;
 }
 
 IndexBuffer* Segment::GetIndexBuffer()

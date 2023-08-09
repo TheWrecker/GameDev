@@ -37,8 +37,7 @@ void FinishDigEvent::Fire()
         _adjacent_segment = _adjacent_sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
         if (_adjacent_segment)
-            SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index,
-                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
+            SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index);
     }
     else if ((_segment_index.x == SECTOR_HORIZONTAL_SIZE - 1) && (_block_index.x == SEGMENT_DIMENSION_SIZE - 1))
     {
@@ -47,8 +46,7 @@ void FinishDigEvent::Fire()
         _adjacent_segment = _adjacent_sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
         if (_adjacent_segment)
-            SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index,
-                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
+            SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index);
     }
     else if ((_block_index.x == 0) || (_block_index.x == SEGMENT_DIMENSION_SIZE - 1))
     {
@@ -62,15 +60,14 @@ void FinishDigEvent::Fire()
         _adjacent_segment = _sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
         if (_adjacent_segment)
-            SolidBlockProcessor::RebuildSegmentInSector(_sector, _adjacent_segment, _new_segment_index,
-                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
+            SolidBlockProcessor::RebuildSegmentInSector(_sector, _adjacent_segment, _new_segment_index);
     }
 
     if ((_segment_index.y == 0) && (_block_index.y == 0))
     {
         //we shouldnt dig the base layer, add it back
         _segment->SetBlock(_block_index.x, _block_index.y, _block_index.z, block_type);
-        SolidBlockProcessor::RebuildSegmentInSector(_sector, _segment, _segment_index, _segment->GetVertexBuffer(), _segment->GetIndexBuffer());
+        SolidBlockProcessor::RebuildSegmentInSector(_sector, _segment, _segment_index);
         //return to prevent emiting further associated events
         return;
     }
@@ -90,8 +87,7 @@ void FinishDigEvent::Fire()
         _adjacent_segment = _sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
         if (_adjacent_segment)
-            SolidBlockProcessor::RebuildSegmentInSector(_sector, _adjacent_segment, _new_segment_index,
-                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
+            SolidBlockProcessor::RebuildSegmentInSector(_sector, _adjacent_segment, _new_segment_index);
     }
 
     if ((_segment_index.z == 0) && (_block_index.z == 0))
@@ -101,8 +97,7 @@ void FinishDigEvent::Fire()
         _adjacent_segment = _adjacent_sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
         if (_adjacent_segment)
-            SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index,
-                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
+            SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index);
     }
     else if ((_segment_index.z == SECTOR_HORIZONTAL_SIZE - 1) && (_block_index.z == SEGMENT_DIMENSION_SIZE - 1))
     {
@@ -111,8 +106,7 @@ void FinishDigEvent::Fire()
         _adjacent_segment = _adjacent_sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
         if (_adjacent_segment)
-            SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index,
-                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
+            SolidBlockProcessor::RebuildSegmentInSector(_adjacent_sector, _adjacent_segment, _new_segment_index);
     }
     else if ((_block_index.z == 0) || (_block_index.z == SEGMENT_DIMENSION_SIZE - 1))
     {
@@ -126,11 +120,10 @@ void FinishDigEvent::Fire()
         _adjacent_segment = _sector->segments[_new_segment_index.x][_new_segment_index.y][_new_segment_index.z].load();
 
         if (_adjacent_segment)
-            SolidBlockProcessor::RebuildSegmentInSector(_sector, _adjacent_segment, _new_segment_index,
-                _adjacent_segment->GetVertexBuffer(), _adjacent_segment->GetIndexBuffer());
+            SolidBlockProcessor::RebuildSegmentInSector(_sector, _adjacent_segment, _new_segment_index);
     }
 
-    SolidBlockProcessor::RebuildSegmentInSector(_sector, _segment, _segment_index, _segment->GetVertexBuffer(), _segment->GetIndexBuffer());
+    SolidBlockProcessor::RebuildSegmentInSector(_sector, _segment, _segment_index);
 
     auto _event = new BlockDiggedEvent(parent, player, block_type, position);
     parent->FeedEvent(_event);

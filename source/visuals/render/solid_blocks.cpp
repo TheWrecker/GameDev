@@ -20,7 +20,7 @@
 static const ::DirectX::XMVECTORF32 RENDER_TARGET_DEFAULT_COLOR = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 SolidBlockRender::SolidBlockRender(Presenter* parent)
-	:RenderBase(parent), render_shadows(true), show_depth_map(true)
+	:RenderBase(parent), render_shadows(false), show_depth_map(true)
 {
 	vertex_shader = std::make_unique<VertexShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "vs_simple_directional_lighting");
 	pixel_shader = std::make_unique<PixelShader>(presenter, L"source/visuals/shaders/solid_blocks.hlsl", "ps_simple_directional_lighting");
@@ -35,10 +35,14 @@ SolidBlockRender::SolidBlockRender(Presenter* parent)
 	unsigned int _slot2 = static_cast<unsigned int>(DefaultObjects::QUAD);
 
 	input_layout = std::make_unique<InputLayout>(presenter, vertex_shader.get());
-	input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, _slot1)
-		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, _slot1)
-		.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, _slot1)
-		.AddElement("ATLAS_SLICE", DXGI_FORMAT_R32_FLOAT, _slot1)
+	input_layout->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, 1)
+		.AddElement("TEXCOORDS", DXGI_FORMAT_R32G32_FLOAT, 2)
+		.AddElement("NORMALS", DXGI_FORMAT_R32G32B32_FLOAT, 3)
+		.AddElement("ATLAS_SLICE", DXGI_FORMAT_R32_FLOAT, 4)
+		.Build();
+
+	input_layout_depth = std::make_unique<InputLayout>(presenter, vs_shadowmap_depth.get());
+	input_layout_depth->AddElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT, 1)
 		.Build();
 
 	texture_overlay_input_layout = std::make_unique<InputLayout>(presenter, texture_overlay_vertex_shader.get());
@@ -163,7 +167,7 @@ void SolidBlockRender::Render()
 		//depth pass
 		
 		//apply depth states
-		input_layout->Bind();
+		input_layout_depth->Bind();
 		vs_shadowmap_depth->Apply();
 		//presenter->SetRasterizerState(RasterizerMode::CULL_BACK_SOLID_CW);
 
@@ -185,6 +189,7 @@ void SolidBlockRender::Render()
 		depth_map->BindAsShaderResource(3);
 
 		//apply proper render states
+		input_layout->Bind();
 		vs_shadowmap_render->Apply();
 		ps_shadowmap_render->Apply();
 		presenter->SetRasterizerState(RasterizerMode::CULL_NONE_SOLID_CW);
@@ -214,31 +219,55 @@ void SolidBlockRender::Render()
 	}
 }
 
-void SolidBlockRender::RenderSegments(bool renderAll)
+void SolidBlockRender::RenderSegments(bool renderDepth)
 {
-	std::vector<Segment*>& _target_container = visible_segments;
-
-	if (renderAll)
-		_target_container = near_segments;
-
-	for (auto _segment : _target_container)
+	if (renderDepth)
 	{
-		if (!_segment)
-			continue;
 
-		if (_segment->vertex_buffer.load()->GetVertexCount() == 0)
-			continue;
+		for (auto _segment : near_segments)
+		{
+			if (!_segment)
+				continue;
 
-		_segment->draw_mutex.lock();
+			if (_segment->position_buffer.load()->GetVertexCount() == 0)
+				continue;
 
-		DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_segment->World_Matrix()) };
-		per_object_buffer->Update(_cb);
-		per_object_buffer->Bind(BindStage::VERTEX, 1);
-		_segment->GetVertexBuffer()->Bind(1);
-		_segment->GetIndexBuffer()->Bind();
-		context->DrawIndexed(_segment->GetIndexBuffer()->GetIndexCount(), 0, 0);
+			_segment->draw_mutex.lock();
 
-		_segment->draw_mutex.unlock();
+			DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_segment->World_Matrix()) };
+			per_object_buffer->Update(_cb);
+			per_object_buffer->Bind(BindStage::VERTEX, 1);
+			_segment->GetPositionBuffer()->Bind(1);
+			_segment->GetIndexBuffer()->Bind();
+			context->DrawIndexed(_segment->GetIndexBuffer()->GetIndexCount(), 0, 0);
+
+			_segment->draw_mutex.unlock();
+		}
+	}
+	else
+	{
+		for (auto _segment : visible_segments)
+		{
+			if (!_segment)
+				continue;
+
+			if (_segment->position_buffer.load()->GetVertexCount() == 0)
+				continue;
+
+			_segment->draw_mutex.lock();
+
+			DefaultConstantStruct _cb = { DirectX::XMMatrixTranspose(_segment->World_Matrix()) };
+			per_object_buffer->Update(_cb);
+			per_object_buffer->Bind(BindStage::VERTEX, 1);
+			_segment->GetPositionBuffer()->Bind(1);
+			_segment->GetUVBuffer()->Bind(2);
+			_segment->GetNormalsBuffer()->Bind(3);
+			_segment->GetSliceBuffer()->Bind(4);
+			_segment->GetIndexBuffer()->Bind();
+			context->DrawIndexed(_segment->GetIndexBuffer()->GetIndexCount(), 0, 0);
+
+			_segment->draw_mutex.unlock();
+		}
 	}
 	
 }

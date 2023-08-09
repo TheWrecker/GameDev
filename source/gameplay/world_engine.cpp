@@ -140,8 +140,7 @@ void WorldEngine::SetupStartingWorld()
 					_segment = _sector.second->segments[_i][_j][_k].load();
 					if (_segment)
 					{
-						SolidBlockProcessor::RebuildSegmentInSector(_sector.second, _segment, SegmentIndex(_i, _j, _k),
-							_segment->vertex_buffer, _segment->index_buffer);
+						SolidBlockProcessor::RebuildSegmentInSector(_sector.second, _segment, SegmentIndex(_i, _j, _k));
 						_segment->biome_processed = true;
 					}
 				}
@@ -295,24 +294,27 @@ void WorldEngine::SectorMeshTick()
 						if (_segment->mesh_generated.load())
 							continue;
 
-						auto _vbuffer = new VertexBuffer<SolidBlockVertex>(scene->GetDevice(), scene->GetContext());
-						auto _ibuffer = new IndexBuffer(scene->GetDevice(), scene->GetContext());
+						Segment* _new_segment = new Segment(_segment->scene);
 
-						SolidBlockProcessor::RebuildSegmentInSector(_sector, _segment, SegmentIndex(_i, _j, _k), _vbuffer, _ibuffer);
+						memcpy(&_new_segment->blocks, _segment->blocks, sizeof(_segment->blocks));
+
+						_new_segment->default_type = _segment->default_type;
+						_new_segment->position = _segment->position;
+						_new_segment->biome_processed.store(_segment->biome_processed.load());
+						_new_segment->block_count.store(_segment->block_count.load());
+
+						SolidBlockProcessor::RebuildSegmentInSector(_sector, _new_segment, SegmentIndex(_i, _j, _k));
+						_new_segment->mesh_generated.store(true);
 
 						_segment->draw_mutex.lock();
-						
-						auto _old_vbuffer = _segment->vertex_buffer.exchange(_vbuffer);
-						auto _old_ibuffer = _segment->index_buffer.exchange(_ibuffer);
-						_segment->mesh_generated.store(true);
+
+						_sector->segments[_i][_j][_k].exchange(_new_segment);
 
 						_segment->draw_mutex.unlock();
 
-						garbage_collector->AddSegmentVertexBuffer(_old_vbuffer);
-						garbage_collector->AddIndexBuffer(_old_ibuffer);
+						garbage_collector->AddSegment(_segment);
 
 						return;
-
 					}
 				}
 
@@ -356,21 +358,27 @@ void WorldEngine::SectorMeshTick()
 						if (_segment->mesh_rebuilt.load())
 							continue;
 
-						auto _vbuffer = new VertexBuffer<SolidBlockVertex>(scene->GetDevice(), scene->GetContext());
-						auto _ibuffer = new IndexBuffer(scene->GetDevice(), scene->GetContext());
+						Segment* _new_segment = new Segment(_segment->scene);
 
-						SolidBlockProcessor::RebuildSegmentInSector(_sector, _segment, SegmentIndex(_i, _j, _k), _vbuffer, _ibuffer);
+						memcpy(&_new_segment->blocks, _segment->blocks, sizeof(_segment->blocks));
+
+						_new_segment->default_type = _segment->default_type;
+						_new_segment->position = _segment->position;
+						_new_segment->biome_processed.store(_segment->biome_processed.load());
+						_new_segment->mesh_generated.store(_segment->mesh_generated.load());
+						_new_segment->block_count.store(_segment->block_count.load());
+
+						SolidBlockProcessor::RebuildSegmentInSector(_sector, _new_segment, SegmentIndex(_i, _j, _k));
+						_new_segment->mesh_rebuilt.store(true);
 
 						_segment->draw_mutex.lock();
 
-						auto _old_vbuffer = _segment->vertex_buffer.exchange(_vbuffer);
-						auto _old_ibuffer = _segment->index_buffer.exchange(_ibuffer);
-						_segment->mesh_rebuilt.store(true);
+						_sector->segments[_i][_j][_k].exchange(_new_segment);
 
 						_segment->draw_mutex.unlock();
 
-						garbage_collector->AddSegmentVertexBuffer(_old_vbuffer);
-						garbage_collector->AddIndexBuffer(_old_ibuffer);
+						garbage_collector->AddSegment(_segment);
+
 
 						return;
 

@@ -41,7 +41,12 @@ cbuffer LightData : register(b4)
     float4 UNUSED;
 };
 
-struct VS_INPUT
+struct VS_DEPTH_INPUT
+{
+    float3 position : POSITION;
+};
+
+struct VS_FULL_INPUT
 {
     float3 position : POSITION;
     float2 uv : TEXCOORDS;
@@ -64,7 +69,7 @@ struct VS_DIRECTIONAL_OUTPUT
     float3 normal : NORMALS;
 };
 
-float4 vs_shadowmap_first_pass(VS_INPUT vertex) : SV_Position
+float4 vs_shadowmap_first_pass(VS_DEPTH_INPUT vertex) : SV_Position
 {
     float4 _pos = float4(vertex.position, 1.0);
     _pos = mul(_pos, world_matrix);
@@ -79,7 +84,7 @@ float4 ps_shadowmap_first_pass(float4 vertex : SV_Position) : SV_Target
     return float4(vertex.zzz, 1.0f);
 }
 
-VS_SHADOWMAP_OUTPUT vs_shadowmap_second_pass(VS_INPUT vertex)
+VS_SHADOWMAP_OUTPUT vs_shadowmap_second_pass(VS_FULL_INPUT vertex)
 {
     VS_SHADOWMAP_OUTPUT output;
     float4 _pos = float4(vertex.position, 1.0);
@@ -152,7 +157,7 @@ float4 ps_shadowmap_second_pass(VS_SHADOWMAP_OUTPUT input) : SV_TARGET
     //return saturate(ambient + diffuse);
 }
 
-VS_DIRECTIONAL_OUTPUT vs_simple_directional_lighting(VS_INPUT vertex)
+VS_DIRECTIONAL_OUTPUT vs_simple_directional_lighting(VS_FULL_INPUT vertex)
 {
     VS_DIRECTIONAL_OUTPUT output;
     float4 _pos = float4(vertex.position, 1.0);

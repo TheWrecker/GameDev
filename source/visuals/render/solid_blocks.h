@@ -26,7 +26,7 @@
 	private:
 		friend class Overlay;
 
-		void RenderSegments(bool renderAll = false);
+		void RenderSegments(bool renderDepth = false);
 
 		std::unique_ptr<VisionPerimeter> perimeter;
 		std::vector<Segment*>
@@ -46,6 +46,8 @@
 		std::unique_ptr<PixelShader>
 			ps_shadowmap_depth,
 			ps_shadowmap_render;
+
+		std::unique_ptr<InputLayout> input_layout_depth;
 
 		std::unique_ptr<DepthMap> depth_map;
 		std::unique_ptr<ConstantBuffer<DefaultConstantStruct>> texture_overlay_buffer;
